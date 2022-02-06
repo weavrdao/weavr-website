@@ -1,0 +1,30 @@
+/* :root {
+    --scrollbar-color: grey;
+}
+
+.is-clickable {
+    cursor: pointer;
+}
+
+.voting-scroller {
+    overflow: hidden;
+    max-height: 80vh;
+}
+
+*.is-scrollable {
+    overflow-y: auto;
+}
+
+body ::-webkit-scrollbar {
+    background-color: transparent;
+    width: 0.5rem;
+}
+
+body ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-color);
+}
+
+body * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-color) transparent;
+} */

@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "examples": [
+      {
+          "world": {
+              "property": {
+                  "address": "Test address 1",
+                  "currentRent": 1234,
+                  "marketValue": 1234,
+                  "area": 1234,
+                  "rooms": {
+                      "bdCount": 1,
+                      "baCount": 2
+                  },
+                  "grossYieldPct": 10,
+                  "yearBuilt": 2000,
+                  "coverImage": "Qmqwerty",
+                  "description": "Lorem ipsum.",
+                  "doc": "Qmqwerty"
+              }
+          }
+      }
+  ],
+  "required": [
+      "world"
+  ],
+  "title": "The root schema",
+  "type": "object",
+  "properties": {
+      "assetId": {
+          "default": 0,
+          "type": "integer"
+      },
+      "world": {
+          "$id": "#/properties/world",
+          "required": [
+              "property"
+          ],
+          "title": "The world schema",
+          "type": "object",
+          "properties": {
+              "property": {
+                  "$id": "#/properties/world/properties/property",
+                  "required": [
+                      "address",
+                      "currentRent",
+                      "marketValue",
+                      "area",
+                      "rooms",
+                      "grossYieldPct",
+                      "yearBuilt",
+                      "coverImage",
+                      "doc"
+                  ],
+                  "title": "The property schema",
+                  "type": "object",
+                  "properties": {
+                      "address": {
+                          "type": "string"
+                      },
+                      "currentRent": {
+                          "type": "integer"
+                      },
+                      "marketValue": {
+                          "type": "integer"
+                      },
+                      "area": {
+                          "type": "integer"
+                      },
+                      "rooms": {
+                          "$id": "#/properties/world/properties/property/properties/rooms",
+                          "required": [
+                              "bdCount",
+                              "baCount"
+                          ],
+                          "title": "The rooms schema",
+                          "type": "object",
+                          "properties": {
+                              "bdCount": {
+                                  "type": "integer"
+                              },
+                              "baCount": {
+                                  "type": "integer"
+                              }
+                          },
+                          "additionalProperties": true
+                      },
+                      "grossYieldPct": {
+                          "maximum": 100,
+                          "minimum": 0,
+                          "type": "integer"
+                      },
+                      "yearBuilt": {
+                          "type": "integer"
+                      },
+                      "coverImage": {
+                          "maxLength": 46,
+                          "minLength": 46,
+                          "pattern": "^Qm[a-zA-Z0-9]{44}$",
+                          "type": "string"
+                      },
+                      "description": {
+                          "type": "string"
+                      },
+                      "doc": {
+                        "maxLength": 46,
+                        "minLength": 46,
+                        "pattern": "^Qm[a-zA-Z0-9]{44}$",
+                        "type": "string"
+                    }
+                  },
+                  "additionalProperties": true
+              }
+          },
+          "additionalProperties": true
+      },
+      "market": {
+          "$id": "#/properties/market",
+          "title": "The market schema",
+          "type": "object",
+          "additionalProperties": true
+      },
+      "dao": {
+          "$id": "#/properties/dao",
+          "title": "The dao schema",
+          "type": "object",
+          "additionalProperties": true
+      }
+  },
+  "additionalProperties": true
+}

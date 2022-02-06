@@ -1,0 +1,28 @@
+.DS_Store
+Thumbs.db
+db.json
+*.log
+node_modules/
+dist/
+.deploy*/
+src/_drafts
+src/temp/
+package-lock.json
+
+# env files
+*.env*
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

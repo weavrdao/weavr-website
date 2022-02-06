@@ -1,0 +1,4 @@
+finish the market list item
+polish the marketplace views
+write dissolution tests
+design and code dissolution UI

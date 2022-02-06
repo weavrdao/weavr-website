@@ -1,0 +1,63 @@
+{
+    "root": true,
+    "env": {
+        "node": true
+    },
+    "extends": [
+        "plugin:vue/essential",
+        "eslint:recommended"
+    ],
+    "rules": {
+        "quotes": [
+            "warn",
+            "double"
+        ],
+        "indent": [
+            "warn",
+            2
+        ],
+        "no-empty": "warn",
+        "no-cond-assign": [
+            "error",
+            "always"
+        ],
+        "for-direction": "warn",
+        "no-confusing-arrow": "warn",
+        "no-await-in-loop": "warn",
+        "no-self-compare": "warn",
+        "no-sparse-arrays": "warn",
+        "no-template-curly-in-string": "warn",
+        "no-unsafe-finally": "warn",
+        /* "no-unreachable-loop": "warn", */
+        /* "no-unused-private-class-members": "warn", */
+        "no-unused-vars": "warn",
+        "no-use-before-define": "warn",
+        "block-scoped-var": "warn",
+        "class-methods-use-this": "warn",
+        "default-case": "warn",
+        "dot-notation": "warn",
+        "default-param-last": "warn",
+        "no-constructor-return": "error",
+        /* "no-promise-executor-return": "error", */
+        /* "default-case-last": "error", */
+        "no-alert": "error",
+        "no-eval": "error",
+        "no-implied-eval": "error",
+        "no-invalid-this": "warn",
+        "max-lines-per-function": [
+            "warn",
+            {
+                "max": 50,
+                "skipBlankLines": false,
+                "skipComments": false
+            }
+        ],
+        "max-nested-callbacks": [
+            "warn",
+            3
+        ]
+    },
+    "parserOptions": {
+        "parser": "babel-eslint"
+    }
+}

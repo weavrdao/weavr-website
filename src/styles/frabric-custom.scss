@@ -1,0 +1,86 @@
+@charset "utf-8";
+// 1. Import the initial variables
+@import "../../node_modules/bulma/sass/utilities/initial-variables.sass";
+@import "../../node_modules/bulma/sass/utilities/functions";
+
+
+// Add font family
+$family-sans-serif: "Work Sans", "sans";
+
+//FRABRIC THEME
+$purpleBlack: #080220;
+$purpleBlack-invert: findColorInvert($purpleBlack);
+$purpleOne: #100545;
+$purpleOne-invert: findColorInvert($purpleOne);
+$purpleTwo: #181A50;
+$purpleTwo-invert: findColorInvert($purpleTwo);
+$purpleThree: #57467B;
+$purpleThree-invert: findColorInvert($purpleThree);
+$foam: #D6FCFE;
+$foam-invert: findColorInvert($foam);
+$actionBlue: #46A4F8;
+$actionBlue-invert: findColorInvert($actionBlue);
+$bgLevel1Light: #1B1B33;
+$bgLevel1Light-invert: findColorInvert($bgLevel1Light);
+$bgLevel2Light: #41485A;
+$bgLevel2Light-invert: findColorInvert($bgLevel2Light);
+$bgLevel2Dark: #111028;
+$bgLevel2Dark-invert: findColorInvert($bgLevel2Dark);
+$affirmativeGreen: #6EA082;
+$affirmativeGreen-invert: findColorInvert($affirmativeGreen);
+$negativeRed: #AC5960;
+$negativeRed-invert: findColorInvert($negativeRed);
+$black: $purpleBlack;
+$dark: $bgLevel2Dark;
+// Derived variables
+$primary: $purpleThree;
+$primary-invert: findColorInvert($primary);
+$danger: $negativeRed;
+$transparent: rgba(0,0,0,0);
+// Use the new serif family
+$family-primary: $family-sans-serif;
+// Components and tags Styling
+$input-color:$purpleOne;
+$scheme-main:#f1f2fb;
+$scheme-color: $bgLevel2Dark;
+$text: $purpleTwo;
+$strong-color: $purpleThree;
+$border-light: $foam;
+$scheme-main-bis:$actionBlue;
+$navbar-item-active-color:#fff;
+$card-radius: 1rem;
+
+input{
+  border: $purpleThree solid 1px !important;
+}
+
+// RADIUS
+.has-radius-md {
+  border-radius: 0.75rem !important;
+}
+.has-radius-lg {
+  border-radius: 1rem !important;
+}
+//BORDER
+.has-border-bottom {
+  border-bottom: $foam 1px solid !important;
+}
+
+// Adding new color variables to the color map.
+@import "../../node_modules/bulma/sass/utilities/derived-variables";
+$addColors: (
+  "purpleBlack": ($purpleBlack, $purpleBlack-invert),
+  "purpleOne": ($purpleOne, $purpleOne-invert),
+  "purpleTwo": ($purpleTwo, $purpleTwo-invert),
+  "purpleThree": ($purpleThree, $purpleThree-invert),
+  "foam": ($foam, $foam-invert),
+  "affirmativeGreen": ($affirmativeGreen, $affirmativeGreen-invert),
+  "levelOne": ($bgLevel1Light , $bgLevel1Light-invert),
+  "levelTwoLight": ($bgLevel2Light, $bgLevel2Light-invert),
+  "levelTwoDark": ($bgLevel2Dark, $bgLevel2Dark-invert),
+  "transprent": ($transparent, $transparent)
+);
+$colors: map-merge($colors, $addColors);
+
+// Importing the rest of Bulma
+@import "../../node_modules/bulma/bulma.sass";

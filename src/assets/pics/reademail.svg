@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="173" height="172.997" viewBox="0 0 173 172.997">
+  <defs>
+    <filter id="reademail" x="0" y="0" width="173" height="172.997" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feFlood flood-color="#00a4ff"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#reademail)">
+    <path id="reademail-2" data-name="reademail" d="M109.272,106.238l-37.6-37.49,37.49-37.49a6.2,6.2,0,0,1,.859,3.117v68.748a6.887,6.887,0,0,1-.752,3.117ZM96.38,34.374h-.107v.107l-27.5,27.5v-.107h-27.5v.107l-27.5-27.5v-.107h-.107L6.9,27.606V6.875a6.558,6.558,0,0,1,2.04-4.887A6.691,6.691,0,0,1,13.775,0h82.5a6.643,6.643,0,0,1,4.887,1.988,6.643,6.643,0,0,1,1.988,4.887V27.609ZM38.374,68.748l-37.6,37.49a6.888,6.888,0,0,1-.752-3.117V34.374a6.2,6.2,0,0,1,.859-3.117Zm23.633,0L103.256,110H6.792L48.042,68.748Z" transform="translate(31.48 31.5)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+  </g>
+</svg>
