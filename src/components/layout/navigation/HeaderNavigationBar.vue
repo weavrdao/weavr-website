@@ -1,9 +1,5 @@
 <template>
-  <nav
-    class="navbar  p-5"
-    role="navigation"
-    aria-label="main navigation"
-  >
+  <nav class="navbar p-5" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="#">
         <div class="title has-text-purpleThree">FRABRIC DAO</div>
@@ -12,7 +8,11 @@
       <a
         role="button"
         ref="menuButton"
-        :class="[navigation.isOpen ? 'is-active' : '', 'navbar-burger', 'has-border-bottom']"
+        :class="[
+          navigation.isOpen ? 'is-active' : '',
+          'navbar-burger',
+          'has-border-bottom',
+        ]"
         @click="menuToggle()"
         aria-label="menu"
         aria-expanded="false"
@@ -27,7 +27,10 @@
     <div :class="[navigation.isOpen ? 'is-active' : '', 'navbar-menu']">
       <div class="navbar-start">
         <a
-        :class="[isItemCurrent(item) ? 'has-border-bottom' : '', 'navbar-item']"
+          :class="[
+            isItemCurrent(item) ? 'has-border-bottom' : '',
+            'navbar-item',
+          ]"
           v-for="item in navigation.items"
           :key="item.name"
           v-on:click="transitTo(item.path)"
@@ -58,10 +61,7 @@ export default {
     return {
       navigation: {
         isOpen: false,
-        items: [
-          { name: "My Assets", path: "/assets" },
-          { name: "Marketplace", path: "/market" },
-        ],
+        items: [{ name: "Marketplace", path: "/market" }],
       },
     };
   },
