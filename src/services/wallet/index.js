@@ -5,7 +5,7 @@ import WalletState from "../../models/walletState"
  * Wallet service
  * @property {EthereumClient} client Ethereum client
  */
- class Wallet {
+class Wallet {
   constructor(
     ethereumClient
   ) {

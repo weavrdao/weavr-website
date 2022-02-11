@@ -53,8 +53,8 @@ class Market {
         (mapper, response) => { return mapper.mapAssets(response.data.deployedAssets) }
       )
 
-      console.log("Mapped assets:")
-      console.log(assets)
+    console.log("Mapped assets:")
+    console.log(assets)
 
     // TODO: CONSIDER DISCONTINUED/DEACTIVATED ASSETS
 
@@ -63,9 +63,9 @@ class Market {
     const assetDataURIArray = assets
       .map(asset => asset.dataURI)
     let assetOffchainDataArray = (
-        await this.storageNetwork
-          .getFiles(assetDataURIArray.map(uri => CommonUtils.pathFromURL(uri)))
-      )
+      await this.storageNetwork
+        .getFiles(assetDataURIArray.map(uri => CommonUtils.pathFromURL(uri)))
+    )
       .map(obj => obj.world.property)
 
     console.log("Off-chain data:")
