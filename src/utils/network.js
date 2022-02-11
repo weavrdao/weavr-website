@@ -11,14 +11,14 @@ const postRequest = (
     params: params,
     headers: headers,
   })
-  .then((res) => {
-    console.log(res.data);
-    resolve(res.data)
-  })
-  .catch((err) => {
-    console.log(err)
-    reject(err)
-  })
+    .then((res) => {
+      console.log(res.data);
+      resolve(res.data)
+    })
+    .catch((err) => {
+      console.log(err)
+      reject(err)
+    })
 })
 
 /**
@@ -32,7 +32,7 @@ const postRequest = (
  *  If invalid, the response is filtered out.
  *  (response: any) => boolean
  */
- async function allRequests ({
+async function allRequests ({
   urlMap,
   timeout,
   validationCheck

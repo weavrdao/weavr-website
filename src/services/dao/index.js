@@ -130,15 +130,15 @@ class DAO {
     let status
 
     switch (voteType) {
-      case VoteType.Yes:
-        status = await assetContract.voteYes(proposal.id)
-        break
-      case VoteType.No:
-        status = await assetContract.voteNo(proposal.id)
-        break
-      case VoteType.Abstain:
-        // Not supported at the moment
-        break
+    case VoteType.Yes:
+      status = await assetContract.voteYes(proposal.id)
+      break
+    case VoteType.No:
+      status = await assetContract.voteNo(proposal.id)
+      break
+    case VoteType.Abstain:
+      // Not supported at the moment
+      break
     }
 
     return status
