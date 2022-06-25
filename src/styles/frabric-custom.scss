@@ -5,80 +5,89 @@
 
 
 // Add font family
-$family-sans-serif: "Work Sans", "sans";
+$family-sans-serif: "Poppins Sans", "sans";
 
-//FRABRIC THEME
-$purpleBlack: #080220;
-$purpleBlack-invert: findColorInvert($purpleBlack);
-$purpleOne: #100545;
-$purpleOne-invert: findColorInvert($purpleOne);
-$purpleTwo: #181A50;
-$purpleTwo-invert: findColorInvert($purpleTwo);
-$purpleThree: #57467B;
-$purpleThree-invert: findColorInvert($purpleThree);
-$foam: #D6FCFE;
-$foam-invert: findColorInvert($foam);
-$actionBlue: #46A4F8;
-$actionBlue-invert: findColorInvert($actionBlue);
-$bgLevel1Light: #1B1B33;
-$bgLevel1Light-invert: findColorInvert($bgLevel1Light);
-$bgLevel2Light: #41485A;
-$bgLevel2Light-invert: findColorInvert($bgLevel2Light);
-$bgLevel2Dark: #111028;
-$bgLevel2Dark-invert: findColorInvert($bgLevel2Dark);
-$affirmativeGreen: #6EA082;
-$affirmativeGreen-invert: findColorInvert($affirmativeGreen);
-$negativeRed: #AC5960;
-$negativeRed-invert: findColorInvert($negativeRed);
-$black: $purpleBlack;
-$dark: $bgLevel2Dark;
-// Derived variables
-$primary: $purpleThree;
+//####################################
+//#          FRABRIC THEME           #
+//####################################
+
+// COLORS
+$darkBlue: #000044;
+$mediumBlue: #5A50D8;
+$lightBlue: #968EFF;
+$darkGray: #1D1B22;
+$mediumGray: #8D8D8D;
+$lightGray: #CACACA;
+$white: #FFFFFF;
+$black: #13111A;
+$magenta: #D841DE;
+$mint: #00EDC4;
+$red: #FF3200;
+$cyan: #00BDFF;
+$darkBlue-invert: findColorInvert($darkBlue);
+$mediumBlue-invert: findColorInvert($mediumBlue);
+$lightBlue-invert: findColorInvert($lightBlue);
+$darkGray-invert: findColorInvert($darkGray);
+$mediumGray-invert: findColorInvert($mediumGray);
+$lightGray-invert: findColorInvert($lightGray);
+$magenta-invert: findColorInvert($magenta);
+$mint-invert: findColorInvert($mint);
+$red-invert: findColorInver($red);
+$cyan-invert: findColorInver($cyan);
+
+// SCHEME SETUP
+$scheme-main:$black;
+$scheme-color: $lightGray;
+$text: $lightGray;
+
+$primary: $mediumBlue;
 $primary-invert: findColorInvert($primary);
-$danger: $negativeRed;
+$danger: $lightBlue;
+
 $transparent: rgba(0,0,0,0);
-// Use the new serif family
+
+// Setup the new serif family
 $family-primary: $family-sans-serif;
+
 // Components and tags Styling
-$input-color:$purpleOne;
-$scheme-main:#f1f2fb;
-$scheme-color: $bgLevel2Dark;
-$text: $purpleTwo;
-$strong-color: $purpleThree;
-$border-light: $foam;
-$scheme-main-bis:$actionBlue;
+$input-color:$lightBlue;
+
+$strong-color: $white;
+$border-light: $mediumBlue;
+$scheme-main-bis:$danger;
 $navbar-item-active-color:#fff;
-$card-radius: 1rem;
+$card-radius: 0.50rem;
 
 input{
-  border: $purpleThree solid 1px !important;
+  border: $mediumBlue solid 1px !important;
 }
 
 // RADIUS
 .has-radius-md {
-  border-radius: 0.75rem !important;
+  border-radius: 0.50rem !important;
 }
 .has-radius-lg {
   border-radius: 1rem !important;
 }
 //BORDER
 .has-border-bottom {
-  border-bottom: $foam 1px solid !important;
+  border-bottom: $mediumGray 1px solid !important;
 }
 
 // Adding new color variables to the color map.
 @import "../../node_modules/bulma/sass/utilities/derived-variables";
 $addColors: (
-  "purpleBlack": ($purpleBlack, $purpleBlack-invert),
-  "purpleOne": ($purpleOne, $purpleOne-invert),
-  "purpleTwo": ($purpleTwo, $purpleTwo-invert),
-  "purpleThree": ($purpleThree, $purpleThree-invert),
-  "foam": ($foam, $foam-invert),
-  "affirmativeGreen": ($affirmativeGreen, $affirmativeGreen-invert),
-  "levelOne": ($bgLevel1Light , $bgLevel1Light-invert),
-  "levelTwoLight": ($bgLevel2Light, $bgLevel2Light-invert),
-  "levelTwoDark": ($bgLevel2Dark, $bgLevel2Dark-invert),
-  "transprent": ($transparent, $transparent)
+  "darkBlue": ($darkBlue, $darkBlue-invert),
+  "mediumBlue": ($mediumBlue, $mediumBlue-invert),
+  "lightBlue": ($lightBlue, $lightBlue-invert),
+  "darkGray": ($darkGray, $darkGray-invert),
+  "mediumGray": ($mediumGray, $mediumGray-invert),
+  "lightGray": ($lightGray, $lightGray-invert),
+  "transprent": ($transparent, $transparent),
+  "cyan": ($cyan, $cyan-invert),
+  "red": ($red, $red-invert),
+  "magenta": ($magenta, $magenta-invert),
+  "mint": ($mint, $mint-invert)
 );
 $colors: map-merge($colors, $addColors);
 
