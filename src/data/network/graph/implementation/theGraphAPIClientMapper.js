@@ -35,21 +35,21 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
       })
   }
 
-  mapMarketOrders(rawMarketOrders) {
-    if (!rawMarketOrders || rawMarketOrders.length < 1) {
-      return []
-    }
+  // mapMarketOrders(rawMarketOrders) {
+  //   if (!rawMarketOrders || rawMarketOrders.length < 1) {
+  //     return []
+  //   }
 
-    return rawMarketOrders
-      .map(rawMarketOrder => {
-        return new MarketOrder(
-          rawMarketOrder.id,
-          rawMarketOrder.orderType,
-          rawMarketOrder.price,
-          rawMarketOrder.amount
-        )
-      })
-  }
+  //   return rawMarketOrders
+  //     .map(rawMarketOrder => {
+  //       return new MarketOrder(
+  //         rawMarketOrder.id,
+  //         rawMarketOrder.orderType,
+  //         rawMarketOrder.price,
+  //         rawMarketOrder.amount
+  //       )
+  //     })
+  // }
 
   mapProposals(rawProposals) {
     if (!rawProposals || rawProposals.length < 1) {
