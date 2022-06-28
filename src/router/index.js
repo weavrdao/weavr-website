@@ -7,21 +7,21 @@ export default new createRouter({
   history: createWebHashHistory(),
   routes: [
     {
-      path: '/',
-      redirect: '/quickProposal',
+      path: '',
+      // redirect: '/quickProposal',
     },
-    {
-      path: '/dao/:assetId/',
-      name: 'dao',
-      props: true,
-      component: Voting,
-    },
-    {
-      path: '/dao/:assetId/:proposalId',
-      name: 'proposal',
-      props: true,
-      component: Proposal,
-    },
+    // {
+    //   path: '/dao/:assetId/',
+    //   name: 'dao',
+    //   props: true,
+    //   component: Voting,
+    // },
+    // {
+    //   path: '/dao/:assetId/:proposalId',
+    //   name: 'proposal',
+    //   props: true,
+    //   component: Proposal,
+    // },
     {
       path: '/quickProposal',
       name: 'quickProposal',
