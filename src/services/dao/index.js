@@ -82,7 +82,7 @@ class DAO {
 
   /**
    * Create a proposal
-   * @param {Asset} asset Asset that the DAO controls
+   * @param {String} asset AssetID
    * @param {string} title Proposal title
    * @param {string} description Proposal body
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
@@ -93,7 +93,7 @@ class DAO {
     description
   ) {
     const assetContract = new AssetContract(this.ethereumClient, "0xa602bA5287Df6f85Fc16F7Fd6D7ea86F6A0F6d32")
-
+    console.log("IndexJS", asset, ", ", title, ", ", description)
     let proposalCID = await this.storageNetwork
       .addFile(
         {
@@ -107,8 +107,8 @@ class DAO {
     }
 
     let proposalURI = "ipfs://" + proposalCID.path
-
-    let status = await assetContract.proposePaper(proposalURI)
+    console.log(proposalURI)
+    let status = await assetContract.proposePaper(false, proposalURI)
 
     return status
   }
