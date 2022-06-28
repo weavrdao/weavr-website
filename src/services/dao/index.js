@@ -92,7 +92,7 @@ class DAO {
     title,
     description
   ) {
-    const assetContract = new AssetContract(this.ethereumClient, asset.contractAddress)
+    const assetContract = new AssetContract(this.ethereumClient, "0xa602bA5287Df6f85Fc16F7Fd6D7ea86F6A0F6d32")
 
     let proposalCID = await this.storageNetwork
       .addFile(

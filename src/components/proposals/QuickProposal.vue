@@ -4,14 +4,14 @@
     <div class="field">
       <label class="label">Title</label>
       <div class="control">
-        <input class="input" type="text" placeholder="Text input">
+        <input class="input" v-model="title" type="text" placeholder="Text input">
       </div>
     </div>
     
     <div class="field">
       <label class="label">Description</label>
       <div class="control">
-        <textarea class="textarea" placeholder="e.g. Hello world"></textarea>
+        <textarea class="textarea" v-model="description" placeholder="e.g. Hello world"></textarea>
       </div>
     </div>
 
@@ -35,7 +35,10 @@ export default {
   name: "quickProposal",
   data(){
     return {
-      assetId: "0"
+      assetId: "0",
+      title: "",
+      description: "",
+      
     }
   },
   methods: {
@@ -44,6 +47,18 @@ export default {
       syncWallet: "syncWallet",
       createProposal: "createProposal",
     }),
+    publish() {
+      if (this.title.length < 1 || this.description.length < 1) {
+        return;
+      }
+
+      this.createProposal({
+        assetId: this.assetId,
+        title: this.title,
+        description: this.description,
+        $toast: this.$toast,
+      });
+    },
   }
 }
 </script>

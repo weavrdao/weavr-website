@@ -180,6 +180,7 @@ const actions = {
       router.push("/dao/" + params.assetId + "/proposals")
     } else {
       params.$toast.error("Transaction failed. See details in MetaMask.");
+      console.log("Transaction failed. See details in MetaMask.")
     }
   },
 
