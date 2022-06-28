@@ -17,7 +17,7 @@
 
     <div class="field is-grouped">
       <div class="control">
-        <button class="button is-link" @click="createProposal">Submit Proposal</button>
+        <button class="button is-link" @click="publish">Submit Proposal</button>
       </div>
       <div class="control">
         <button class="button is-link is-light">Cancel</button>
@@ -47,17 +47,16 @@ export default {
       syncWallet: "syncWallet",
       createProposal: "createProposal",
     }),
-    publish() {
+    async publish() {
       if (this.title.length < 1 || this.description.length < 1) {
         return;
       }
-
-      this.createProposal({
+      const obj = {
         assetId: this.assetId,
         title: this.title,
-        description: this.description,
-        $toast: this.$toast,
-      });
+        description: this.description,  
+      }
+      await this.createProposal(this.assetId, this.title, this.description);
     },
   }
 }

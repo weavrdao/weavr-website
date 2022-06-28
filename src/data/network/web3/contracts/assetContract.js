@@ -8,7 +8,7 @@ const contractAbi = [
   "function buy(uint256 amount, uint256 price) payable",
 
   // Create a standard proposal
-  "function proposePaper(string info) returns (uint256)",
+  "function proposePaper(bool supermajority, bytes32 info) returns (uint256)",
 
   // Vote Yes on a certain proposal
   "function voteYes(uint256 id)",
@@ -19,10 +19,12 @@ const contractAbi = [
   // Propose a thread dissolution
   "function proposeDissolution(string info, address purchaser, address token, uint256 purchaseAmount)",
 
+  // Can Propose
+  "function canPropose(address proposer) returns (bool)",
+
   // Event that is triggered every time an order is filled on the market
   "event Filled(address indexed sender, address indexed recipient, uint256 indexed price, uint256 amount)"
 
-  
 ]
 const startBlock = 0 // TODO: Inject the actual contract deployment block instead
 
@@ -44,13 +46,17 @@ class AssetContract {
    * @param {string} info Proposal info
    */
   async proposePaper(
+    supermajority,
     info
   ) {
     console.log("Creating a proposal..")
-
+    console.log(this.mutableContract.address);
+    const bytesInfo = ethers.utils.id(info)
+    console.log("string: ", info, " bytes: ", bytesInfo)
     let tx = await this.mutableContract
       .proposePaper(
-        info, 
+        supermajority,
+        bytesInfo, 
         {
           gasLimit: 5000000
         }
@@ -58,6 +64,12 @@ class AssetContract {
 
     return (await tx.wait()).status
   }
+  /** 
+   * Check if participant can make a proposal 
+  */
+   async canPropose(proposer){
+
+   }
 
   /**
    * Make a buy order

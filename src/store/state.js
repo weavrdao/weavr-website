@@ -162,26 +162,29 @@ const actions = {
     context.commit("setProposalsForAsset", { assetId: assetId, proposals: assetProposals })
   },
 
-  async createProposal(context, params) {
-    let asset = context.getters.assetsById.get(params.assetId)
-    let title = params.title
-    let description = params.description
+  async createProposal(asset, description, title) {
+    // let title = obj['title']
+    // let description = obj['description']
+    // let asset = obj['asset']
 
-    params.$toast.show("Confirming transaction...", {
-      duration: false
-    });
-
+    
+    // params.$toast.show("Confirming transaction...", {
+    //   duration: false
+    // });
+    // const x = await dao.vote("0", "0", "Yes");
+    console.log(title," ", description, " ", asset);
     const status = await dao.createProposal(asset, title, description);
-    params.$toast.clear();
+    console.log(title," ", description, " ", asset);
+    // params.$toast.clear();
 
-    if (status) {
-      params.$toast.success("Transaction confirmed!");
-      context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
-      router.push("/dao/" + params.assetId + "/proposals")
-    } else {
-      params.$toast.error("Transaction failed. See details in MetaMask.");
-      console.log("Transaction failed. See details in MetaMask.")
-    }
+    // if (status) {
+    //   params.$toast.success("Transaction confirmed!");
+    //   context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
+    //   router.push("/dao/" + params.assetId + "/proposals")
+    // } else {
+    //   params.$toast.error("Transaction failed. See details in MetaMask.");
+    //   console.log("Transaction failed. See details in MetaMask.")
+    // }
   },
 
   async voteOnProposal(context, params) {
