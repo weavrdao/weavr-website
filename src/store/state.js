@@ -162,19 +162,19 @@ const actions = {
     context.commit("setProposalsForAsset", { assetId: assetId, proposals: assetProposals })
   },
 
-  async createProposal(asset, description, title) {
-    // let title = obj['title']
-    // let description = obj['description']
-    // let asset = obj['asset']
-
+  async createProposal(context, props) {
+    let {title, description} = props
+    let asset = "0xa602bA5287Df6f85Fc16F7Fd6D7ea86F6A0F6d32"
+    console.log("contexct", context)
     
     // params.$toast.show("Confirming transaction...", {
     //   duration: false
     // });
     // const x = await dao.vote("0", "0", "Yes");
-    console.log(title," ", description, " ", asset);
+    console.log("STATE 1", title," ", description, " ", asset);
     const status = await dao.createProposal(asset, title, description);
-    console.log(title," ", description, " ", asset);
+    console.log("STATE 2", title," ", description, " ", asset);
+    console.log(status);
     // params.$toast.clear();
 
     // if (status) {
