@@ -35,7 +35,7 @@ export default {
   name: "quickProposal",
   data(){
     return {
-      assetId: "0",
+      asset: "0xa602bA5287Df6f85Fc16F7Fd6D7ea86F6A0F6d32",
       title: "",
       description: "",
       
@@ -51,12 +51,12 @@ export default {
       if (this.title.length < 1 || this.description.length < 1) {
         return;
       }
-      const obj = {
-        assetId: this.assetId,
-        title: this.title,
-        description: this.description,  
-      }
-      await this.createProposal(this.assetId, this.title, this.description);
+      
+      const  assetId = this.assetId;
+      const  title = this.title;
+      const  description = this.description;
+      
+      await this.createProposal({assetId, title, description});
     },
   }
 }

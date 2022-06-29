@@ -71,7 +71,10 @@ input{
 }
 //BORDER
 .has-border-bottom {
-  border-bottom: $mediumGray 1px solid !important;
+  border-bottom: $white 1px solid !important;
+}
+.has-full-borders {
+  border: $white 1px solid !important;
 }
 
 // Adding new color variables to the color map.
