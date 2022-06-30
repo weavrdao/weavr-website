@@ -32,10 +32,10 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
 
-  name: "quickProposal",
+  name: "newPaperProposal",
   data(){
     return {
-      asset: "0xa602bA5287Df6f85Fc16F7Fd6D7ea86F6A0F6d32",
+      assetId: "0",
       title: "",
       description: "",
       

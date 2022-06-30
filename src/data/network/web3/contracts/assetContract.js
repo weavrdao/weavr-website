@@ -43,7 +43,7 @@ class AssetContract {
 
   /**
    * Create a standard proposal
-   * @param {string} info Proposal info
+   * @param {bytes32} info Proposal info
    */
   async proposePaper(
     supermajority,
@@ -61,8 +61,8 @@ class AssetContract {
           gasLimit: 5000000
         }
       )
-
-    return (await tx.wait()).status
+    let status = (await tx.wait()).status
+    console.log(status)
   }
   /** 
    * Check if participant can make a proposal 

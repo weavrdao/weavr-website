@@ -97,16 +97,16 @@ class DAO {
     let proposalCID = await this.storageNetwork
       .addFile(
         {
-          title: title,
-          description: description
+          title: "title",
+          description: "description"
         }
       )
 
     if (proposalCID == null) {
       return
     }
-
-    let proposalURI = "ipfs://" + proposalCID.path
+    // console.log((await this.storageNetwork.getFile(proposalCID)))
+    let proposalURI = proposalCID.path
     console.log(proposalURI)
     let status = await assetContract.proposePaper(false, proposalURI)
 
