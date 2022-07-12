@@ -2,6 +2,7 @@
 const { ethers } = require("ethers")
 
 import EthereumClient from "../ethereum/ethereumClient"
+import { ParticipantType } from "@/models/common"
 
 const contractAbi = [
   // Make a buy order
@@ -10,6 +11,9 @@ const contractAbi = [
   // Create a standard proposal
   "function proposePaper(bool supermajority, bytes32 info) returns (uint256)",
 
+  // Create a participant proposal
+  "function proposeParticipant(ParticipantType participantType, address _participant, bytes32 info ) returns (uint256 id)",
+  
   // Vote Yes on a certain proposal
   "function voteYes(uint256 id)",
 
@@ -33,6 +37,9 @@ const startBlock = 0 // TODO: Inject the actual contract deployment block instea
  * @param {EthereumClient} ethereumClient Ethereum client
  */
 class AssetContract {
+  
+  
+
   constructor(
     ethereumClient,
     contractAddress
@@ -56,6 +63,32 @@ class AssetContract {
     let tx = await this.mutableContract
       .proposePaper(
         supermajority,
+        bytesInfo, 
+        {
+          gasLimit: 5000000
+        }
+      )
+    let status = (await tx.wait()).status
+    console.log(status)
+  }
+
+  /**
+   * Create a standard proposal
+   * @param {bytes32} info Proposal info
+   */
+  async proposeParticipant(
+    participantType, 
+    participant, 
+    info
+  ) {
+    console.log("Creating a proposal..")
+    console.log(this.mutableContract.address);
+    const bytesInfo = ethers.utils.id(info)
+    console.log("string: ", info, " bytes: ", bytesInfo)
+    let tx = await this.mutableContract
+      .proposeParticipant(
+        participantType,
+        participant,
         bytesInfo, 
         {
           gasLimit: 5000000

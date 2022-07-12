@@ -29,22 +29,18 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { CommonProposalType } from "@/models/common.js"
+import {ParticpantType} from "@/models/common.js"
+
 export default {
 
   name: "newPaperProposal",
   data(){
     return {
       assetId: "0",
-      title: "",
-      description: "",
-      proposalType: CommonProposalType.Paper
+      address: "",
+      pType: ParticpantType.null,
+      
     }
-  },
-  computed: {
-    ...mapGetters({
-      assetMap: "assetsById",
-    }),
   },
   methods: {
     ...mapActions({
@@ -57,13 +53,11 @@ export default {
         return;
       }
       
-      const assetAddr = await this.assetMap.get(this.assetId);
-      console.log("ADD" + assetAddr)
-      const title = this.title;
-      const description = this.description;
-      const proposalType = this.proposalType
+      const  assetId = this.assetId;
+      const  title = this.title;
+      const  description = this.description;
       
-      await this.createProposal({proposalType, assetAddr, title, description});
+      await this.createProposal({assetId, title, description});
     },
   }
 }

@@ -4,6 +4,7 @@ import { MarketOrderType } from "../models/marketOrder"
 import { bigIntMax, bigIntMin } from "../utils/common"
 import router from "../router/index"
 import { Vote } from "../models/vote"
+import { CommonProposalType, FrabricProposalType, ThreadProposalType } from "@/models/common.js"
 
 const wallet = ServiceProvider.wallet()
 const market = ServiceProvider.market()
@@ -51,6 +52,16 @@ const getters = {
     state.platform.assets
       .forEach(asset => {
         assetMap.set(asset.id, asset)
+      })
+
+    return assetMap
+  },
+
+  assetsAddressById(state) {
+    var assetMap = new Map()
+    state.platform.assets
+      .forEach(asset => {
+        assetMap.set(asset.id, asset.contract)
       })
 
     return assetMap
@@ -161,18 +172,52 @@ const actions = {
 
     context.commit("setProposalsForAsset", { assetId: assetId, proposals: assetProposals })
   },
-
+  /*
+    AT THE MOMENT THIS IS USING THE ID, BUT WE NEED TO PASS THE ADDRESS TO THE FUNCTION
+    SUGGESTION: GET THE ADDRESS FROM ID IN THE COMPONENT-SPECIFIC PROPOSAL
+  */
   async createProposal(context, props) {
-    let {title, description} = props
+    let {assetAddress, proposalType, title, description} = props
+  
+    // params.$toast.show("Confirming transaction...", {
+    //   duration: false
+    // });
+    // const x = await dao.vote("0", "0", "Yes");
+    switch (proposalType) {
+    case CommonProposalType.Paper: {
+      await dao.createPaperProposal(assetAddress, title, description)
+    } break;
+    case FrabricProposalType.Participant: {
+      await dao.createParticipantProposal(assetAddress, title, description)
+    } break;
+    default:
+      break;
+    }
+    const status = await dao.createProposal(assetAddress, title, description);
+
+    // params.$toast.clear();
+
+    // if (status) {
+    //   params.$toast.success("Transaction confirmed!");
+    //   context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
+    //   router.push("/dao/" + params.assetId + "/proposals")
+    // } else {
+    //   params.$toast.error("Transaction failed. See details in MetaMask.");
+    //   console.log("Transaction failed. See details in MetaMask.")
+    // }
+  },
+
+  async createParticipantProposal(context, props) {
+    let {particpantType, participant, title, description} = props
     let asset = "0xa602bA5287Df6f85Fc16F7Fd6D7ea86F6A0F6d32"
-    console.log("contexct", context)
+    console.log("context", context)
     
     // params.$toast.show("Confirming transaction...", {
     //   duration: false
     // });
     // const x = await dao.vote("0", "0", "Yes");
     console.log("STATE 1", title," ", description, " ", asset);
-    const status = await dao.createProposal(asset, title, description);
+    const status = await dao.createParticipantProposal(particpantType, participant, title, description);
     console.log("STATE 2", title," ", description, " ", asset);
     console.log(status);
     // params.$toast.clear();
