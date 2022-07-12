@@ -4,12 +4,12 @@
 
 <script>
 export default {
-    name: "ProposalList",
-    props: {
-        proposalStatus: {
-            type: String,
-            required: true,
-        }
+  name: "ProposalList",
+  props: {
+    proposalStatus: {
+      type: String,
+      required: true,
     }
+  }
 }
 </script>

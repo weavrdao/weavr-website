@@ -8,16 +8,16 @@ export default new createRouter({
   routes: [
     {
       path: '/',
-      redirect: 'dao/0/',
+      redirect: 'dao/0',
     },
     {
-      path: '/dao/:assetId/',
+      path: '/dao/:assetId/proposals',
       name: 'dao',
       props: true,
       component: Voting,
     },
     {
-      path: '/dao/:assetId/:proposalId',
+      path: '/dao/:assetId/proposal/:proposalId',
       name: 'proposal',
       props: true,
       component: Proposal,
