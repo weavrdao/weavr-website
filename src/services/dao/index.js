@@ -105,7 +105,7 @@ class DAO {
     if (proposalCID == null) {
       return
     }
-    // console.log((await this.storageNetwork.getFile(proposalCID)))
+    console.log((await this.storageNetwork.getFile(proposalCID)))
     let proposalURI = proposalCID.path
     console.log(proposalURI)
     let status = await assetContract.proposePaper(false, proposalURI)
@@ -132,8 +132,8 @@ class DAO {
     let proposalCID = await this.storageNetwork
       .addFile(
         {
-          title: "title",
-          description: "description"
+          title: title,
+          description: description
         }
       )
 
