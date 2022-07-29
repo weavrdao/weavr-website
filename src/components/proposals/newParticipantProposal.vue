@@ -2,19 +2,25 @@
   <div class="container p-5">
     <!-- PAPER PROPOSAL FORM -->
     <div class="field">
-      <label class="label">Title</label>
-      <div class="control">
-        <input class="input" v-model="title" type="text" placeholder="Text input">
+      <div class="select">
+        <select
+          v-model="selectedType"
+        >
+          <option 
+            v-for="(value, name) in pTypeList"
+            :key="name"
+          >
+            {{name}}
+          </option>
+        </select>
       </div>
     </div>
-    
-    <div class="field">
-      <label class="label">Description</label>
+    <div class="field" v-if="selectedType!='Null'">
+      <label class="label">Address</label>
       <div class="control">
-        <textarea class="textarea" v-model="description" placeholder="e.g. Hello world"></textarea>
+        <input class="input" v-model="address" type="text" placeholder="Text input">
       </div>
     </div>
-
     <div class="field is-grouped">
       <div class="control">
         <button class="button is-link" @click="publish">Submit Proposal</button>
@@ -29,8 +35,8 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import {ParticpantType} from "@/models/common.js"
-
+import {ParticipantType} from "@/models/common.js";
+import {ethers} from "ethers";
 export default {
 
   name: "newPaperProposal",
@@ -38,9 +44,15 @@ export default {
     return {
       assetId: "0",
       address: "",
-      pType: ParticpantType.null,
-      
+      title: "",
+      description: "",
+      pTypeList: ParticipantType,
+      selectedType: "Null"
+
+
     }
+  },
+  computed: {
   },
   methods: {
     ...mapActions({
@@ -49,15 +61,17 @@ export default {
       createProposal: "createProposal",
     }),
     async publish() {
-      if (this.title.length < 1 || this.description.length < 1) {
+      if (this.address.length < 1) {
         return;
       }
       
       const  assetId = this.assetId;
       const  title = this.title;
       const  description = this.description;
-      
-      await this.createProposal({assetId, title, description});
+      const isAddr = ethers.utils.isAddress(this.address);
+      console.log(isAddr)
+      console.log(this.pTypeList[this.selectedType]);
+      // await this.createProposal({assetId, title, description});
     },
   }
 }

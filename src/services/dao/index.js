@@ -92,13 +92,13 @@ class DAO {
     title,
     description
   ) {
-    const assetContract = new AssetContract(this.ethereumClient, "0xa602bA5287Df6f85Fc16F7Fd6D7ea86F6A0F6d32")
+    const assetContract = new AssetContract(this.ethereumClient, asset)
     console.log("IndexJS", asset, ", ", title, ", ", description)
     let proposalCID = await this.storageNetwork
       .addFile(
         {
-          title: "title",
-          description: "description"
+          title: title,
+          description: description
         }
       )
 
@@ -127,8 +127,8 @@ class DAO {
     title,
     description,
   ) {
-    const assetContract = new AssetContract(this.ethereumClient, "0xa602bA5287Df6f85Fc16F7Fd6D7ea86F6A0F6d32")
-    console.log("IndexJS", asset, ", ", title, ", ", description)
+    const assetContract = new AssetContract(this.ethereumClient, asset)
+    console.log("IndexJS:\t", asset, ", ", title, ", ", description)
     let proposalCID = await this.storageNetwork
       .addFile(
         {
