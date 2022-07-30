@@ -1,18 +1,14 @@
 const network = require("../../../../utils/network")
 const { create } = require("ipfs-http-client")
 import { ethers } from "ethers"
-import bs58 from "bs58";
 import StorageNetwork from "../storageNetwork"
 import { base58 } from "ethers/lib/utils"
 const ipfsAPIClient = create("https://ipfs.infura.io:5001/api/v0")
-
-
 
 class IPFSStorageNetwork extends StorageNetwork {
   constructor() {
     super()
   }
-
 
   getBytes32FromIpfsHash(ipfsListing) {
     const bytesArray = base58
