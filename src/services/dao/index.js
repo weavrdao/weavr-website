@@ -147,6 +147,38 @@ class DAO {
     return status
   }
 
+  async createUpgradeProposal(
+    assetAddress,
+    instanceAddress,
+    beaconAddress,
+    version,
+    codeAddress,
+    upgradeData,
+    title,
+    description,
+  ) {
+    const assetContract = new AssetContract(this.ethereumClient, assetAddress);
+    const ipfsPathBytes = await this.storageNetwork
+      .uploadAndGetPathAsBytes(
+        {
+          title: title,
+          description: description
+        }
+      );
+
+    const createUpgradeProposalTx = await assetContract.proposeUpgrade(
+      beaconAddress,
+      instanceAddress,
+      version,
+      codeAddress,
+      upgradeData,
+      ipfsPathBytes,
+    );
+
+    const txReciept = await createUpgradeProposalTx.wait();
+    return txReciept.status;
+  }
+
   /**
    * Vote on a proposal
    * @param {Asset} asset Asset that the DAO controls

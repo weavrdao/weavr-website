@@ -1,8 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Voting from '@/components/sections/Voting.vue'
-import Proposal from '@/components/sections/Proposal.vue'
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue"
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue"
+import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue"
 
 export default new createRouter({
   history: createWebHashHistory(),
@@ -25,6 +25,11 @@ export default new createRouter({
         {
           path: "participantProposal",
           component: newParticipantProposal,
+          props: {assetId: "dd"}
+        },
+        {
+          path: "upgradeProposal",
+          component: newUpgradeProposal,
           props: {assetId: "dd"}
         }
       ]

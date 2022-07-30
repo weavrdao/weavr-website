@@ -1,5 +1,6 @@
 const network = require("../../../../utils/network")
 const { create } = require("ipfs-http-client")
+import { ethers } from "ethers"
 import StorageNetwork from "../storageNetwork"
 import { base58 } from "ethers/lib/utils"
 const ipfsAPIClient = create("https://ipfs.infura.io:5001/api/v0")
@@ -96,6 +97,11 @@ class IPFSStorageNetwork extends StorageNetwork {
     const responses = (await Promise.all(requests)).filter(Boolean)
     
     return responses
+  }
+
+  async uploadAndGetPathAsBytes(file) {
+    const cid = await this.addFile(file);
+    return ethers.utils.formatBytes32String(cid.path);
   }
 }
 
