@@ -1,6 +1,6 @@
 import GraphQLAPIMapper from "../graphQLAPIMapper"
 import Asset  from "../../../../models/asset"
-import {PaperProposal}  from "../../../../models/proposals"
+import {Proposal}  from "../../../../models/proposal"
 import { Vote }  from "../../../../models/vote"
 import { MarketOrder } from "../../../../models/marketOrder"
 
