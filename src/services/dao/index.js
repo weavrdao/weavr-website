@@ -1,6 +1,6 @@
 import * as CommonUtils from "../../utils/common"
 import StorageNetwork from "../../data/network/storage/storageNetwork"
-import Proposal from "../../models/proposal"
+import {PaperProposal} from "../../models/proposals"
 import { VoteType } from "../../models/vote"
 import { GraphQLAPIClient, ALL_ASSET_PROPOSALS_QUERY } from "../../data/network/graph/graphQLAPIClient"
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
@@ -63,7 +63,7 @@ class DAO {
       let proposal = proposals[i]
       let data = proposalOffchainDataArray[i]
 
-      let completeProposal = new Proposal(
+      let completeProposal = new PaperProposal(
         proposal.id,
         proposal.creatorAddress,
         proposal.dataURI,
