@@ -45,12 +45,16 @@ export default {
     ...mapGetters({
       assetMap: "assetsById",
     }),
+
+    asset() {
+      return this.assetMap.get(this.assetId);
+    },
   },
   methods: {
     ...mapActions({
       refresh: "refreshProposalsDataForAsset",
       syncWallet: "syncWallet",
-      createProposal: "createProposal",
+      createProposal: "createPaperProposal",
     }),
     async publish() {
       if (this.title.length < 1 || this.description.length < 1) {
@@ -63,8 +67,12 @@ export default {
       const description = this.description;
       const proposalType = this.proposalType
       
-      await this.createProposal({proposalType, assetAddr, title, description});
+      await this.createPaperProposal({proposalType, assetAddr, title, description});
     },
-  }
+  },
+  mounted() {
+    this.refresh({ assetId: this.assetId });
+    this.syncWallet();
+  },
 }
 </script>
