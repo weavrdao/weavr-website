@@ -13,36 +13,44 @@ import BaseProposal from "./baseProposal";
 */
 
 class FrabricChangeProposal extends BaseProposal{
-  constructor(
-    id,
-    thread,
-    frabric,
-    creator,
-    type,
-    state,
-    votes,
-    supermajority,
-    startTimestamp,
-    endTimestamp,
-    newFrabric,
-    governor
-  ) {
-    super(
-      id,
-      thread,
-      frabric,
-      creator,
-      type,
-      state,
-      votes,
-      supermajority,
-      startTimestamp,
-      endTimestamp
-    );
-    this.newFrabric = newFrabric;
-    this.governor = governor;
+  defaults () {
+    return {
+      id: null,
+      thread: [],
+      frabric: "",
+      governor: "",
+    }
   }
+  // constructor(
+  //   id,
+  //   thread,
+  //   frabric,
+  //   creator,
+  //   type,
+  //   state,
+  //   votes,
+  //   supermajority,
+  //   startTimestamp,
+  //   endTimestamp,
+  //   newFrabric,
+  //   governor
+  // ) {
+  //   super(
+  //     id,
+  //     thread,
+  //     frabric,
+  //     creator,
+  //     type,
+  //     state,
+  //     votes,
+  //     supermajority,
+  //     startTimestamp,
+  //     endTimestamp
+  //   );
+  //   this.newFrabric = newFrabric;
+  //   this.governor = governor;
+  // }
 }
 
 
-export default { FrabricChangeProposal }
+export default FrabricChangeProposal

@@ -14,37 +14,46 @@ import BaseProposal from "./baseProposal";
 */
 
 class ParticipantRemovalProposal extends BaseProposal{
-  constructor(
-    id,
-    thread,
-    frabric,
-    creator,
-    type,
-    state,
-    votes,
-    supermajority,
-    startTimestamp,
-    endTimestamp,
-    description,
-    participant,
-    removalFee
-  ) {
-    super(
-      id,
-      thread,
-      frabric,
-      creator,
-      type,
-      state,
-      votes,
-      supermajority,
-      startTimestamp,
-      endTimestamp
-    );
-    this.description = description;
-    this.participant = participant;
-    this.removalFee = removalFee;
+  defaults() {
+    return {
+      id:  null,
+      frabric: [],
+      thread: [],
+      participant: "",
+      removalFee: null
+    }
   }
+  // constructor(
+  //   id,
+  //   thread,
+  //   frabric,
+  //   creator,
+  //   type,
+  //   state,
+  //   votes,
+  //   supermajority,
+  //   startTimestamp,
+  //   endTimestamp,
+  //   description,
+  //   participant,
+  //   removalFee
+  // ) {
+  //   super(
+  //     id,
+  //     thread,
+  //     frabric,
+  //     creator,
+  //     type,
+  //     state,
+  //     votes,
+  //     supermajority,
+  //     startTimestamp,
+  //     endTimestamp
+  //   );
+  //   this.description = description;
+  //   this.participant = participant;
+  //   this.removalFee = removalFee;
+  // }
 }
 
 export default {ParticipantRemovalProposal}

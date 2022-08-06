@@ -17,43 +17,54 @@ import BaseProposal from "./baseProposal";
 */
 
 class ThreadProposal extends BaseProposal{
-  constructor(
-    id,
-    thread,
-    frabric,
-    creator,
-    type,
-    state,
-    votes,
-    supermajority,
-    startTimestamp,
-    endTimestamp,
-    description,
-    governor,
-    name,
-    symbol,
-    descriptor,
-    data
-  ) {
-    super(
-      id,
-      thread,
-      frabric,
-      creator,
-      type,
-      state,
-      votes,
-      supermajority,
-      startTimestamp,
-      endTimestamp
-    );
-    this.description = description;
-    this.name = name;
-    this.symbol = symbol;
-    this.descriptor = descriptor;
-    this.data = data;
-    this.governor = governor;
+  defaults(){
+    return {
+      id: null,
+      frabric: [],
+      governor: "",
+      name: "",
+      symbol: "",
+      descriptor: "",
+      data: ""
+    }
   }
+  // constructor(
+  //   id,
+  //   thread,
+  //   frabric,
+  //   creator,
+  //   type,
+  //   state,
+  //   votes,
+  //   supermajority,
+  //   startTimestamp,
+  //   endTimestamp,
+  //   description,
+  //   governor,
+  //   name,
+  //   symbol,
+  //   descriptor,
+  //   data
+  // ) {
+  //   super(
+  //     id,
+  //     thread,
+  //     frabric,
+  //     creator,
+  //     type,
+  //     state,
+  //     votes,
+  //     supermajority,
+  //     startTimestamp,
+  //     endTimestamp
+  //   );
+  //   this.description = description;
+  //   this.name = name;
+  //   this.symbol = symbol;
+  //   this.descriptor = descriptor;
+  //   this.data = data;
+  //   this.governor = governor;
+  // }
 }
 
 

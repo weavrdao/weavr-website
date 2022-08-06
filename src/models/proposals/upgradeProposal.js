@@ -35,4 +35,41 @@ export class UpgradeProposal extends BaseProposal {
       version: "",
     }
   }
+  // constructor(
+  //   id,
+  //   thread,
+  //   frabric,
+  //   creator,
+  //   type,
+  //   state,
+  //   votes,
+  //   supermajority,
+  //   startTimestamp,
+  //   endTimestamp,
+  //   description,
+  //   beacon,
+  //   instance,
+  //   version,
+  //   code,
+  //   data
+  // ) {
+  //   super(
+  //     id,
+  //     thread,
+  //     frabric,
+  //     creator,
+  //     type,
+  //     state,
+  //     votes,
+  //     supermajority,
+  //     startTimestamp,
+  //     endTimestamp
+  //   );
+  //   this.description = description;
+  //   this.beacon = beacon;
+  //   this.instance = instance;
+  //   this.version = version;
+  //   this.code = code;
+  //   this.data = data;
+  // }
 }

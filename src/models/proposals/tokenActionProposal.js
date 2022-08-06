@@ -27,4 +27,41 @@ export class TokenActionProposal extends BaseProposal {
       token: "",
     }
   }
+  // constructor(
+  //   id,
+  //   thread,
+  //   frabric,
+  //   creator,
+  //   type,
+  //   state,
+  //   votes,
+  //   supermajority,
+  //   startTimestamp,
+  //   endTimestamp,
+  //   description,
+  //   token,
+  //   target,
+  //   mint,
+  //   price,
+  //   amount
+  // ) {
+  //   super(
+  //     id,
+  //     thread,
+  //     frabric,
+  //     creator,
+  //     type,
+  //     state,
+  //     votes,
+  //     supermajority,
+  //     startTimestamp,
+  //     endTimestamp
+  //   );
+  //   this.description = description;
+  //   this.token = token;
+  //   this.target = target;
+  //   this.mint = mint;
+  //   this.price = price;
+  //   this.amount = amount;
+  // }
 }
