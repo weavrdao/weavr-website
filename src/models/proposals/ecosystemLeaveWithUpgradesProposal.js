@@ -14,38 +14,47 @@ import BaseProposal from "./baseProposal";
 */
 
 class EcosystemLeaveWithUpgradesProposal extends BaseProposal{
-  constructor(
-    id,
-    thread,
-    frabric,
-    creator,
-    type,
-    state,
-    votes,
-    supermajority,
-    startTimestamp,
-    endTimestamp,
-    description,
-    newFrabric,
-    governor
-  ) {
-    super(
-      id,
-      thread,
-      frabric,
-      creator,
-      type,
-      state,
-      votes,
-      supermajority,
-      startTimestamp,
-      endTimestamp
-    );
-    this.description = description;
-    this.newFrabric = newFrabric;
-    this.governor = governor;
+  
+  defaults(){
+    return {
+      id: null,
+      thread: [],
+      frabric: "",
+      governor: ""  
+    }
   }
+  // constructor(
+  //   id,
+  //   thread,
+  //   frabric,
+  //   creator,
+  //   type,
+  //   state,
+  //   votes,
+  //   supermajority,
+  //   startTimestamp,
+  //   endTimestamp,
+  //   description,
+  //   newFrabric,
+  //   governor
+  // ) {
+  //   super(
+  //     id,
+  //     thread,
+  //     frabric,
+  //     creator,
+  //     type,
+  //     state,
+  //     votes,
+  //     supermajority,
+  //     startTimestamp,
+  //     endTimestamp
+  //   );
+  //   this.description = description;
+  //   this.newFrabric = newFrabric;
+  //   this.governor = governor;
+  // }
 }
 
 
-export default { EcosystemLeaveWithUpgradesProposal }
+export default EcosystemLeaveWithUpgradesProposal

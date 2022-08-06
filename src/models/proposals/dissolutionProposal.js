@@ -14,38 +14,47 @@ import BaseProposal from "./baseProposal";
 */
 
 class DissolutionProposal extends BaseProposal{
-  constructor(
-    id,
-    thread,
-    frabric,
-    creator,
-    type,
-    state,
-    votes,
-    supermajority,
-    startTimestamp,
-    endTimestamp,
-    description,
-    token,
-    price
-  ) {
-    super(
-      id,
-      thread,
-      frabric,
-      creator,
-      type,
-      state,
-      votes,
-      supermajority,
-      startTimestamp,
-      endTimestamp
-    );
-    this.description = description;
-    this.token = token;
-    this.price = price
+
+  defaults() {
+    return {
+      id: null,
+      thread: [],
+      token: "",
+      price: null
+    }
   }
+  // constructor(
+  //   id,
+  //   thread,
+  //   frabric,
+  //   creator,
+  //   type,
+  //   state,
+  //   votes,
+  //   supermajority,
+  //   startTimestamp,
+  //   endTimestamp,
+  //   description,
+  //   token,
+  //   price
+  // ) {
+  //   super(
+  //     id,
+  //     thread,
+  //     frabric,
+  //     creator,
+  //     type,
+  //     state,
+  //     votes,
+  //     supermajority,
+  //     startTimestamp,
+  //     endTimestamp
+  //   );
+  //   this.description = description;
+  //   this.token = token;
+  //   this.price = price
+  // }
 }
 
 
-export default {DissolutionProposal}
+export default DissolutionProposal

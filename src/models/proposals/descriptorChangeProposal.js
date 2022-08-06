@@ -12,36 +12,49 @@ import BaseProposal from "./baseProposal";
 */
 
 class DescriptorChangeProposal extends BaseProposal{
-  constructor(
-    id,
-    thread,
-    frabric,
-    creator,
-    type,
-    state,
-    votes,
-    supermajority,
-    startTimestamp,
-    endTimestamp,
-    description,
-    descriptor
-  ) {
-    super(
-      id,
-      thread,
-      frabric,
-      creator,
-      type,
-      state,
-      votes,
-      supermajority,
-      startTimestamp,
-      endTimestamp
-    );
-    this.description = description;
-    this.descriptor = descriptor;
+
+  model() {
+    return BaseProposal;
   }
+
+  defaults() {
+    return {
+      id: null,
+      thread: [],
+      descriptor: ""
+    }
+  }
+
+  // constructor(
+  //   id,
+  //   thread,
+  //   frabric,
+  //   creator,
+  //   type,
+  //   state,
+  //   votes,
+  //   supermajority,
+  //   startTimestamp,
+  //   endTimestamp,
+  //   description,
+  //   descriptor
+  // ) {
+  //   super(
+  //     id,
+  //     thread,
+  //     frabric,
+  //     creator,
+  //     type,
+  //     state,
+  //     votes,
+  //     supermajority,
+  //     startTimestamp,
+  //     endTimestamp
+  //   );
+  //   this.description = description;
+  //   this.descriptor = descriptor;
+  // }
 }
 
 
-export default { DescriptorChangeProposal }
+export default DescriptorChangeProposal

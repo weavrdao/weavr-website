@@ -15,40 +15,49 @@ import BaseProposal from "./baseProposal";
 
 */
 
-class BondRemovalProposal extends BaseProposal{
-  constructor(
-    id,
-    thread,
-    frabric,
-    creator,
-    type,
-    state,
-    votes,
-    supermajority,
-    startTimestamp,
-    endTimestamp,
-    description,
-    participant,
-    slash,amount
-  ) {
-    super(
-      id,
-      thread,
-      frabric,
-      creator,
-      type,
-      state,
-      votes,
-      supermajority,
-      startTimestamp,
-      endTimestamp
-    );
-    this.description = description;
-    this.participant = participant;
-    this.slash = slash;
-    this.amount = amount;
+class BondRemovalProposal extends BaseProposal {
+  defaults() {
+    return {
+      id: null,
+      frabric: [],
+      participant: "",
+      slash: false,
+      amount: null,
+    } 
   }
+  // constructor(
+  //   id,
+  //   thread,
+  //   frabric,
+  //   creator,
+  //   type,
+  //   state,
+  //   votes,
+  //   supermajority,
+  //   startTimestamp,
+  //   endTimestamp,
+  //   description,
+  //   participant,
+  //   slash,amount
+  // ) {
+  //   super(
+  //     id,
+  //     thread,
+  //     frabric,
+  //     creator,
+  //     type,
+  //     state,
+  //     votes,
+  //     supermajority,
+  //     startTimestamp,
+  //     endTimestamp
+  //   );
+  //   this.description = description;
+  //   this.participant = participant;
+  //   this.slash = slash;
+  //   this.amount = amount;
+  // }
 }
 
 
-export default {BondRemovalProposal}
+export default BondRemovalProposal
