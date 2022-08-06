@@ -1,6 +1,7 @@
 const network = require("../../../../utils/network")
 const { create } = require("ipfs-http-client")
 import { ethers } from "ethers"
+import bs58 from "bs58";
 import StorageNetwork from "../storageNetwork"
 import { base58 } from "ethers/lib/utils"
 const ipfsAPIClient = create("https://ipfs.infura.io:5001/api/v0")
@@ -36,8 +37,7 @@ class IPFSStorageNetwork extends StorageNetwork {
   getFile = (
     name
   ) => new Promise((resolve, reject) => {
-    console.log("into IPFSStorageNetwork");
-    const url = `https://ipfs.infura.io:5001/api/v0/cat`
+    const url = "https://ipfs.infura.io:5001/api/v0/cat"
   
     let params = { 
       arg: name
@@ -62,10 +62,11 @@ class IPFSStorageNetwork extends StorageNetwork {
       })
   })
 
+  // eslint-disable-next-line class-methods-use-this
   async getFiles(names) {
     console.log("Requesting files from IPFS")
 
-    const url = `https://ipfs.infura.io:5001/api/v0/cat`
+    const url = "https://ipfs.infura.io:5001/api/v0/cat"
     
     let headers = { }
     //headers["Authorization"] = `Basic ${auth}`
@@ -101,7 +102,7 @@ class IPFSStorageNetwork extends StorageNetwork {
 
   async uploadAndGetPathAsBytes(file) {
     const cid = await this.addFile(file);
-    return ethers.utils.formatBytes32String(cid.path);
+    return this.getBytes32FromIpfsHash(cid.path);
   }
 }
 

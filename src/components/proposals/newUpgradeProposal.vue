@@ -2,23 +2,21 @@
   <div class="container p-5">
     <!-- PAPER PROPOSAL FORM -->
     <div class="field">
-      <div class="select">
-        <select
-          v-model="selectedType"
-        >
-          <option 
-            v-for="(value, name) in pTypeList"
-            :key="name"
-          >
-            {{name}}
-          </option>
-        </select>
+      <label class="label">Upgrade Target</label>
+      <div class="control">
+        <input class="input" v-model="codeAddress" type="text" placeholder="New contract address">
       </div>
     </div>
-    <div class="field" v-if="selectedType!='Null'">
-      <label class="label">Address</label>
+    <div class="field">
+      <label class="label">Proposal Title</label>
       <div class="control">
-        <input class="input" v-model="address" type="text" placeholder="Text input">
+        <input class="input" v-model="title" type="text" placeholder="Title">
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Proposal Description</label>
+      <div class="control">
+        <textarea class="input" v-model="description" type="text" placeholder="Description"></textarea>
       </div>
     </div>
     <div class="field is-grouped">
@@ -35,7 +33,6 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import {ParticipantType} from "@/models/common.js";
 import {ethers} from "ethers";
 export default {
 
@@ -43,14 +40,16 @@ export default {
   data(){
     return {
       assetId: "0",
-      address: "",
+      codeAddress: "",
       title: "",
       description: "",
-      pTypeList: ParticipantType,
       selectedType: "Null"
     }
   },
   computed: {
+    ...mapGetters({
+      assetMap: "assetsById",
+    }),
   },
   methods: {
     ...mapActions({
@@ -59,17 +58,18 @@ export default {
       createUpgradeProposal: "createUpgradeProposal",
     }),
     async publish() {
-      if (this.address.length < 1) {
+      if (!ethers.utils.isAddress(this.codeAddress)) {
         return;
       }
       
-      const  assetId = this.assetId;
-      const  title = this.title;
-      const  description = this.description;
-      const isAddr = ethers.utils.isAddress(this.address);
-      console.log(isAddr)
-      console.log(this.pTypeList[this.selectedType]);
-      await this.createUpgradeProposal({assetId, title, description});
+      const assetAddress = await this.assetMap.get(this.assetId);
+
+      await this.createUpgradeProposal({
+        assetAddress,
+        codeAddress: this.codeAddress,
+        title: this.title,
+        description: this.description,
+      });
     },
   }
 }

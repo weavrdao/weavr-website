@@ -219,6 +219,24 @@ const actions = {
     // }
   },
 
+  async createUpgradeProposal(context, props) {
+    const {
+      assetAddress,
+      codeAddress,
+      title,
+      description,
+    } = props;
+
+    const status = await dao.createUpgradeProposal(
+      assetAddress,
+      codeAddress,
+      title,
+      description
+    )
+
+    console.log(status);
+  },
+
   async voteOnProposal(context, params) {
     let asset = context.getters.assetsById.get(params.assetId)
     let proposal = context.getters.proposalsById.get(params.proposalId)

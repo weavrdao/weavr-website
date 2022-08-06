@@ -13,6 +13,8 @@ const contractAbi = [
 
   // Create a participant proposal
   "function proposeParticipant(uint16 participantType, address _participant, bytes32 info) returns (uint256 id)",
+
+  "function proposeUpgrade(address beacon, address instance, uint256 version, address code, bytes data, bytes32 info) returns (uint256 id)",
   
   // Vote Yes on a certain proposal
   "function voteYes(uint256 id)",
@@ -37,9 +39,6 @@ const startBlock = 0 // TODO: Inject the actual contract deployment block instea
  * @param {EthereumClient} ethereumClient Ethereum client
  */
 class AssetContract {
-  
-  
-
   constructor(
     ethereumClient,
     contractAddress
@@ -101,6 +100,42 @@ class AssetContract {
     let status = (await tx.wait()).status
     console.log(status)
   }
+
+  // eslint-disable-next-line class-methods-use-this
+  async proposeUpgrade(
+    beacon,
+    instance,
+    version,
+    code,
+    data,
+    info,
+  ) {
+    console.log("Creating upgrade proposal...");
+    console.log({
+      beacon,
+      instance,
+      version,
+      code,
+      data,
+      info,
+    });
+    const tx = await this.mutableContract
+      .proposeUpgrade(
+        beacon,
+        instance,
+        version,
+        code,
+        data,
+        info,
+        {
+          gasLimit: 5000000,
+        }
+      );
+    const status = (await tx.wait()).status;
+    console.log(status);
+    return status;
+  }
+
   /** 
    * Check if participant can make a proposal 
   */
