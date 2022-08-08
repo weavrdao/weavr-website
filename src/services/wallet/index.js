@@ -11,7 +11,7 @@ class Wallet {
   ) {
     this.client = ethereumClient
   }
-
+z
   async getState() {
     await this.client.syncWallet()
 

@@ -28,6 +28,9 @@ const contractAbi = [
   // Can Propose
   "function canPropose(address proposer) returns (bool)",
 
+  // Vouch a participant
+  "function vouch(address participant, bytes signature)",
+
   // Event that is triggered every time an order is filled on the market
   "event Filled(address indexed sender, address indexed recipient, uint256 indexed price, uint256 amount)"
 
@@ -132,6 +135,24 @@ class AssetContract {
     console.log(status);
     return status;
   }
+
+  /**
+   * Vouch a participant
+   */
+  async vouch(participant, signature) {
+    const bytesSignature = ethers.utils.id(signature);
+    let tx = this.mutableContract.vouch(
+      participant,
+      bytesSignature,
+      {
+        gasLimit: 5000000
+      }
+    );
+    // this.mutableContract.signer
+    let status = (await tx.wait()).status;
+    console.log(status);
+    return status
+  } 
 
   /** 
    * Check if participant can make a proposal 

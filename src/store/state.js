@@ -262,6 +262,22 @@ const actions = {
       params.$toast.error("Transaction failed. See details in MetaMask.");
     }
   },
+
+  async createVouch(context, props) {
+    let { assetAddr, participant} = props
+    console.log("assetAddr: ", assetAddr,props);
+    const status = await dao.vouch("0x8C1a3931102f4D65c91f2DDA5166f8970f2760A8", "0x4C3D84E96EB3c7dEB30e136f5150f0D4b58C7bdB")
+      },
+  // async vouch(params) {
+  //   console.log("PARAMS: ", params);
+  //   const domain = {
+  //     name: 'Frabric Protocol',
+  //     version: '1',
+  //     chainId: 4,
+  //   }
+  //   // const status = await this.dao.vouch(contractAddress, domain, "0x4C3D84E96EB3c7dEB30e136f5150f0D4b58C7bdB")
+  //   console.log("STATE: ", status);  
+  // },
 }
 
 const mutations = {
