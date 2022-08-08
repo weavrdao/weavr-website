@@ -3,7 +3,7 @@ const { ethers } = require("ethers")
 
 import EthereumClient from "../ethereum/ethereumClient"
 import { ParticipantType } from "@/models/common"
-
+import { base58 } from "ethers/lib/utils"
 const contractAbi = [
   // Make a buy order
   "function buy(uint256 amount, uint256 price) payable",
@@ -12,7 +12,7 @@ const contractAbi = [
   "function proposePaper(bool supermajority, bytes32 info) returns (uint256)",
 
   // Create a participant proposal
-  "function proposeParticipant(ParticipantType participantType, address _participant, bytes32 info ) returns (uint256 id)",
+  "function proposeParticipant(uint16 participantType, address _participant, bytes32 info) returns (uint256 id)",
   
   // Vote Yes on a certain proposal
   "function voteYes(uint256 id)",
@@ -56,42 +56,46 @@ class AssetContract {
     supermajority,
     info
   ) {
-    console.log("Creating a proposal..")
     console.log(this.mutableContract.address);
     const bytesInfo = ethers.utils.id(info)
-    console.log("string: ", info, " bytes: ", bytesInfo)
     let tx = await this.mutableContract
       .proposePaper(
         supermajority,
         bytesInfo, 
         {
-          gasLimit: 5000000
+          gasLimit: 500000
         }
       )
-    let status = (await tx.wait()).status
-    console.log(status)
+    await tx.wait()
   }
 
   /**
-   * Create a standard proposal
+   * Create a participant proposal
    * @param {bytes32} info Proposal info
    */
-  async proposeParticipant(
+   async proposeParticipant(
     participantType, 
     participant, 
     info
   ) {
-    console.log("Creating a proposal..")
+    console.log("Creating a proposal..", info)
     console.log(this.mutableContract.address);
-    const bytesInfo = ethers.utils.id(info)
-    console.log("string: ", info, " bytes: ", bytesInfo)
+    // const bytesInfo = ethers.utils.id(info)
+    
+    // console.log("string: ", info, " bytes: ", bytesInfo)
+      const hashHex = '1220' + info.slice(2)
+      const hashBytes = Buffer.from(hashHex, 'hex')
+      const hashStr = base58.encode(hashBytes)
+      console.log("info: ", info,  "|| decoded: ", hashStr )
+  
+  
     let tx = await this.mutableContract
       .proposeParticipant(
         participantType,
         participant,
-        bytesInfo, 
+        info, 
         {
-          gasLimit: 5000000
+          gasLimit: 50000006
         }
       )
     let status = (await tx.wait()).status
@@ -101,7 +105,14 @@ class AssetContract {
    * Check if participant can make a proposal 
   */
    async canPropose(proposer){
-
+    let tx = await this.mutableContract
+      .canPropose(proposer,
+        {
+          gasLimit: 5000000
+        }
+      )
+    let status = (await tx.wait()).status
+    console.log(status)
    }
 
   /**
