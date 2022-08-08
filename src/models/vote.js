@@ -1,14 +1,14 @@
-/* eslint-disable class-methods-use-this */
-import { Model } from "vue-mc";
 import BaseProposal from "./proposals/baseProposal";
 
 /**
  * Vote model.
  * @property {string} voterAddress Address of the voter
- * @property {VoteType} voteDirection Type of the vote posted
  * @property {number} count Voting power of the voter
  */
-export class Vote extends Model {
+
+export class Vote extends BaseProposal {
+
+  // Default attributes that define the "empty" state.
   defaults() {
     return {
       voter: "",
@@ -18,8 +18,10 @@ export class Vote extends Model {
   }
 }
 
-export const VoteType = {
+const VoteType = {
   Yes: "Yes",
   No: "No",
   Abstain: "Abstain"
 }
+
+export { VoteType }

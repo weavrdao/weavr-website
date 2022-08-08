@@ -13,7 +13,7 @@ import BaseProposal from "./baseProposal";
  * @property {number} price Price proposed for the buyout
 */
 
-class DissolutionProposal extends BaseProposal{
+export class DissolutionProposal extends BaseProposal{
 
   defaults() {
     return {
@@ -55,6 +55,3 @@ class DissolutionProposal extends BaseProposal{
   //   this.price = price
   // }
 }
-
-
-export default DissolutionProposal

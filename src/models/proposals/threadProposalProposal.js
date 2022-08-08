@@ -13,7 +13,7 @@ import BaseProposal from "./baseProposal";
  * @property {string} newThread 
 */
 
-class ThreadProposalProposal extends BaseProposal{
+export class ThreadProposalProposal extends BaseProposal{
   defaults(){
     return {
       id: null,
@@ -52,6 +52,3 @@ class ThreadProposalProposal extends BaseProposal{
   //   this.newThread = newThread
   // }
 }
-
-
-export default ThreadProposalProposal

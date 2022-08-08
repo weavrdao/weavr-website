@@ -73,5 +73,3 @@ export class UpgradeProposal extends BaseProposal {
   //   this.data = data;
   // }
 }
-
-export default UpgradeProposal

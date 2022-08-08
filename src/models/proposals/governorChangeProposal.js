@@ -12,7 +12,7 @@ import BaseProposal from "./baseProposal";
  * @property {string} governor Governor proposed
 */
 
-class GovernorChangeProposal extends BaseProposal{
+export class GovernorChangeProposal extends BaseProposal{
   defaults(){
     return {
       id: null,
@@ -50,6 +50,3 @@ class GovernorChangeProposal extends BaseProposal{
   //   this.governor = governor;
   // }
 }
-
-
-export default GovernorChangeProposal

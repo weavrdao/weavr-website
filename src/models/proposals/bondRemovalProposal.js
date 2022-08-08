@@ -15,7 +15,7 @@ import BaseProposal from "./baseProposal";
 
 */
 
-class BondRemovalProposal extends BaseProposal {
+export class BondRemovalProposal extends BaseProposal {
   defaults() {
     return {
       id: null,
@@ -58,6 +58,3 @@ class BondRemovalProposal extends BaseProposal {
   //   this.amount = amount;
   // }
 }
-
-
-export default BondRemovalProposal

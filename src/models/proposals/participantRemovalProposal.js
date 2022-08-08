@@ -13,7 +13,7 @@ import BaseProposal from "./baseProposal";
  * @property {number} removalFee Fee to pay for the removal
 */
 
-class ParticipantRemovalProposal extends BaseProposal{
+export class ParticipantRemovalProposal extends BaseProposal{
   defaults() {
     return {
       id:  null,
@@ -55,5 +55,3 @@ class ParticipantRemovalProposal extends BaseProposal{
   //   this.removalFee = removalFee;
   // }
 }
-
-export default ParticipantRemovalProposal

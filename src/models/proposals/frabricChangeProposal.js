@@ -12,7 +12,7 @@ import BaseProposal from "./baseProposal";
  * @property {string} description Description of the proposal
 */
 
-class FrabricChangeProposal extends BaseProposal{
+export class FrabricChangeProposal extends BaseProposal{
   defaults () {
     return {
       id: null,
@@ -51,6 +51,3 @@ class FrabricChangeProposal extends BaseProposal{
   //   this.governor = governor;
   // }
 }
-
-
-export default FrabricChangeProposal

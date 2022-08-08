@@ -13,7 +13,7 @@ import BaseProposal from "./baseProposal";
  * @property {string} governor governor for the thread in the new ecosystem
 */
 
-class EcosystemLeaveWithUpgradesProposal extends BaseProposal{
+export class EcosystemLeaveWithUpgradesProposal extends BaseProposal{
   
   defaults(){
     return {
@@ -55,6 +55,3 @@ class EcosystemLeaveWithUpgradesProposal extends BaseProposal{
   //   this.governor = governor;
   // }
 }
-
-
-export default EcosystemLeaveWithUpgradesProposal

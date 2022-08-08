@@ -11,7 +11,7 @@ import BaseProposal from "./baseProposal";
  * @property {string} description Description of the proposal
 */
 
-class DescriptorChangeProposal extends BaseProposal{
+export class DescriptorChangeProposal extends BaseProposal{
 
   // I am thinking w/ the vue-mc, base proposal should be under collection, not sure if I should extend the two classes here..
   // model() {
@@ -56,6 +56,3 @@ class DescriptorChangeProposal extends BaseProposal{
   //   this.descriptor = descriptor;
   // }
 }
-
-
-export default DescriptorChangeProposal

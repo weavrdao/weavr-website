@@ -16,7 +16,7 @@ import BaseProposal from "./baseProposal";
  * 
 */
 
-class ThreadProposal extends BaseProposal{
+export class ThreadProposal extends BaseProposal{
   defaults(){
     return {
       id: null,
@@ -66,8 +66,3 @@ class ThreadProposal extends BaseProposal{
   //   this.governor = governor;
   // }
 }
-
-
-
-
-export default ThreadProposal

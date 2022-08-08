@@ -65,6 +65,3 @@ export class TokenActionProposal extends BaseProposal {
   //   this.amount = amount;
   // }
 }
-
-
-export default TokenActionProposal
