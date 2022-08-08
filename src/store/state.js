@@ -222,6 +222,9 @@ const actions = {
   async createUpgradeProposal(context, props) {
     const {
       assetAddress,
+      beaconAddress,
+      instanceAddress,
+      version,
       codeAddress,
       title,
       description,
@@ -229,9 +232,12 @@ const actions = {
 
     const status = await dao.createUpgradeProposal(
       assetAddress,
+      beaconAddress,
+      instanceAddress,
       codeAddress,
       title,
-      description
+      description,
+      version,
     )
 
     console.log(status);

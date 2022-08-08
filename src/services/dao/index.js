@@ -161,16 +161,15 @@ class DAO {
   // eslint-disable-next-line max-lines-per-function
   async createUpgradeProposal(
     assetAddress,
-    // beaconAddress,
+    beaconAddress,
+    instanceAddress,
     codeAddress,
-    // upgradeData,
     title,
     description,
-    version = 2, // Required for validateUpgrade to run correctly
+    version, // Required for validateUpgrade to run correctly
   ) {
     // Hardcoding these for simplicity
     const ASSET_ADDRESS = assetAddress || "0x8C1a3931102f4D65c91f2DDA5166f8970f2760A8";
-    const BEACON_ADDRESS = "0xc4cad6434a405a3d9c89cbcb0d1a77b6eceb4bf7";
     const THREAD_DEPLOYER_ADDRESS = "0xF78C9BCA95f98Eb8EB241Af0865946429a8A5050";
     const BOND_ADDRESS = "0x20cf3b3A2dA25B726eE367e20F5659f1794994a2";
     const DATA = ethers.utils.defaultAbiCoder.encode(
@@ -191,8 +190,8 @@ class DAO {
       );
 
     console.log({
-      BEACON_ADDRESS,
-      assetAddress,
+      beaconAddress,
+      instanceAddress,
       version,
       codeAddress,
       DATA,
@@ -200,8 +199,8 @@ class DAO {
     })
 
     const createUpgradeProposalTx = await assetContract.proposeUpgrade(
-      BEACON_ADDRESS,
-      ASSET_ADDRESS,
+      beaconAddress,
+      instanceAddress,
       version,
       codeAddress,
       DATA,

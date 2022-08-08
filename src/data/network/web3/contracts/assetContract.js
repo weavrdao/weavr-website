@@ -127,9 +127,6 @@ class AssetContract {
         code,
         data,
         info,
-        {
-          gasLimit: 5000000,
-        }
       );
     const status = (await tx.wait()).status;
     console.log(status);
