@@ -13,9 +13,10 @@ import BaseProposal from "./baseProposal";
 
 class DescriptorChangeProposal extends BaseProposal{
 
-  model() {
-    return BaseProposal;
-  }
+  // I am thinking w/ the vue-mc, base proposal should be under collection, not sure if I should extend the two classes here..
+  // model() {
+  //   return BaseProposal;
+  // }
 
   defaults() {
     return {

@@ -70,4 +70,4 @@ class ThreadProposal extends BaseProposal{
 
 
 
-export default {ThreadProposal}
+export default ThreadProposal

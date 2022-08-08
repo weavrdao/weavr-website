@@ -56,4 +56,4 @@ class ParticipantRemovalProposal extends BaseProposal{
   // }
 }
 
-export default {ParticipantRemovalProposal}
+export default ParticipantRemovalProposal

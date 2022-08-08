@@ -35,3 +35,5 @@ export class PaperProposal extends BaseProposal {
   //   this.description = description;
   // }
 }
+
+export default PaperProposal

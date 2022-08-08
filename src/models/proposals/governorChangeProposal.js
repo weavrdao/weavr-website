@@ -52,4 +52,4 @@ class GovernorChangeProposal extends BaseProposal{
 }
 
 
-export default {GovernorChangeProposal}
+export default GovernorChangeProposal

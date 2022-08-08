@@ -53,3 +53,5 @@ export class ParticipantProposal extends BaseProposal {
   //   this.participant = participant;
   // }
 }
+
+export default ParticipantProposal
