@@ -1,5 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { Model } from "vue-mc";
+import BaseProposal from "./proposals/baseProposal";
+
 /**
  * Vote model.
  * @property {string} voterAddress Address of the voter
