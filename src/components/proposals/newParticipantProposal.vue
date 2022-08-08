@@ -40,9 +40,15 @@ import {ethers} from "ethers";
 export default {
 
   name: "newPaperProposal",
+  props: {
+    assetId: {
+      type: String,
+      required: true,
+    },
+  },
   data(){
     return {
-      assetId: "0",
+    
       address: "",
       title: "",
       description: "",
@@ -58,7 +64,7 @@ export default {
     ...mapActions({
       refresh: "refreshProposalsDataForAsset",
       syncWallet: "syncWallet",
-      createProposal: "createProposal",
+      createProposal: "createParticipantProposal",
     }),
     async publish() {
       if (this.address.length < 1) {
@@ -66,12 +72,19 @@ export default {
       }
       
       const  assetId = this.assetId;
-      const  title = this.title;
+      // const  title = this.title;
       const  description = this.description;
       const isAddr = ethers.utils.isAddress(this.address);
-      console.log(isAddr)
-      console.log(this.pTypeList[this.selectedType]);
-      // await this.createProposal({assetId, title, description});
+      const participant = this.address
+      const props = {
+        assetId: this.assetId,
+        participantType: this.pTypeList[this.selectedType],
+        participant: this.address,
+        info: this.description
+      }
+
+      console.log("PArticipantType:  ", props['participantType']);
+      await this.createProposal(props);
     },
   }
 }

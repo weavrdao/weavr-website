@@ -1,22 +1,41 @@
 const network = require("../../../../utils/network")
 const { create } = require("ipfs-http-client")
 import StorageNetwork from "../storageNetwork"
-
+import { base58 } from "ethers/lib/utils"
 const ipfsAPIClient = create("https://ipfs.infura.io:5001/api/v0")
+
+
 
 class IPFSStorageNetwork extends StorageNetwork {
   constructor() {
     super()
   }
 
+
+  getBytes32FromIpfsHash(ipfsListing) {
+    const bytesArray = base58
+        .decode(ipfsListing)
+        .slice(2)
+    return `0x${Buffer.from(bytesArray).toString('hex')}`;
+  }
+  
+  getIpfsHashFromBytes32(bytes32Hex) {
+    const hashHex = '1220' + bytes32Hex.slice(2)
+    const hashBytes = Buffer.from(hashHex, 'hex')
+    const hashStr = base58.encode(hashBytes)
+    return hashStr
+  }
+
   async addFile(file) { 
     let jsonString = JSON.stringify(file, null, 2)
+    console.log("JSON: ", jsonString);
     return await ipfsAPIClient.add(jsonString, { pin: true })
   }
   
   getFile = (
     name
   ) => new Promise((resolve, reject) => {
+    console.log("into IPFSStorageNetwork");
     const url = `https://ipfs.infura.io:5001/api/v0/cat`
   
     let params = { 

@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+import { Model } from "vue-mc"
 /**
  * Proposal model.
  * @property {string} id ID of the proposal
@@ -20,21 +22,24 @@ supermajority: Boolean!
 startTimestamp: Int!
 endTimestamp: Int!
 */
-class BaseProposal {
-  constructor(
-    id,
-    creatorAddress,
-    startTimestamp,
-    endTimestamp,
-    votes,
-    supermajority
-  ) {
-    this.id = id
-    this.creatorAddress = creatorAddress
-    this.startTimestamp = startTimestamp
-    this.endTimestamp = endTimestamp
-    this.votes = votes
-    this.supermajority = supermajority
+class BaseProposal extends Model{
+  defaults() {
+    return {
+      id: null,
+      creatorAddress: null,
+      startTimestamp: null,
+      endTimestamp: null,
+      votes: null,
+      supermajority: null
+    }
+  }
+
+  methods() {
+    return {
+      fetch() {
+
+      }
+    }
   }
 }
 

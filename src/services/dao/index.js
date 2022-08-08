@@ -2,10 +2,10 @@ import * as CommonUtils from "../../utils/common"
 import StorageNetwork from "../../data/network/storage/storageNetwork"
 import {Proposal} from "../../models/proposal"
 import { VoteType } from "../../models/vote"
-import { GraphQLAPIClient, ALL_ASSET_PROPOSALS_QUERY } from "../../data/network/graph/graphQLAPIClient"
+import { GraphQLAPIClient, ALL_ASSETS_QUERY, PARTICIPANTS_PER_DAO } from "../../data/network/graph/graphQLAPIClient"
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
 import AssetContract from "../../data/network/web3/contracts/assetContract"
-
+import { ethers } from "ethers"
 // TODO: Should there be a single service instance per proposal?
 
 /**
@@ -25,7 +25,7 @@ class DAO {
     this.storageNetwork = storageNetwork
   }
 
-  /**
+  /** 
    * Get proposals that from this asset"s DAO.
    * @param {string} proposalId
    */
@@ -36,7 +36,7 @@ class DAO {
 
     var proposals = await this.graphQLAPIClient
       .query(
-        ALL_ASSET_PROPOSALS_QUERY,
+        PARTICIPANTS_PER_DAO,
         { assetId },
         (mapper, response) => { return mapper.mapProposals(response.data.proposals) }
       )
@@ -93,7 +93,7 @@ class DAO {
     description
   ) {
     const assetContract = new AssetContract(this.ethereumClient, asset)
-    console.log("IndexJS", asset, ", ", title, ", ", description)
+    console.log("DAO-service: ", asset, ", ", title, ", ", description)
     let proposalCID = await this.storageNetwork
       .addFile(
         {
@@ -101,13 +101,13 @@ class DAO {
           description: description
         }
       )
-
+    console.log("here or not");
     if (proposalCID == null) {
+      console.log("CID not created");
       return
     }
-    console.log((await this.storageNetwork.getFile(proposalCID)))
-    let proposalURI = proposalCID.path
-    console.log(proposalURI)
+    let proposalURI = ethers.utils.id(proposalCID) 
+    
     let status = await assetContract.proposePaper(false, proposalURI)
 
     return status
@@ -116,34 +116,33 @@ class DAO {
   /**
    * Create a proposal
    * @param {String} asset Asset's contract address   
-   * @param {string} title Proposal title
+   * @param {number} participantType Proposal title
    * @param {string} description Proposal body
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
    */
   async createParticipantProposal(
-    asset,
+    assetId,
     participantType,
     participant,
-    title,
     description,
   ) {
-    const assetContract = new AssetContract(this.ethereumClient, asset)
-    console.log("IndexJS:\t", asset, ", ", title, ", ", description)
+    console.log("###### ASSET: ", assetId);
+    const assetContract = new AssetContract(this.ethereumClient, assetId)
+    console.log("DAO-service:\t", participantType, ", ", description)
     let proposalCID = await this.storageNetwork
       .addFile(
         {
-          title: title,
-          description: description
+          description: "This participant has been proposed as KYC"
         }
       )
 
     if (proposalCID == null) {
       return
     }
+    const hashedCID = this.storageNetwork.getBytes32FromIpfsHash(proposalCID.path)
     // console.log((await this.storageNetwork.getFile(proposalCID)))
-    let proposalURI = proposalCID.path
-    console.log(proposalURI)
-    let status = await assetContract.proposeParticipant(participantType, participant, proposalURI)
+    console.log(proposalCID.path);
+    let status = await assetContract.proposeParticipant(3, participant, hashedCID)
 
     return status
   }

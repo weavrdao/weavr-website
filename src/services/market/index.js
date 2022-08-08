@@ -5,7 +5,7 @@ import PlatformContract from "../../data/network/web3/contracts/platformContract
 import AssetContract from "../../data/network/web3/contracts/assetContract"
 import StorageNetwork from "../../data/network/storage/storageNetwork"
 import Asset from "../../models/asset"
-import { GraphQLAPIClient, ALL_ASSETS_QUERY } from "../../data/network/graph/graphQLAPIClient"
+import { GraphQLAPIClient, ALL_ASSETS_QUERY,PROPOSALS_FOR_DAO } from "../../data/network/graph/graphQLAPIClient"
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
 
 /**

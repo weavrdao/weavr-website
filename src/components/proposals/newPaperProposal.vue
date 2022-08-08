@@ -33,9 +33,15 @@ import { CommonProposalType } from "@/models/common.js"
 export default {
 
   name: "newPaperProposal",
+  props: {
+    assetId: {
+      type: String,
+      required: true,
+    },
+  },
   data(){
     return {
-      assetId: "0",
+    
       title: "",
       description: "",
       proposalType: CommonProposalType.Paper
@@ -45,7 +51,7 @@ export default {
     ...mapGetters({
       assetMap: "assetsById",
     }),
-
+    
     asset() {
       return this.assetMap.get(this.assetId);
     },
@@ -54,20 +60,20 @@ export default {
     ...mapActions({
       refresh: "refreshProposalsDataForAsset",
       syncWallet: "syncWallet",
-      createProposal: "createPaperProposal",
+      createPaperProposal: "createPaperProposal",
     }),
     async publish() {
       if (this.title.length < 1 || this.description.length < 1) {
         return;
       }
       
-      const assetAddr = await this.assetMap.get(this.assetId);
-      console.log("ADD" + assetAddr)
+      const assetAddr = this.assetId;
+      console.log("ADD:" + assetAddr)
       const title = this.title;
       const description = this.description;
       const proposalType = this.proposalType
       
-      await this.createPaperProposal({proposalType, assetAddr, title, description});
+      await this.createPaperProposal({assetAddr, proposalType, title, description});
     },
   },
   mounted() {

@@ -8,37 +8,26 @@ export default new createRouter({
   history: createWebHashHistory(),
   routes: [
     {
-      path: '/',
-      redirect: '/dao/0/proposals',
+      path: "/",
+      redirect: "/frabric"
     },
     {
-      path: '/dao/:assetId/proposals',
-      name: 'dao',
-      props: true,
+      path: "/dao/:assetId",
       component: Voting,
-    },
-    {
-      path: '/dao/0/proposals',
-      name: 'frabric',
-      component: Voting
-    },
-    {
-      path: '/dao/:assetId/proposal/:proposalId',
-      name: 'proposal',
-      props: true,
-      component: Proposal,
-    },
-    {
-      path: '/dao/:assetId/newPaperProposal',
-      name: 'newPaperProposal',
-      props: true,
-      component: newPaperProposal,
-    },
-    {
-      path: '/dao/:assetId/newParticipantProposal',
-      name: 'newParticipantProposal',
-      props: true,
-      component: newParticipantProposal,
-    },
+      props: {assetId: "0x8C1a3931102f4D65c91f2DDA5166f8970f2760A8"},
+      alias: "/frabric",
+      children: [
+        {
+          path: "paperProposal",
+          component: newPaperProposal,
+          props: {assetId: "dd"}
+        },
+        {
+          path: "participantProposal",
+          component: newParticipantProposal,
+          props: {assetId: "dd"}
+        }
+      ]
+    }
   ],
 })

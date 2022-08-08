@@ -176,24 +176,15 @@ const actions = {
     AT THE MOMENT THIS IS USING THE ID, BUT WE NEED TO PASS THE ADDRESS TO THE FUNCTION
     SUGGESTION: GET THE ADDRESS FROM ID IN THE COMPONENT-SPECIFIC PROPOSAL
   */
-  async createProposal(context, props) {
-    let {assetAddress, proposalType, title, description} = props
-  
+  async createPaperProposal(context, props) {
+    let { assetAddr, proposalType, title, description} = props
+    console.log("assetAddr: ", assetAddr,props);
     // params.$toast.show("Confirming transaction...", {
     //   duration: false
     // });
     // const x = await dao.vote("0", "0", "Yes");
-    switch (proposalType) {
-    case CommonProposalType.Paper: {
-      await dao.createPaperProposal(assetAddress, title, description)
-    } break;
-    case FrabricProposalType.Participant: {
-      await dao.createParticipantProposal(assetAddress, title, description)
-    } break;
-    default:
-      break;
-    }
-    const status = await dao.createProposal(assetAddress, title, description);
+    
+    const status = await dao.createPaperProposal(assetAddr, title, description);
 
     // params.$toast.clear();
 
@@ -208,17 +199,13 @@ const actions = {
   },
 
   async createParticipantProposal(context, props) {
-    let {particpantType, participant, title, description} = props
-    let asset = "0xa602bA5287Df6f85Fc16F7Fd6D7ea86F6A0F6d32"
-    console.log("context", context)
+    let {assetId, participantType, participant, info} = props
     
-    // params.$toast.show("Confirming transaction...", {
-    //   duration: false
-    // });
-    // const x = await dao.vote("0", "0", "Yes");
-    console.log("STATE 1", title," ", description, " ", asset);
-    const status = await dao.createParticipantProposal(particpantType, participant, title, description);
-    console.log("STATE 2", title," ", description, " ", asset);
+    console.log(props)
+    console.log('OBJ: \t', participantType, participant, info); 
+   
+    console.log("STATE 1", " ", assetId);
+    const status = await dao.createParticipantProposal(assetId, participantType, participant, info);
     console.log(status);
     // params.$toast.clear();
 
