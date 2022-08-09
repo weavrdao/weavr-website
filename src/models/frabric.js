@@ -4,7 +4,7 @@ import { Model } from 'vue-mc'
  * Frabric model
  */
 
-class Frabric extends Model {
+export default class Frabric extends Model {
 
     // Default attributes that define the "empty" state.
     defaults() {
@@ -26,5 +26,3 @@ class Frabric extends Model {
         }
     }
 }
-
-export default Frabric;

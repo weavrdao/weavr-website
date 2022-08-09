@@ -2,8 +2,6 @@ import BaseProposal from "./proposals/baseProposal";
 
 /**
  * Vote model.
- * @property {string} voterAddress Address of the voter
- * @property {number} count Voting power of the voter
  */
 
 export class Vote extends BaseProposal {

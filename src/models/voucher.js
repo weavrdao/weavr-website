@@ -4,7 +4,7 @@ import { Model } from "vue-mc";
  * Voucher model
  */
 
-class Voucher extends Model {
+export default class Voucher extends Model {
 
     // Default attributes that define the "empty" state.
     defaults() {
@@ -16,5 +16,3 @@ class Voucher extends Model {
         }
     }
 }
-
-export default Voucher;

@@ -4,7 +4,7 @@ import { Model } from 'vue-mc';
  * Thread model
  */
 
-class Thread extends Model {
+export default class Thread extends Model {
 
     // Default attributes that define the "empty" state.
     defaults() {
@@ -27,5 +27,3 @@ class Thread extends Model {
         }
     }
 }
-
-export default Thread
