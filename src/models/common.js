@@ -58,6 +58,11 @@ module.exports = {
     Removed: 2
   },
 
+  MintType: {
+    Yes: true,
+    No: false,
+  },
+
   ThreadProposalType: {
     DescriptorChange: 0,
     FrabricChange: 1,

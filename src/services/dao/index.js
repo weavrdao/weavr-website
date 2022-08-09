@@ -166,7 +166,7 @@ class DAO {
     codeAddress,
     title,
     description,
-    version, // Required for validateUpgrade to run correctly
+    version,
   ) {
     // Hardcoding these for simplicity
     const ASSET_ADDRESS = assetAddress || "0x8C1a3931102f4D65c91f2DDA5166f8970f2760A8";
@@ -198,7 +198,7 @@ class DAO {
       ipfsPathBytes,
     })
 
-    const createUpgradeProposalTx = await assetContract.proposeUpgrade(
+    const status = await assetContract.proposeUpgrade(
       beaconAddress,
       instanceAddress,
       version,
@@ -207,8 +207,33 @@ class DAO {
       ipfsPathBytes,
     );
 
-    const txReciept = await createUpgradeProposalTx.wait();
-    return txReciept.status;
+    return status;
+  }
+
+  async createTokenActionProposal(
+    tokenAddress,
+    targetAddress,
+    mint,
+    price,
+    amount,
+    title,
+    description,
+  ) {
+    const assetContract = new AssetContract(this.ethereumClient, targetAddress);
+
+    const ipfsPathBytes = await this.storageNetwork
+      .uploadAndGetPathAsBytes({ title, description });
+    
+    const status = await assetContract.proposeTokenAction(
+      tokenAddress,
+      targetAddress,
+      mint,
+      price,
+      amount,
+      ipfsPathBytes,
+    );
+
+    return status;
   }
 
   async vouch(asset, domain, participant) {

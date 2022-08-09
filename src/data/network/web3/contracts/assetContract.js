@@ -14,8 +14,12 @@ const contractAbi = [
   // Create a participant proposal
   "function proposeParticipant(uint16 participantType, address _participant, bytes32 info) returns (uint256 id)",
 
+  // Create an upgrade proposal
   "function proposeUpgrade(address beacon, address instance, uint256 version, address code, bytes data, bytes32 info) returns (uint256 id)",
   
+  // Create a token action proposal
+  "function proposeTokenAction(address token, address target, bool mint, uint256 price, uint256 amount, bytes32 info) returns (uint256 id)",
+
   // Vote Yes on a certain proposal
   "function voteYes(uint256 id)",
 
@@ -133,6 +137,36 @@ class AssetContract {
       );
     const status = (await tx.wait()).status;
     console.log(status);
+    return status;
+  }
+
+  async proposeTokenAction(
+    token,
+    target,
+    mint,
+    price,
+    amount,
+    info,
+  ) {
+    console.log("Creating token action proposal...");
+    console.log({
+      token,
+      target,
+      mint,
+      price,
+      amount,
+      info,
+    });
+    const tx = await this.mutableContract
+      .proposeTokenAction(
+        token,
+        target,
+        mint,
+        price,
+        amount,
+        info,
+      );
+    const status = (await tx.wait()).status;
     return status;
   }
 

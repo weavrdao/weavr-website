@@ -3,6 +3,7 @@ import Voting from '@/components/sections/Voting.vue'
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue"
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue"
 import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue"
+import newTokenAction from "@/components/proposals/newTokenAction.vue"
 import vouch from "@/components/proposals/vouch"
 export default new createRouter({
   history: createWebHashHistory(),
@@ -31,6 +32,11 @@ export default new createRouter({
           path: "upgradeProposal",
           component: newUpgradeProposal,
           props: {assetId: "dd"}
+        },
+        {
+          path: "tokenProposal",
+          component: newTokenAction,
+          props: {assetId: "dd"},
         },
         {
           path: "vouch",

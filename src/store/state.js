@@ -243,6 +243,30 @@ const actions = {
     console.log(status);
   },
 
+  async createTokenActionProposal(context, props) {
+    const {
+      tokenAddress,
+      targetAddress,
+      mint,
+      price,
+      amount,
+      title,
+      description,
+    } = props;
+
+    const status = await dao.createTokenActionProposal(
+      tokenAddress,
+      targetAddress,
+      mint,
+      price,
+      amount,
+      title,
+      description,
+    );
+
+    console.log(status);
+  },
+
   async voteOnProposal(context, params) {
     let asset = context.getters.assetsById.get(params.assetId)
     let proposal = context.getters.proposalsById.get(params.proposalId)
