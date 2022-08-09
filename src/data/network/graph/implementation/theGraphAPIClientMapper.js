@@ -1,10 +1,10 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-lines-per-function */
 import GraphQLAPIMapper from "../graphQLAPIMapper"
-import Asset  from "../../../../models/asset"
+import Asset from "../../../../models/asset"
 import { getIpfsHashFromBytes32 } from "../../storage/ipfs/common"
 import { ProposalTypes } from "../../../../models/common"
-import { Vote }  from "../../../../models/vote"
+import { Vote } from "../../../../models/vote"
 import { PaperProposal } from "../../../../models/proposals/paperProposal";
 import { UpgradeProposal } from "../../../../models/proposals/upgradeProposal";
 import { ParticipantProposal } from "../../../../models/proposals/participantProposal";
@@ -24,7 +24,7 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
 
         var ownersMap = new Map()
         rawAsset.owners
-          .forEach(ownership => { 
+          .forEach(ownership => {
             ownersMap.set(ownership.owner, ownership.shares)
           })
 
@@ -48,7 +48,7 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
     if (!rawProposals || rawProposals.length < 1) {
       return [];
     }
-  
+
     const paperProposals = this.mapPaperProposals(rawProposals.paperProposals);
     const upgradeProposals = this.mapUpgradeProposals(rawProposals.upgradeProposals);
     const participantProposals = this.mapParticipantProposals(rawProposals.participantProposals);
@@ -90,7 +90,7 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
           type: ProposalTypes.Paper,
         })
       })
-    } catch(e) {
+    } catch (e) {
       console.log("Issue parsing paper proposals");
       console.error(e);
     }
@@ -135,7 +135,7 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
           type: ProposalTypes.Upgrade,
         })
       })
-    } catch(e) {
+    } catch (e) {
       console.log("Issue parsing upgrade proposals");
       console.error(e);
     }
@@ -174,7 +174,7 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
           type: ProposalTypes.Participant,
         })
       })
-    } catch(e) {
+    } catch (e) {
       console.log("Issue parsing participant proposals");
       console.error(e);
     }
@@ -219,7 +219,7 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
           type: ProposalTypes.TokenAction,
         })
       })
-    } catch(e) {
+    } catch (e) {
       console.log("Issue parsing participant proposals");
       console.error(e);
     }
