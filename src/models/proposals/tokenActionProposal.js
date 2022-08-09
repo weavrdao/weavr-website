@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import BaseProposal from "./baseProposal";
 
 /**
@@ -16,45 +17,14 @@ import BaseProposal from "./baseProposal";
  * @property {number} amount
 */
 
-class TokenActionProposal extends BaseProposal{
-  constructor(
-    id,
-    thread,
-    frabric,
-    creator,
-    type,
-    state,
-    votes,
-    supermajority,
-    startTimestamp,
-    endTimestamp,
-    description,
-    token,
-    target,
-    mint,
-    price,
-    amount
-  ) {
-    super(
-      id,
-      thread,
-      frabric,
-      creator,
-      type,
-      state,
-      votes,
-      supermajority,
-      startTimestamp,
-      endTimestamp
-    );
-    this.description = description;
-    this.token = token;
-    this.target = target;
-    this.mint = mint;
-    this.price = price;
-    this.amount = amount;
+export class TokenActionProposal extends BaseProposal {
+  defaults() {
+    return {
+      amount: "",
+      mint: null,
+      price: "",
+      target: "",
+      token: "",
+    }
   }
 }
-
-
-export default {TokenActionProposal}

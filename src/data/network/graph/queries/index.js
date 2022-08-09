@@ -1,13 +1,6 @@
-// import {
-//   gql
-// } from "@apollo/client/core"
 import gql from "graphql-tag";
 
-// const DAO_LIST_ADDRESSES = gql`
-//   query 
-// `
-
-const THREAD_PROPOSAL_QUERY = gql`
+export const THREAD_PROPOSAL_QUERY = gql`
   query ThreadProposals {
     threadProposals {
         id
@@ -37,12 +30,9 @@ const THREAD_PROPOSAL_QUERY = gql`
         }
       }
   }
-`
+`;
 
-
-
-
-const ALL_ASSETS_QUERY = gql`
+export const ALL_ASSETS_QUERY = gql`
   query Frabric
   {
     frabrics {
@@ -52,9 +42,9 @@ const ALL_ASSETS_QUERY = gql`
       }
     }
   }  
-`
+`;
 
-const PARTICIPANTS_PER_DAO = gql`
+export const PARTICIPANTS_PER_DAO = gql`
   query Frabric
   {
     frabrics {
@@ -67,10 +57,86 @@ const PARTICIPANTS_PER_DAO = gql`
       }
     }
   }
-`
+`;
 
-export {
-  PARTICIPANTS_PER_DAO,
-  ALL_ASSETS_QUERY,
-  THREAD_PROPOSAL_QUERY
-}
+export const ALL_PROPOSALS = gql`
+  query ALL_PROPOSALS($id: String!) {
+    frabric(id: $id) {
+      paperProposals(orderBy: id, orderDirection: desc) {
+        id
+        baseProposal {
+          creator
+          endTimestamp
+          info
+          startTimestamp
+          state
+          supermajority
+          votes {
+            voteDirection
+            voter
+            count
+          }
+        }
+      }
+      upgradeProposals(orderBy: id, orderDirection: desc) {
+        baseProposal {
+          creator
+          endTimestamp
+          info
+          startTimestamp
+          state
+          supermajority
+          votes {
+            voteDirection
+            voter
+            count
+          }
+        }
+        beacon
+        code
+        data
+        id
+        instance
+        version
+      }
+      participantProposals(orderBy: id, orderDirection: desc) {
+        baseProposal {
+          id
+          info
+          startTimestamp
+          state
+          supermajority
+          votes {
+            voteDirection
+            voter
+            count
+          }
+        }
+        participant
+        proposer
+      }
+      tokenActionProposals(orderBy: id, orderDirection: desc) {
+        amount
+        id
+        mint
+        price
+        target
+        token
+        baseProposal {
+          creator
+          endTimestamp
+          info
+          startTimestamp
+          state
+          supermajority
+          type
+          votes {
+            count
+            voteDirection
+            voter
+          }
+        }
+      }
+    }
+  }
+`;

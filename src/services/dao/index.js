@@ -2,7 +2,7 @@ import * as CommonUtils from "../../utils/common"
 import StorageNetwork from "../../data/network/storage/storageNetwork"
 import {Proposal} from "../../models/proposal"
 import { VoteType } from "../../models/vote"
-import { GraphQLAPIClient, ALL_ASSETS_QUERY, PARTICIPANTS_PER_DAO } from "../../data/network/graph/graphQLAPIClient"
+import { GraphQLAPIClient, ALL_ASSETS_QUERY, PARTICIPANTS_PER_DAO, ALL_PROPOSALS } from "../../data/network/graph/graphQLAPIClient"
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
 import AssetContract from "../../data/network/web3/contracts/assetContract"
 import { ethers } from "ethers"
@@ -36,9 +36,9 @@ class DAO {
 
     var proposals = await this.graphQLAPIClient
       .query(
-        PARTICIPANTS_PER_DAO,
-        { assetId },
-        (mapper, response) => { return mapper.mapProposals(response.data.proposals) }
+        ALL_PROPOSALS,
+        { id: assetId },
+        (mapper, response) => { return mapper.mapProposals(response.data.frabric) }
       )
 
     console.log("Mapped proposals:")

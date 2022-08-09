@@ -1,33 +1,19 @@
+/* eslint-disable class-methods-use-this */
 const network = require("../../../../utils/network")
 const { create } = require("ipfs-http-client")
-import { ethers } from "ethers"
-import StorageNetwork from "../storageNetwork"
-import { base58 } from "ethers/lib/utils"
-const ipfsAPIClient = create("https://ipfs.infura.io:5001/api/v0")
+import StorageNetwork from "../storageNetwork";
+import { getBytes32FromIpfsHash } from "./common";
 
 class IPFSStorageNetwork extends StorageNetwork {
   constructor() {
     super()
-  }
-
-  getBytes32FromIpfsHash(ipfsListing) {
-    const bytesArray = base58
-        .decode(ipfsListing)
-        .slice(2)
-    return `0x${Buffer.from(bytesArray).toString('hex')}`;
-  }
-  
-  getIpfsHashFromBytes32(bytes32Hex) {
-    const hashHex = '1220' + bytes32Hex.slice(2)
-    const hashBytes = Buffer.from(hashHex, 'hex')
-    const hashStr = base58.encode(hashBytes)
-    return hashStr
+    this.ipfsAPIClient = create("https://ipfs.infura.io:5001/api/v0");
   }
 
   async addFile(file) { 
     let jsonString = JSON.stringify(file, null, 2)
     console.log("JSON: ", jsonString);
-    return await ipfsAPIClient.add(jsonString, { pin: true })
+    return await this.ipfsAPIClient.add(jsonString, { pin: true })
   }
   
   getFile = (
@@ -98,7 +84,7 @@ class IPFSStorageNetwork extends StorageNetwork {
 
   async uploadAndGetPathAsBytes(file) {
     const cid = await this.addFile(file);
-    return this.getBytes32FromIpfsHash(cid.path);
+    return getBytes32FromIpfsHash(cid.path);
   }
 }
 

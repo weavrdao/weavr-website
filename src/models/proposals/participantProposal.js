@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import BaseProposal from "./baseProposal";
 
 /**
@@ -13,38 +14,11 @@ import BaseProposal from "./baseProposal";
  * @property {string} participant Address of the participant to propose
 */
 
-class ParticipantProposal extends BaseProposal{
-  constructor(
-    id,
-    thread,
-    frabric,
-    creator,
-    type,
-    state,
-    votes,
-    supermajority,
-    startTimestamp,
-    endTimestamp,
-    description,
-    participantType,
-    participant
-  ) {
-    super(
-      id,
-      thread,
-      frabric,
-      creator,
-      type,
-      state,
-      votes,
-      supermajority,
-      startTimestamp,
-      endTimestamp
-    );
-    this.description = description;
-    this.participantType = participantType;
-    this.participant = participant;
+export class ParticipantProposal extends BaseProposal {
+  defaults() {
+    return {
+      participant: "",
+      proposer: "",
+    }
   }
 }
-
-export default {ParticipantProposal}

@@ -1,28 +1,23 @@
+/* eslint-disable class-methods-use-this */
+import { Model } from "vue-mc";
 /**
  * Vote model.
- * @property {string} proposalID ID of the proposal this vote belongs to
  * @property {string} voterAddress Address of the voter
- * @property {VoteType} type Type of the vote posted
+ * @property {VoteType} voteDirection Type of the vote posted
  * @property {number} count Voting power of the voter
  */
-class Vote {
-  constructor(
-    proposalID,
-    voterAddress,
-    type,
-    count
-  ) {
-    this.proposalID = proposalID
-    this.voterAddress = voterAddress
-    this.type = type
-    this.count = count
+export class Vote extends Model {
+  defaults() {
+    return {
+      voter: "",
+      voteDirection: null,
+      count: null,
+    }
   }
 }
 
-const VoteType = {
+export const VoteType = {
   Yes: "Yes",
   No: "No",
   Abstain: "Abstain"
 }
-
-export { Vote, VoteType }

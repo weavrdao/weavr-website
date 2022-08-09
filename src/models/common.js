@@ -70,4 +70,11 @@ module.exports = {
     EcosystemLeaveWithUpgrades: 3,
     Dissolution: 4
   },
+
+  ProposalTypes: {
+    Upgrade: "upgrade",
+    Participant: "participant",
+    TokenAction: "token",
+    Paper: "paper",
+  }
 } 
