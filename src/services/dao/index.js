@@ -218,15 +218,18 @@ class DAO {
         Vouch: [{type: "address", name: "participant"}]
       }
     ]
-
+    console.log("asset from DAO: ", asset);
     const assetContract = new AssetContract(this.ethereumClient, asset);
 
     let signArgs = JSON.parse(JSON.stringify(signCfg))
     signArgs[1] = {Vouch: signArgs[1].Vouch}
     console.log("SIGNARGS: ", signArgs, participant);   
-    const signature = (await this.ethereumClient
-      .getSignature(signArgs, "0x8c1a3931102f4d65c91f2dda5166f8970f2760a8"))
-    
+    let signature = (await this.ethereumClient
+      .getSignature(signArgs, participant))
+    console.log("after signature");
+    console.log("Signature", signature);
+    signature = ethers.utils.defaultAbiCoder.encode(signature)
+    console.log("Encoded Signature: ", signature);
       const tx_result = await assetContract.vouch(participant, signature)
   }
   /**

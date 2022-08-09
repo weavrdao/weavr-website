@@ -97,7 +97,7 @@ class AssetContract {
         participant,
         info, 
         {
-          gasLimit: 50000006
+          gasLimit: 5000000
         }
       )
     let status = (await tx.wait()).status
@@ -140,10 +140,11 @@ class AssetContract {
    * Vouch a participant
    */
   async vouch(participant, signature) {
-    const bytesSignature = ethers.utils.id(signature);
+    // const bytesSignature = ethers.utils.id(signature);
+    console.log("ASSETCONTRACT: ", participant, signature);
     let tx = this.mutableContract.vouch(
       participant,
-      bytesSignature,
+      signature,
       {
         gasLimit: 5000000
       }

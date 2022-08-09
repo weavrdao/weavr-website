@@ -44,14 +44,14 @@ export default {
     ...mapActions({
       refresh: "refreshProposalsDataForAsset",
       syncWallet: "syncWallet",
-      createVouch: "createVouch",
+      vouchParticipant: "vouchParticipant",
     }),
     async publish() {
       // if (this.title.length < 1 || this.description.length < 1) {
       //   return;
       // }
       
-      const assetAddress = this.assetId;
+      const assetAddr = this.assetId;
       
       const participant = this.participant;
       console.log(
@@ -59,7 +59,7 @@ export default {
          this.assetId,
          this.participant
       )
-      await this.createVouch({assetAddress, participant})
+      await this.vouchParticipant({assetAddr, participant})
       },
   },
   mounted() {
