@@ -60,83 +60,86 @@ export const PARTICIPANTS_PER_DAO = gql`
 `;
 
 export const ALL_PROPOSALS = gql`
-  query ALL_PROPOSALS($id: String!) {
-    frabric(id: $id) {
-      paperProposals(orderBy: id, orderDirection: desc) {
-        id
-        baseProposal {
-          creator
-          endTimestamp
-          info
-          startTimestamp
-          state
-          supermajority
-          votes {
-            voteDirection
-            voter
-            count
-          }
-        }
-      }
-      upgradeProposals(orderBy: id, orderDirection: desc) {
-        baseProposal {
-          creator
-          endTimestamp
-          info
-          startTimestamp
-          state
-          supermajority
-          votes {
-            voteDirection
-            voter
-            count
-          }
-        }
-        beacon
-        code
-        data
-        id
-        instance
-        version
-      }
-      participantProposals(orderBy: id, orderDirection: desc) {
-        baseProposal {
+query ALL_PROPOSALS($id: String!) {
+  frabric(id: $id) {
+    paperProposals(orderBy: id, orderDirection: desc) {
+      id
+      baseProposal {
+        creator
+        endTimestamp
+        info
+        startTimestamp
+        state
+        supermajority
+        votes {
           id
-          info
-          startTimestamp
-          state
-          supermajority
-          votes {
-            voteDirection
-            voter
-            count
-          }
+          voteDirection
+          voter
+          count
         }
-        participant
-        proposer
       }
-      tokenActionProposals(orderBy: id, orderDirection: desc) {
-        amount
+    }
+    upgradeProposals(orderBy: id, orderDirection: desc) {
+      baseProposal {
+        creator
+        endTimestamp
+        info
+        startTimestamp
+        state
+        supermajority
+        votes {
+          id
+          voteDirection
+          voter
+          count
+        }
+      }
+      beacon
+      code
+      data
+      id
+      instance
+      version
+    }
+    participantProposals(orderBy: id, orderDirection: desc) {
+      baseProposal {
         id
-        mint
-        price
-        target
-        token
-        baseProposal {
-          creator
-          endTimestamp
-          info
-          startTimestamp
-          state
-          supermajority
-          type
-          votes {
-            count
-            voteDirection
-            voter
-          }
+        info
+        startTimestamp
+        state
+        supermajority
+        votes {
+          id
+          voteDirection
+          voter
+          count
+        }
+      }
+      participant
+      proposer
+    }
+    tokenActionProposals(orderBy: id, orderDirection: desc) {
+      amount
+      id
+      mint
+      price
+      target
+      token
+      baseProposal {
+        creator
+        endTimestamp
+        info
+        startTimestamp
+        state
+        supermajority
+        type
+        votes {
+          id
+          count
+          voteDirection
+          voter
         }
       }
     }
   }
-`;
+}`;

@@ -1,6 +1,6 @@
 import ServiceProvider from "../services/provider"
 import WalletState from "../models/walletState"
-import { MarketOrderType } from "../models/marketOrder"
+// import { MarketOrderType } from "../models/marketOrder"
 import { bigIntMax, bigIntMin } from "../utils/common"
 import router from "../router/index"
 import { Vote } from "../models/vote"
@@ -77,31 +77,31 @@ const getters = {
   },
 
   // TODO: Quick implementation for testing, need something smarter than that
-  bestAssetPrices(state) {
-    var assetPriceMap = new Map()
+  // bestAssetPrices(state) {
+  //   var assetPriceMap = new Map()
 
-    state.platform.assets
-      .forEach(asset => {
-        let buyPrices = asset.marketOrders
-          .filter(o => { return o.orderType == MarketOrderType.Buy })
-          .map(o => { return o.price })
-        let sellPrices = asset.marketOrders
-          .filter(o => { return o.orderType == MarketOrderType.Sell })
-          .map(o => { return o.price })
+  //   state.platform.assets
+  //     .forEach(asset => {
+  //       let buyPrices = asset.marketOrders
+  //         .filter(o => { return o.orderType == MarketOrderType.Buy })
+  //         .map(o => { return o.price })
+  //       let sellPrices = asset.marketOrders
+  //         .filter(o => { return o.orderType == MarketOrderType.Sell })
+  //         .map(o => { return o.price })
 
-        const prices = {
-          bid: bigIntMax(buyPrices),
-          ask: bigIntMin(sellPrices)
-        }
+  //       const prices = {
+  //         bid: bigIntMax(buyPrices),
+  //         ask: bigIntMin(sellPrices)
+  //       }
 
-        assetPriceMap.set(asset.id, prices)
-      })
+  //       assetPriceMap.set(asset.id, prices)
+  //     })
 
-    console.log("Best asset prices:")
-    console.log(assetPriceMap)
+  //   console.log("Best asset prices:")
+  //   console.log(assetPriceMap)
 
-    return assetPriceMap
-  },
+  //   return assetPriceMap
+  // },
 
   assetProposals(state) {
     return state.platform.proposals
@@ -130,14 +130,16 @@ const actions = {
     context.commit("setWallet", walletState)
   },
 
+  // TODO (bill) This needs to be reimplemented
   async refreshOwnedAssetsData(context) {
-    let assets = await market.getAssetsOnTheMarket()
-    context.commit("setAssets", assets)
+    // let assets = await market.getAssetsOnTheMarket()
+    // context.commit("setAssets", assets)
   },
 
+  // TODO (bill) This needs to be reimplemented
   async refreshMarketplaceData(context) {
-    let assets = await market.getAssetsOnTheMarket()
-    context.commit("setAssets", assets)
+    // let assets = await market.getAssetsOnTheMarket()
+    // context.commit("setAssets", assets)
   },
 
   async swapToAsset(context, params) {
@@ -161,9 +163,10 @@ const actions = {
   },
 
   async refreshProposalsDataForAsset(context, params) {
-    context.dispatch("refreshMarketplaceData")
+    // context.dispatch("refreshMarketplaceData")
 
-    let assetId = params.assetId
+    let assetId = params.assetId.toLowerCase();
+    console.log(assetId);
 
     let assetProposals = await dao.getProposalsForAsset(assetId)
 
