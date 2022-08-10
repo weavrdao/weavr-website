@@ -51,17 +51,21 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
           votes,
         }
       }) => {
-        return new PaperProposal({
+        const mappedVotes = this.mapVotes(votes);
+        const ifpsPath = getIpfsHashFromBytes32(info);
+        return new PaperProposal(
           id,
+          null,
+          null,
           creator,
-          endTimestamp,
-          startTimestamp,
-          votes: this.mapVotes(votes),
-          supermajority,
+          ProposalTypes.Paper,
           state,
-          info: getIpfsHashFromBytes32(info),
-          type: ProposalTypes.Paper,
-        })
+          mappedVotes,
+          supermajority,
+          startTimestamp,
+          endTimestamp,
+          ifpsPath,
+        )
       })
     } catch (e) {
       console.log("Issue parsing paper proposals");
@@ -201,22 +205,17 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
 
   // Map raw vote array to array of vue-mc models 
   mapVotes(rawVotes) {
-    console.log(rawVotes);
-    const votes = new Votes();
-    rawVotes.forEach(({
+    return rawVotes.map(({
       id,
       voter,
       voteDirection,
       count,
-    }) => {
-      votes.add(new Vote({
-        id,
-        voter,
-        voteDirection,
-        count,
-      }))
-    });
-    return votes;
+    }) => new Vote({
+      id,
+      voter,
+      voteDirection,
+      count,
+    }));
   }
 }
 

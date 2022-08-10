@@ -1,42 +1,32 @@
-/* eslint-disable class-methods-use-this */
-import BaseProposal from "./baseProposal";
-
 /**
  * Paper Proposal model.
 */
 
-export default class PaperProposal extends BaseProposal {
-
-  defaults() {
-    return {}
+// This is very dirty but we are using this as a workaround currently
+export class PaperProposal {
+  constructor(
+    id,
+    thread,
+    frabric,
+    creator,
+    type,
+    state,
+    votes,
+    supermajority,
+    startTimestamp,
+    endTimestamp,
+    info,
+  ) {
+    this.id = id,
+      this.thread = thread,
+      this.frabric = frabric,
+      this.creator = creator,
+      this.type = type,
+      this.state = state,
+      this.votes = votes,
+      this.supermajority = supermajority,
+      this.startTimestamp = startTimestamp,
+      this.endTimestamp = endTimestamp
+    this.info = info;
   }
-  // constructor(
-  //   id,
-  //   thread,
-  //   frabric,
-  //   creator,
-  //   type,
-  //   state,
-  //   votes,
-  //   supermajority,
-  //   startTimestamp,
-  //   endTimestamp,
-  //   title,
-  //   description
-  // ) {
-  //   super(
-  //     id,
-  //     thread,
-  //     frabric,
-  //     creator,
-  //     type,
-  //     state,
-  //     votes,
-  //     supermajority,
-  //     startTimestamp,
-  //     endTimestamp
-  //   );
-  //   this.title = title;
-  //   this.description = description;
-  // }
 }

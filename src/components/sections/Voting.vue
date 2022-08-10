@@ -4,6 +4,7 @@
       {{ `${assetId} - DAO` }}
     </StackNavigationBar>
     <div>
+      {{ proposalsList }}
       <h2>
         ASSET: {{asset}}
       </h2>
@@ -62,6 +63,8 @@ export default {
     },
 
     proposals() {
+      console.log("HERE");
+      console.log(this.assetProposalMap.get(this.assetId))
       return this.assetProposalMap.get(this.assetId);
     },
 
@@ -166,6 +169,7 @@ export default {
       }),
       orderFromValue: "",
       orderToValue: "",
+      proposalsList: this.proposals,
     };
   },
   mounted() {
