@@ -21,7 +21,7 @@
       <dl>
         <dt class="mt-1 has-text-weight-bold help">Created By</dt>
         <dd class="mb-3">
-          <Address :value="proposal.creatorAddress" />
+          <Address :value="proposal.creator" />
         </dd>
         <dt class="mt-1 has-text-weight-bold help">Results</dt>
         <dd class="mb-3">

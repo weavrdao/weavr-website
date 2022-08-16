@@ -17,7 +17,7 @@ function state() {
     },
     platform: {
       assets: [],
-      proposals: new Map()
+      proposals: []
     },
     interface: {
       alert: null
@@ -104,13 +104,15 @@ const getters = {
   // },
 
   assetProposals(state) {
+    console.log(`STATE.PLATFORM.PROPOSALS`);
+    console.dir(state.platform.proposals);
     return state.platform.proposals
   },
 
   proposalsById(state) {
     var proposalsMap = new Map()
 
-    console.log(state.platform.proposals.values())
+    console.log(`STATE: ${state.platform.proposals.values()}`)
 
     Array.from(state.platform.proposals.values())
       .flatMap(p => { return p })
@@ -167,14 +169,9 @@ const actions = {
     // context.dispatch("refreshMarketplaceData")
 
     let assetId = params.assetId.toLowerCase();
-    console.log(assetId);
-
     let assetProposals = await dao.getProposalsForAsset(assetId)
 
-    console.log("New Proposals")
-    console.log(assetProposals)
-
-    context.commit("setProposalsForAsset", { assetId: assetId, proposals: assetProposals })
+    context.commit("setProposalsForAsset", { assetId: assetId.toLowerCase(), proposals: assetProposals })
   },
   /*
     AT THE MOMENT THIS IS USING THE ID, BUT WE NEED TO PASS THE ADDRESS TO THE FUNCTION
@@ -329,7 +326,8 @@ const mutations = {
   },
 
   setProposalsForAsset(state, { proposals, assetId }) {
-    state.platform.proposals.set(assetId, proposals)
+    console.log(`SettingProposalsForAsset:\n ${proposals}`)
+    state.platform.proposals = proposals;
   },
 
   setAlert(state, alert) {

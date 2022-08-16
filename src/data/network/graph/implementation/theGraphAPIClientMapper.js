@@ -17,7 +17,6 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
 
   // Map all proposal types to a single array to be written to global state
   mapProposals(rawProposals) {
-    console.log(rawProposals);
     if (!rawProposals || rawProposals.length < 1) return [];
 
     return [

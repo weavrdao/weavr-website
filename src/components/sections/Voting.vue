@@ -4,7 +4,9 @@
       {{ `${assetId} - DAO` }}
     </StackNavigationBar>
     <div>
-      {{ proposals }}
+      <div v-for="proposal in proposals" v-bind:key="proposal.id">
+        <ProposalListItem :proposal="proposal" :assetId="assetId"/>
+      </div>
       <h2>
         ASSET: {{asset}}
       </h2>
@@ -40,11 +42,8 @@ export default {
   },
   components: {
     StackNavigationBar,
-    // ProposalListItem,
-    // Accordion,
-    // Address,
-    // Button,
-  },
+    ProposalListItem,
+},
   computed: {
     ...mapGetters({
       assetMap: "assetsById",
@@ -63,9 +62,7 @@ export default {
     },
 
     proposals() {
-      console.log("HERE");
-      console.log(this.assetProposalMap)
-      return this.assetProposalMap.get(this.assetId);
+      return this.assetProposalMap;
     },
 
     timestamp() {

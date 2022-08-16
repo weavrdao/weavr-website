@@ -29,6 +29,7 @@ class DAO {
    * Get proposals that from this asset"s DAO.
    * @param {string} proposalId
    */
+  // eslint-disable-next-line max-lines-per-function
   async getProposalsForAsset(
     assetId
   ) {
@@ -44,38 +45,39 @@ class DAO {
     console.log("Mapped proposals:")
     console.log(proposals)
 
+    // This needs to be reworked, ipfs requests must go out on a component basis to avoid excessive calls
     // Fetch and append off-chain data
 
-    const proposalDataURIArray = proposals
-      .map(proposal => proposal.dataURI)
-    let proposalOffchainDataArray = (
-      await this.storageNetwork
-        .getFiles(proposalDataURIArray.map(uri => CommonUtils.pathFromURL(uri)))
-    )
+    // const proposalDataURIArray = proposals
+    //   .map(proposal => proposal.dataURI)
+    // let proposalOffchainDataArray = (
+    //   await this.storageNetwork
+    //     .getFiles(proposalDataURIArray.map(uri => CommonUtils.pathFromURL(uri)))
+    // )
 
-    console.log("Off-chain data:", proposalOffchainDataArray);
+    // console.log("Off-chain data:", proposalOffchainDataArray);
 
-    if (proposalOffchainDataArray.length != proposals.length) {
-      throw ("Off-chain data count doesn't match the on-chain data")
-    }
+    // if (proposalOffchainDataArray.length != proposals.length) {
+    //   throw ("Off-chain data count doesn't match the on-chain data")
+    // }
 
-    for (var i = 0; i < proposals.length; i++) {
-      let proposal = proposals[i]
-      let data = proposalOffchainDataArray[i]
+    // for (var i = 0; i < proposals.length; i++) {
+    //   let proposal = proposals[i]
+    //   let data = proposalOffchainDataArray[i]
 
-      let completeProposal = new Proposal(
-        proposal.id,
-        proposal.creatorAddress,
-        proposal.dataURI,
-        proposal.startTimestamp,
-        proposal.endTimestamp,
-        proposal.votes,
-        data.title,
-        data.description
-      )
+    //   let completeProposal = new Proposal(
+    //     proposal.id,
+    //     proposal.creatorAddress,
+    //     proposal.dataURI,
+    //     proposal.startTimestamp,
+    //     proposal.endTimestamp,
+    //     proposal.votes,
+    //     data.title,
+    //     data.description
+    //   )
 
-      proposals[i] = completeProposal
-    }
+    //   proposals[i] = completeProposal
+    // }
 
     return proposals
   }
