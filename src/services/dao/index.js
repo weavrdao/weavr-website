@@ -35,7 +35,7 @@ class DAO {
   ) {
     // Get indexed on-chain data
 
-    var proposals = await this.graphQLAPIClient
+    let proposals = await this.graphQLAPIClient
       .query(
         ALL_PROPOSALS,
         { id: assetId },
@@ -45,42 +45,20 @@ class DAO {
     console.log("Mapped proposals:")
     console.log(proposals)
 
-    // This needs to be reworked, ipfs requests must go out on a component basis to avoid excessive calls
     // Fetch and append off-chain data
 
-    // const proposalDataURIArray = proposals
-    //   .map(proposal => proposal.dataURI)
-    // let proposalOffchainDataArray = (
-    //   await this.storageNetwork
-    //     .getFiles(proposalDataURIArray.map(uri => CommonUtils.pathFromURL(uri)))
-    // )
+    const offChainData = await this.storageNetwork.getFiles(proposals.map(p => p.info));
+    console.log(offChainData);
+  
+    proposals.forEach((_, i) => {
+      proposals[i].title = offChainData[i].title;
+      proposals[i].description = offChainData[i].description;
+    });
 
-    // console.log("Off-chain data:", proposalOffchainDataArray);
-
-    // if (proposalOffchainDataArray.length != proposals.length) {
-    //   throw ("Off-chain data count doesn't match the on-chain data")
-    // }
-
-    // for (var i = 0; i < proposals.length; i++) {
-    //   let proposal = proposals[i]
-    //   let data = proposalOffchainDataArray[i]
-
-    //   let completeProposal = new Proposal(
-    //     proposal.id,
-    //     proposal.creatorAddress,
-    //     proposal.dataURI,
-    //     proposal.startTimestamp,
-    //     proposal.endTimestamp,
-    //     proposal.votes,
-    //     data.title,
-    //     data.description
-    //   )
-
-    //   proposals[i] = completeProposal
-    // }
-
-    return proposals
+    console.log(proposals);
+    return proposals;
   }
+
 
   /**
    * Create a proposal

@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 <template>
   <section aria-labelledby="proposal-title">
     <div class="panel mb-2 mt-2 p-4">
@@ -27,14 +28,14 @@
         <dd class="mb-3">
           <div>
             <span class="tag is-success">Yes</span> —
-            {{ numberFormat.format(votes.yes.percentage) }}% ({{
+            {{ votes.yes.percentage }}% ({{
               votes.yes.count
             }}
             shares)
           </div>
           <div>
             <span class="tag is-danger">No</span> —
-            {{ numberFormat.format(votes.no.percentage) }}% ({{
+            {{ votes.no.percentage }}% ({{
               votes.no.count
             }}
             shares)
@@ -81,9 +82,6 @@ export default {
   },
   data() {
     return {
-      numberFormat: new Intl.NumberFormat("en-US", {
-        maximumSignificantDigits: 3,
-      }),
 
       PASSED: {
         Yes: 0,
@@ -96,24 +94,24 @@ export default {
   },
   computed: {
     votes() {
-      var yesVoteShares = 0;
-      var noVoteShares = 0;
+      let yesVoteShares = 0;
+      let noVoteShares = 0;
 
       this.proposal.votes.forEach((vote) => {
-        if (vote.type == VoteType.Yes) {
+        if (vote.voteDirection == VoteType.Yes) {
           yesVoteShares += vote.count;
-        } else if (vote.type == VoteType.No) {
+        } else if (vote.voteDirection == VoteType.No) {
           noVoteShares += vote.count;
         }
       });
 
       return {
         yes: {
-          count: yesVoteShares,
+          count: Number(yesVoteShares).toFixed(0),
           percentage: (yesVoteShares / (yesVoteShares + noVoteShares)) * 100,
         },
         no: {
-          count: noVoteShares,
+          count: Number(noVoteShares).toFixed(0),
           percentage: (noVoteShares / (yesVoteShares + noVoteShares)) * 100,
         },
       };
@@ -168,7 +166,9 @@ export default {
       );
     },
     dateStringForTimestamp(timestamp) {
+      console.log(this.proposal.startTimestamp);
       var date = new Date(timestamp * 1000);
+      console.log(date);
 
       var hours = date.getHours();
       var minutes = date.getMinutes();

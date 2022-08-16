@@ -115,10 +115,10 @@ export function mapParticipantProposals(rawParticipantProposals) {
   try {
     participantProposals = rawParticipantProposals.map(({
       participant,
+      participantType,
       proposer,
       baseProposal: {
         id,
-        creator, // Not being pulled?
         endTimestamp, // Not being pulled?
         info,
         startTimestamp,
@@ -141,7 +141,7 @@ export function mapParticipantProposals(rawParticipantProposals) {
         startTimestamp,
         endTimestamp,
         ifpsPath,
-        null, // Participant type (not currently tracked by graph)
+        participantType,
         participant,
         proposer,
       )

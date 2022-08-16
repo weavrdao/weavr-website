@@ -106,6 +106,7 @@ query ALL_PROPOSALS($id: String!) {
         id
         info
         startTimestamp
+        endTimestamp
         state
         supermajority
         votes {
@@ -116,6 +117,7 @@ query ALL_PROPOSALS($id: String!) {
         }
       }
       participant
+      participantType
       proposer
     }
     tokenActionProposals(orderBy: id, orderDirection: desc) {

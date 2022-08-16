@@ -14,7 +14,7 @@ export class Vote {
     this.id = id;
     this.voter = voter;
     this.voteDirection = voteDirection;
-    this.count = ethers.utils.parseEther(count);
+    this.count = ethers.utils.formatEther(count);
   }
 }
 

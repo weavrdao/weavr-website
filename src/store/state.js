@@ -17,7 +17,7 @@ function state() {
     },
     platform: {
       assets: [],
-      proposals: []
+      proposals: [] // new Map()
     },
     interface: {
       alert: null
@@ -327,7 +327,7 @@ const mutations = {
 
   setProposalsForAsset(state, { proposals, assetId }) {
     console.log(`SettingProposalsForAsset:\n ${proposals}`)
-    state.platform.proposals = proposals;
+    state.platform.proposals = proposals; // state.platform.proposals.set(assetId, proposals);
   },
 
   setAlert(state, alert) {
