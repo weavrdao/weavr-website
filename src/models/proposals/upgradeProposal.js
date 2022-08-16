@@ -2,7 +2,7 @@
  * Upgrade Proposal model.
 */
 export class UpgradeProposal {
-  constructor({
+  constructor(
     id,
     thread,
     frabric,
@@ -19,7 +19,7 @@ export class UpgradeProposal {
     version,
     code,
     data,
-  }) {
+  ) {
     this.id = id;
     this.thread = thread;
     this.frabric = frabric;

@@ -4,7 +4,7 @@
       {{ `${assetId} - DAO` }}
     </StackNavigationBar>
     <div>
-      {{ proposalsList }}
+      {{ proposals }}
       <h2>
         ASSET: {{asset}}
       </h2>
@@ -64,7 +64,7 @@ export default {
 
     proposals() {
       console.log("HERE");
-      console.log(this.assetProposalMap.get(this.assetId))
+      console.log(this.assetProposalMap)
       return this.assetProposalMap.get(this.assetId);
     },
 

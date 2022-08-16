@@ -3,7 +3,7 @@
 */
 
 export class ParticipantProposal {
-  constructor({
+  constructor(
     id,
     thread,
     frabric,
@@ -18,7 +18,7 @@ export class ParticipantProposal {
     participantType,
     participant,
     proposer
-  }) {
+  ) {
     this.type = type;
     this.id = id;
     this.thread = thread;

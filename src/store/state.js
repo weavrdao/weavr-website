@@ -116,6 +116,7 @@ const getters = {
       .flatMap(p => { return p })
       .forEach(p => { proposalsMap.set(p.id, p) })
 
+    console.log(proposalsMap);
     return proposalsMap
   },
 
