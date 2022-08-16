@@ -46,16 +46,20 @@ class DAO {
     console.log(proposals)
 
     // Fetch and append off-chain data
-
-    const offChainData = await this.storageNetwork.getFiles(proposals.map(p => p.info));
-    console.log(offChainData);
+    try {
+      const offChainData = await this.storageNetwork.getFiles(proposals.map(p => p.info));
+      console.log(offChainData);
+    
+      proposals.forEach((_, i) => {
+        proposals[i].title = offChainData[i].title;
+        proposals[i].description = offChainData[i].description;
+      });
   
-    proposals.forEach((_, i) => {
-      proposals[i].title = offChainData[i].title;
-      proposals[i].description = offChainData[i].description;
-    });
+      console.log(proposals);
+    } catch(e) {
+      console.log(e);
+    }
 
-    console.log(proposals);
     return proposals;
   }
 
