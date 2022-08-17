@@ -1,5 +1,5 @@
 <template>
-  <div class="tag is-purpleOne is-medium is-clickable has-radius-lg" @click="onClick">
+  <div class="tag is-mediumBlue is-medium is-clickable has-radius-lg" @click="onClick">
     <span class="icon">
       <svg
         xmlns="http://www.w3.org/2000/svg"

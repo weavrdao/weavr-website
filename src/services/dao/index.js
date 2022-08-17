@@ -47,19 +47,30 @@ class DAO {
 
     // Fetch and append off-chain data
     try {
-      const offChainData = await this.storageNetwork.getFiles(proposals.map(p => p.info));
-      console.log(offChainData);
+      // const offChainData = (await this.storageNetwork.getFiles(proposals.map(p => p.info)));
+
     
-      proposals.forEach((_, i) => {
+      // for(let i=0; i<proposals.length; i++) {
+      //   proposals[i].title = offChainData[i].title;
+      //   proposals[i].description = offChainData[i].description;
+      // }
+    } catch(e) {
+      // console.log(e);
+
+    // This block is for testing purposes only and should be removed
+    } finally {
+      const offChainData = (new Array(proposals.length)).fill({
+        title: "Test title",
+        description: "Test description",
+      }, 0, proposals.length);
+
+      for(let i=0; i<proposals.length; i++) {
         proposals[i].title = offChainData[i].title;
         proposals[i].description = offChainData[i].description;
-      });
-  
-      console.log(proposals);
-    } catch(e) {
-      console.log(e);
+      }
     }
 
+    console.log(proposals);
     return proposals;
   }
 

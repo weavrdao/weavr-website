@@ -1,56 +1,38 @@
 import { ethers } from "ethers";
 <template>
-  <section aria-labelledby="proposal-title">
-    <div class="panel mb-2 mt-2 p-4">
-      <h2 id="proposal-title" class="is-size-5 has-text-weight-bold mb-4">
-        {{ proposal.title }}
-      </h2>
-      <div class="mb-2 mt-2" v-if="ended">
-        <span v-if="this.passed == this.PASSED.Yes" class="tag is-success"
-          >PASSED</span
-        >
-        <span v-else-if="this.passed == this.PASSED.No" class="tag is-danger"
-          >FAILED</span
-        >
-        <span v-else class="tag is-info">TIED</span>
+  <section class="proposal has-radius-md mb-5" aria-labelledby="proposal">
+    <span class="proposal-type" :class="this.typeStylingData.class">
+      {{ this.typeStylingData.text }}
+    </span>
+    <div class="is-flex is-flex-direction-column is-justify-content-space-between mb-2 mt-2 pt-4 pb-0 px-4">
+      <div>
+        <h2 class="is-size-5 has-text-mediumBlue">
+          {{ this.startDate }}
+        </h2>
+        <h2 id="proposal-title" class="is-size-5 has-text-white mb-4">
+          {{ proposal.title }}
+        </h2>
+        <p> {{ proposal.description }}</p>
       </div>
-      <div v-else>
-        <span class="tag is-success">ONGOING</span> — Ends on
-        <strong>{{ endDateString }}</strong
-        >, (<strong>{{ timeRemainingString }}</strong> left)
-      </div>
-      <dl>
-        <dt class="mt-1 has-text-weight-bold help">Created By</dt>
+      <dl class="mt-5 mb-0 pb-0">
+        <dt class="mt-2 mb-1 help">Creator:</dt>
         <dd class="mb-3">
           <Address :value="proposal.creator" />
         </dd>
-        <dt class="mt-1 has-text-weight-bold help">Results</dt>
-        <dd class="mb-3">
-          <div>
-            <span class="tag is-success">Yes</span> —
-            {{ votes.yes.percentage }}% ({{
-              votes.yes.count
-            }}
-            shares)
-          </div>
-          <div>
-            <span class="tag is-danger">No</span> —
-            {{ votes.no.percentage }}% ({{
-              votes.no.count
-            }}
-            shares)
-          </div>
-        </dd>
       </dl>
+    </div>
+    <div v-if="!ended" class="is-flex is-justify-content-flex-end">
       <Button
         v-if="!embedded"
-        label="View Details"
-        extraClasses="pt-1 is-info"
+        label="Vote"
+        extraClasses="p-5 is-mediumBlue bottom-right-corner"
         @click="openProposal"
       />
-      <div v-else>
-        <slot></slot>
-      </div>
+    </div>
+    <div v-else class="is-flex is-justify-content-flex-end">
+      <div class="outcome-box bottom-right-corner passed" v-if="this.passed == this.PASSED.Yes">PASSED</div>
+      <div class="outcome-box bottom-right-corner failed" v-else-if="this.passed == this.PASSED.No">FAILED</div>
+      <div class="outcome-box bottom-right-corner tie" v-else>TIE</div>
     </div>
   </section>
 </template>
@@ -58,6 +40,7 @@ import { ethers } from "ethers";
 <script>
 import Address from "../address/Address.vue";
 import Button from "../common/Button.vue";
+import { ProposalTypes } from "../../../models/common";
 import { VoteType } from "../../../models/vote";
 
 export default {
@@ -117,6 +100,13 @@ export default {
       };
     },
 
+    startDate() {
+      const startDate = new Date(this.proposal.startTimestamp * 1000);
+      console.log(this.proposal.startTimestamp);
+      console.log(startDate);
+      return `${this.padWithZeroes(startDate.getDate())}/${this.padWithZeroes(startDate.getMonth() + 1)}`;
+    },
+
     startDateString() {
       return this.dateStringForTimestamp(this.proposal.startTimestamp);
     },
@@ -131,6 +121,7 @@ export default {
 
       return t < 0;
     },
+  
     passed() {
       const votes = this.votes;
       if (votes.yes.count > votes.no.count) {
@@ -139,6 +130,36 @@ export default {
         return this.PASSED.No;
       }
       return this.PASSED.Tie;
+    },
+
+    typeStylingData() {
+      switch(this.proposal.type) {
+      case ProposalTypes.Paper:
+        return {
+          text: "Paper",
+          class: "paper",
+        };
+      case ProposalTypes.Upgrade:
+        return {
+          text: "Upgrade",
+          class: "upgrade"
+        };
+      case ProposalTypes.Participant:
+        return {
+          text: "Participant",
+          class: "participant"
+        };
+      case ProposalTypes.TokenAction:
+        return {
+          text: "Token Action",
+          class: "token-action",
+        };
+      default:
+        return {
+          text: "Unknown Type",
+          class: "unknown",
+        }
+      }
     },
   },
   methods: {
@@ -165,6 +186,11 @@ export default {
         1000
       );
     },
+
+    padWithZeroes(number){
+      return (number < 10 ? "0" + number : number);
+    },
+
     dateStringForTimestamp(timestamp) {
       console.log(this.proposal.startTimestamp);
       var date = new Date(timestamp * 1000);
@@ -179,13 +205,11 @@ export default {
         suffix = " PM";
       }
 
-      const padWithZeroes = (nr) => (nr < 10 ? "0" + nr : nr);
-
-      return `${date.getFullYear()}-${padWithZeroes(
+      return `${date.getFullYear()}-${this.padWithZeroes(
         date.getMonth() + 1
-      )}-${padWithZeroes(date.getDate())}, ${padWithZeroes(
+      )}-${this.padWithZeroes(date.getDate())}, ${this.padWithZeroes(
         hours
-      )}:${padWithZeroes(minutes)} ${suffix}`;
+      )}:${this.padWithZeroes(minutes)} ${suffix}`;
     },
 
     openProposal() {
@@ -198,3 +222,64 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+@import "../../../styles/frabric-custom.scss";
+@import "../../../styles/_variables.sass";
+
+.proposal {
+  background-color: $darkGray;
+  position: relative;
+}
+
+.proposal-type {
+  font-weight: 400;
+  padding: 5px 10px;
+  border: 2px solid white;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 0 0.5rem 0 0 !important;
+}
+.paper {
+  border-color: #00EDC4;
+  color: #00EDC4;
+}
+
+.participant {
+  border-color: whitesmoke;
+  color: whitesmoke;
+}
+
+.upgrade {
+  border-color: #D841DE;
+  color: #D841DE;
+}
+
+.outcome-box {
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  padding: 15px 20px;
+}
+
+.bottom-right-corner {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-radius: 0 0 0.5rem 0;
+}
+
+.passed {
+  background: $mint;
+}
+
+.failed {
+  background: $red;
+}
+
+.tied {
+  background: $cyan;
+}
+
+</style>
