@@ -3,14 +3,10 @@
     <StackNavigationBar @onBack="goBack">
       {{ `${assetId} - DAO` }}
     </StackNavigationBar>
-    <div>
-      <div v-for="proposal in proposals" v-bind:key="proposal.id">
-        <ProposalListItem :proposal="proposal" :assetId="assetId"/>
-      </div>
-      <h2>
-        ASSET: {{asset}}
-      </h2>
-      <router-view :assetId="assetId"></router-view>
+    <div class="is-flex">
+      <ProposalList v-if="this.activeProposal.length > 0" :proposals="this.activeProposals" :assetId="assetId" proposalStatus="Active Proposals"/>
+      <ProposalList v-if="this.pastProposal.length > 0" :proposals="this.pastProposals" :assetId="assetId" proposalStatus="Past Proposals"/>
+      <!-- <router-view :assetId="assetId"></router-view> -->
     </div>
   </div>
 </template>
@@ -27,10 +23,7 @@
 import { toFixedNumber } from "../../utils/common";
 import { mapGetters, mapActions } from "vuex";
 import StackNavigationBar from "../layout/navigation/StackNavigationBar.vue";
-import Button from "../views/common/Button.vue";
-import ProposalListItem from "../views/voting/ProposalListItem.vue";
-import Accordion from "../utils/Accordion.vue";
-import Address from "../views/address/Address.vue";
+import ProposalList from "../proposals/ProposalList.vue";
 
 export default {
   name: "Voting",
@@ -42,7 +35,7 @@ export default {
   },
   components: {
     StackNavigationBar,
-    ProposalListItem,
+    ProposalList,
 },
   computed: {
     ...mapGetters({
@@ -92,10 +85,31 @@ export default {
       }
       return askETH;
     },
+  
     askPriceString() {
       return toFixedNumber(this.askPrice);
     },
+
+    activeProposals() {
+      return this.assetProposalMap.filter((proposal) => {
+        const endTime = new Date(proposal.endTimestamp * 1000);
+        const currentTime = new Date();
+        return currentTime < endTime;
+      })
+    },
+
+    pastProposals() {
+      const pastProps = this.assetProposalMap.filter((proposal) => {
+        const endTime = new Date(proposal.endTimestamp * 1000);
+        const currentTime = new Date();
+        return currentTime > endTime;
+      });
+
+      console.log(pastProps);
+      return pastProps;
+    },  
   },
+
   methods: {
     ...mapActions({
       refresh: "refreshProposalsDataForAsset",
@@ -110,6 +124,7 @@ export default {
     createProposal() {
       this.$router.push(`/dao/${this.assetId}/paperProposal`);
     },
+  
     isNumber(evt) {
       evt = evt ? evt : window.event;
       var charCode = evt.which ? evt.which : evt.keyCode;
@@ -142,13 +157,16 @@ export default {
           break;
       }
     },
+  
     convertToETH(shares) {
       console.log(this.askPrice);
       return shares * this.askPrice;
     },
+  
     convertToShares(eth) {
       return eth / this.askPrice;
     },
+  
     async performSwap() {
       await this.swap({
         asset: this.asset,
@@ -159,6 +177,7 @@ export default {
       this.orderToValue = 0;
     },
   },
+
   data() {
     return {
       numberFormat: new Intl.NumberFormat("en-US", {
@@ -169,6 +188,7 @@ export default {
       proposalsList: this.proposals,
     };
   },
+
   mounted() {
     this.refresh({ assetId: this.assetId });
     this.syncWallet();
