@@ -104,21 +104,15 @@ const getters = {
   // },
 
   assetProposals(state) {
-    console.log(`STATE.PLATFORM.PROPOSALS`);
-    console.dir(state.platform.proposals);
     return state.platform.proposals
   },
 
   proposalsById(state) {
-    var proposalsMap = new Map()
-
-    console.log(`STATE: ${state.platform.proposals.values()}`)
-
+    const proposalsMap = new Map()
     Array.from(state.platform.proposals.values())
       .flatMap(p => { return p })
       .forEach(p => { proposalsMap.set(p.id, p) })
-
-    console.log(proposalsMap);
+  
     return proposalsMap
   },
 
@@ -326,7 +320,6 @@ const mutations = {
   },
 
   setProposalsForAsset(state, { proposals, assetId }) {
-    console.log(`SettingProposalsForAsset:\n ${proposals}`)
     state.platform.proposals = proposals; // state.platform.proposals.set(assetId, proposals);
   },
 

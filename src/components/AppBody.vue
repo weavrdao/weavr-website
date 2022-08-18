@@ -1,19 +1,7 @@
 <template>
   <div>
     <HeaderNavigationBar />
-    <RouterView class="container p-5" />
- 
-    <div class="container">
-      <section class="columns p-5">
-      <div class="column">
-        <ProposalListVue proposalStatus="Active Proposals" />
-      </div>
-      <div class="column">
-        <ProposalListVue proposalStatus="Past Proposals" />
-      </div>
-    </section>
-    </div>
- 
+    <RouterView class="container p-5" /> 
   </div>
 </template>
 
@@ -26,7 +14,6 @@ export default {
   name: "AppBody",
   components: {
     HeaderNavigationBar,
-    ProposalListVue,
   },
   computed: {
     ...mapGetters({

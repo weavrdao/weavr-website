@@ -42,20 +42,17 @@ class DAO {
         (mapper, response) => { return mapper.mapProposals(response.data.frabric) }
       )
 
-    console.log("Mapped proposals:")
-    console.log(proposals)
-
     // Fetch and append off-chain data
     try {
-      // const offChainData = (await this.storageNetwork.getFiles(proposals.map(p => p.info)));
+      const offChainData = (await this.storageNetwork.getFiles(proposals.map(p => p.info)));
 
     
-      // for(let i=0; i<proposals.length; i++) {
-      //   proposals[i].title = offChainData[i].title;
-      //   proposals[i].description = offChainData[i].description;
-      // }
+      for(let i=0; i<proposals.length; i++) {
+        proposals[i].title = offChainData[i].title;
+        proposals[i].description = offChainData[i].description;
+      }
     } catch(e) {
-      // console.log(e);
+      console.log(e);
 
     // This block is for testing purposes only and should be removed
     } finally {
@@ -69,8 +66,6 @@ class DAO {
         proposals[i].description = offChainData[i].description;
       }
     }
-
-    console.log(proposals);
     return proposals;
   }
 

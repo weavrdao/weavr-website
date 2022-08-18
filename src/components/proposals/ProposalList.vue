@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <h2 class="title is-size-3">{{ proposalStatus }}</h2>
-    <div v-for="proposal in proposals" v-bind:key="proposal.id">
+  <div class="proposal-list column py-3 px-5">
+    <h3 class="title is-size-3">{{ proposalStatus }}</h3>
+    <div v-for="proposal in this.proposals" v-bind:key="proposal.id">
       <ProposalListItem :proposal="proposal" :assetId="assetId"/>
     </div>
   </div>
@@ -31,3 +31,19 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import "../../styles/_variables.sass";
+@import "../../styles/frabric-custom.scss";
+
+.proposal-list {
+  border: 1px solid #575757;
+  border-radius: 10px;
+
+  h3 {
+    color: white;
+    font-size: 2rem;
+  }
+}
+
+</style>

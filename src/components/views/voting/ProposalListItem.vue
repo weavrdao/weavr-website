@@ -102,8 +102,6 @@ export default {
 
     startDate() {
       const startDate = new Date(this.proposal.startTimestamp * 1000);
-      console.log(this.proposal.startTimestamp);
-      console.log(startDate);
       return `${this.padWithZeroes(startDate.getDate())}/${this.padWithZeroes(startDate.getMonth() + 1)}`;
     },
 
@@ -192,10 +190,7 @@ export default {
     },
 
     dateStringForTimestamp(timestamp) {
-      console.log(this.proposal.startTimestamp);
       var date = new Date(timestamp * 1000);
-      console.log(date);
-
       var hours = date.getHours();
       var minutes = date.getMinutes();
       var suffix = " AM";
@@ -230,6 +225,7 @@ export default {
 .proposal {
   background-color: $darkGray;
   position: relative;
+  min-width: 320px;
 }
 
 .proposal-type {

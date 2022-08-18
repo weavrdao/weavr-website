@@ -3,10 +3,16 @@
     <StackNavigationBar @onBack="goBack">
       {{ `${assetId} - DAO` }}
     </StackNavigationBar>
-    <div class="is-flex">
-      <ProposalList v-if="this.activeProposal.length > 0" :proposals="this.activeProposals" :assetId="assetId" proposalStatus="Active Proposals"/>
-      <ProposalList v-if="this.pastProposal.length > 0" :proposals="this.pastProposals" :assetId="assetId" proposalStatus="Past Proposals"/>
-      <!-- <router-view :assetId="assetId"></router-view> -->
+    <div class="columns is-variable is-8">
+      <ProposalList
+        :proposals="activeProposals"
+        :assetId="assetId"
+        :proposalStatus="`Active Proposals`"/>
+      <ProposalList
+        :proposals="pastProposals"
+        :assetId="assetId"
+        :proposalStatus="`Past Proposals`"/>
+      <router-view :assetId="assetId"></router-view>
     </div>
   </div>
 </template>
@@ -95,18 +101,15 @@ export default {
         const endTime = new Date(proposal.endTimestamp * 1000);
         const currentTime = new Date();
         return currentTime < endTime;
-      })
+      });
     },
 
     pastProposals() {
-      const pastProps = this.assetProposalMap.filter((proposal) => {
+      return this.assetProposalMap.filter((proposal) => {
         const endTime = new Date(proposal.endTimestamp * 1000);
         const currentTime = new Date();
         return currentTime > endTime;
       });
-
-      console.log(pastProps);
-      return pastProps;
     },  
   },
 
@@ -143,14 +146,12 @@ export default {
       switch (index) {
         case 0:
           this.orderFromValue = event.target.value;
-          console.log("eth field value", event.target.value);
           this.orderToValue = this.convertToShares(
             this.orderFromValue
           ).toString();
           break;
         case 1:
           this.orderToValue = event.target.value;
-          console.log("shares field value", event.target.value);
           this.orderFromValue = this.convertToETH(this.orderToValue).toString();
           break;
         default:
@@ -159,7 +160,6 @@ export default {
     },
   
     convertToETH(shares) {
-      console.log(this.askPrice);
       return shares * this.askPrice;
     },
   
