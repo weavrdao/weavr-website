@@ -2,7 +2,7 @@
 const network = require("../../../../utils/network")
 const { create } = require("ipfs-http-client")
 import StorageNetwork from "../storageNetwork";
-import { getBytes32FromIpfsHash } from "./common";
+import { getBytes32FromIpfsHash, getIpfsAuthHeader } from "./common";
 import "dotenv/config";
 console.log(process.env);
 
@@ -16,7 +16,7 @@ class IPFSStorageNetwork extends StorageNetwork {
       port: 5001,
       protocol: "https",
       headers: {
-        Authorization: "Basic " + Buffer.from(process.env.PROJECT_ID + ":" + process.env.PROJECT_SECRET).toString("base64"),
+        Authorization: getIpfsAuthHeader(),
       },
     });
   }
@@ -37,9 +37,8 @@ class IPFSStorageNetwork extends StorageNetwork {
     }
   
     let headers = {
-      Authorization: "Basic " + Buffer.from(process.env.PROJECT_ID + ":" + process.env.PROJECT_SECRET).toString("base64"),
+      Authorization: getIpfsAuthHeader(),
     }
-    //headers["Authorization"] = `Basic ${auth}`
   
     let data =  { }
     network
@@ -63,7 +62,7 @@ class IPFSStorageNetwork extends StorageNetwork {
     console.log(names);
     
     let headers = {
-      Authorization: "Basic " + Buffer.from(process.env.PROJECT_ID + ":" + process.env.PROJECT_SECRET).toString("base64"),
+      Authorization: getIpfsAuthHeader(),
     };
 
     const data = {};
