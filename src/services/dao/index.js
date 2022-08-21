@@ -159,9 +159,9 @@ class DAO {
     version,
   ) {
     // Hardcoding these for simplicity
-    const ASSET_ADDRESS = assetAddress || "0x8C1a3931102f4D65c91f2DDA5166f8970f2760A8";
-    const THREAD_DEPLOYER_ADDRESS = "0xF78C9BCA95f98Eb8EB241Af0865946429a8A5050";
-    const BOND_ADDRESS = "0x20cf3b3A2dA25B726eE367e20F5659f1794994a2";
+    const ASSET_ADDRESS = assetAddress || "0xa7930bfc863b895de85307457b976b12515389fb";
+    const THREAD_DEPLOYER_ADDRESS = "0xf033246E5301FD64de5C2bE408262eCeFd2A3aC4";
+    const BOND_ADDRESS = "0x4e8DEF7A306C50c99c8f434bFA0D98aE6B790878";
     const DATA = ethers.utils.defaultAbiCoder.encode(
       ["address", "address"],
       [BOND_ADDRESS, THREAD_DEPLOYER_ADDRESS],

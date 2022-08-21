@@ -4,7 +4,6 @@ const { create } = require("ipfs-http-client")
 import StorageNetwork from "../storageNetwork";
 import { getBytes32FromIpfsHash, getIpfsAuthHeader } from "./common";
 import "dotenv/config";
-console.log(process.env);
 
 const baseInfuraURL = "https://ipfs.infura.io:5001/api/v0";
 
@@ -21,7 +20,8 @@ class IPFSStorageNetwork extends StorageNetwork {
     });
   }
 
-  async addFile(file) { 
+  async addFile(file) {
+    console.log(getIpfsAuthHeader());
     let jsonString = JSON.stringify(file, null, 2)
     console.log("JSON: ", jsonString);
     return await this.ipfsAPIClient.add(jsonString, { pin: true });

@@ -15,7 +15,7 @@ export default new createRouter({
     {
       path: "/dao/:assetId",
       component: Voting,
-      props: {assetId: "0x8C1a3931102f4D65c91f2DDA5166f8970f2760A8"},
+      props: {assetId: "0x0d443712225ad4d31c9086fc7564cc86f8219567"},
       alias: "/frabric",
       children: [
         {
