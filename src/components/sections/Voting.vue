@@ -3,6 +3,7 @@
     <StackNavigationBar @onBack="goBack">
       {{ `${assetId} - DAO` }}
     </StackNavigationBar>
+    <NewProposalSelector/>
     <div class="columns is-variable is-8">
       <ProposalList
         :proposals="activeProposals"
@@ -30,6 +31,7 @@ import { toFixedNumber } from "../../utils/common";
 import { mapGetters, mapActions } from "vuex";
 import StackNavigationBar from "../layout/navigation/StackNavigationBar.vue";
 import ProposalList from "../proposals/ProposalList.vue";
+import NewProposalSelector from "./NewProposalSelector.vue";
 
 export default {
   name: "Voting",
@@ -42,6 +44,7 @@ export default {
   components: {
     StackNavigationBar,
     ProposalList,
+    NewProposalSelector,
 },
   computed: {
     ...mapGetters({

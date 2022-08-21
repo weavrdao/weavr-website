@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 const faker = require("faker/locale/en")
 
 export const proposals = [
@@ -51,7 +52,7 @@ export const marketOffers = () => {
           }
         },
         property: {
-          address: `${ faker.address.streetAddress(true) }, ${ faker.address.cityName() }, ${ faker.address.stateAbbr() }, ${ faker.address.zipCode() }, ${ faker.address.country() }`,
+          address: `${faker.address.streetAddress(true)}, ${faker.address.cityName()}, ${faker.address.stateAbbr()}, ${faker.address.zipCode()}, ${faker.address.country()}`,
           currentRent: faker.datatype.number(8000) + 800,
           marketValue: faker.datatype.number(90000000) + 200000,
           area: faker.datatype.number(3000) + 1000,
@@ -104,7 +105,7 @@ export const myAssets = () => {
           }
         },
         property: {
-          address: `${ faker.address.streetAddress(true) }, ${ faker.address.cityName() }, ${ faker.address.stateAbbr() }, ${ faker.address.zipCode() }, ${ faker.address.country() }`,
+          address: `${faker.address.streetAddress(true)}, ${faker.address.cityName()}, ${faker.address.stateAbbr()}, ${faker.address.zipCode()}, ${faker.address.country()}`,
           currentRent: faker.datatype.number(8000) + 800,
           marketValue: faker.datatype.number(90000000) + 200000,
           area: faker.datatype.number(3000) + 1000,

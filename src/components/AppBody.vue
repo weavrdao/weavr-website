@@ -1,7 +1,7 @@
 <template>
   <div>
     <HeaderNavigationBar />
-    <RouterView class="container p-5" />
+    <RouterView class="main container p-5" />
     <Footer />
   </div>
 </template>
@@ -24,3 +24,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.main {
+  min-height: calc(100vh - 600px);
+}
+</style>
