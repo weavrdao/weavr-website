@@ -1,11 +1,12 @@
 import * as CommonUtils from "../../utils/common"
 import StorageNetwork from "../../data/network/storage/storageNetwork"
-import {Proposal} from "../../models/proposal"
+import { Proposal } from "../../models/proposal"
 import { VoteType } from "../../models/vote"
 import { GraphQLAPIClient, ALL_ASSETS_QUERY, PARTICIPANTS_PER_DAO, ALL_PROPOSALS } from "../../data/network/graph/graphQLAPIClient"
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
 import AssetContract from "../../data/network/web3/contracts/assetContract"
 import { ethers } from "ethers"
+import { getBytes32FromIpfsHash } from "../../data/network/storage/ipfs/common";
 // TODO: Should there be a single service instance per proposal?
 
 /**
@@ -45,27 +46,34 @@ class DAO {
     // Fetch and append off-chain data
     try {
       const offChainData = (await this.storageNetwork.getFiles(proposals.map(p => p.info)));
+      console.log(offChainData);
 
-    
-      for(let i=0; i<proposals.length; i++) {
-        proposals[i].title = offChainData[i].title;
-        proposals[i].description = offChainData[i].description;
+      for (let i = 0; i < proposals.length; i++) {
+        console.log(offChainData[i]);
+        if (offChainData[i].value) {
+          proposals[i].title = offChainData[i].value.title || "Untitled";
+          proposals[i].description = offChainData[i].value.description || "No description";
+        } else {
+          proposals[i].title = "Untitled";
+          proposals[i].description = "No description";
+        }
+
       }
-    } catch(e) {
+    } catch (e) {
       console.log(e);
+    }
 
     // This block is for testing purposes only and should be removed
-    } finally {
-      const offChainData = (new Array(proposals.length)).fill({
-        title: "Test title",
-        description: "Test description",
-      }, 0, proposals.length);
-
-      for(let i=0; i<proposals.length; i++) {
-        proposals[i].title = offChainData[i].title;
-        proposals[i].description = offChainData[i].description;
-      }
-    }
+    // } finally {
+    //   const offChainData = (new Array(proposals.length)).fill({
+    //     title: "Test title",
+    //     description: "Test description",
+    //   }, 0, proposals.length);
+    //   for (let i = 0; i < proposals.length; i++) {
+    //     proposals[i].title = offChainData[i].title;
+    //     proposals[i].description = offChainData[i].description;
+    //   }
+    // }
     return proposals;
   }
 
@@ -82,24 +90,15 @@ class DAO {
     title,
     description
   ) {
-    const assetContract = new AssetContract(this.ethereumClient, asset)
-    console.log("DAO-service: ", asset, ", ", title, ", ", description)
-    let proposalCID = await this.storageNetwork
-      .addFile(
-        {
-          title: title,
-          description: description
-        }
-      )
-    console.log("here or not");
-    if (proposalCID == null) {
-      console.log("CID not created");
-      return
-    }
-    let proposalURI = ethers.utils.id(proposalCID) 
-    
-    let status = await assetContract.proposePaper(false, proposalURI)
+    const assetContract = new AssetContract(this.ethereumClient, asset);
 
+    const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
+      title,
+      description,
+    });
+    if (!infoHash) return;
+
+    const status = await assetContract.proposePaper(false, infoHash);
     return status
   }
 
@@ -119,21 +118,15 @@ class DAO {
     console.log("###### ASSET: ", assetId);
     const assetContract = new AssetContract(this.ethereumClient, assetId)
     console.log("DAO-service:\t", participantType, ", ", description)
-    let proposalCID = await this.storageNetwork
-      .addFile(
-        {
-          description: "This participant has been proposed as KYC"
-        }
-      )
+    let infoHash = await this.storageNetwork
+      .uploadAndGetPathAsBytes({
+        title: `Proposing ${participant} for level ${participantType}`,
+        description
+      });
 
-    if (proposalCID == null) {
-      return
-    }
-    const hashedCID = this.storageNetwork.getBytes32FromIpfsHash(proposalCID.path)
-    // console.log((await this.storageNetwork.getFile(proposalCID)))
-    console.log(proposalCID.path);
-    let status = await assetContract.proposeParticipant(3, participant, hashedCID)
+    if (!infoHash) return;
 
+    let status = await assetContract.proposeParticipant(3, participant, infoHash)
     return status
   }
 
@@ -166,7 +159,7 @@ class DAO {
       ["address", "address"],
       [BOND_ADDRESS, THREAD_DEPLOYER_ADDRESS],
     );
-  
+
     const assetContract = new AssetContract(this.ethereumClient, ASSET_ADDRESS);
 
     console.dir(assetContract);
@@ -213,7 +206,7 @@ class DAO {
 
     const ipfsPathBytes = await this.storageNetwork
       .uploadAndGetPathAsBytes({ title, description });
-    
+
     const status = await assetContract.proposeTokenAction(
       tokenAddress,
       targetAddress,
@@ -248,15 +241,15 @@ class DAO {
     const assetContract = new AssetContract(this.ethereumClient, asset);
 
     let signArgs = JSON.parse(JSON.stringify(signCfg))
-    signArgs[1] = {Vouch: signArgs[1].Vouch}
-    console.log("SIGNARGS: ", signArgs, participant);   
+    signArgs[1] = { Vouch: signArgs[1].Vouch }
+    console.log("SIGNARGS: ", signArgs, participant);
     let signature = (await this.ethereumClient
       .getSignature(signArgs, participant))
     console.log("after signature");
     console.log("Signature", signature);
     signature = ethers.utils.defaultAbiCoder.encode(signature)
     console.log("Encoded Signature: ", signature);
-      const tx_result = await assetContract.vouch(participant, signature)
+    const tx_result = await assetContract.vouch(participant, signature)
   }
   /**
    * Vote on a proposal
@@ -275,17 +268,17 @@ class DAO {
     let status
 
     switch (voteType) {
-    case VoteType.Yes:
-      status = await assetContract.voteYes(proposal.id)
-      break
-    case VoteType.No:
-      status = await assetContract.voteNo(proposal.id)
-      break
-    case VoteType.Abstain:
-      // Not supported at the moment
-      break
-    default: VoteType.Abstain
-      break
+      case VoteType.Yes:
+        status = await assetContract.voteYes(proposal.id)
+        break
+      case VoteType.No:
+        status = await assetContract.voteNo(proposal.id)
+        break
+      case VoteType.Abstain:
+        // Not supported at the moment
+        break
+      default: VoteType.Abstain
+        break
     }
 
     return status

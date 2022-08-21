@@ -20,20 +20,20 @@ class TheGraphAPIClient extends GraphQLAPIClient {
   async query(query, vars = {}, mappingCallback) {
     return new Promise((resolve) => {
       this.client
-      .query({
-        query: query,
-        variables: vars,
-        fetchPolicy: "no-cache"
-      })
-      .then(response => {
-        console.log("Query result:")
-        console.log(response)
-        resolve(mappingCallback(this.mapper, response))
-      })
-      .catch(err => { 
-        // TODO: Propagate error
-        console.log("Error fetching data: ", err) 
-      })
+        .query({
+          query: query,
+          variables: vars,
+          fetchPolicy: "no-cache"
+        })
+        .then(response => {
+          console.log("Query result:")
+          console.log(response)
+          resolve(mappingCallback(this.mapper, response))
+        })
+        .catch(err => {
+          // TODO: Propagate error
+          console.log("Error fetching data: ", err)
+        })
     })
   }
 }

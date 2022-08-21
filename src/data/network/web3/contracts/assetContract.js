@@ -16,7 +16,7 @@ const contractAbi = [
 
   // Create an upgrade proposal
   "function proposeUpgrade(address beacon, address instance, uint256 version, address code, bytes data, bytes32 info) returns (uint256 id)",
-  
+
   // Create a token action proposal
   "function proposeTokenAction(address token, address target, bool mint, uint256 price, uint256 amount, bytes32 info) returns (uint256 id)",
 
@@ -62,15 +62,11 @@ class AssetContract {
     supermajority,
     info
   ) {
-    console.log(this.mutableContract.address);
-    const bytesInfo = ethers.utils.id(info)
+    console.log(`SENT DIRECTLY TO CONTRACT: ${info}`);
     let tx = await this.mutableContract
       .proposePaper(
         supermajority,
-        bytesInfo, 
-        {
-          gasLimit: 500000
-        }
+        info,
       )
     await tx.wait()
   }
@@ -79,30 +75,16 @@ class AssetContract {
    * Create a participant proposal
    * @param {bytes32} info Proposal info
    */
-   async proposeParticipant(
-    participantType, 
-    participant, 
+  async proposeParticipant(
+    participantType,
+    participant,
     info
   ) {
-    console.log("Creating a proposal..", info)
-    console.log(this.mutableContract.address);
-    // const bytesInfo = ethers.utils.id(info)
-    
-    // console.log("string: ", info, " bytes: ", bytesInfo)
-      const hashHex = '1220' + info.slice(2)
-      const hashBytes = Buffer.from(hashHex, 'hex')
-      const hashStr = base58.encode(hashBytes)
-      console.log("info: ", info,  "|| decoded: ", hashStr )
-  
-  
     let tx = await this.mutableContract
       .proposeParticipant(
         participantType,
         participant,
-        info, 
-        {
-          gasLimit: 5000000
-        }
+        info
       )
     let status = (await tx.wait()).status
     console.log(status)
@@ -118,14 +100,6 @@ class AssetContract {
     info,
   ) {
     console.log("Creating upgrade proposal...");
-    console.log({
-      beacon,
-      instance,
-      version,
-      code,
-      data,
-      info,
-    });
     const tx = await this.mutableContract
       .proposeUpgrade(
         beacon,
@@ -187,12 +161,12 @@ class AssetContract {
     let status = (await tx.wait()).status;
     console.log(status);
     return status
-  } 
+  }
 
   /** 
    * Check if participant can make a proposal 
   */
-   async canPropose(proposer){
+  async canPropose(proposer) {
     let tx = await this.mutableContract
       .canPropose(proposer,
         {
@@ -201,7 +175,7 @@ class AssetContract {
       )
     let status = (await tx.wait()).status
     console.log(status)
-   }
+  }
 
   /**
    * Make a buy order
@@ -217,7 +191,7 @@ class AssetContract {
 
     let tx = await this.mutableContract
       .buy(
-        amount, 
+        amount,
         price,
         {
           value: BigInt(amount) * BigInt(price),
@@ -239,7 +213,7 @@ class AssetContract {
 
     let tx = await this.mutableContract
       .voteYes(
-        proposalId, 
+        proposalId,
         {
           gasLimit: 5000000
         }
@@ -259,7 +233,7 @@ class AssetContract {
 
     let tx = await this.mutableContract
       .voteNo(
-        proposalId, 
+        proposalId,
         {
           gasLimit: 5000000
         }
@@ -276,24 +250,24 @@ class AssetContract {
    * @param {uint256} purchaseAmount Amount proposed for the purchase
    */
   async proposeDissolution(
-    info, 
-    purchaser, 
-    token, 
+    info,
+    purchaser,
+    token,
     purchaseAmount
   ) {
     console.log("Dissolution proposal for " + token, + " by " + purchaser + "for $" + purchaseAmount)
 
     let tx = await this.mutableContract
       .proposeDissolution(
-        info, 
-        purchaser, 
-        token, 
+        info,
+        purchaser,
+        token,
         purchaseAmount,
         {
           gasLimit: 5000000
         }
       )
-      
+
     return (await tx.wait()).status
   }
 }

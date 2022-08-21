@@ -15,41 +15,41 @@ class IPFSStorageNetwork extends StorageNetwork {
       port: 5001,
       protocol: "https",
       headers: {
-        Authorization: getIpfsAuthHeader(),
+        authorization: getIpfsAuthHeader(),
       },
     });
   }
 
   async addFile(file) {
-    console.log(getIpfsAuthHeader());
     let jsonString = JSON.stringify(file, null, 2)
     console.log("JSON: ", jsonString);
-    return await this.ipfsAPIClient.add(jsonString, { pin: true });
+    const test = await this.ipfsAPIClient.add(jsonString, { pin: true });
+    return test;
   }
-  
+
   getFile = (
     name
-  ) => new Promise((resolve, reject) => {
+  ) => new Promise((resolve) => {
     const url = `${baseInfuraURL}/cat`;
-  
-    let params = { 
+
+    let params = {
       arg: name
     }
-  
+
     let headers = {
       Authorization: getIpfsAuthHeader(),
     }
-  
-    let data =  { }
+
+    let data = {}
     network
       .postRequest(
-        url, 
-        params, 
-        headers, 
+        url,
+        params,
+        headers,
         data
       )
       .then((res) => {
-        resolve(res)
+        resolve(res.value || null)
       })
       .catch((err) => {
         resolve(null)
@@ -59,8 +59,9 @@ class IPFSStorageNetwork extends StorageNetwork {
   // eslint-disable-next-line class-methods-use-this
   async getFiles(names) {
     console.log("Requesting files from IPFS")
-    console.log(names);
-    
+
+    const requestURL = `${baseInfuraURL}/cat`;
+
     let headers = {
       Authorization: getIpfsAuthHeader(),
     };
@@ -68,25 +69,24 @@ class IPFSStorageNetwork extends StorageNetwork {
     const data = {};
 
     const requests = names.map(async name => {
-      let params = { 
+      let params = {
         arg: name
       }
 
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         network
           .postRequest(
-            baseInfuraURL, 
-            params, 
-            headers, 
+            requestURL,
+            params,
+            headers,
             data
           )
-          .then(response => {
-            console.log("resolving");
-            resolve(response)
+          .then(res => {
+            resolve(res || null)
           })
-          .catch((thrown) => {
-            console.log("rejecting")
-            reject(null)
+          .catch(() => {
+            console.log("Request failed")
+            resolve(null);
           })
       })
     })
@@ -94,8 +94,13 @@ class IPFSStorageNetwork extends StorageNetwork {
   }
 
   async uploadAndGetPathAsBytes(file) {
-    const cid = await this.addFile(file);
-    return getBytes32FromIpfsHash(cid.path);
+    try {
+      const cid = await this.addFile(file);
+      return getBytes32FromIpfsHash(cid.path);
+    } catch (e) {
+      console.log(e);
+      throw new Error("Could not upload files to IPFS");
+    }
   }
 }
 
