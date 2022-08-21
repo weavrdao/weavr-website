@@ -1,31 +1,52 @@
 <template>
 <div class="is-flex is-jusify-content-space-between select my-5">
   <select v-model="selectedProposal">
-    <option>Paper Proposal</option>
-    <option>Token Action</option>
+    <option
+      v-for="actionType in this.actionTypes"
+      v-bind:value="{ path: actionType.path, name: actionType.name }"
+      v-bind:key="actionType.path">
+      {{ actionType.name }}
+    </option>
   </select>
   <button @click="routeToPage">Create Proposal</button>
 </div>
 </template>
 
 <script>
-
-const actionTypes = {
-  "Paper Proposal": "paperProposal",
-  "Token Action": "tokenProposal",
-}
-
-
 export default {
   name: "NewProposalSelector",
   data () {
     return {
-      selectedAction: "Paper Proposal",
-    }
+      selectedAction: {
+        path: "paperProposal",
+        name: "Paper Proposal"
+      },
+      actionTypes: [
+        {
+          path: "paperProposal",
+          name: "Paper Proposal"
+        },
+        {
+          path: "tokenProposal",
+          name: "Token Action",
+        },
+        {
+          path: "participantProposal",
+          name: "Participant Proposal"
+        },
+        {
+          path: "upgradeProposal",
+          name: "Upgrade Proposal",
+        },
+        {
+          path: "vouch",
+          name: "Participant Vouch",
+        }
+    ]}
   },
   methods: {
     routeToPage() {
-      console.log(actionTypes[this.selectedAction])
+      console.log(this.selectedAction.path);
     }
   }
 }
