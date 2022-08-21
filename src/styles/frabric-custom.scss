@@ -36,7 +36,7 @@ $red-invert: findColorInver($red);
 $cyan-invert: findColorInver($cyan);
 
 // SCHEME SETUP
-$scheme-main:$black;
+$scheme-main: $black;
 $scheme-color: $lightGray;
 $text: $lightGray;
 
@@ -44,21 +44,23 @@ $primary: $mediumBlue;
 $primary-invert: findColorInvert($primary);
 $danger: $lightBlue;
 
-$transparent: rgba(0,0,0,0);
+$transparent: rgba(0, 0, 0, 0);
 
 // Setup the new serif family
 $family-primary: $family-sans-serif;
 
 // Components and tags Styling
-$input-color:$lightBlue;
+$input-color: $lightBlue;
 
 $strong-color: $white;
 $border-light: $mediumBlue;
-$scheme-main-bis:$danger;
-$navbar-item-active-color:#fff;
+$scheme-main-bis: $danger;
+$navbar-item-active-color: #fff;
 $card-radius: 0.50rem;
+$tiny-radius: 5px;
+$small-radius: 10px;
 
-input{
+input {
   border: $mediumBlue solid 1px !important;
 }
 
@@ -66,13 +68,16 @@ input{
 .has-radius-md {
   border-radius: 0.50rem !important;
 }
+
 .has-radius-lg {
   border-radius: 1rem !important;
 }
+
 //BORDER
 .has-border-bottom {
   border-bottom: $white 1px solid !important;
 }
+
 .has-full-borders {
   border: $white 1px solid !important;
 }
