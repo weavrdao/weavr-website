@@ -213,11 +213,22 @@ class DAO {
 
   async vouch(asset, domain, participant) {
     const signCfg = [
-      domain,
       {
-        Vouch: [{type: "address", name: "participant"}]
-      }
+        name: "Frabric Protocol",
+        version: "1",
+        chainId: 4,
+      },
+      {
+        Vouch: [{ type: "address", name: "participant" }],
+        KYCVerification: [
+          { type: "uint8", name: "participantType" },
+          { type: "address", name: "participant" },
+          { type: "bytes32", name: "kyc" },
+          { type: "uint256", name: "nonce" },
+        ],
+      },
     ]
+
     console.log("asset from DAO: ", asset);
     const assetContract = new AssetContract(this.ethereumClient, asset);
 
@@ -257,6 +268,8 @@ class DAO {
       break
     case VoteType.Abstain:
       // Not supported at the moment
+      break
+    default: VoteType.Abstain
       break
     }
 
