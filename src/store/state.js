@@ -239,7 +239,7 @@ const actions = {
       description,
       version,
     )
-
+      
     console.log(status);
   },
 
@@ -269,10 +269,9 @@ const actions = {
     const status = await dao.vouch(
       assetAddr, 
       {
-            name: 'Frabric Protocol',
-            version: '2',
-            chainId: 4,
-          
+        name: "Frabric Protocol",
+        version: "2",
+        chainId: 4,   
       },
       participant)
   // async vouch(params) {
