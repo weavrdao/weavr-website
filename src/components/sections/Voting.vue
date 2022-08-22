@@ -1,8 +1,6 @@
 <template>
   <div v-if="assetId" class="container p-5 is-dark">
-    <StackNavigationBar @onBack="goBack">
-      {{ `${assetId} - DAO` }}
-    </StackNavigationBar>
+    <StackNavigationBar @onBack="goBack" :address="assetId" />
     <NewProposalSelector/>
     <div class="columns is-variable is-8">
       <ProposalList

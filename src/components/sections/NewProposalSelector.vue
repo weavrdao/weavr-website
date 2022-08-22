@@ -8,7 +8,7 @@
       </option>
     </select>
   </div>
-  <button class="has-background-mediumBlue button has-text-white mt-5 p-5" @click="routeToPage">Create Proposal</button>
+  <button class="has-background-mediumBlue button has-text-white mt-5 p-5" @click="routeToSelectedPage">Create Proposal</button>
 </div>
 </template>
 
@@ -44,9 +44,9 @@ export default {
     }
   },
   methods: {
-    routeToPage() {
-      this.$router.push(`/frabric/${this.selectedAction}`)
-    }
+    routeToSelectedPage() {
+      this.$router.push(`/frabric/${this.selectedAction}`);
+    },
   }
 }
 </script>
