@@ -1,14 +1,14 @@
 <template>
-<div class="proposal-selector is-flex is-justify-content-space-between my-5 mx-0 p-5">
+<div class="proposal-selector is-flex is-justify-content-space-between is-align-items-center my-5 mx-0 p-5">
   <div>
     <label for="proposal-selector">Type of Proposal</label>
-    <select class="select" v-model="selectedAction">
+    <select class="select is-medium has-background-darkGray has-text-white px-3 my-2"  v-model="selectedAction">
       <option v-for="option in actionTypes" :value="option.id" v-bind:key="option.id">
         {{ option.name }}
       </option>
     </select>
   </div>
-  <button class="has-background-mediumBlue button has-text-white" @click="routeToPage">Create Proposal</button>
+  <button class="has-background-mediumBlue button has-text-white mt-5 p-5" @click="routeToPage">Create Proposal</button>
 </div>
 </template>
 
@@ -52,6 +52,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../styles/frabric-custom.scss";
+
 .proposal-selector {
   border: 1px solid #575757;
   border-radius: 10px;
@@ -59,5 +61,7 @@ export default {
 
 .select {
   display: block;
+  border-radius: $tiny-radius;
 }
+
 </style>

@@ -24,6 +24,14 @@
   flex-wrap: wrap;
   align-content: center; /* used this for multiple child */
 }
+
+.columns {
+   /* Bulma uses negative margin and ruins alignment  */
+  margin-left: unset !important;
+  margin-right: unset !important;
+  margin-top: 1.5rem;
+  gap: 1.5rem;
+}
 </style>
 
 <script>
