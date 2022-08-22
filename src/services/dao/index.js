@@ -46,10 +46,8 @@ class DAO {
     // Fetch and append off-chain data
     try {
       const offChainData = (await this.storageNetwork.getFiles(proposals.map(p => p.info)));
-      console.log(offChainData);
 
       for (let i = 0; i < proposals.length; i++) {
-        console.log(offChainData[i]);
         if (offChainData[i].value) {
           proposals[i].title = offChainData[i].value.title || "Untitled";
           proposals[i].description = offChainData[i].value.description || "No description";
@@ -62,18 +60,6 @@ class DAO {
     } catch (e) {
       console.log(e);
     }
-
-    // This block is for testing purposes only and should be removed
-    // } finally {
-    //   const offChainData = (new Array(proposals.length)).fill({
-    //     title: "Test title",
-    //     description: "Test description",
-    //   }, 0, proposals.length);
-    //   for (let i = 0; i < proposals.length; i++) {
-    //     proposals[i].title = offChainData[i].title;
-    //     proposals[i].description = offChainData[i].description;
-    //   }
-    // }
     return proposals;
   }
 
@@ -115,9 +101,7 @@ class DAO {
     participant,
     description,
   ) {
-    console.log("###### ASSET: ", assetId);
     const assetContract = new AssetContract(this.ethereumClient, assetId)
-    console.log("DAO-service:\t", participantType, ", ", description)
     let infoHash = await this.storageNetwork
       .uploadAndGetPathAsBytes({
         title: `Proposing ${participant} for level ${participantType}`,
@@ -162,8 +146,6 @@ class DAO {
 
     const assetContract = new AssetContract(this.ethereumClient, ASSET_ADDRESS);
 
-    console.dir(assetContract);
-
     const ipfsPathBytes = await this.storageNetwork
       .uploadAndGetPathAsBytes(
         {
@@ -171,15 +153,6 @@ class DAO {
           description: description
         }
       );
-
-    console.log({
-      beaconAddress,
-      instanceAddress,
-      version,
-      codeAddress,
-      DATA,
-      ipfsPathBytes,
-    })
 
     const status = await assetContract.proposeUpgrade(
       beaconAddress,
@@ -236,8 +209,6 @@ class DAO {
         ],
       },
     ]
-
-    console.log("asset from DAO: ", asset);
     const assetContract = new AssetContract(this.ethereumClient, asset);
 
     let signArgs = JSON.parse(JSON.stringify(signCfg))
@@ -245,10 +216,7 @@ class DAO {
     console.log("SIGNARGS: ", signArgs, participant);
     let signature = (await this.ethereumClient
       .getSignature(signArgs, participant))
-    console.log("after signature");
-    console.log("Signature", signature);
     signature = ethers.utils.defaultAbiCoder.encode(signature)
-    console.log("Encoded Signature: ", signature);
     const tx_result = await assetContract.vouch(participant, signature)
   }
   /**

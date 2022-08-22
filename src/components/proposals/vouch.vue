@@ -2,7 +2,7 @@
   <div class="container p-5">
     <!-- PAPER PROPOSAL FORM -->
     <div class="field">
-      <label class="label">PArticipant</label>
+      <label class="label">Participant</label>
       <div class="control">
         <input class="input" v-model="participant" type="text" placeholder="Text input">
       </div>
@@ -54,11 +54,6 @@ export default {
       const assetAddr = this.assetId;
       
       const participant = this.participant;
-      console.log(
-        "COMponent: ",
-         this.assetId,
-         this.participant
-      )
       await this.vouchParticipant({assetAddr, participant})
       },
   },

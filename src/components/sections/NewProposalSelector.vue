@@ -1,14 +1,14 @@
 <template>
-<div class="is-flex is-jusify-content-space-between select my-5">
-  <select v-model="selectedProposal">
-    <option
-      v-for="actionType in this.actionTypes"
-      v-bind:value="{ path: actionType.path, name: actionType.name }"
-      v-bind:key="actionType.path">
-      {{ actionType.name }}
-    </option>
-  </select>
-  <button @click="routeToPage">Create Proposal</button>
+<div class="proposal-selector is-flex is-justify-content-space-between my-5 mx-0 p-5">
+  <div>
+    <label for="proposal-selector">Type of Proposal</label>
+    <select class="select" v-model="selectedAction">
+      <option v-for="option in actionTypes" :value="option.id" v-bind:key="option.id">
+        {{ option.name }}
+      </option>
+    </select>
+  </div>
+  <button class="has-background-mediumBlue button has-text-white" @click="routeToPage">Create Proposal</button>
 </div>
 </template>
 
@@ -17,36 +17,35 @@ export default {
   name: "NewProposalSelector",
   data () {
     return {
-      selectedAction: {
-        path: "paperProposal",
-        name: "Paper Proposal"
-      },
+      selectedAction: "paperProposal",
+      // The id field here must match the desired page path
       actionTypes: [
         {
-          path: "paperProposal",
+          id: "paperProposal",
           name: "Paper Proposal"
         },
         {
-          path: "tokenProposal",
+          id: "tokenProposal",
           name: "Token Action",
         },
         {
-          path: "participantProposal",
+          id: "participantProposal",
           name: "Participant Proposal"
         },
         {
-          path: "upgradeProposal",
+          id: "upgradeProposal",
           name: "Upgrade Proposal",
         },
         {
-          path: "vouch",
+          id: "vouch",
           name: "Participant Vouch",
         }
-    ]}
+      ],
+    }
   },
   methods: {
     routeToPage() {
-      console.log(this.selectedAction.path);
+      this.$router.push(`/frabric/${this.selectedAction}`)
     }
   }
 }
@@ -56,5 +55,9 @@ export default {
 .proposal-selector {
   border: 1px solid #575757;
   border-radius: 10px;
+}
+
+.select {
+  display: block;
 }
 </style>
