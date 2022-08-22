@@ -2,8 +2,8 @@
 <div>
 <div class="tag is-large is-flex is-address-container" v-if="address !=null">
   <div>
-    <span>5,250 </span>
-    <span class="has-text-medium-blue">FBRC</span>
+    <span>{{ balance }}</span>
+    <span class="has-text-medium-blue"> FBRC</span>
   </div>
   <div
     class="tag is-primary has-radius-xs is-large is-clickable"
@@ -33,17 +33,22 @@ export default {
   computed: {
     ...mapGetters({
       address: "userWalletAddress",
+      balance: "userTokenBalance",
     }),
   },
   methods: {
     ...mapActions({
       sync: "syncWallet",
+      getTokenBalance: "getTokenBalance",
     }),
     onClick() {
       this.sync({ $toast: this.$toast });
       this.$toast.show("Syncing wallet...");
     },
   },
+  mounted() {
+    this.getTokenBalance();
+  }
 };
 </script>
 

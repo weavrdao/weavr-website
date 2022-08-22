@@ -1,11 +1,11 @@
 import Wallet from "./wallet"
 import Market from "./market"
 import DAO from "./dao"
+import Token from "./token";
 import IPFSStorageNetwork from "../data/network/storage/ipfs/IPFSStorageNetwork"
 import EthereumClient from "../data/network/web3/ethereum/ethereumClient"
 import TheGraphAPIClient from "../data/network/graph/implementation/theGraphAPIClient"
 import TheGraphAPIMapper from "../data/network/graph/implementation/theGraphAPIClientMapper"
-
 const graphQLAPIClient = new TheGraphAPIClient(new TheGraphAPIMapper())
 const ethereumClient = new EthereumClient()
 const storageNetwork = new IPFSStorageNetwork()
@@ -20,7 +20,7 @@ class ServiceProvider {
       ethereumClient
     )
   }
-  
+
   /**
    * Creates market service.
    * @returns {Market} Market service
@@ -41,6 +41,12 @@ class ServiceProvider {
       ethereumClient,
       graphQLAPIClient,
       storageNetwork
+    )
+  }
+
+  static token() {
+    return new Token(
+      ethereumClient,
     )
   }
 }
