@@ -101,3 +101,38 @@ $colors: map-merge($colors, $addColors);
 
 // Importing the rest of Bulma
 @import "../../node_modules/bulma/bulma.sass";
+
+
+// Explicit Bulma class overrides
+
+.label {
+  color: white;
+}
+
+.textarea {
+  border-color: $mediumBlue;
+  min-height: 200px;
+  max-width: 100%;
+  min-width: 100%;
+
+  &:hover {
+    border-color: $mediumBlue;
+  }
+}
+
+.button {
+  border: none;
+  transition: all 150ms;
+
+  &:hover {
+    filter: contrast(140%);
+  }
+}
+
+.select {
+  display: block;
+  cursor: pointer;
+  outline: none !important;
+  border-color: $mediumBlue  !important;
+  border-radius: $tiny-radius;
+}

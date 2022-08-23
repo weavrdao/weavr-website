@@ -1,30 +1,28 @@
 <template>
-  <div class="container p-5">
-    <!-- PAPER PROPOSAL FORM -->
-    <div class="field">
-      <label class="label">Title</label>
-      <div class="control">
-        <input class="input" v-model="title" type="text" placeholder="Text input">
-      </div>
+<div class="container p-5">
+  <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Paper Proposal</div>
+  <!-- PAPER PROPOSAL FORM -->
+  <div class="field">
+    <label class="label">Title</label>
+    <div class="control">
+      <input class="input" v-model="title" type="text" placeholder="Enter title here">
     </div>
-    
-    <div class="field">
-      <label class="label">Description</label>
-      <div class="control">
-        <textarea class="textarea" v-model="description" placeholder="e.g. Hello world"></textarea>
-      </div>
-    </div>
-
-    <div class="field is-grouped">
-      <div class="control">
-        <button class="button is-link" @click="publish">Submit Proposal</button>
-      </div>
-      <div class="control">
-        <button class="button is-link is-light">Cancel</button>
-      </div>
-    </div>
-    <!-- End Form -->
   </div>
+  
+  <div class="field">
+    <label class="label">Description</label>
+    <div class="control">
+      <textarea class="textarea" v-model="description" placeholder="Enter description here"></textarea>
+    </div>
+  </div>
+
+  <div class="is-flex is-justify-content-space-between mt-5">
+    <button @click="publish" class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
+    <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
+  </div>
+  <!-- End Form -->
+</div>
+
 </template>
 
 <script>
@@ -37,11 +35,10 @@ export default {
     assetId: {
       type: String,
       required: true,
-    },
+    }
   },
   data(){
     return {
-    
       title: "",
       description: "",
       proposalType: CommonProposalType.Paper
@@ -63,6 +60,7 @@ export default {
       createPaperProposal: "createPaperProposal",
     }),
     async publish() {
+      console.dir(this.trigger);
       if (this.title.length < 1 || this.description.length < 1) {
         return;
       }
@@ -75,6 +73,9 @@ export default {
       
       await this.createPaperProposal({assetAddr, proposalType, title, description});
     },
+    onCancel() {
+      this.$router.push("/frabric");
+    }
   },
   mounted() {
     this.refresh({ assetId: this.assetId });

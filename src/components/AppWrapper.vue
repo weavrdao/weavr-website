@@ -2,6 +2,7 @@
   <div>
     <Background />
     <AppBody />
+    <div id="modal-portal-target"></div>
   </div>
 </template>
 
