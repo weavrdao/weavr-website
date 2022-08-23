@@ -1,22 +1,21 @@
 <template>
   <div>
     <HeaderNavigationBar />
-    <main class="mt-6 mb-6">
-      <div class="container mt-3 mb-3">
-        <RouterView class="container p-5" />
-      </div>
-    </main>
+    <RouterView class="main container p-5" />
+    <Footer />
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import HeaderNavigationBar from "./layout/navigation/HeaderNavigationBar.vue";
+import Footer from "./layout/navigation/Footer.vue";
 
 export default {
   name: "AppBody",
   components: {
     HeaderNavigationBar,
+    Footer,
   },
   computed: {
     ...mapGetters({
@@ -25,3 +24,10 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.main {
+  min-height: calc(100vh - 600px);
+  margin: 0 auto;
+}
+</style>

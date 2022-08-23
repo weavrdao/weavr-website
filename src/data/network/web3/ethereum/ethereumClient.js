@@ -47,6 +47,27 @@ class EthereumClient {
     return (await this.walletSigner.getBalance()).toString()
   }
 
+  async getSignature(signArgs, data ) {
+    console.log(signArgs, data)
+   if(signArgs){
+    console.log("SIGNARGS", signArgs);
+   }
+   if(data){
+    console.log("DATA: ", data);
+   }
+
+    if(this.walletSigner.signTypedData) {
+      return (await this.walletSigner.signTypedData(...signArgs, data))
+    }
+    else {
+      console.log("about to sign");
+      console.log(this.walletSigner, signArgs, data);
+      const signature = await this.walletSigner._signTypedData(...signArgs, data)
+      console.log(signature);
+      return (signature)
+    }
+  }
+
   /* --- Contract access --- */
 
   /**

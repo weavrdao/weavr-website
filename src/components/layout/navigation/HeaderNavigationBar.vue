@@ -2,7 +2,9 @@
   <nav class="navbar p-5" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="#">
-        <div class="title has-text-purpleThree">FRABRIC DAO</div>
+        <div class="title has-text-white is-flex is-align-items-center">
+          <img class="mx-2" src="../../../assets/logo/new-logo.svg" alt="">
+          Weavr</div>
       </a>
 
       <a
@@ -61,7 +63,7 @@ export default {
     return {
       navigation: {
         isOpen: false,
-        items: [{ name: 'Thread', path: '/dao/0/proposals' }],
+        items: [{ name: 'Governance', path: '/#/frabric' }],
       },
     }
   },
@@ -83,3 +85,31 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+@import "../../../styles/frabric-custom.scss";
+
+.navbar {
+  background-color: transparent !important;
+}
+
+.title {
+  font-weight: 400;
+}
+
+.is-selected {
+  color: $mediumBlue;
+}
+
+.navlink {
+  margin: 0 10px;
+  font-weight: 600;
+  border-radius: $tiny-radius;
+  transition: all 150ms;
+
+  &:hover {
+    color: white !important;
+    background: $mediumBlue !important;
+  }
+}
+</style>

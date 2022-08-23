@@ -1,13 +1,17 @@
 import ServiceProvider from "../services/provider"
 import WalletState from "../models/walletState"
-import { MarketOrderType } from "../models/marketOrder"
+// import { MarketOrderType } from "../models/marketOrder"
 import { bigIntMax, bigIntMin } from "../utils/common"
 import router from "../router/index"
 import { Vote } from "../models/vote"
+import { CommonProposalType, FrabricProposalType, ThreadProposalType } from "@/models/common.js"
+import { TOKEN_ADDRESS } from "../services/constants"
+import { ethers } from "ethers";
 
 const wallet = ServiceProvider.wallet()
 const market = ServiceProvider.market()
 const dao = ServiceProvider.dao()
+const token = ServiceProvider.token();
 
 function state() {
   return {
@@ -16,7 +20,7 @@ function state() {
     },
     platform: {
       assets: [],
-      proposals: new Map()
+      proposals: [] // new Map()
     },
     interface: {
       alert: null
@@ -38,6 +42,10 @@ const getters = {
     return state.user.wallet.address
   },
 
+  userTokenBalance(state) {
+    return state.user.wallet.tokenBalance;
+  },
+
   userEthBalance(state) {
     return state.user.wallet.ethBalance
   },
@@ -56,6 +64,16 @@ const getters = {
     return assetMap
   },
 
+  assetsAddressById(state) {
+    var assetMap = new Map()
+    state.platform.assets
+      .forEach(asset => {
+        assetMap.set(asset.id, asset.contract)
+      })
+
+    return assetMap
+  },
+
   marketplaceActiveAssets(state) {
     return state.platform.assets
   },
@@ -66,41 +84,38 @@ const getters = {
   },
 
   // TODO: Quick implementation for testing, need something smarter than that
-  bestAssetPrices(state) {
-    var assetPriceMap = new Map()
+  // bestAssetPrices(state) {
+  //   var assetPriceMap = new Map()
 
-    state.platform.assets
-      .forEach(asset => {
-        let buyPrices = asset.marketOrders
-          .filter(o => { return o.orderType == MarketOrderType.Buy })
-          .map(o => { return o.price })
-        let sellPrices = asset.marketOrders
-          .filter(o => { return o.orderType == MarketOrderType.Sell })
-          .map(o => { return o.price })
+  //   state.platform.assets
+  //     .forEach(asset => {
+  //       let buyPrices = asset.marketOrders
+  //         .filter(o => { return o.orderType == MarketOrderType.Buy })
+  //         .map(o => { return o.price })
+  //       let sellPrices = asset.marketOrders
+  //         .filter(o => { return o.orderType == MarketOrderType.Sell })
+  //         .map(o => { return o.price })
 
-        const prices = {
-          bid: bigIntMax(buyPrices),
-          ask: bigIntMin(sellPrices)
-        }
+  //       const prices = {
+  //         bid: bigIntMax(buyPrices),
+  //         ask: bigIntMin(sellPrices)
+  //       }
 
-        assetPriceMap.set(asset.id, prices)
-      })
+  //       assetPriceMap.set(asset.id, prices)
+  //     })
 
-    console.log("Best asset prices:")
-    console.log(assetPriceMap)
+  //   console.log("Best asset prices:")
+  //   console.log(assetPriceMap)
 
-    return assetPriceMap
-  },
+  //   return assetPriceMap
+  // },
 
   assetProposals(state) {
     return state.platform.proposals
   },
 
   proposalsById(state) {
-    var proposalsMap = new Map()
-
-    console.log(state.platform.proposals.values())
-
+    const proposalsMap = new Map()
     Array.from(state.platform.proposals.values())
       .flatMap(p => { return p })
       .forEach(p => { proposalsMap.set(p.id, p) })
@@ -115,18 +130,25 @@ const getters = {
 
 const actions = {
   async syncWallet(context) {
-    const walletState = await wallet.getState()
-    context.commit("setWallet", walletState)
+    const walletState = await wallet.getState();
+    const tokenBalance = await token.getTokenBalance(
+      TOKEN_ADDRESS,
+      walletState.address,
+    );
+    context.commit("setWallet", walletState);
+    context.commit("setTokenBalance", ethers.utils.formatEther(tokenBalance.toString()));
   },
 
+  // TODO (bill) This needs to be reimplemented
   async refreshOwnedAssetsData(context) {
-    let assets = await market.getAssetsOnTheMarket()
-    context.commit("setAssets", assets)
+    // let assets = await market.getAssetsOnTheMarket()
+    // context.commit("setAssets", assets)
   },
 
+  // TODO (bill) This needs to be reimplemented
   async refreshMarketplaceData(context) {
-    let assets = await market.getAssetsOnTheMarket()
-    context.commit("setAssets", assets)
+    // let assets = await market.getAssetsOnTheMarket()
+    // context.commit("setAssets", assets)
   },
 
   async swapToAsset(context, params) {
@@ -150,37 +172,106 @@ const actions = {
   },
 
   async refreshProposalsDataForAsset(context, params) {
-    context.dispatch("refreshMarketplaceData")
+    // context.dispatch("refreshMarketplaceData")
 
-    let assetId = params.assetId
-
+    let assetId = params.assetId.toLowerCase();
     let assetProposals = await dao.getProposalsForAsset(assetId)
 
-    console.log("New Proposals")
-    console.log(assetProposals)
+    context.commit("setProposalsForAsset", { assetId: assetId.toLowerCase(), proposals: assetProposals })
+  },
+  /*
+    AT THE MOMENT THIS IS USING THE ID, BUT WE NEED TO PASS THE ADDRESS TO THE FUNCTION
+    SUGGESTION: GET THE ADDRESS FROM ID IN THE COMPONENT-SPECIFIC PROPOSAL
+  */
+  async createPaperProposal(context, props) {
+    let { assetAddr, proposalType, title, description } = props
+    console.log("assetAddr: ", assetAddr, props);
+    // params.$toast.show("Confirming transaction...", {
+    //   duration: false
+    // });
+    // const x = await dao.vote("0", "0", "Yes");
 
-    context.commit("setProposalsForAsset", { assetId: assetId, proposals: assetProposals })
+    const status = await dao.createPaperProposal(assetAddr, title, description);
+
+    // params.$toast.clear();
+
+    // if (status) {
+    //   params.$toast.success("Transaction confirmed!");
+    //   context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
+    //   router.push("/dao/" + params.assetId + "/proposals")
+    // } else {
+    //   params.$toast.error("Transaction failed. See details in MetaMask.");
+    //   console.log("Transaction failed. See details in MetaMask.")
+    // }
   },
 
-  async createProposal(context, params) {
-    let asset = context.getters.assetsById.get(params.assetId)
-    let title = params.title
-    let description = params.description
+  async createParticipantProposal(context, props) {
+    let { assetId, participantType, participant, info } = props
 
-    params.$toast.show("Confirming transaction...", {
-      duration: false
-    });
+    console.log(props)
+    console.log('OBJ: \t', participantType, participant, info);
 
-    const status = await dao.createProposal(asset, title, description);
-    params.$toast.clear();
+    console.log("STATE 1", " ", assetId);
+    const status = await dao.createParticipantProposal(assetId, participantType, participant, info);
+    console.log(status);
+    // params.$toast.clear();
 
-    if (status) {
-      params.$toast.success("Transaction confirmed!");
-      context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
-      router.push("/dao/" + params.assetId + "/proposals")
-    } else {
-      params.$toast.error("Transaction failed. See details in MetaMask.");
-    }
+    // if (status) {
+    //   params.$toast.success("Transaction confirmed!");
+    //   context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
+    //   router.push("/dao/" + params.assetId + "/proposals")
+    // } else {
+    //   params.$toast.error("Transaction failed. See details in MetaMask.");
+    //   console.log("Transaction failed. See details in MetaMask.")
+    // }
+  },
+
+  async createUpgradeProposal(context, props) {
+    const {
+      assetAddress,
+      beaconAddress,
+      instanceAddress,
+      version,
+      codeAddress,
+      title,
+      description,
+    } = props;
+
+    const status = await dao.createUpgradeProposal(
+      assetAddress,
+      beaconAddress,
+      instanceAddress,
+      codeAddress,
+      title,
+      description,
+      version,
+    )
+
+    console.log(status);
+  },
+
+  async createTokenActionProposal(context, props) {
+    const {
+      tokenAddress,
+      targetAddress,
+      mint,
+      price,
+      amount,
+      title,
+      description,
+    } = props;
+
+    const status = await dao.createTokenActionProposal(
+      tokenAddress,
+      targetAddress,
+      mint,
+      price,
+      amount,
+      title,
+      description,
+    );
+
+    console.log(status);
   },
 
   async voteOnProposal(context, params) {
@@ -202,6 +293,29 @@ const actions = {
       params.$toast.error("Transaction failed. See details in MetaMask.");
     }
   },
+
+  async vouchParticipant(context, props) {
+    let { assetAddr, participant } = props
+    console.log("assetAddr: ", assetAddr, props);
+    const status = await dao.vouch(
+      assetAddr,
+      {
+        name: "Frabric Protocol",
+        version: "2",
+        chainId: 4,
+      },
+      participant)
+    // async vouch(params) {
+    //   console.log("PARAMS: ", params);
+    //   const domain = {
+    //     name: 'Frabric Protocol',
+    //     version: '1',
+    //     chainId: 4,
+    //   }
+    //   // const status = await this.dao.vouch(contractAddress, domain, "0x4C3D84E96EB3c7dEB30e136f5150f0D4b58C7bdB")
+    //   console.log("STATE: ", status);  
+    // },
+  }
 }
 
 const mutations = {
@@ -218,11 +332,15 @@ const mutations = {
   },
 
   setProposalsForAsset(state, { proposals, assetId }) {
-    state.platform.proposals.set(assetId, proposals)
+    state.platform.proposals = proposals; // state.platform.proposals.set(assetId, proposals);
   },
 
   setAlert(state, alert) {
     state.interface.alert = alert
+  },
+
+  setTokenBalance(state, balance) {
+    state.user.wallet.tokenBalance = balance;
   }
 }
 

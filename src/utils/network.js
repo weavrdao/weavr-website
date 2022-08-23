@@ -7,12 +7,12 @@ const postRequest = (
   data
 ) => new Promise((resolve, reject) => {
   axios.post(url, data, {
-    maxContentLength: "Infinity", 
+    maxContentLength: "Infinity",
     params: params,
     headers: headers,
+    timeout: 5000, // (bill) This is currently making the UI hang, we should work out a way to display proposals as they load
   })
     .then((res) => {
-      console.log(res.data);
       resolve(res.data)
     })
     .catch((err) => {
@@ -32,7 +32,7 @@ const postRequest = (
  *  If invalid, the response is filtered out.
  *  (response: any) => boolean
  */
-async function allRequests ({
+async function allRequests({
   urlMap,
   timeout,
   validationCheck
@@ -60,7 +60,7 @@ async function allRequests ({
         })
     })
   })
-  
+
   const responses = (await Promise.all(requests)).filter(Boolean)
   return responses
 }

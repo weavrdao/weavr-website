@@ -1,82 +1,106 @@
+/* eslint-disable class-methods-use-this */
 const network = require("../../../../utils/network")
 const { create } = require("ipfs-http-client")
-import StorageNetwork from "../storageNetwork"
+import StorageNetwork from "../storageNetwork";
+import { getBytes32FromIpfsHash, getIpfsAuthHeader } from "./common";
+import "dotenv/config";
 
-const ipfsAPIClient = create("https://ipfs.infura.io:5001/api/v0")
+const baseInfuraURL = "https://ipfs.infura.io:5001/api/v0";
 
 class IPFSStorageNetwork extends StorageNetwork {
   constructor() {
     super()
+    this.ipfsAPIClient = create({
+      host: "ipfs.infura.io",
+      port: 5001,
+      protocol: "https",
+      headers: {
+        authorization: getIpfsAuthHeader(),
+      },
+    });
   }
 
-  async addFile(file) { 
+  async addFile(file) {
     let jsonString = JSON.stringify(file, null, 2)
-    return await ipfsAPIClient.add(jsonString, { pin: true })
+    console.log("JSON: ", jsonString);
+    const test = await this.ipfsAPIClient.add(jsonString, { pin: true });
+    return test;
   }
-  
+
   getFile = (
     name
-  ) => new Promise((resolve, reject) => {
-    const url = `https://ipfs.infura.io:5001/api/v0/cat`
-  
-    let params = { 
+  ) => new Promise((resolve) => {
+    const url = `${baseInfuraURL}/cat`;
+
+    let params = {
       arg: name
     }
-  
-    let headers = { }
-    //headers["Authorization"] = `Basic ${auth}`
-  
-    let data =  { }
+
+    let headers = {
+      Authorization: getIpfsAuthHeader(),
+    }
+
+    let data = {}
     network
       .postRequest(
-        url, 
-        params, 
-        headers, 
+        url,
+        params,
+        headers,
         data
       )
       .then((res) => {
-        resolve(res)
+        resolve(res.value || null)
       })
       .catch((err) => {
-        reject(err)
+        resolve(null)
       })
   })
 
+  // eslint-disable-next-line class-methods-use-this
   async getFiles(names) {
     console.log("Requesting files from IPFS")
 
-    const url = `https://ipfs.infura.io:5001/api/v0/cat`
-    
-    let headers = { }
-    //headers["Authorization"] = `Basic ${auth}`
-  
-    let data =  { }
+    const requestURL = `${baseInfuraURL}/cat`;
+
+    let headers = {
+      Authorization: getIpfsAuthHeader(),
+    };
+
+    const data = {};
 
     const requests = names.map(async name => {
-      let params = { 
+      let params = {
         arg: name
       }
 
       return new Promise((resolve) => {
         network
           .postRequest(
-            url, 
-            params, 
-            headers, 
+            requestURL,
+            params,
+            headers,
             data
           )
-          .then(response => {
-            resolve(response)
+          .then(res => {
+            resolve(res || null)
           })
-          .catch((thrown) => {
-            resolve(null)
+          .catch(() => {
+            console.log("Request failed")
+            resolve(null);
           })
       })
     })
-    
-    const responses = (await Promise.all(requests)).filter(Boolean)
-    
-    return responses
+    return (await Promise.allSettled(requests));
+  }
+
+  async uploadAndGetPathAsBytes(file) {
+    try {
+      const cid = await this.addFile(file);
+      return getBytes32FromIpfsHash(cid.path);
+    } catch (e) {
+      console.log(e);
+      throw new Error("Could not upload files to IPFS");
+    }
   }
 }
 

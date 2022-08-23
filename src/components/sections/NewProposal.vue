@@ -106,7 +106,7 @@ export default {
     ...mapActions({
       refresh: "refreshProposalsDataForAsset",
       syncWallet: "syncWallet",
-      createProposal: "createProposal",
+      createProposal: "createPaperProposal",
     }),
 
     goBack() {

@@ -2,13 +2,23 @@
 const { ethers } = require("ethers")
 
 import EthereumClient from "../ethereum/ethereumClient"
-
+import { ParticipantType } from "@/models/common"
+import { base58 } from "ethers/lib/utils"
 const contractAbi = [
   // Make a buy order
   "function buy(uint256 amount, uint256 price) payable",
 
   // Create a standard proposal
-  "function proposePaper(string info) returns (uint256)",
+  "function proposePaper(bool supermajority, bytes32 info) returns (uint256)",
+
+  // Create a participant proposal
+  "function proposeParticipant(uint16 participantType, address _participant, bytes32 info) returns (uint256 id)",
+
+  // Create an upgrade proposal
+  "function proposeUpgrade(address beacon, address instance, uint256 version, address code, bytes data, bytes32 info) returns (uint256 id)",
+
+  // Create a token action proposal
+  "function proposeTokenAction(address token, address target, bool mint, uint256 price, uint256 amount, bytes32 info) returns (uint256 id)",
 
   // Vote Yes on a certain proposal
   "function voteYes(uint256 id)",
@@ -19,10 +29,15 @@ const contractAbi = [
   // Propose a thread dissolution
   "function proposeDissolution(string info, address purchaser, address token, uint256 purchaseAmount)",
 
+  // Can Propose
+  "function canPropose(address proposer) returns (bool)",
+
+  // Vouch a participant
+  "function vouch(address participant, bytes signature)",
+
   // Event that is triggered every time an order is filled on the market
   "event Filled(address indexed sender, address indexed recipient, uint256 indexed price, uint256 amount)"
 
-  
 ]
 const startBlock = 0 // TODO: Inject the actual contract deployment block instead
 
@@ -41,22 +56,125 @@ class AssetContract {
 
   /**
    * Create a standard proposal
-   * @param {string} info Proposal info
+   * @param {bytes32} info Proposal info
    */
   async proposePaper(
+    supermajority,
     info
   ) {
-    console.log("Creating a proposal..")
-
+    console.log(`SENT DIRECTLY TO CONTRACT: ${info}`);
     let tx = await this.mutableContract
       .proposePaper(
-        info, 
+        supermajority,
+        info,
+      )
+    await tx.wait()
+  }
+
+  /**
+   * Create a participant proposal
+   * @param {bytes32} info Proposal info
+   */
+  async proposeParticipant(
+    participantType,
+    participant,
+    info
+  ) {
+    let tx = await this.mutableContract
+      .proposeParticipant(
+        participantType,
+        participant,
+        info
+      )
+    let status = (await tx.wait()).status
+    console.log(status)
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async proposeUpgrade(
+    beacon,
+    instance,
+    version,
+    code,
+    data,
+    info,
+  ) {
+    console.log("Creating upgrade proposal...");
+    const tx = await this.mutableContract
+      .proposeUpgrade(
+        beacon,
+        instance,
+        version,
+        code,
+        data,
+        info,
+      );
+    const status = (await tx.wait()).status;
+    console.log(status);
+    return status;
+  }
+
+  async proposeTokenAction(
+    token,
+    target,
+    mint,
+    price,
+    amount,
+    info,
+  ) {
+    console.log("Creating token action proposal...");
+    console.log({
+      token,
+      target,
+      mint,
+      price,
+      amount,
+      info,
+    });
+    const tx = await this.mutableContract
+      .proposeTokenAction(
+        token,
+        target,
+        mint,
+        price,
+        amount,
+        info,
+      );
+    const status = (await tx.wait()).status;
+    return status;
+  }
+
+  /**
+   * Vouch a participant
+   */
+  async vouch(participant, signature) {
+    // const bytesSignature = ethers.utils.id(signature);
+    console.log("ASSETCONTRACT: ", participant, signature);
+    let tx = this.mutableContract.vouch(
+      participant,
+      signature,
+      {
+        gasLimit: 5000000
+      }
+    );
+    // this.mutableContract.signer
+    let status = (await tx.wait()).status;
+    console.log(status);
+    return status
+  }
+
+  /** 
+   * Check if participant can make a proposal 
+  */
+  async canPropose(proposer) {
+    let tx = await this.mutableContract
+      .canPropose(proposer,
         {
           gasLimit: 5000000
         }
       )
-
-    return (await tx.wait()).status
+    let status = (await tx.wait()).status
+    console.log(status)
   }
 
   /**
@@ -73,7 +191,7 @@ class AssetContract {
 
     let tx = await this.mutableContract
       .buy(
-        amount, 
+        amount,
         price,
         {
           value: BigInt(amount) * BigInt(price),
@@ -95,7 +213,7 @@ class AssetContract {
 
     let tx = await this.mutableContract
       .voteYes(
-        proposalId, 
+        proposalId,
         {
           gasLimit: 5000000
         }
@@ -115,7 +233,7 @@ class AssetContract {
 
     let tx = await this.mutableContract
       .voteNo(
-        proposalId, 
+        proposalId,
         {
           gasLimit: 5000000
         }
@@ -132,24 +250,24 @@ class AssetContract {
    * @param {uint256} purchaseAmount Amount proposed for the purchase
    */
   async proposeDissolution(
-    info, 
-    purchaser, 
-    token, 
+    info,
+    purchaser,
+    token,
     purchaseAmount
   ) {
     console.log("Dissolution proposal for " + token, + " by " + purchaser + "for $" + purchaseAmount)
 
     let tx = await this.mutableContract
       .proposeDissolution(
-        info, 
-        purchaser, 
-        token, 
+        info,
+        purchaser,
+        token,
         purchaseAmount,
         {
           gasLimit: 5000000
         }
       )
-      
+
     return (await tx.wait()).status
   }
 }
