@@ -1,5 +1,5 @@
 <template>
-  <div v-if="proposal" class="container p-5">
+  <div v-if="proposal" class="container p-5 proposal">
     <StackNavigationBar class="mt-8" @onBack="goBack">
       {{ "Proposal — " + proposal.title }}
     </StackNavigationBar>

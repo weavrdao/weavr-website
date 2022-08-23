@@ -18,7 +18,7 @@
 </div>
 <div
     v-else
-    class="tag is-primary has-radius-xs is-large is-clickable"
+    class="tag is-primary has-radius-xs is-large is-clickable connect"
     @click="onClick"
   >
     <div class="has-text-white">Connect Wallet</div>
@@ -71,5 +71,12 @@ export default {
 
   .has-text-medium-blue {
     color: $mediumBlue;
+  }
+
+  .connect {
+    transition: all 150ms;
+    &:hover {
+      filter: contrast(120%);
+    }
   }
 </style>

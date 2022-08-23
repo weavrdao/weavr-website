@@ -64,4 +64,13 @@ export default {
   border-radius: $tiny-radius;
 }
 
+.button {
+  border: none;
+  transition: all 150ms;
+
+  &:hover {
+    filter: contrast(120%);
+  }
+}
+
 </style>

@@ -4,7 +4,7 @@ import { ethers } from "ethers";
     <span class="proposal-type" :class="this.typeStylingData.class">
       {{ this.typeStylingData.text }}
     </span>
-    <div class="is-flex is-flex-direction-column is-justify-content-space-between mb-2 mt-2 pt-4 pb-0 px-4">
+    <div @click="routeToProposal" class="is-flex is-flex-direction-column is-justify-content-space-between mb-2 mt-2 pt-4 pb-0 px-4">
       <div>
         <h2 class="is-size-5 has-text-mediumBlue">
           {{ this.startDate }}
@@ -215,6 +215,11 @@ export default {
   created() {
     this.setTimeRemainingCountdown();
   },
+
+  routeToProposal() {
+    console.log("opening proposal")
+    this.$router.push(`/frabric/proposal/${this.proposal.id}`);
+  },
 };
 </script>
 
@@ -226,6 +231,11 @@ export default {
   background-color: $darkGray;
   position: relative;
   min-width: 320px;
+  cursor: pointer;
+  transition: all 150ms;
+  &:hover {
+    filter: contrast(95%);
+  }
 }
 
 .proposal-type {

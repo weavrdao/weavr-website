@@ -37,7 +37,7 @@ import { toFixedNumber } from "../../utils/common";
 import { mapGetters, mapActions } from "vuex";
 import StackNavigationBar from "../layout/navigation/StackNavigationBar.vue";
 import ProposalList from "../proposals/ProposalList.vue";
-import NewProposalSelector from "./NewProposalSelector.vue";
+import NewProposalSelector from "../sections/NewProposalSelector.vue";
 
 export default {
   name: "Voting",
