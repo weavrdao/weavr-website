@@ -61,16 +61,6 @@ export default {
 
 .select {
   display: block;
-  border-radius: $tiny-radius;
-}
-
-.button {
-  border: none;
-  transition: all 150ms;
-
-  &:hover {
-    filter: contrast(120%);
-  }
 }
 
 </style>
