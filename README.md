@@ -1,4 +1,4 @@
-# Frabric Governance Web Interface
+# Weavr Governance Web Interface
 
 ## Contribution Guidelines
 
