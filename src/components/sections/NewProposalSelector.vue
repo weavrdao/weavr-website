@@ -61,7 +61,6 @@ export default {
 
 .select {
   display: block;
-  border-radius: $tiny-radius;
 }
 
 </style>

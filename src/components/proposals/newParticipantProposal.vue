@@ -1,19 +1,20 @@
 <template>
   <div class="container p-5">
+    <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Participant Proposal</div>
     <!-- PAPER PROPOSAL FORM -->
     <div class="field">
-      <div class="select">
-        <select
-          v-model="selectedType"
+      <label class="label">Participant Type</label>
+      <select
+        class="select is-small has-background-darkGray has-text-white px-3"
+        v-model="selectedType"
+      >
+        <option 
+          v-for="(value, name) in pTypeList"
+          :key="name"
         >
-          <option 
-            v-for="(value, name) in pTypeList"
-            :key="name"
-          >
-            {{name}}
-          </option>
-        </select>
-      </div>
+          {{name}}
+        </option>
+      </select>
     </div>
     <div class="field" v-if="selectedType!='Null'">
       <label class="label">Address</label>
@@ -21,13 +22,9 @@
         <input class="input" v-model="address" type="text" placeholder="Text input">
       </div>
     </div>
-    <div class="field is-grouped">
-      <div class="control">
-        <button class="button is-link" @click="publish">Submit Proposal</button>
-      </div>
-      <div class="control">
-        <button class="button is-link is-light">Cancel</button>
-      </div>
+    <div class="is-flex is-justify-content-space-between mt-5">
+      <button @click="publish" class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
+      <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
     </div>
     <!-- End Form -->
   </div>
@@ -48,14 +45,11 @@ export default {
   },
   data(){
     return {
-    
       address: "",
       title: "",
       description: "",
       pTypeList: ParticipantType,
-      selectedType: "Null"
-
-
+      selectedType: "Individual"
     }
   },
   computed: {
@@ -86,6 +80,9 @@ export default {
       console.log("PArticipantType:  ", props['participantType']);
       await this.createProposal(props);
     },
+    onCancel() {
+      this.$router.push("/frabric");
+    }
   }
 }
 </script>

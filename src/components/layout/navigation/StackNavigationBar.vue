@@ -1,10 +1,5 @@
 <template>
-  <div class="mb-4 is-flex is-align-items-center">
-    <a href="javascript:void(0)"
-       v-on:click="goBack">
-       <img class="back-arrow"
-       src="../../../assets/common/left-arrow.svg"/>
-    </a>
+  <div class="ml-1 mb-4 is-flex is-align-items-center">
     <div>
       <span class="asset">ASSET</span>
       <a :href="`https://rinkeby.etherscan.io/address/${address}`"
