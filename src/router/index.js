@@ -6,6 +6,7 @@ import newPaperProposal from "@/components/proposals/newPaperProposal.vue"
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue"
 import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue"
 import newTokenAction from "@/components/proposals/newTokenAction.vue"
+import SingleProposal from "@/components/proposals/SingleProposal.vue";
 import vouch from "@/components/proposals/vouch"
 import { WEAVR_ADDRESS } from '../services/constants'
 
@@ -50,8 +51,7 @@ export default new createRouter({
         {
           path: "proposal/:proposalId",
           component: Modal,
-          // (bill) Hardcording proposal ID as temp measure, this does not work rn
-          props: { proposalId: 0, component: null }
+          props: { component: SingleProposal }
         }
       ]
     },

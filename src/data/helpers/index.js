@@ -1,0 +1,1 @@
+export { getProposalTypeStyling } from "./proposals";

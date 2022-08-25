@@ -40,8 +40,8 @@ import { ethers } from "ethers";
 <script>
 import Address from "../address/Address.vue";
 import Button from "../common/Button.vue";
-import { ProposalTypes } from "../../../models/common";
-import { VoteType } from "../../../models/vote";
+import { getProposalTypeStyling } from "@/data/helpers";
+import { VoteType } from "@/models/vote";
 
 export default {
   name: "ProposalListItem",
@@ -131,33 +131,7 @@ export default {
     },
 
     typeStylingData() {
-      switch(this.proposal.type) {
-      case ProposalTypes.Paper:
-        return {
-          text: "Paper",
-          class: "paper",
-        };
-      case ProposalTypes.Upgrade:
-        return {
-          text: "Upgrade",
-          class: "upgrade"
-        };
-      case ProposalTypes.Participant:
-        return {
-          text: "Participant",
-          class: "participant"
-        };
-      case ProposalTypes.TokenAction:
-        return {
-          text: "Token Action",
-          class: "token-action",
-        };
-      default:
-        return {
-          text: "Unknown Type",
-          class: "unknown",
-        }
-      }
+      return getProposalTypeStyling(this.proposal.type);
     },
   },
   methods: {
