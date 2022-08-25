@@ -153,6 +153,7 @@ export default {
       return dateStringForTimestamp(this.proposal.endTimestamp);
     },
     userVote() {
+      if (!this.address) return null;
       return this.proposal.votes.find(vote => vote.voter.toLowerCase() === this.address.toLowerCase());
     },
   },
