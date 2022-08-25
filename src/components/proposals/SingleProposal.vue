@@ -160,6 +160,7 @@ export default {
   methods: {
     ...mapActions({
       vote: "vote",
+      loadProposalData: "refreshProposalsDataForAsset",
     }), // Voting action
     routeToHome() {
       this.$router.push("/frabric");
@@ -204,6 +205,7 @@ export default {
   },
   mounted() {
     this.setTimeRemainingCountdown();
+    this.loadProposalData();
   }
 }
 </script>
