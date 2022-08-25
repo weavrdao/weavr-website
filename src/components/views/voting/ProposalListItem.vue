@@ -12,7 +12,7 @@ import { ethers } from "ethers";
         <h2 id="proposal-title" class="is-size-5 has-text-white mb-4">
           {{ proposal.title }}
         </h2>
-        <p> {{ proposal.description }}</p>
+        <p class="description"> {{ proposal.description }}</p>
       </div>
       <dl class="mt-5 mb-0 pb-0">
         <dt class="mt-2 mb-1 help">Creator:</dt>
@@ -192,6 +192,16 @@ export default {
   font-weight: 600;
   border-radius: 0.5rem;
   padding: 15px 20px;
+}
+
+.description {
+  display: inline-block;
+  line-height: 1.2rem;
+  max-height: 7.2rem;
+  white-space: nowrap;
+  max-width: 56ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .bottom-right-corner {

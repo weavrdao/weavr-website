@@ -51,7 +51,7 @@ export default new createRouter({
         {
           path: "proposal/:proposalId",
           component: Modal,
-          props: { component: SingleProposal }
+          props: { assetId: "dd", component: SingleProposal }
         }
       ]
     },

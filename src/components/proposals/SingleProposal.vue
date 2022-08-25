@@ -66,8 +66,8 @@
           </div>
       </div>
       <div class="is-flex is-justify-content-space-between is-align-items-center mt-5">
-        <button :disabled="!address" class="button has-text-white has-background-mint has-text-weight-semibold">VOTE FOR</button>
-        <button :disabled="!address" class="button has-text-white has-background-red has-text-weight-semibold">VOTE AGAINST</button>
+        <button @click="submitYesVote" :disabled="!address" class="button has-text-white has-background-mint has-text-weight-semibold">VOTE FOR</button>
+        <button @click="submitNoVote" :disabled="!address" class="button has-text-white has-background-red has-text-weight-semibold">VOTE AGAINST</button>
       </div>
       <div class="mt-5">
         <p>Voting ends on {{ endDateString }}</p> 
@@ -108,6 +108,12 @@ export default {
       PASSED,
     }
   },
+  props: {
+    assetId: {
+      type: String,
+      required: true,
+    }
+  },
   computed: {
     ...mapGetters({
       proposals: "assetProposals",
@@ -122,20 +128,10 @@ export default {
       return getProposalTypeStyling(this.proposal.type);
     },
     votes() {
-      // return {
-      //   yes: {
-      //     count: 3,
-      //     percentage: 30
-      //   },
-      //   no: {
-      //     count: 7,
-      //     percentage: 70,
-      //   }
-      // }
       return getVotes(this.proposal);
     },
     ended() {
-      return hasEnded(this.proposal);
+      return false; //hasEnded(this.proposal);
     },
     passed() {
       return getResult(this.proposal);
@@ -152,7 +148,9 @@ export default {
     },
   },
   methods: {
-    ...mapActions({}), // Voting action
+    ...mapActions({
+      vote: "vote",
+    }), // Voting action
     routeToHome() {
       this.$router.push("/frabric");
     },
@@ -179,6 +177,20 @@ export default {
         1000
       );
     },
+    submitYesVote() {
+      this.vote({
+        assetAddress: this.assetId,
+        proposalId: this.$route.params.proposalId,
+        votes: +this.voteAmount,
+      })
+    },
+    submitNoVote() {
+      this.vote({
+        assetAddress: this.assetId,
+        proposalId: this.$route.params.proposalId,
+        votes: -this.voteAmount,
+      })
+    }
   },
   mounted() {
     this.setTimeRemainingCountdown();

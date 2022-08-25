@@ -4,6 +4,7 @@ import { Proposal } from "../../models/proposal"
 import { VoteType } from "../../models/vote"
 import { GraphQLAPIClient, ALL_ASSETS_QUERY, PARTICIPANTS_PER_DAO, ALL_PROPOSALS } from "../../data/network/graph/graphQLAPIClient"
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
+import { THREAD_DEPLOYER_ADDRESS, BOND_ADDRESS } from "../constants"
 import AssetContract from "../../data/network/web3/contracts/assetContract"
 import { ethers } from "ethers"
 import { getBytes32FromIpfsHash } from "../../data/network/storage/ipfs/common";
@@ -137,8 +138,6 @@ class DAO {
   ) {
     // Hardcoding these for simplicity
     const ASSET_ADDRESS = assetAddress || "0xa7930bfc863b895de85307457b976b12515389fb";
-    const THREAD_DEPLOYER_ADDRESS = "0xf033246E5301FD64de5C2bE408262eCeFd2A3aC4";
-    const BOND_ADDRESS = "0x4e8DEF7A306C50c99c8f434bFA0D98aE6B790878";
     const DATA = ethers.utils.defaultAbiCoder.encode(
       ["address", "address"],
       [BOND_ADDRESS, THREAD_DEPLOYER_ADDRESS],
@@ -227,29 +226,13 @@ class DAO {
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
    */
   async vote(
-    asset,
-    proposal,
-    voteType
+    assetAddress,
+    proposalId,
+    votes,
   ) {
-    const assetContract = new AssetContract(this.ethereumClient, asset.contractAddress)
-
-    let status
-
-    switch (voteType) {
-      case VoteType.Yes:
-        status = await assetContract.voteYes(proposal.id)
-        break
-      case VoteType.No:
-        status = await assetContract.voteNo(proposal.id)
-        break
-      case VoteType.Abstain:
-        // Not supported at the moment
-        break
-      default: VoteType.Abstain
-        break
-    }
-
-    return status
+    const assetContract = new AssetContract(this.ethereumClient, assetAddress)
+    const status = await assetContract.vote(proposalId, votes);
+    return status;
   }
 }
 
