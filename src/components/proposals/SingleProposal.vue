@@ -38,7 +38,10 @@
     <label class="label">Voting</label>
     <div v-if="ended">
       <div class="is-flex is-justify-content-space-between is-align-items-center mt-5">
-        <p>Voting ended on {{ endDateString }}</p> 
+        <div>
+          <p>Voting ended on <strong>{{ endDateString }}</strong></p>
+          <p v-if="!!userVote">You voted <strong>{{ userVote.count }} votes {{ userVote.voteDirection === "Yes" ? "for" : "against" }}</strong></p>
+        </div>
         <div class="outcome-box has-background-mint" v-if="this.passed == this.PASSED.Yes">PASSED</div>
         <div class="outcome-box has-background-red" v-else-if="this.passed == this.PASSED.No">FAILED</div>
         <div class="outcome-box has-background-cyan" v-else>TIE</div>
@@ -70,8 +73,11 @@
         <button @click="submitNoVote" :disabled="!address" class="button has-text-white has-background-red has-text-weight-semibold">VOTE AGAINST</button>
       </div>
       <div class="mt-5">
-        <p>Voting ends on {{ endDateString }}</p> 
+        <p>Voting ends on <strong>{{ endDateString }}</strong></p> 
         <p>( {{ timeRemainingString }} )</p>
+        <div v-if="!!userVote">
+          <p>You voted <strong>{{ userVote.count }} votes {{ userVote.voteDirection === "Yes" ? "for" : "against" }}</strong></p>
+        </div>
       </div>
     </div>
   </div>
@@ -131,7 +137,7 @@ export default {
       return getVotes(this.proposal);
     },
     ended() {
-      return false; //hasEnded(this.proposal);
+      return hasEnded(this.proposal);
     },
     passed() {
       return getResult(this.proposal);
@@ -145,6 +151,9 @@ export default {
     },
     endDateString() {
       return dateStringForTimestamp(this.proposal.endTimestamp);
+    },
+    userVote() {
+      return this.proposal.votes.find(vote => vote.voter.toLowerCase() === this.address.toLowerCase());
     },
   },
   methods: {
