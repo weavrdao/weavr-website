@@ -53,3 +53,12 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+.tag {
+  transition: all 150ms;
+  &:hover {
+    filter: contrast(120%);
+  }
+}
+</style>

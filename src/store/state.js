@@ -5,7 +5,7 @@ import { bigIntMax, bigIntMin } from "../utils/common"
 import router from "../router/index"
 import { Vote } from "../models/vote"
 import { CommonProposalType, FrabricProposalType, ThreadProposalType } from "@/models/common.js"
-import { TOKEN_ADDRESS } from "../services/constants"
+import { TOKEN_ADDRESS, WEAVR_ADDRESS } from "../services/constants"
 import { ethers } from "ethers";
 
 const wallet = ServiceProvider.wallet()
@@ -172,7 +172,8 @@ const actions = {
   },
 
   async refreshProposalsDataForAsset(context, params) {
-    // context.dispatch("refreshMarketplaceData")
+    // NOTE (bill) Quick fix to allow loading from child paths, better solutions available
+    if (context.getters.assetProposals.length > 1) return;
 
     let assetId = params.assetId.toLowerCase();
     let assetProposals = await dao.getProposalsForAsset(assetId)
@@ -275,24 +276,20 @@ const actions = {
     console.log(status);
   },
 
-  async voteOnProposal(context, params) {
-    let asset = context.getters.assetsById.get(params.assetId)
-    let proposal = context.getters.proposalsById.get(params.proposalId)
-    let voteType = params.voteType
+  async vote(context, props) {
+    const {
+      assetAddress,
+      proposalId,
+      votes,
+    } = props;
 
-    params.$toast.show("Confirming transaction...", {
-      duration: false
-    })
+    const status = await dao.vote(
+      assetAddress || WEAVR_ADDRESS,
+      proposalId,
+      votes,
+    );
 
-    const status = await dao.vote(asset, proposal, voteType);
-    params.$toast.clear();
-
-    if (status) {
-      params.$toast.success("Transaction confirmed!");
-      context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
-    } else {
-      params.$toast.error("Transaction failed. See details in MetaMask.");
-    }
+    console.log(status);
   },
 
   async vouchParticipant(context, props) {

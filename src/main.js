@@ -6,9 +6,9 @@ import "./styles/frabric-custom.scss";
 // import "bulma/css/bulma.css"
 import Toaster from "@meforma/vue-toaster";
 import Unicon from "vue-unicons"
-import { uniAppsSolid, uniListUlSolid } from "vue-unicons/dist/icons"
+import { uniMultiplySolid, uniAppsSolid, uniListUlSolid, uniConstructor } from "vue-unicons/dist/icons"
 
-Unicon.add([uniAppsSolid, uniListUlSolid])
+Unicon.add([uniMultiplySolid, uniAppsSolid, uniListUlSolid, uniConstructor])
 
 require("dotenv").config()
 

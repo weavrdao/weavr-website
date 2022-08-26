@@ -10051,6 +10051,11 @@ vue-unicons@^3.3.1:
     vue "^2.5.22"
     vue-analytics "^5.16.2"
 
+vue3-slider@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/vue3-slider/-/vue3-slider-1.8.0.tgz#364fadeac308edef08fd6c6e0156000b5943a88a"
+  integrity sha512-JzYEEnDiCPHrmpQaHCRaMNg7yZtydY+cbzb+uissRzN3p5+pV5WtIpfYl7nyYZ2hRJzJineZJCq8WvPdRXWGMQ==
+
 vue@^2.5.22:
   version "2.6.14"
   resolved "https://registry.npmjs.org/vue/-/vue-2.6.14.tgz"

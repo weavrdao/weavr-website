@@ -1,6 +1,7 @@
 <template>
   <div class="container p-5">
     <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Upgrade Proposal</div>
+    <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Upgrade Proposal</div>
     <!-- PAPER PROPOSAL FORM -->
     <div class="field">
       <label class="label">New Contract Address</label>
@@ -49,6 +50,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import {ethers} from "ethers";
+
 
 export default {
 

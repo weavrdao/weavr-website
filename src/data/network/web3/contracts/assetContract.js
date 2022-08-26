@@ -1,6 +1,5 @@
 /* global BigInt */
-const { ethers } = require("ethers")
-
+import { ethers } from "ethers";
 import EthereumClient from "../ethereum/ethereumClient"
 import { ParticipantType } from "@/models/common"
 import { base58 } from "ethers/lib/utils"
@@ -20,11 +19,8 @@ const contractAbi = [
   // Create a token action proposal
   "function proposeTokenAction(address token, address target, bool mint, uint256 price, uint256 amount, bytes32 info) returns (uint256 id)",
 
-  // Vote Yes on a certain proposal
-  "function voteYes(uint256 id)",
-
-  // Vote No on a certain proposal
-  "function voteNo(uint256 id)",
+  // Vote on a proposal
+  "function vote(uint256[] ids, int112[] votes)",
 
   // Propose a thread dissolution
   "function proposeDissolution(string info, address purchaser, address token, uint256 purchaseAmount)",
@@ -108,7 +104,7 @@ class AssetContract {
         data,
         info,
         {
-          gasLimit: 300000
+          gasLimit: 3000000
         }
       );
     await tx.wait()
@@ -203,40 +199,23 @@ class AssetContract {
   }
 
   /**
-   * Vote Yes on a certain proposal
+   * Vote on a proposal
    * @param {string} proposalId ID of the proposal
+   * @param {string} votes Number of votes to cast (sign handles for or against) 
    */
-  async voteYes(
-    proposalId
+  async vote(
+    proposalId,
+    votes,
   ) {
-    console.log("Voting Yes on the proposal " + proposalId)
-
+    console.dir({
+      votesRaw: votes,
+      votesType: typeof votes,
+      parsed: ethers.utils.parseEther(votes.toString()),
+    })
     let tx = await this.mutableContract
-      .voteYes(
-        proposalId,
-        {
-          gasLimit: 5000000
-        }
-      )
-
-    return (await tx.wait()).status
-  }
-
-  /**
-   * Vote No on a certain proposal
-   * @param {string} proposalId ID of the proposal
-   */
-  async voteNo(
-    proposalId
-  ) {
-    console.log("Voting No on the proposal " + proposalId)
-
-    let tx = await this.mutableContract
-      .voteNo(
-        proposalId,
-        {
-          gasLimit: 5000000
-        }
+      .vote(
+        [proposalId],
+        [ethers.utils.parseEther(votes.toString())],
       )
 
     return (await tx.wait()).status

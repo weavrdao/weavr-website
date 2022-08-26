@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 <template>
-  <section class="proposal has-radius-md mb-5" aria-labelledby="proposal">
+  <section @click="openProposal" class="proposal has-radius-md mb-5" aria-labelledby="proposal">
     <span class="proposal-type" :class="this.typeStylingData.class">
       {{ this.typeStylingData.text }}
     </span>
@@ -12,7 +12,7 @@ import { ethers } from "ethers";
         <h2 id="proposal-title" class="is-size-5 has-text-white mb-4">
           {{ proposal.title }}
         </h2>
-        <p> {{ proposal.description }}</p>
+        <p class="description"> {{ proposal.description }}</p>
       </div>
       <dl class="mt-5 mb-0 pb-0">
         <dt class="mt-2 mb-1 help">Creator:</dt>
@@ -40,8 +40,15 @@ import { ethers } from "ethers";
 <script>
 import Address from "../address/Address.vue";
 import Button from "../common/Button.vue";
-import { ProposalTypes } from "../../../models/common";
-import { VoteType } from "../../../models/vote";
+import {
+  getProposalTypeStyling,
+  padWithZeroes,
+  dateStringForTimestamp,
+  getVotes,
+  getResult,
+  hasEnded,
+} from "@/data/helpers";
+import { PASSED } from "@/models/common";
 
 export default {
   name: "ProposalListItem",
@@ -65,99 +72,39 @@ export default {
   },
   data() {
     return {
-
-      PASSED: {
-        Yes: 0,
-        No: 1,
-        Tie: 2,
-      },
-
       timeRemainingString: "",
+      PASSED,
     };
   },
   computed: {
+
     votes() {
-      let yesVoteShares = 0;
-      let noVoteShares = 0;
-
-      this.proposal.votes.forEach((vote) => {
-        if (vote.voteDirection == VoteType.Yes) {
-          yesVoteShares += vote.count;
-        } else if (vote.voteDirection == VoteType.No) {
-          noVoteShares += vote.count;
-        }
-      });
-
-      return {
-        yes: {
-          count: Number(yesVoteShares).toFixed(0),
-          percentage: (yesVoteShares / (yesVoteShares + noVoteShares)) * 100,
-        },
-        no: {
-          count: Number(noVoteShares).toFixed(0),
-          percentage: (noVoteShares / (yesVoteShares + noVoteShares)) * 100,
-        },
-      };
+      return getVotes(this.proposal);
     },
 
     startDate() {
       const startDate = new Date(this.proposal.startTimestamp * 1000);
-      return `${this.padWithZeroes(startDate.getDate())}/${this.padWithZeroes(startDate.getMonth() + 1)}`;
+      return `${padWithZeroes(startDate.getDate())}/${padWithZeroes(startDate.getMonth() + 1)}`;
     },
 
     startDateString() {
-      return this.dateStringForTimestamp(this.proposal.startTimestamp);
+      return dateStringForTimestamp(this.proposal.startTimestamp);
     },
 
     endDateString() {
-      return this.dateStringForTimestamp(this.proposal.endTimestamp);
+      return dateStringForTimestamp(this.proposal.endTimestamp);
     },
 
     ended() {
-      let now = new Date().getTime() / 1000;
-      let t = this.proposal.endTimestamp - now;
-
-      return t < 0;
+      return hasEnded(this.proposal);
     },
-  
+
     passed() {
-      const votes = this.votes;
-      if (votes.yes.count > votes.no.count) {
-        return this.PASSED.Yes;
-      } else if (votes.yes.count < votes.no.count) {
-        return this.PASSED.No;
-      }
-      return this.PASSED.Tie;
+      return getResult(this.proposal);
     },
 
     typeStylingData() {
-      switch(this.proposal.type) {
-      case ProposalTypes.Paper:
-        return {
-          text: "Paper",
-          class: "paper",
-        };
-      case ProposalTypes.Upgrade:
-        return {
-          text: "Upgrade",
-          class: "upgrade"
-        };
-      case ProposalTypes.Participant:
-        return {
-          text: "Participant",
-          class: "participant"
-        };
-      case ProposalTypes.TokenAction:
-        return {
-          text: "Token Action",
-          class: "token-action",
-        };
-      default:
-        return {
-          text: "Unknown Type",
-          class: "unknown",
-        }
-      }
+      return getProposalTypeStyling(this.proposal.type);
     },
   },
   methods: {
@@ -185,30 +132,8 @@ export default {
       );
     },
 
-    padWithZeroes(number){
-      return (number < 10 ? "0" + number : number);
-    },
-
-    dateStringForTimestamp(timestamp) {
-      var date = new Date(timestamp * 1000);
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
-      var suffix = " AM";
-
-      if (hours > 11) {
-        hours = 24 - hours;
-        suffix = " PM";
-      }
-
-      return `${date.getFullYear()}-${this.padWithZeroes(
-        date.getMonth() + 1
-      )}-${this.padWithZeroes(date.getDate())}, ${this.padWithZeroes(
-        hours
-      )}:${this.padWithZeroes(minutes)} ${suffix}`;
-    },
-
     openProposal() {
-      this.$router.push(`/dao/${this.assetId}/proposals/${this.proposal.id}`);
+      this.$router.push(`/frabric/proposal/${this.proposal.id}`);
     },
   },
 
@@ -267,6 +192,16 @@ export default {
   font-weight: 600;
   border-radius: 0.5rem;
   padding: 15px 20px;
+}
+
+.description {
+  display: inline-block;
+  line-height: 1.2rem;
+  max-height: 7.2rem;
+  white-space: nowrap;
+  max-width: 56ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .bottom-right-corner {
