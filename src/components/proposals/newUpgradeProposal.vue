@@ -53,9 +53,14 @@ import {ethers} from "ethers";
 export default {
 
   name: "newUpgradeProposal",
+  props: {
+    assetId: {
+      type: String,
+      required: true,
+    }
+  },
   data(){
     return {
-      assetId: "0",
       beaconAddress: "0xc4cad6434a405a3d9c89cbcb0d1a77b6eceb4bf7",
       instanceAddress: ethers.constants.AddressZero,
       codeAddress: ethers.constants.AddressZero,
@@ -81,8 +86,8 @@ export default {
         return;
       }
       
-      const assetAddress = await this.assetMap.get(this.assetId);
-
+      let assetAddress = this.assetId
+      console.log("#ASSET_ID: ", this.assetId);
       await this.createUpgradeProposal({
         assetAddress,
         instanceAddress: this.instanceAddress,
@@ -90,13 +95,17 @@ export default {
         codeAddress: this.codeAddress,
         title: this.title,
         description: this.description,
-        version: this.version,
+        version: this.version
       });
     },
     onCancel() {
       this.$router.push("/frabric");
     }
-  }
+  },
+  mounted() {
+    this.refresh({ assetId: this.assetId });
+    this.syncWallet();
+  },
 }
 </script>
 

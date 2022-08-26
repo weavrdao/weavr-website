@@ -137,33 +137,56 @@ class DAO {
   ) {
     // Hardcoding these for simplicity
     const ASSET_ADDRESS = assetAddress || "0xa7930bfc863b895de85307457b976b12515389fb";
-    const THREAD_DEPLOYER_ADDRESS = "0xf033246E5301FD64de5C2bE408262eCeFd2A3aC4";
-    const BOND_ADDRESS = "0x4e8DEF7A306C50c99c8f434bFA0D98aE6B790878";
+    const THREAD_DEPLOYER_ADDRESS = "0x0EDa658808F1637D062b20db1e454275025FF0ab";
+    const BOND_ADDRESS = "0x294D8F10A51E82BCbE5EBaCa9B09023FEa7071FB";
     const DATA = ethers.utils.defaultAbiCoder.encode(
       ["address", "address"],
       [BOND_ADDRESS, THREAD_DEPLOYER_ADDRESS],
     );
+    if(
+      !assetAddress ||
+      !beaconAddress ||
+      !instanceAddress ||
+      !codeAddress ||
+      !version
+    ){
+      console.log("Something wrong with the parameters at DAOservice level");
+      return null
+    }else {
+      const payload = {
+        assetAddress: assetAddress,
+        beaconAddress: beaconAddress,
+        instanceAddress: instanceAddress,
+        version: version,
+        codeAddress: codeAddress
+      }
+      console.log(payload);
+      const assetContract = new AssetContract(this.ethereumClient, assetAddress);
 
-    const assetContract = new AssetContract(this.ethereumClient, ASSET_ADDRESS);
+      const ipfsPathBytes = await this.storageNetwork
+        .uploadAndGetPathAsBytes(
+          {
+            title: title,
+            description: description
+          }
+        );
 
-    const ipfsPathBytes = await this.storageNetwork
-      .uploadAndGetPathAsBytes(
-        {
-          title: title,
-          description: description
-        }
-      );
+      const status = await assetContract.proposeUpgrade(
+        beaconAddress,
+        instanceAddress,
+        version,
+        codeAddress,
+        DATA,
+        ipfsPathBytes
+      ).then( x => {
+        console.log("RETURN", x);
+      }).catch(err => {
+        console.log("ERR: => ", err.message);
+      });
 
-    const status = await assetContract.proposeUpgrade(
-      beaconAddress,
-      instanceAddress,
-      version,
-      codeAddress,
-      DATA,
-      ipfsPathBytes,
-    );
-
-    return status;
+      return status;
+    }
+    
   }
 
   async createTokenActionProposal(

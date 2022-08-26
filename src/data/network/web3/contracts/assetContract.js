@@ -86,8 +86,7 @@ class AssetContract {
         participant,
         info
       )
-    let status = (await tx.wait()).status
-    console.log(status)
+    await tx.wait()
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -108,10 +107,11 @@ class AssetContract {
         code,
         data,
         info,
+        {
+          gasLimit: 300000
+        }
       );
-    const status = (await tx.wait()).status;
-    console.log(status);
-    return status;
+    await tx.wait()
   }
 
   async proposeTokenAction(

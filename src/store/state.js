@@ -236,7 +236,8 @@ const actions = {
       title,
       description,
     } = props;
-
+    
+    
     const status = await dao.createUpgradeProposal(
       assetAddress,
       beaconAddress,
