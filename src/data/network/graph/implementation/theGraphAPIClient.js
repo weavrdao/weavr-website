@@ -5,7 +5,7 @@ import {
 import { GraphQLAPIClient } from "../graphQLAPIClient"
 
 const client = new ApolloClient({
-  uri: "https://api.thegraph.com/subgraphs/name/abstrucked/weavr_goerli",
+  uri: "https://api.studio.thegraph.com/query/33686/tonyweavrdao/v0.0.1",
   cache: new InMemoryCache()
 })
 
