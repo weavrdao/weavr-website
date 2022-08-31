@@ -10,7 +10,7 @@ import SingleProposal from "@/components/proposals/SingleProposal.vue";
 import vouch from "@/components/proposals/vouch"
 import { WEAVR_ADDRESS } from '../services/constants'
 
-export default new createRouter({
+const router = new createRouter({
   history: createWebHashHistory(),
   routes: [
     {
@@ -57,4 +57,10 @@ export default new createRouter({
     },
     { path: "/:pathMatch(.*)*", name: "not-found", component: PageNotFound },
   ],
-})
+});
+
+// router.beforeEach((to, from) => {
+
+// });
+
+export default router;

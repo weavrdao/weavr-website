@@ -119,6 +119,8 @@
           v-model="voteAmount"
           color="#5A50D8"
           track-color="#FEFEFE"
+          handleScale="0"
+          circleOffset="40"
           :max=Number(balance)
           :min=0
           :step=0.1
@@ -270,7 +272,12 @@ export default {
   mounted() {
     this.setTimeRemainingCountdown();
     this.loadProposalData();
-  }
+  },
+  created() {
+    if(this.balance) {
+      this.voteAmount = +this.balance;
+    }
+  },
 }
 </script>
 
