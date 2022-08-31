@@ -20,12 +20,17 @@
   </div>
   <!-- Upgrade Proposal Information -->
   <div v-if="proposal.code">
-    <label class="label">Beacon Address</label>
-    <Address :value="proposal.beacon" />
+    <label class="label">New Code Address</label>
+    <Address :value="proposal.code" />
   </div>
   <div v-if="proposal.instance">
     <label class="label">Instance Address</label>
     <Address :value="proposal.instance" />
+    <p
+      v-if="proposal.instance === '0x0000000000000000000000000000000000000000'"
+      class="has-text-red">
+      <strong class="has-text-red">Warning: </strong> Accepting this proposal will break the ability to upgrade this contract in the future. (Implementation address should be the current contract implementation)
+    </p>
   </div>
   <div v-if="proposal.version">
     <label class="label">Proposed Version</label>
