@@ -76,5 +76,11 @@ module.exports = {
     Participant: "participant",
     TokenAction: "token",
     Paper: "paper",
-  }
+  },
+
+  PASSED: {
+    Yes: 0,
+    No: 1,
+    Tie: 2,
+  },
 } 

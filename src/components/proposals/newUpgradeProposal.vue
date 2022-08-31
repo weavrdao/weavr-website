@@ -12,6 +12,9 @@
       <label class="label">Instance Address</label>
       <div class="control">
         <input class="input" v-model="instanceAddress" type="text" placeholder="New contract address">
+        <p
+          class="has-text-red mt-2"
+          v-if="instanceAddress === '0x0000000000000000000000000000000000000000'"><strong class="has-text-red">Warning: </strong>Passing this instance address may cause the upgrade process to become stuck.</p>
       </div>
     </div>
     <div class="field">

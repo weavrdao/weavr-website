@@ -39,6 +39,7 @@
     "vue-template-compiler": "^2.6.11",
     "vue-toaster": "^2.0.0",
     "vue-unicons": "^3.3.1",
+    "vue3-slider": "^1.8.0",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
