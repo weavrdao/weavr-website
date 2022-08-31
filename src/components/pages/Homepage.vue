@@ -2,6 +2,7 @@
   <div v-if="assetId" class="container p-5 is-dark">
     <StackNavigationBar @onBack="goBack" :address="assetId" />
     <NewProposalSelector/>
+    <RefreshButton/>
     <div class="columns is-variable is-8">
       <ProposalList
         :proposals="activeProposals"
@@ -38,6 +39,7 @@ import { mapGetters, mapActions } from "vuex";
 import StackNavigationBar from "../layout/navigation/StackNavigationBar.vue";
 import ProposalList from "../proposals/ProposalList.vue";
 import NewProposalSelector from "../sections/NewProposalSelector.vue";
+import RefreshButton from "../sections/RefreshButton.vue";
 
 export default {
   name: "Voting",
@@ -51,6 +53,7 @@ export default {
     StackNavigationBar,
     ProposalList,
     NewProposalSelector,
+    RefreshButton,
 },
   computed: {
     ...mapGetters({
