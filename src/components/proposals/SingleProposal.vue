@@ -23,7 +23,7 @@
     <label class="label">Proposed Version</label>
     <p><strong>{{proposal.version}}</strong></p>
   </div>
-  
+
   <!-- Upgrade Proposal Information -->
   <div v-if="proposal.code">
     <label class="label">New Code Address</label>
@@ -56,8 +56,28 @@
   <!-- End Participant Proposal Upgrade -->
 
   <!-- Token Action Proposal -->
-
+    <div v-if="proposal.token">
+      <label class="label">Token Address</label>
+      <Address :value="proposal.token" />
+    </div>
+    <div v-if="proposal.target">
+      <label class="label">Target Address</label>
+      <Address :value="proposal.target" />
+    </div>
+    <div v-if="proposal.mint">
+    <label class="label">Mint</label>
+    <p><strong>{{proposal.mint}}</strong></p>
+  </div>
+  <div v-if="proposal.price">
+    <label class="label">Price</label>
+    <p><strong>{{proposal.price}}</strong></p>
+  </div>
+  <div v-if="proposal.amount">
+    <label class="label">Amount</label>
+    <p><strong>{{proposal.amount}}</strong></p>
+  </div>
   <!-- End Token Action Proposal -->
+
   <label class="label">Description</label>
   <div class="description-container p-3">
     <p class="has-text-white">{{ proposal.description }}</p>
