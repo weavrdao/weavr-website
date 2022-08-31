@@ -14,6 +14,11 @@
   <h1 class="title has-text-white mb-5">{{ proposal.title }}</h1>
   <label class="label">Creator</label>
   <Address :value="proposal.creator" />
+  <p
+    class="mt-2"
+    :class="proposal.supermajority ? 'has-text-red' : 'has-text-mint'">
+    {{ proposal.supermajority ? 'Supermajority consensus required' : 'Supermajority consensus not required'
+  }}</p>
   <div v-if="proposal.version">
     <label class="label">Proposed Version</label>
     <p><strong>{{proposal.version}}</strong></p>
