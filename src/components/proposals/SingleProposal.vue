@@ -14,6 +14,24 @@
   <h1 class="title has-text-white mb-5">{{ proposal.title }}</h1>
   <label class="label">Creator</label>
   <Address :value="proposal.creator" />
+  <div v-if="proposal.version">
+    <label class="label">Proposed Version</label>
+    <p><strong>{{proposal.version}}</strong></p>
+  </div>
+  <!-- Upgrade Proposal Information -->
+  <div v-if="proposal.code">
+    <label class="label">Beacon Address</label>
+    <Address :value="proposal.beacon" />
+  </div>
+  <div v-if="proposal.instance">
+    <label class="label">Instance Address</label>
+    <Address :value="proposal.instance" />
+  </div>
+  <div v-if="proposal.version">
+    <label class="label">Proposed Version</label>
+    <p><strong>{{proposal.version}}</strong></p>
+  </div>
+  <!-- End Upgrade Proposal Information -->
   <label class="label">Description</label>
   <div class="description-container p-3">
     <p class="has-text-white">{{ proposal.description }}</p>
