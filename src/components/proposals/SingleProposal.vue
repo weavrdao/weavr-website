@@ -220,7 +220,12 @@ export default {
     },
     userVote() {
       if (!this.address) return null;
-      return this.proposal.votes.find(vote => vote.voter.toLowerCase() === this.address.toLowerCase());
+      // Select user vote by matching voter address to user address
+      const vote = this.proposal.votes.find(vote => vote.voter.toLowerCase() === this.address.toLowerCase());
+      return {
+        ...vote,
+        count: Number(vote.count).toFixed(1),
+      }
     },
   },
   methods: {

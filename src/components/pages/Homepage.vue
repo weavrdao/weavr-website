@@ -2,7 +2,7 @@
   <div v-if="assetId" class="container p-5 is-dark">
     <StackNavigationBar @onBack="goBack" :address="assetId" />
     <NewProposalSelector/>
-    <RefreshButton/>
+    <RefreshButton :assetId="assetId"/>
     <div class="columns is-variable is-8">
       <ProposalList
         :proposals="activeProposals"

@@ -172,12 +172,8 @@ const actions = {
   },
 
   async refreshProposalsDataForAsset(context, params) {
-    // NOTE (bill) Quick fix to allow loading from child paths, better solutions available
-    if (context.getters.assetProposals.length > 1) return;
-
     let assetId = params.assetId.toLowerCase();
     let assetProposals = await dao.getProposalsForAsset(assetId)
-
     context.commit("setProposalsForAsset", { assetId: assetId.toLowerCase(), proposals: assetProposals })
   },
   /*

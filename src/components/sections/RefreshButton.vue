@@ -11,6 +11,12 @@ import { mapActions } from "vuex";
 
 export default {
   name: "RefreshButton",
+  props: {
+    assetId: {
+      type: String,
+      requried: true,
+    }
+  },
   methods: {
     ...mapActions({
       refresh: "refreshProposalsDataForAsset",
@@ -18,7 +24,7 @@ export default {
     }),
     refreshData() {
       this.syncWallet();
-      this.refresh();
+      this.refresh({ assetId: this.assetId });
     }
   }
 }
