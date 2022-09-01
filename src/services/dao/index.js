@@ -36,7 +36,6 @@ class DAO {
     assetId
   ) {
     // Get indexed on-chain data
-
     let proposals = await this.graphQLAPIClient
       .query(
         ALL_PROPOSALS,
@@ -61,6 +60,7 @@ class DAO {
     } catch (e) {
       console.log(e);
     }
+
     return proposals;
   }
 
