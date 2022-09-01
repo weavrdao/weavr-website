@@ -1,14 +1,15 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router';
 import PageNotFound from "@/components/pages/404.vue";
-import Modal from '@/components/views/modal/Modal.vue'
-import Homepage from "@/components/pages/Homepage.vue"
+import Modal from '@/components/views/modal/Modal.vue';
+import Homepage from "@/components/pages/Homepage.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue"
-import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue"
-import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue"
-import newTokenAction from "@/components/proposals/newTokenAction.vue"
+import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue";
+import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue";
+import newTokenAction from "@/components/proposals/newTokenAction.vue";
+import newThreadProposal from "@/components/proposals/newThreadProposal.vue";
 import SingleProposal from "@/components/proposals/SingleProposal.vue";
-import vouch from "@/components/proposals/vouch"
-import { WEAVR_ADDRESS } from '../services/constants'
+import vouch from "@/components/proposals/vouch";
+import { WEAVR_ADDRESS } from '../services/constants';
 
 const router = new createRouter({
   history: createWebHashHistory(),
@@ -47,6 +48,11 @@ const router = new createRouter({
           path: "vouch",
           component: Modal,
           props: { assetId: "dd", component: vouch }
+        },
+        {
+          path: "threadProposal",
+          component: Modal,
+          props: { assetId: "dd", component: newThreadProposal },
         },
         {
           path: "proposal/:proposalId",

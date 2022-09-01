@@ -31,8 +31,11 @@ const contractAbi = [
   // Vouch a participant
   "function vouch(address participant, bytes signature)",
 
+  // Propose a new thread
+  "function proposeThread(uint8 variant, string calldata name, string calldata symbol, bytes32 descriptor, bytes calldata data, bytes32 info) returns (uint256 id)",
+
   // Event that is triggered every time an order is filled on the market
-  "event Filled(address indexed sender, address indexed recipient, uint256 indexed price, uint256 amount)"
+  "event Filled(address indexed sender, address indexed recipient, uint256 indexed price, uint256 amount)",
 
 ]
 const startBlock = 0 // TODO: Inject the actual contract deployment block instead
@@ -136,6 +139,37 @@ class AssetContract {
         amount,
         info,
       );
+    const status = (await tx.wait()).status;
+    return status;
+  }
+
+  async proposeThread(
+    variant,
+    name,
+    symbol,
+    descriptorHash,
+    data,
+    infoHash,
+  ) {
+    console.log("Creating thread proposal...")
+    console.dir({
+      variant,
+      name,
+      symbol,
+      descriptorHash,
+      data,
+      infoHash,
+    });
+    const tx = await this.mutableContract
+      .proposeThread(
+        variant,
+        name,
+        symbol,
+        descriptorHash,
+        data,
+        infoHash,
+      );
+
     const status = (await tx.wait()).status;
     return status;
   }

@@ -64,6 +64,53 @@ class DAO {
     return proposals;
   }
 
+  async createThreadProposal(
+    assetId,
+    name,
+    descriptor,
+    title,
+    description,
+    symbol,
+    tradeToken,
+    target,
+  ) {
+    const assetContract = new AssetContract(this.ethereumClient, assetId);
+
+    const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
+      title,
+      description,
+    });
+
+    const descriptorHash = await this.storageNetwork.uploadAndGetPathAsBytes(descriptor);
+
+    console.dir({
+      assetId,
+      name,
+      descriptor,
+      title,
+      description,
+      symbol,
+      tradeToken,
+      target,
+    })
+    const data = ethers.utils.defaultAbiCoder.encode(
+      ["address", "uint112"],
+      [tradeToken, target],
+    );
+
+    if (!infoHash) return;
+
+    const status = await assetContract.proposeThread(
+      0, // Only valid "variant" number
+      name,
+      symbol,
+      descriptorHash,
+      data,
+      infoHash,
+    );
+    return status
+  }
+
 
   /**
    * Create a proposal

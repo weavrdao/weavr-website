@@ -256,7 +256,11 @@ const actions = {
       amount,
       title,
       description,
+      tradeToken,
+      target,
     } = props;
+
+    console.dir(props);
 
     const status = await dao.createTokenActionProposal(
       tokenAddress,
@@ -266,9 +270,38 @@ const actions = {
       amount,
       title,
       description,
+      tradeToken,
+      target,
     );
 
     console.log(status);
+    return status;
+  },
+
+  async createThreadProposal(context, props) {
+    const {
+      assetId,
+      name,
+      descriptor,
+      title,
+      description,
+      symbol,
+      tradeToken,
+      target,
+    } = props;
+
+    const status = await dao.createThreadProposal(
+      assetId,
+      name, descriptor,
+      title,
+      description,
+      symbol,
+      tradeToken,
+      target,
+    );
+
+    console.log(status)
+    return status;
   },
 
   async vote(context, props) {
