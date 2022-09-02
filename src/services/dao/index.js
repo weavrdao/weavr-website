@@ -4,7 +4,7 @@ import { Proposal } from "../../models/proposal"
 import { VoteType } from "../../models/vote"
 import { GraphQLAPIClient, ALL_ASSETS_QUERY, PARTICIPANTS_PER_DAO, ALL_PROPOSALS } from "../../data/network/graph/graphQLAPIClient"
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
-import { THREAD_DEPLOYER_ADDRESS, BOND_ADDRESS } from "../constants"
+import { THREAD_DEPLOYER_ADDRESS, BOND_ADDRESS, WEAVR_ADDRESS } from "../constants"
 import AssetContract from "../../data/network/web3/contracts/assetContract"
 import { ethers } from "ethers"
 import { getBytes32FromIpfsHash } from "../../data/network/storage/ipfs/common";
@@ -184,7 +184,7 @@ class DAO {
     version,
   ) {
     // Hardcoding these for simplicity
-    const ASSET_ADDRESS = assetAddress || "0xa7930bfc863b895de85307457b976b12515389fb";
+    const ASSET_ADDRESS = assetAddress || WEAVR_ADDRESS;
     const DATA = ethers.utils.defaultAbiCoder.encode(
       ["address", "address"],
       [BOND_ADDRESS, THREAD_DEPLOYER_ADDRESS],

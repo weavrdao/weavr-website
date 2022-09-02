@@ -59,7 +59,7 @@ export default {
   data(){
     return {
       assetId: "0",
-      beaconAddress: "0xc4cad6434a405a3d9c89cbcb0d1a77b6eceb4bf7",
+      beaconAddress: "0x91a2b15d9f861a6b7b0b14049b47eebcb6aa49d1",
       instanceAddress: ethers.constants.AddressZero,
       codeAddress: ethers.constants.AddressZero,
       version: 4,

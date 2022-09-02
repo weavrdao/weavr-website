@@ -17,12 +17,8 @@
   <p
     class="mt-2"
     :class="proposal.supermajority ? 'has-text-red' : 'has-text-mint'">
-    {{ proposal.supermajority ? 'Supermajority consensus required' : 'Supermajority consensus not required'
-  }}</p>
-  <div v-if="proposal.version">
-    <label class="label">Proposed Version</label>
-    <p><strong>{{proposal.version}}</strong></p>
-  </div>
+    <strong>{{ proposal.supermajority ? 'Supermajority consensus required' : 'Supermajority consensus not required' }}</strong>
+  </p>
 
   <!-- Upgrade Proposal Information -->
   <div v-if="proposal.code">
@@ -222,10 +218,16 @@ export default {
       if (!this.address) return null;
       // Select user vote by matching voter address to user address
       const vote = this.proposal.votes.find(vote => vote.voter.toLowerCase() === this.address.toLowerCase());
-      return {
-        ...vote,
-        count: Number(vote.count).toFixed(1),
+
+      if(vote) {
+        return {
+          ...vote,
+          count: Number(vote.count).toFixed(1),
+        }
+      } else {
+        return null;
       }
+
     },
   },
   methods: {
