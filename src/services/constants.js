@@ -1,4 +1,4 @@
-export const TOKEN_ADDRESS = "0x1Db4963c79C431D71e083d114AC5b79fdE3e808e"; // ERC20 Beacon
-export const WEAVR_ADDRESS = "0xf1Ba6Bf73c4EB490CC8389B138137886d22bA3Ed"; // Initial Frabric
-export const THREAD_DEPLOYER_ADDRESS = "0xf033246E5301FD64de5C2bE408262eCeFd2A3aC4"; // Thread deployer address
-export const BOND_ADDRESS = "0x4e8DEF7A306C50c99c8f434bFA0D98aE6B790878"; // Bond address;
+export const TOKEN_ADDRESS = "0x201Fa226F58584EF2cDE3AC818964c6e5E7dFC14"; // ERC20 Beacon
+export const WEAVR_ADDRESS = "0xbB018186D80f8340978b12994A5c59b84A42Ab0F"; // Initial Frabric
+export const THREAD_DEPLOYER_ADDRESS = "0xDf0Bae5AB1eC2D4d7fE7A72bc2Cd3e00119f0D35"; // Thread deployer address
+export const BOND_ADDRESS = "0xC248f18Eca0FBaf04e8cAEde5a165b553f3A19C2"; // Bond address;
