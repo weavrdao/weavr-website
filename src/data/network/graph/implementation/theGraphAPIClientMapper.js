@@ -6,6 +6,7 @@ import {
   mapUpgradeProposals,
   mapParticipantProposals,
   mapTokenActionProposals,
+  mapThreadProposals,
 } from "./proposals";
 
 class TheGraphAPIMapper extends GraphQLAPIMapper {
@@ -25,6 +26,7 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
       ...mapUpgradeProposals(rawProposals.upgradeProposals),
       ...mapParticipantProposals(rawProposals.participantProposals),
       ...mapTokenActionProposals(rawProposals.tokenActionProposals),
+      ...mapThreadProposals(rawProposals.threadProposal),
     ];
   }
 }

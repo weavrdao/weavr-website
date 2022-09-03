@@ -8,6 +8,7 @@ import { THREAD_DEPLOYER_ADDRESS, BOND_ADDRESS, WEAVR_ADDRESS } from "../constan
 import AssetContract from "../../data/network/web3/contracts/assetContract"
 import { ethers } from "ethers"
 import { getBytes32FromIpfsHash } from "../../data/network/storage/ipfs/common";
+import { ProposalTypes } from "../../models/common"
 // TODO: Should there be a single service instance per proposal?
 
 /**
@@ -56,6 +57,19 @@ class DAO {
           proposals[i].description = "No description";
         }
 
+      }
+    } catch (e) {
+      console.log(e);
+    }
+
+    try {
+      const descriptorData = (await this.storageNetwork.getFiles(proposals.map(proposal => proposal.descriptor)));
+      for (let i = 0; i < proposals.length; i++) {
+        if (descriptorData[i] && descriptorData[i].value) {
+          proposals[i].title = descriptorData[i].value.descriptor || "Untitled";
+        } else {
+          proposals[i].descriptor = "No descriptor";
+        }
       }
     } catch (e) {
       console.log(e);

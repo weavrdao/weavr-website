@@ -14,12 +14,12 @@
   <h1 class="title has-text-white mb-5">{{ proposal.title }}</h1>
   <label class="label">Creator</label>
   <Address :value="proposal.creator" />
-  <p
-    class="mt-2"
-    :class="proposal.supermajority ? 'has-text-red' : 'has-text-mint'">
-    <strong>{{ proposal.supermajority ? 'Supermajority consensus required' : 'Supermajority consensus not required' }}</strong>
+  <p class="mt-2">
+    <strong
+      :class="proposal.supermajority ? 'has-text-red' : 'has-text-mint'">
+      {{ proposal.supermajority ? 'Supermajority consensus required' : 'Supermajority consensus not required' }}
+    </strong>
   </p>
-
   <!-- Upgrade Proposal Information -->
   <div v-if="proposal.code">
     <label class="label">New Code Address</label>
@@ -28,11 +28,6 @@
   <div v-if="proposal.instance">
     <label class="label">Instance Address</label>
     <Address :value="proposal.instance" />
-    <p
-      v-if="proposal.instance === '0x0000000000000000000000000000000000000000'"
-      class="has-text-red">
-      <strong class="has-text-red">Warning: </strong> Accepting this proposal will break the ability to upgrade this contract in the future. (Implementation address should be the current contract implementation)
-    </p>
   </div>
   <div v-if="proposal.version">
     <label class="label">Proposed Version</label>
@@ -346,6 +341,11 @@ export default {
 .upgrade {
   border-color: #D841DE;
   color: #D841DE;
+}
+
+.thread {
+  border-color: yellow;
+  color: yellow;
 }
 
 .description-container {

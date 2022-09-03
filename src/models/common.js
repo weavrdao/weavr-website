@@ -76,6 +76,7 @@ module.exports = {
     Participant: "participant",
     TokenAction: "token",
     Paper: "paper",
+    Thread: "thread",
   },
 
   PASSED: {

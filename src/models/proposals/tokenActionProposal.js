@@ -3,7 +3,7 @@
 */
 
 export class TokenActionProposal {
-  constructor({
+  constructor(
     id,
     thread,
     frabric,
@@ -20,7 +20,7 @@ export class TokenActionProposal {
     mint,
     price,
     amount
-  }) {
+  ) {
     this.id = id;
     this.thread = thread;
     this.frabric = frabric;

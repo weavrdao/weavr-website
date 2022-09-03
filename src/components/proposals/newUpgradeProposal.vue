@@ -12,9 +12,6 @@
       <label class="label">Instance Address</label>
       <div class="control">
         <input class="input" v-model="instanceAddress" type="text" placeholder="New contract address">
-        <p
-          class="has-text-red mt-2"
-          v-if="instanceAddress === '0x0000000000000000000000000000000000000000'"><strong class="has-text-red">Warning: </strong>Passing this instance address may cause the upgrade process to become stuck.</p>
       </div>
     </div>
     <div class="field">
@@ -59,7 +56,7 @@ export default {
   data(){
     return {
       assetId: "0",
-      beaconAddress: "0x91a2b15d9f861a6b7b0b14049b47eebcb6aa49d1",
+      beaconAddress: "0x6a4fc1e0ffc344943972493917b14bc0cd5972c1",
       instanceAddress: ethers.constants.AddressZero,
       codeAddress: ethers.constants.AddressZero,
       version: 4,
