@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import PageNotFound from "@/components/pages/404.vue";
-import Modal from '@/components/views/modal/Modal.vue'
+import Modal from "@/components/views/modal/Modal.vue"
 import Homepage from "@/components/pages/Homepage.vue"
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue"
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue"

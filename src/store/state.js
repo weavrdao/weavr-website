@@ -49,7 +49,7 @@ const getters = {
   userEthBalance(state) {
     return state.user.wallet.ethBalance
   },
-
+  
   allAssets(state) {
     return state.platform.assets
   },
@@ -236,6 +236,8 @@ const actions = {
       codeAddress,
       title,
       description,
+      signer,
+      governor
     } = props;
     
     
@@ -247,6 +249,8 @@ const actions = {
       title,
       description,
       version,
+      signer,
+      governor
     )
 
     console.log(status);

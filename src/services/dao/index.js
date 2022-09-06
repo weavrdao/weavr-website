@@ -135,23 +135,34 @@ class DAO {
     title,
     description,
     version,
+    signer,
+    governor
   ) {
-    // Hardcoding these for simplicity
-    const ASSET_ADDRESS = assetAddress || "0xa7930bfc863b895de85307457b976b12515389fb";
-    const DATA = ethers.utils.defaultAbiCoder.encode(
-      ["address", "address"],
-      [BOND_ADDRESS, THREAD_DEPLOYER_ADDRESS],
-    );
     if(
       !assetAddress ||
       !beaconAddress ||
       !instanceAddress ||
       !codeAddress ||
-      !version
+      !version ||
+      !signer ||
+      !governor
     ){
       console.log("Something wrong with the parameters at DAOservice level");
-      return null
+
+      return {assetAddress,
+        beaconAddress,
+        instanceAddress,
+        codeAddress,
+        title,
+        description,
+        version,
+        signer,
+        governor}
     }else {
+      const DATA = ethers.utils.defaultAbiCoder.encode(
+        ["address", "address", "address", "address"],
+        [BOND_ADDRESS, THREAD_DEPLOYER_ADDRESS, signer, governor],
+      );
       const payload = {
         assetAddress: assetAddress,
         beaconAddress: beaconAddress,
@@ -185,7 +196,6 @@ class DAO {
 
       return status;
     }
-    
   }
 
   async createTokenActionProposal(

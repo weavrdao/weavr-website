@@ -6,25 +6,25 @@
     <div class="field">
       <label class="label">New Contract Address</label>
       <div class="control">
-        <input class="input" v-model="codeAddress" type="text" placeholder="New contract address">
+        <input class="input" v-model="codeAddress" type="text" placeholder="0x...">
       </div>
     </div>
      <div class="field">
       <label class="label">Instance Address</label>
       <div class="control">
-        <input class="input" v-model="instanceAddress" type="text" placeholder="New contract address">
+        <input class="input" v-model="instanceAddress" type="text" placeholder="0x...">
       </div>
     </div>
     <div class="field">
       <label class="label">Beacon</label>
       <div class="control">
-        <input class="input" v-model="beaconAddress" type="text">
+        <input class="input" v-model="beaconAddress" type="text" placeholder="0x...">
       </div>
     </div>
     <div class="field">
       <label class="label">Version</label>
       <div class="control">
-        <input class="input" v-model="version" type="number">
+        <input class="input" v-model="version" type="number" placeholder="0x...">
       </div>
     </div>
     <div class="field">
@@ -50,7 +50,15 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import {ethers} from "ethers";
+import { ProposalTypes } from "@/models/common"
 
+const GOERLI_TEST = {
+  beacon: "0x5cf192affaf907dc52b91826b97881eee1e5d528",
+  instance: ethers.constants.AddressZero,
+  code: "0x20EF1bBE2d35957046d396032be7b8642E4c43F7",
+  governor: "0x6ac7f09fa05f40e229064fa20ef3d27c4c961591",
+  signer: "0x4ee7974A4A68C4f8C83f0Dc6Ac9eE1ef74daF403"
+}
 
 export default {
 
@@ -63,13 +71,15 @@ export default {
   },
   data(){
     return {
-      beaconAddress: "0xc4cad6434a405a3d9c89cbcb0d1a77b6eceb4bf7",
-      instanceAddress: ethers.constants.AddressZero,
-      codeAddress: ethers.constants.AddressZero,
-      version: 4,
+      beaconAddress: GOERLI_TEST.beacon,
+      instanceAddress: GOERLI_TEST.instance,
+      codeAddress: GOERLI_TEST.code,
+      version: 2,
       title: "",
       description: "",
-      selectedType: "Null"
+      selectedType: "upgradeProposal",
+      governor: GOERLI_TEST.governor,
+      signer: GOERLI_TEST.signer
     }
   },
   computed: {
@@ -87,17 +97,19 @@ export default {
       if (!ethers.utils.isAddress(this.codeAddress)) {
         return;
       }
-      
+      console.log(this.signerAddress);
       let assetAddress = this.assetId
       console.log("#ASSET_ID: ", this.assetId);
       await this.createUpgradeProposal({
         assetAddress,
-        instanceAddress: this.instanceAddress,
         beaconAddress: this.beaconAddress,
         codeAddress: this.codeAddress,
+        instanceAddress: this.instanceAddress,
         title: this.title,
         description: this.description,
-        version: this.version
+        version: this.version,
+        signer: this.signer,
+        governor: this.governor
       });
     },
     onCancel() {
