@@ -53,9 +53,9 @@ import {ethers} from "ethers";
 import { ProposalTypes } from "@/models/common"
 
 const GOERLI_TEST = {
-  beacon: "0x5cf192affaf907dc52b91826b97881eee1e5d528",
+  beacon: "0xAe371F948d46399E920104575BAE1D186D8B2642",
   instance: ethers.constants.AddressZero,
-  code: "0x20EF1bBE2d35957046d396032be7b8642E4c43F7",
+  code: "0x04657b8A598b8AB1eFF2c20807EF9dd8f2e61036",
   governor: "0x6ac7f09fa05f40e229064fa20ef3d27c4c961591",
   signer: "0x4ee7974A4A68C4f8C83f0Dc6Ac9eE1ef74daF403"
 }
@@ -75,8 +75,8 @@ export default {
       instanceAddress: GOERLI_TEST.instance,
       codeAddress: GOERLI_TEST.code,
       version: 2,
-      title: "",
-      description: "",
+      title: "Title",
+      description: "Description",
       selectedType: "upgradeProposal",
       governor: GOERLI_TEST.governor,
       signer: GOERLI_TEST.signer
