@@ -8,7 +8,10 @@ import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue"
 import newTokenAction from "@/components/proposals/newTokenAction.vue"
 import SingleProposal from "@/components/proposals/SingleProposal.vue";
 import vouch from "@/components/proposals/vouch"
-import { WEAVR_ADDRESS } from '../services/constants'
+import {CONTRACTS} from "../services/constants"
+
+
+
 
 export default new createRouter({
   history: createWebHashHistory(),
@@ -20,7 +23,7 @@ export default new createRouter({
     {
       path: "/dao/:assetId",
       component: Homepage,
-      props: { assetId: WEAVR_ADDRESS },
+      props: { assetId:  CONTRACTS.WEAVR},
       alias: "/frabric",
       children: [
         {

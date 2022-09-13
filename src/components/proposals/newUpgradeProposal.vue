@@ -51,11 +51,8 @@
 import { mapGetters, mapActions } from "vuex";
 import {ethers} from "ethers";
 import { ProposalTypes } from "@/models/common"
-
+import {CONTRACTS} from "../../services/constants" 
 const GOERLI_TEST = {
-  beacon: "0xAe371F948d46399E920104575BAE1D186D8B2642",
-  instance: ethers.constants.AddressZero,
-  code: "0x04657b8A598b8AB1eFF2c20807EF9dd8f2e61036",
   governor: "0x6ac7f09fa05f40e229064fa20ef3d27c4c961591",
   signer: "0x4ee7974A4A68C4f8C83f0Dc6Ac9eE1ef74daF403"
 }
@@ -71,12 +68,12 @@ export default {
   },
   data(){
     return {
-      beaconAddress: GOERLI_TEST.beacon,
-      instanceAddress: GOERLI_TEST.instance,
-      codeAddress: GOERLI_TEST.code,
+      beaconAddress: CONTRACTS.BEACON,
+      instanceAddress:ethers.constants.AddressZero,
+      codeAddress: CONTRACTS.FRABRIC_CODE,
       version: 2,
-      title: "Title",
-      description: "Description",
+      title: "Upgrade",
+      description: "Upgrade Proposal",
       selectedType: "upgradeProposal",
       governor: GOERLI_TEST.governor,
       signer: GOERLI_TEST.signer
