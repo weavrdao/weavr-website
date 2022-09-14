@@ -89,6 +89,7 @@ export default {
       refresh: "refreshProposalsDataForAsset",
       syncWallet: "syncWallet",
       createUpgradeProposal: "createUpgradeProposal",
+      addressList: "platformContractAddresses"
     }),
     async publish() {
       if (!ethers.utils.isAddress(this.codeAddress)) {

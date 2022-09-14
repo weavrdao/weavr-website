@@ -3,10 +3,11 @@ import WalletState from "../models/walletState"
 // import { MarketOrderType } from "../models/marketOrder"
 import { bigIntMax, bigIntMin } from "../utils/common"
 import router from "../router/index"
+import { ethers } from "ethers";
 import { Vote } from "../models/vote"
 import { CommonProposalType, FrabricProposalType, ThreadProposalType } from "@/models/common.js"
 import { CONTRACTS } from "../services/constants"
-import { ethers } from "ethers";
+
 
 const wallet = ServiceProvider.wallet()
 const market = ServiceProvider.market()
