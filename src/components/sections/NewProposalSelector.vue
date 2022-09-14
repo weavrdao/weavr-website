@@ -37,6 +37,10 @@ export default {
           name: "Upgrade Proposal",
         },
         {
+          id: "threadProposal",
+          name: "Thread Proposal",
+        },
+        {
           id: "vouch",
           name: "Participant Vouch",
         }

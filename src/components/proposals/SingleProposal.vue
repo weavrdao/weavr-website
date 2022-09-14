@@ -14,6 +14,61 @@
   <h1 class="title has-text-white mb-5">{{ proposal.title }}</h1>
   <label class="label">Creator</label>
   <Address :value="proposal.creator" />
+  <p class="mt-2">
+    <strong
+      :class="proposal.supermajority ? 'has-text-red' : 'has-text-mint'">
+      {{ proposal.supermajority ? 'Supermajority consensus required' : 'Supermajority consensus not required' }}
+    </strong>
+  </p>
+  <!-- Upgrade Proposal Information -->
+  <div v-if="proposal.code">
+    <label class="label">New Code Address</label>
+    <Address :value="proposal.code" />
+  </div>
+  <div v-if="proposal.instance">
+    <label class="label">Instance Address</label>
+    <Address :value="proposal.instance" />
+  </div>
+  <div v-if="proposal.version">
+    <label class="label">Proposed Version</label>
+    <p><strong>{{proposal.version}}</strong></p>
+  </div>
+  <!-- End Upgrade Proposal Information -->
+  
+  <!-- Participant Proposal Upgrade -->
+  <div v-if="proposal.participant">
+    <label class="label">Participant Address</label>
+    <Address :value="proposal.participant" />
+  </div>
+  <div v-if="proposal.participantType">
+    <label class="label">Participant Type</label>
+    <p><strong>{{proposal.participantType}}</strong></p>
+  </div>
+  <!-- End Participant Proposal Upgrade -->
+
+  <!-- Token Action Proposal -->
+    <div v-if="proposal.token">
+      <label class="label">Token Address</label>
+      <Address :value="proposal.token" />
+    </div>
+    <div v-if="proposal.target">
+      <label class="label">Target Address</label>
+      <Address :value="proposal.target" />
+    </div>
+    <div v-if="proposal.mint">
+    <label class="label">Mint</label>
+    <p><strong>{{proposal.mint}}</strong></p>
+  </div>
+  <div v-if="proposal.price">
+    <label class="label">Price</label>
+    <p><strong>{{proposal.price}}</strong></p>
+  </div>
+  <div v-if="proposal.amount">
+    <label class="label">Amount</label>
+    <p><strong>{{proposal.amount}}</strong></p>
+  </div>
+  <!-- End Token Action Proposal -->
+
   <label class="label">Description</label>
   <div class="description-container p-3">
     <p class="has-text-white">{{ proposal.description }}</p>
@@ -55,6 +110,8 @@
           v-model="voteAmount"
           color="#5A50D8"
           track-color="#FEFEFE"
+          handleScale="0"
+          circleOffset="40"
           :max=Number(balance)
           :min=0
           :step=0.1
@@ -154,7 +211,18 @@ export default {
     },
     userVote() {
       if (!this.address) return null;
-      return this.proposal.votes.find(vote => vote.voter.toLowerCase() === this.address.toLowerCase());
+      // Select user vote by matching voter address to user address
+      const vote = this.proposal.votes.find(vote => vote.voter.toLowerCase() === this.address.toLowerCase());
+
+      if(vote) {
+        return {
+          ...vote,
+          count: Number(vote.count).toFixed(1),
+        }
+      } else {
+        return null;
+      }
+
     },
   },
   methods: {
@@ -206,7 +274,12 @@ export default {
   mounted() {
     this.setTimeRemainingCountdown();
     this.loadProposalData();
-  }
+  },
+  created() {
+    if(this.balance) {
+      this.voteAmount = +this.balance;
+    }
+  },
 }
 </script>
 
@@ -268,6 +341,11 @@ export default {
 .upgrade {
   border-color: #D841DE;
   color: #D841DE;
+}
+
+.thread {
+  border-color: yellow;
+  color: yellow;
 }
 
 .description-container {

@@ -1,11 +1,11 @@
 import { getIpfsHashFromBytes32 } from "../../../storage/ipfs/common"
 import { ProposalTypes } from "../../../../../models/common"
-import { Vote }  from "../../../../../models/vote"
+import { Vote } from "../../../../../models/vote"
 import { PaperProposal } from "../../../../../models/proposals/paperProposal";
 import { UpgradeProposal } from "../../../../../models/proposals/upgradeProposal";
 import { ParticipantProposal } from "../../../../../models/proposals/participantProposal";
 import { TokenActionProposal } from "../../../../../models/proposals/tokenActionProposal";
-
+import { ThreadProposal } from "../../../../../models/proposals/threadProposal"
 // Map raw vote array to array of vue-mc models 
 export function mapVotes(rawVotes) {
   return rawVotes.map(({
@@ -53,7 +53,7 @@ export function mapPaperProposals(rawPaperProposals) {
         ifpsPath,
       )
     })
-  } catch(e) {
+  } catch (e) {
     console.log("Issue parsing paper proposals");
     console.error(e);
   }
@@ -102,7 +102,7 @@ export function mapUpgradeProposals(rawUpgradeProposals) {
         data,
       )
     })
-  } catch(e) {
+  } catch (e) {
     console.log("Issue parsing upgrade proposals");
     console.error(e);
   }
@@ -146,7 +146,7 @@ export function mapParticipantProposals(rawParticipantProposals) {
         proposer,
       )
     })
-  } catch(e) {
+  } catch (e) {
     console.log("Issue parsing participant proposals");
     console.error(e);
   }
@@ -195,9 +195,55 @@ export function mapTokenActionProposals(rawTokenActionProposals) {
         amount,
       )
     })
-  } catch(e) {
+  } catch (e) {
     console.log("Issue parsing participant proposals");
     console.error(e);
   }
   return tokenActionProposals;
+}
+export function mapThreadProposals(rawThreadProposals) {
+  let threadProposals = [];
+  try {
+    threadProposals = rawThreadProposals.map(({
+      id,
+      governor,
+      name,
+      symbol,
+      descriptor,
+      baseProposal: {
+        creator,
+        endTimestamp,
+        info,
+        startTimestamp,
+        state,
+        supermajority,
+        votes,
+      }
+    }) => {
+      const mappedVotes = mapVotes(votes);
+      const infoPath = getIpfsHashFromBytes32(info);
+      const descriptorPath = getIpfsHashFromBytes32(descriptor);
+      return new ThreadProposal(
+        parseInt(id, 16),
+        null, // thread
+        null, // frabric
+        creator,
+        ProposalTypes.TokenAction,
+        state,
+        mappedVotes,
+        supermajority,
+        startTimestamp,
+        endTimestamp,
+        infoPath,
+        governor,
+        name,
+        symbol,
+        descriptorPath,
+      )
+    })
+  } catch (e) {
+    console.log("Issue parsing thread proposals");
+    console.error(e);
+  }
+  return threadProposals;
 }
