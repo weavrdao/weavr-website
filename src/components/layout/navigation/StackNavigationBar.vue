@@ -2,7 +2,7 @@
   <div class="ml-1 mb-4 is-flex is-align-items-center">
     <div>
       <span class="asset">ASSET</span>
-      <a :href="`https://rinkeby.etherscan.io/address/${address}`"
+      <a :href="`https://goerli.etherscan.io/address/${address}`"
           target="_blank"
           class="address">
       {{ address || "No asset selected" }}

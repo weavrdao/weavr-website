@@ -24,8 +24,8 @@ import { ethers } from "ethers";
     <div v-if="!ended" class="is-flex is-justify-content-flex-end">
       <Button
         v-if="!embedded"
-        label="Vote"
-        extraClasses="p-5 is-mediumBlue bottom-right-corner"
+        label="Details"
+        extraClasses="p-5 is-mediumBlue m-2"
         @click="openProposal"
       />
     </div>

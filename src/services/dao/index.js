@@ -4,10 +4,11 @@ import { Proposal } from "../../models/proposal"
 import { VoteType } from "../../models/vote"
 import { GraphQLAPIClient, ALL_ASSETS_QUERY, PARTICIPANTS_PER_DAO, ALL_PROPOSALS } from "../../data/network/graph/graphQLAPIClient"
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
-import { THREAD_DEPLOYER_ADDRESS, BOND_ADDRESS } from "../constants"
+import { CONTRACTS } from "../constants"
 import AssetContract from "../../data/network/web3/contracts/assetContract"
 import { ethers } from "ethers"
 import { getBytes32FromIpfsHash } from "../../data/network/storage/ipfs/common";
+import { ProposalTypes } from "../../models/common"
 // TODO: Should there be a single service instance per proposal?
 
 /**
@@ -61,7 +62,71 @@ class DAO {
     } catch (e) {
       console.log(e);
     }
+
+    try {
+      const descriptorData = (await this.storageNetwork.getFiles(proposals.map(proposal => proposal.descriptor)));
+      for (let i = 0; i < proposals.length; i++) {
+        if (descriptorData[i] && descriptorData[i].value) {
+          proposals[i].title = descriptorData[i].value.descriptor || "Untitled";
+        } else {
+          proposals[i].descriptor = "No descriptor";
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+
     return proposals;
+  }
+
+  async createThreadProposal(
+    assetId,
+    name,
+    descriptor,
+    title,
+    description,
+    symbol,
+    tradeToken,
+    target,
+  ) {
+    const assetContract = new AssetContract(this.ethereumClient, assetId);
+
+    const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
+      title,
+      description,
+    });
+
+    const descriptorHash = await this.storageNetwork.uploadAndGetPathAsBytes(descriptor);
+
+    console.dir({
+      assetId,
+      name,
+      descriptor,
+      title,
+      description,
+      symbol,
+      tradeToken,
+      target,
+    })
+    const data = ethers.utils.defaultAbiCoder.encode(
+      ["address", "uint112"],
+      [tradeToken, target],
+    );
+
+    if (!infoHash) return;
+
+    const status = await assetContract.proposeThread(
+      0, // Only valid "variant" number
+      name,
+      symbol,
+      descriptorHash,
+      data,
+      infoHash,
+      {
+        gasLimit: 300000
+      }
+    );
+    return status
   }
 
 
@@ -135,23 +200,34 @@ class DAO {
     title,
     description,
     version,
+    signer,
+    governor
   ) {
-    // Hardcoding these for simplicity
-    const ASSET_ADDRESS = assetAddress || "0xa7930bfc863b895de85307457b976b12515389fb";
-    const DATA = ethers.utils.defaultAbiCoder.encode(
-      ["address", "address"],
-      [BOND_ADDRESS, THREAD_DEPLOYER_ADDRESS],
-    );
     if(
       !assetAddress ||
       !beaconAddress ||
       !instanceAddress ||
       !codeAddress ||
-      !version
+      !version ||
+      !signer ||
+      !governor
     ){
       console.log("Something wrong with the parameters at DAOservice level");
-      return null
+
+      return {assetAddress,
+        beaconAddress,
+        instanceAddress,
+        codeAddress,
+        title,
+        description,
+        version,
+        signer,
+        governor}
     }else {
+      const DATA = ethers.utils.defaultAbiCoder.encode(
+        ["address", "address", "address", "address"],
+        [CONTRACTS.BOND, CONTRACTS.THREAD_DEPLOYER, signer, governor],
+      );
       const payload = {
         assetAddress: assetAddress,
         beaconAddress: beaconAddress,
@@ -185,7 +261,6 @@ class DAO {
 
       return status;
     }
-    
   }
 
   async createTokenActionProposal(
