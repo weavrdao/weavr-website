@@ -10,7 +10,8 @@ src/temp/
 package-lock.json
 
 # env files
-*.env*
+*.env
+.gitconfig
 
 # Log files
 npm-debug.log*
