@@ -47,6 +47,10 @@ const getters = {
     return state.user.wallet.tokenBalance;
   },
 
+  assetTokenSymbol(state) {
+    return state.user.wallet.tokenSymbol
+  },
+
   userEthBalance(state) {
     return state.user.wallet.ethBalance
   },
@@ -131,13 +135,17 @@ const getters = {
 
 const actions = {
   async syncWallet(context) {
-    const walletState = await wallet.getState();
-    const tokenBalance = await token.getTokenBalance(
-      CONTRACTS.FRBC,
-      walletState.address,
-    );
+    let walletState = await wallet.getState();
+    console.log(walletState);
+
+    const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
+    const balance = await token.getTokenBalance(CONTRACTS.FRBC, walletState.address);
+  
+    
+    walletState = new WalletState(walletState.address, walletState.ethBalance, ethers.utils.formatEther(balance).toString() , symbol);
     context.commit("setWallet", walletState);
-    context.commit("setTokenBalance", ethers.utils.formatEther(tokenBalance.toString()));
+    console.log(await wallet.getState())
+
   },
 
   // TODO (bill) This needs to be reimplemented
@@ -188,23 +196,33 @@ const actions = {
   async createPaperProposal(context, props) {
     let { assetAddr, proposalType, title, description } = props
     console.log("assetAddr: ", assetAddr, props);
-    // params.$toast.show("Confirming transaction...", {
-    //   duration: false
-    // });
-    // const x = await dao.vote("0", "0", "Yes");
+    props.$toast.info("Confirming transaction...", {
+      duration: false
+    });
 
-    const status = await dao.createPaperProposal(assetAddr, title, description);
 
-    // params.$toast.clear();
+    const status = await dao.createPaperProposal(assetAddr, title, description).then(
+      status => {
+        props.$toast.clear();
+      }
+    );
+    const x = Promise.resolve([status]).then(
+      status => {
+        if (status) {
+          props.$toast.success("Transaction confirmed!");
+          // context.dispatch("refreshProposalsDataForAsset", { assetId: propos.assetId })
+          // router.push("/dao/" + params.assetId + "/proposals")
+        } else {
+          props.$toast.error("Transaction failed. See details in MetaMask.");
+          console.log("Transaction failed. See details in MetaMask.")
+        }
+      }
 
-    // if (status) {
-    //   params.$toast.success("Transaction confirmed!");
-    //   context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
-    //   router.push("/dao/" + params.assetId + "/proposals")
-    // } else {
-    //   params.$toast.error("Transaction failed. See details in MetaMask.");
-    //   console.log("Transaction failed. See details in MetaMask.")
-    // }
+    )
+    
+    
+    
+    
   },
 
   async createParticipantProposal(context, props) {
@@ -377,6 +395,10 @@ const mutations = {
 
   setTokenBalance(state, balance) {
     state.user.wallet.tokenBalance = balance;
+  },
+
+  setTokenSymbol(state, symbol) {
+    state.user.wallet.tokenSymbol = symbol;
   }
 }
 

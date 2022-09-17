@@ -8,11 +8,13 @@ class WalletState {
   constructor(
     address,
     ethBalance,
-    tokenBalance = 0,
+    tokenBalance,
+    tokenSymbol
   ) {
     this.address = address;
     this.ethBalance = ethBalance;
     this.tokenBalance = tokenBalance;
+    this.tokenSymbol = tokenSymbol;
   }
 }
 

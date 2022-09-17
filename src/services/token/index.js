@@ -1,5 +1,13 @@
 import TokenContract from "../../data/network/web3/contracts/tokenContract";
 
+function awaitOn(promise) {
+  Promise.all([promise]).then(
+    () => {
+      return promise;
+    }
+  )
+}
+
 export default class Token {
   constructor(
     ethereumClient,
@@ -8,8 +16,15 @@ export default class Token {
   }
 
   async getTokenBalance(tokenAddress, userAddress) {
-    const tokenContract = new TokenContract(this.ethereumClient, tokenAddress);
-    let balance = await tokenContract.getBalance(userAddress);
-    return balance || 0;
+    const tokenContract =  new TokenContract(this.ethereumClient, tokenAddress);
+    const balance = await tokenContract.getBalance(userAddress);
+    return balance
+  }
+
+  async getTokenSymbol(tokenAddress) {
+    const tokenContract =  new TokenContract(this.ethereumClient, tokenAddress);
+    const symbol = await tokenContract.getSymbol()
+    return symbol
   }
 }
+
