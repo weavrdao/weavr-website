@@ -17,7 +17,7 @@
   </div>
 
   <div class="is-flex is-justify-content-space-between mt-5">
-    <button @click="publish" class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
+    <button @click="publish"  class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
     <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
   </div>
   <!-- End Form -->
@@ -37,21 +37,13 @@ export default {
       required: true,
     }
   },
+  emits: ['submited', "proposed"],
   data(){
     return {
       title: "",
       description: "",
-      proposalType: CommonProposalType.Paper
+      proposalType: CommonProposalType.Paper   
     }
-  },
-  computed: {
-    ...mapGetters({
-      assetMap: "assetsById",
-    }),
-    
-    asset() {
-      return this.assetMap.get(this.assetId);
-    },
   },
   methods: {
     ...mapActions({
@@ -60,21 +52,21 @@ export default {
       createPaperProposal: "createPaperProposal",
     }),
     async publish() {
+      this.$emit("submited")
       console.dir(this.trigger);
       if (this.title.length < 1 || this.description.length < 1) {
         return;
       }
-      
       const assetAddr = this.assetId;
       console.log("ADD:" + assetAddr)
       const title = this.title;
       const description = this.description;
       const proposalType = this.proposalType
-      
-      await this.createPaperProposal({assetAddr, proposalType, title, description});
+      const proposal = await this.createPaperProposal({assetAddr, proposalType, title, description,  $toast: this.$toast} );
+      this.$emit("proposed");
     },
     onCancel() {
-      this.$router.push("/frabric");
+      this.$router.push("/frabric").then( () => { this.$router.go() });
     }
   },
   mounted() {

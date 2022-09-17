@@ -43,6 +43,7 @@ export default {
       required: true,
     },
   },
+  emits: ['submited', "proposed"],
   data(){
     return {
       address: "",
@@ -64,10 +65,9 @@ export default {
       if (this.address.length < 1) {
         return;
       }
-      
-      const  assetId = this.assetId;
-      // const  title = this.title;
-      const  description = this.description;
+      this.$emit("submited");
+      const assetId = this.assetId;
+      const description = this.description;
       const isAddr = ethers.utils.isAddress(this.address);
       const participant = this.address
       const props = {
@@ -77,11 +77,12 @@ export default {
         info: this.description
       }
 
-      console.log("PArticipantType:  ", props['participantType']);
+      console.log("ParticipantType:  ", props['participantType']);
       await this.createProposal(props);
+      this.$emit("proposed");
     },
     onCancel() {
-      this.$router.push("/frabric");
+      this.$router.push("/frabric").then( () => { this.$router.go() });
     }
   }
 }

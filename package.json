@@ -36,6 +36,7 @@
     "vue": "^3.2.13",
     "vue-markdown-render": "^2.0.0",
     "vue-router": "^4.0.10",
+    "vue-spinner": "^1.0.4",
     "vue-template-compiler": "^2.6.11",
     "vue-toaster": "^2.0.0",
     "vue-unicons": "^3.3.1",

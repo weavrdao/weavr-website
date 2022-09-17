@@ -3,7 +3,7 @@
 <div class="tag is-large is-flex is-address-container" v-if="address !=null">
   <div>
     <span>{{ balance }}</span>
-    <span class="has-text-medium-blue"> FBRC</span>
+    <span class="has-text-medium-blue ml-1"> {{ symbol }}</span>
   </div>
   <div
     class="tag is-primary has-radius-xs is-large is-clickable"
@@ -34,20 +34,22 @@ export default {
     ...mapGetters({
       address: "userWalletAddress",
       balance: "userTokenBalance",
+      symbol: "assetTokenSymbol"
     }),
   },
   methods: {
     ...mapActions({
       sync: "syncWallet",
-      getTokenBalance: "getTokenBalance",
+      
     }),
     onClick() {
-      this.sync({ $toast: this.$toast });
+      this.sync({ $toast: this.$toast }).then(
+        console.log("WWWWWWWWWWWWWWWWWW ", this.symbol )
+      );
       this.$toast.show("Syncing wallet...");
     },
   },
   mounted() {
-    this.getTokenBalance();
   }
 };
 </script>

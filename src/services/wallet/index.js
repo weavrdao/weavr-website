@@ -19,10 +19,11 @@ z
       (await this.client.getWalletAddress()).toLowerCase(),
       this.client.getWalletEthBalance()
     ])
-
     const state = new WalletState(
       values[0],
-      values[1] / Math.pow(10, 18)
+      values[1] / Math.pow(10, 18),
+      0,
+      "_FRBC"
     )
 
     return state
