@@ -1,20 +1,15 @@
-import {
-  ApolloClient,
-  InMemoryCache
-} from "@apollo/client/core"
-import { GraphQLAPIClient } from "../graphQLAPIClient"
+import { ApolloClient, InMemoryCache } from "@apollo/client/core";
+import { GraphQLAPIClient } from "../graphQLAPIClient";
 
 const client = new ApolloClient({
-  uri: "https://api.studio.thegraph.com/query/33141/weavr-test/v0.0.5",
-  cache: new InMemoryCache()
-})
+  uri: "https://api.thegraph.com/subgraphs/name/abstrucked/weavr_goerli",
+  cache: new InMemoryCache(),
+});
 
 class TheGraphAPIClient extends GraphQLAPIClient {
-  constructor(
-    mapper
-  ) {
-    super(mapper)
-    this.client = client
+  constructor(mapper) {
+    super(mapper);
+    this.client = client;
   }
 
   async query(query, vars = {}, mappingCallback) {
@@ -23,19 +18,19 @@ class TheGraphAPIClient extends GraphQLAPIClient {
         .query({
           query: query,
           variables: vars,
-          fetchPolicy: "no-cache"
+          fetchPolicy: "no-cache",
         })
-        .then(response => {
-          console.log("Query result:")
-          console.log(response)
-          resolve(mappingCallback(this.mapper, response))
+        .then((response) => {
+          console.log("Query result:");
+          console.log(response);
+          resolve(mappingCallback(this.mapper, response));
         })
-        .catch(err => {
+        .catch((err) => {
           // TODO: Propagate error
-          console.log("Error fetching data: ", err)
-        })
-    })
+          console.log("Error fetching data: ", err);
+        });
+    });
   }
 }
 
-export default TheGraphAPIClient
+export default TheGraphAPIClient;
