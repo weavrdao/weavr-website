@@ -11,7 +11,7 @@ import { getBytes32FromIpfsHash } from "../../data/network/storage/ipfs/common";
 import { ProposalTypes } from "../../models/common"
 // TODO: Should there be a single service instance per proposal?
 
-/**
+/**  
  * DAO service
  * @param {EthereumClient} ethereumClient Ethereum client
  * @param {GraphQLAPIClient} graphQLAPIClient GraphQL API Client
