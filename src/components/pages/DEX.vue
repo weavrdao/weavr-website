@@ -10,7 +10,6 @@
                   :orders="this.orders"/>
             </div>
         </div>
-        <button @click="test">for FUCK SAKE</button>
     </div>
     
     </template>
