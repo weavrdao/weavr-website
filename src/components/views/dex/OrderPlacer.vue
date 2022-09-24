@@ -43,14 +43,14 @@
       Approve
     </button>
     <button
-      :disabled="!this.address"
+      :disabled="!this.address || (this.price * this.quantity > Number(this.tradeTokenBalance))"
       @click="newBuyOrder"
       class="_button order-button buy-button"
       v-else-if="this.orderType === this.orderTypes.BUY">
       Buy
     </button>
     <button
-      :disabled="!this.address"
+      :disabled="!this.address || (this.quantity > Number(this.balance))"
       @click="newSellOrder"
       class="_button order-button sell-button"
       v-else>
@@ -225,6 +225,11 @@ input[type=number] {
     display: block;
     width: 100%;
     margin-top: 35px;
+}
+
+.order-button:disabled {
+  background: gray !important;
+  cursor: auto;
 }
 
 .sell-button {
