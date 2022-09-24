@@ -279,6 +279,15 @@ class FrabricERC20Contract {
       console.log(e);
     }
   }
+
+  async tradeToken() {
+    try {
+      return await this.contract.tradeToken();
+    } catch(e) {
+      console.error("Error fetching trade token");
+      console.error(e);
+    }
+  }
 }
 
 export default FrabricERC20Contract;

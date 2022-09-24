@@ -11,6 +11,7 @@ import {
 } from "@/models/common.js";
 import { TOKEN_ADDRESS, WEAVR_ADDRESS } from "../services/constants";
 import { ethers } from "ethers";
+import { hexToDecimals } from "../data/helpers/numbers";
 
 const wallet = ServiceProvider.wallet();
 const market = ServiceProvider.market();
@@ -32,6 +33,7 @@ function state() {
     },
     exchange: {
       orders: null,
+      tradeTokenAllowance: null,
     },
   };
 }
@@ -52,6 +54,14 @@ const getters = {
 
   userTokenBalance(state) {
     return state.user.wallet.tokenBalance;
+  },
+
+  userTradeTokenBalance(state) {
+    return state.user.wallet.tradeTokenBalance;
+  },
+
+  userTradeTokenAllowance(state) {
+    return state.exchange.tradeTokenAllowance;
   },
 
   userEthBalance(state) {
@@ -147,7 +157,7 @@ const actions = {
   async syncWallet(context) {
     const walletState = await wallet.getState();
     const tokenBalance = await token.getTokenBalance(
-      TOKEN_ADDRESS,
+      process.env.VUE_APP_TOKEN_ADDRESS,
       walletState.address
     );
     context.commit("setWallet", walletState);
@@ -351,10 +361,45 @@ const actions = {
 
     await dex.createSellOrder(assetId, price, amount);
   },
+
+  async approveTradeToken(_, params) {
+    const { assetId } = params;
+    await dex.approveTradeToken(assetId);
+  },
+
+  async fetchTradeTokenData(context, params) {
+    const { assetId, userAddress } = params;
+    const walletState = await wallet.getState();
+
+    const address = userAddress || walletState.address;
+
+    if(!address) {
+      console.error("No wallet connected, cannot get trade token allowance");
+      return;
+    }
+
+    const allowance = await dex.getAllowance(assetId, address);
+    const balance = await dex.getBalance(assetId, address);
+
+    if(allowance) {
+      context.commit(
+        "setTradeTokenAllowance",
+        hexToDecimals(allowance, 6),
+      );
+    }
+
+    if(balance) {
+      context.commit(
+        "setTradeTokenBalance",
+        hexToDecimals(balance, 6),
+      );
+    }
+  },
 };
 
 const mutations = {
   setWallet(state, wallet) {
+    console.dir(wallet);
     state.user.wallet = wallet;
   },
 
@@ -378,9 +423,17 @@ const mutations = {
     state.user.wallet.tokenBalance = balance;
   },
 
+  setTradeTokenBalance(state, balance) {
+    state.user.wallet.tradeTokenBalance = balance;
+  },
+
   setOrders(state, orders) {
     state.exchange.orders = orders;
   },
+
+  setTradeTokenAllowance(state, allowance) {
+    state.exchange.tradeTokenAllowance = allowance;
+  }
 };
 
 export default {

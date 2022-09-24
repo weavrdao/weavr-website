@@ -3,23 +3,29 @@
     <h3>Create order</h3>
     <div class="selection-buttons-container">
         <button
-        class="_button selection-button"
-        v-bind:class="(this.orderType === this.orderTypes.BUY) && 'buy-button'"
-        :onClick="() => this.setOrderType(this.orderTypes.BUY)">
-        Buy
+          class="_button selection-button"
+          v-bind:class="(this.orderType === this.orderTypes.BUY) && 'buy-button'"
+          :onClick="() => this.setOrderType(this.orderTypes.BUY)">
+          Buy
         </button>
         <button
-        class="_button selection-button"
-        v-bind:class="(this.orderType === this.orderTypes.SELL) && 'sell-button'"
-        :onClick="() => this.setOrderType(this.orderTypes.SELL)">
-        Sell
+          class="_button selection-button"
+          v-bind:class="(this.orderType === this.orderTypes.SELL) && 'sell-button'"
+          :onClick="() => this.setOrderType(this.orderTypes.SELL)">
+          Sell
         </button>
     </div>
     <div class="is-flex is-justify-content-space-between my-4">
       <span>Avbl <img class="is-wallet-image" src="../.././../assets/pics/wallet-icon.svg"/></span>
       <span>
-        <span>5,250</span>
-        <span class="has-text-mediumBlue"> FBRC</span>
+        <span>{{ this.balance }}</span>
+        <span class="has-text-mediumBlue"> WEAV</span>
+      </span>
+    </div>
+    <div class="is-flex is-justify-content-flex-end my-4">
+      <span>
+        <span>{{ this.tradeTokenBalance }}</span>
+        <span class="has-text-mediumBlue"> USDC</span>
       </span>
     </div>
     <p>Price</p>
@@ -30,12 +36,21 @@
       <p class="is-total">{{`Total: ${(quantity * price).toFixed(2)} USD`}}</p>
     </div>
     <button
+      :disabled="!this.address"
+      @click="approve"
+      class="_button order-button buy-button"
+      v-if="!!this.address && !!this.allowance & Number(this.allowance) === 0 && this.orderType === this.orderTypes.BUY">
+      Approve
+    </button>
+    <button
+      :disabled="!this.address"
       @click="newBuyOrder"
       class="_button order-button buy-button"
-      v-if="this.orderType === this.orderTypes.BUY">
+      v-else-if="this.orderType === this.orderTypes.BUY">
       Buy
     </button>
     <button
+      :disabled="!this.address"
       @click="newSellOrder"
       class="_button order-button sell-button"
       v-else>
@@ -45,7 +60,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from "vuex";
 
 
 const orderTypes = {
@@ -64,28 +79,40 @@ export default {
       orderType: orderTypes.buy,
       price: 0,
       quantity: 0,
-      assetId: this.$route.query.assetId || process.env.VUE_APP_WEAVR_ADDRESS
+      assetId: this.$route.query.assetId || process.env.VUE_APP_WEAVR_ADDRESS,
     }
+  },
+  computed: {
+    ...mapGetters({
+      orders: "assetMarketOrders",
+      address: "userWalletAddress",
+      balance: "userTokenBalance",
+      allowance: "userTradeTokenAllowance",
+      tradeTokenBalance: "userTradeTokenBalance",
+    }),
   },
   methods: {
     ...mapActions({
       createBuyOrder: "createBuyOrder",
       createSellOrder: "createSellOrder",
+      approveTradeToken: "approveTradeToken",
     }),
     setOrderType(type) {
       this.orderType = type;
       this.setPrice();
     },
     setPrice() {
-      this.price = Number(this.orders
-        .filter(o => o.type === this.orderType)
-        .sort((o1, o2) => {
-          if(this.orderType === this.orderTypes.BUY) {
-            return o1 < o2;
-          } else {
-            return o1 > o2;
-          }
-        })[0].price);
+      if(this.orders && this.orders.length > 0) {
+        this.price = Number(this.orders
+          .filter(o => o.type === this.orderType)
+          .sort((o1, o2) => {
+            if(this.orderType === this.orderTypes.BUY) {
+              return o1 < o2;
+            } else {
+              return o1 > o2;
+            }
+          })[0].price);
+      }
     },
     newBuyOrder: function() {
       this.createBuyOrder({
@@ -101,6 +128,11 @@ export default {
         amount: this.quantity,
       })
     },
+    approve: function() {
+      this.approveTradeToken({
+        assetId: this.assetId,
+      });
+    }
   },
   props: {
     orders: {
@@ -108,7 +140,15 @@ export default {
       default: () => [],
     },
   },
-  onMounted() {
+  mounted() {
+    console.dir({
+      bal: this.balance,
+      ttb: this.tradeTokenBalance,
+      bd: this.buyDisabled,
+      sd: this.sellDisabled,
+      sa: this.showApprove,
+      ad: this.approveDisabled,
+    })
     this.setPrice();
   }
 }

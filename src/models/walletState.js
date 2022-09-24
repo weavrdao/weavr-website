@@ -9,10 +9,12 @@ class WalletState {
     address,
     ethBalance,
     tokenBalance = 0,
+    tradeTokenBalance = 0,
   ) {
     this.address = address;
     this.ethBalance = ethBalance;
     this.tokenBalance = tokenBalance;
+    this.tradeTokenBalance = tradeTokenBalance;
   }
 }
 

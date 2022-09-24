@@ -3,7 +3,7 @@
 <div class="tag is-large is-flex is-address-container" v-if="address !=null">
   <div>
     <span>{{ balance }}</span>
-    <span class="has-text-medium-blue"> FBRC</span>
+    <span class="has-text-medium-blue"> WEAV</span>
   </div>
   <div
     class="tag is-primary has-radius-xs is-large is-clickable"
@@ -30,6 +30,11 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "SignerAddress",
+  data() {
+    return {
+      assetId: this.$route.query.assetId || process.env.VUE_APP_WEAVR_ADDRESS,
+    }
+  },
   computed: {
     ...mapGetters({
       address: "userWalletAddress",
@@ -39,16 +44,18 @@ export default {
   methods: {
     ...mapActions({
       sync: "syncWallet",
-      getTokenBalance: "getTokenBalance",
+      fetchTradeTokenData: "fetchTradeTokenData",
+
     }),
     onClick() {
       this.sync({ $toast: this.$toast });
+      this.fetchTradeTokenData({
+        userAddress: this.address,
+        assetId: this.assetId,
+      });
       this.$toast.show("Syncing wallet...");
     },
   },
-  mounted() {
-    this.getTokenBalance();
-  }
 };
 </script>
 

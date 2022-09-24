@@ -3,6 +3,7 @@ import EthereumClient from "../../data/network/web3/ethereum/ethereumClient";
 import DexRouterContract from "../../data/network/web3/contracts/dexRouterContract";
 import FrabricERC20Contract from "../../data/network/web3/contracts/frabricERC20Contract";
 import AssetContract from "../../data/network/web3/contracts/assetContract";
+import USDCContract from "../../data/network/web3/contracts/usdcContract";
 import {
   FRABRIC_DEX_ORDERS_QUERY,
   THREAD_DEX_ORDERS_QUERY,
@@ -78,6 +79,39 @@ class DEX {
 
     const status = await frabricTokenContract.sell(price, amount);
     return status;
+  }
+
+  async getTradeTokenAddress(frabricAddress) {
+    try {
+      const daoContract = new AssetContract(this.ethereumClient, frabricAddress);
+      const erc20Address = await daoContract.erc20();
+      const frabricERC20Contract = new FrabricERC20Contract(this.ethereumClient, erc20Address);
+      const tradeTokenAddress = await frabricERC20Contract.tradeToken();
+      return tradeTokenAddress;
+    } catch(e) {
+      console.log("Error fetching trade token address");
+      console.error(e);
+      return null;
+    }
+
+  }
+
+  async getAllowance(frabricAddress, userAddress) {
+    const tradeTokenAddress = this.getTradeTokenAddress(frabricAddress);
+    const usdcContract = new USDCContract(this.ethereumClient, tradeTokenAddress);
+    return (await usdcContract.allowance(userAddress, process.env.VUE_APP_DEX_ROUTER));
+  }
+
+  async approveTradeToken(frabricAddress) {
+    const tradeTokenAddress = this.getTradeTokenAddress(frabricAddress);
+    const usdcContract = new USDCContract(this.ethereumClient, tradeTokenAddress);
+    return (await usdcContract.approve(process.env.VUE_APP_DEX_ROUTER));
+  }
+
+  async getBalance(frabricAddress, userAddress) {
+    const tradeTokenAddress = this.getTradeTokenAddress(frabricAddress);
+    const usdcContract = new USDCContract(this.ethereumClient, tradeTokenAddress);
+    return (await usdcContract.balanceOf(userAddress));
   }
 }
 

@@ -2,13 +2,15 @@
     <div class="container">
         <div class="columns reverse-columns">
             <div class="column is-three-fifths">
-              <OrderBook :assetId="assetId" :orders="getBuyOrders(orders)" :buy="true"/>
-              <OrderBook :assetId="assetId" :orders="getSellOrders(orders)" :buy="false"/>
+              <OrderBook :assetId="this.assetId" :orders="getBuyOrders(orders)" :buy="true"/>
+              <OrderBook :assetId="this.assetId" :orders="getSellOrders(orders)" :buy="false"/>
             </div>
             <div class="column">
-                <OrderPlacer :orders="orders"/>
+                <OrderPlacer
+                  :orders="this.orders"/>
             </div>
         </div>
+        <button @click="test">for FUCK SAKE</button>
     </div>
     
     </template>
@@ -32,7 +34,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      orders: "assetMarketOrders"
+      orders: "assetMarketOrders",
     }),
   },
   methods: {
@@ -53,7 +55,6 @@ export default {
       : []),
   },
   mounted() {
-    console.log(this.assetId);
     this.fetchOrders({
       assetId: this.assetId,
     });

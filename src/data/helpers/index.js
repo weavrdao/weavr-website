@@ -6,3 +6,5 @@ export {
   getResult,
   hasEnded,
 } from "./proposals";
+
+export { hexToDecimals } from "./numbers";

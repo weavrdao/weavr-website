@@ -15,9 +15,7 @@ export default class TokenContract {
   async getBalance(account) {
     try {
       const balance = await this.contract
-        .balanceOf(account, {
-          gasLimit: 50000000,
-        });
+        .balanceOf(account);
       return balance;
     } catch (e) {
       console.log("Error fetching token balance");
