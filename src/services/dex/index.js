@@ -113,6 +113,12 @@ class DEX {
     const usdcContract = new USDCContract(this.ethereumClient, tradeTokenAddress);
     return (await usdcContract.balanceOf(userAddress));
   }
+
+  async getTradeTokenDecimals(frabricAddress) {
+    const tradeTokenAddress = this.getTradeTokenAddress(frabricAddress);
+    const usdcContract = new USDCContract(this.ethereumClient, tradeTokenAddress);
+    return (await usdcContract.decimals());
+  }
 }
 
 export default DEX;

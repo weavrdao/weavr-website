@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache } from "@apollo/client/core";
 import { GraphQLAPIClient } from "../graphQLAPIClient";
 
 const client = new ApolloClient({
-  uri: "https://api.thegraph.com/subgraphs/name/abstrucked/weavr_goerli",
+  uri: "https://api.thegraph.com/subgraphs/name/bill0x2a/weavr-test",
   cache: new InMemoryCache(),
 });
 

@@ -350,10 +350,11 @@ const actions = {
 
   async createBuyOrder(_, params) {
     const { assetId, price, amount } = params;
-
-    console.dir(params);
-
-    await dex.createBuyOrder(assetId, price, amount);
+    
+    const decimals = await dex.getTradeTokenDecimals(assetId);
+    const totalAmount = ethers.utils.parseUnits(String(amount), ethers.BigNumber.from(decimals));
+  
+    await dex.createBuyOrder(assetId, price, totalAmount);
   },
 
   async createSellOrder(_, params) {
