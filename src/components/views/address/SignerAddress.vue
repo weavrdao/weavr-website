@@ -30,6 +30,8 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import { DAO } from "../../../services/constants"
+
 export default {
   name: "SignerAddress",
   computed: {
@@ -50,7 +52,7 @@ export default {
     },
     onVouch() {
       // this.vouch({participant: "0x403383c411c0eB14eA0Bd15E7c2AD5431a7410C2"})
-      this.$router.push("/frabric/vouch")
+      this.$router.push("/".concat(DAO).concat("/vouch"))
     }
   },
   mounted() {

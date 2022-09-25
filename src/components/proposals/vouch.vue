@@ -21,6 +21,8 @@
 import { mapActions } from "vuex";
 import { CommonProposalType } from "@/models/common.js"
 import { ethers } from 'ethers';
+import { DAO } from "../../services/constants"
+
 export default {
 
   name: "newPaperProposal",
@@ -59,7 +61,7 @@ export default {
       this.vouch({participant: participant})
     },
     onCancel() {
-      this.$router.push("/frabric");
+      this.$router.push("/".concat(DAO));
     }
   },
   mounted() {

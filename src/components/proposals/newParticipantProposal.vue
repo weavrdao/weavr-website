@@ -33,6 +33,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import {ParticipantType} from "@/models/common.js";
+import { DAO } from "../../services/constants"
 import {ethers} from "ethers";
 export default {
 
@@ -82,7 +83,7 @@ export default {
       this.$emit("proposed");
     },
     onCancel() {
-      this.$router.push("/frabric").then( () => { this.$router.go() });
+      this.$router.push("/".concat(DAO)).then( () => { this.$router.go() });
     }
   }
 }

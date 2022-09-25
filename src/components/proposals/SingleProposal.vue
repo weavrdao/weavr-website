@@ -154,6 +154,7 @@ import {
 } from "../../data/helpers";
 import { PASSED } from "../../models/common";
 import Address from "../views/address/Address.vue";
+import { DAO } from "../../services/constants"
 
 export default {
   // (bill) TODO: Make this reload data if loaded directly
@@ -231,7 +232,7 @@ export default {
       loadProposalData: "refreshProposalsDataForAsset",
     }), // Voting action
     routeToHome() {
-      this.$router.push("/frabric");
+      this.$router.push("/".concat(DAO));
     },
     setTimeRemainingCountdown() {
       clearInterval(this.countdownRef);

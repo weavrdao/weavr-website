@@ -204,23 +204,21 @@ const actions = {
     SUGGESTION: GET THE ADDRESS FROM ID IN THE COMPONENT-SPECIFIC PROPOSAL
   */
   async createPaperProposal(context, props) {
-    let { assetAddr, proposalType, title, description } = props
+    let { assetAddr, daoResolution, title, description } = props
     console.log("assetAddr: ", assetAddr, props);
     props.$toast.info("Confirming transaction...", {
       duration: false
     });
 
-    const status = await dao.createPaperProposal(assetAddr, title, description).then(
-      status => {
+    const status = await dao.createPaperProposal(assetAddr, title, description, daoResolution).then(
+      () => {
         props.$toast.clear();
       }
     );
-    const x = Promise.resolve([status]).then(
+    Promise.resolve([status]).then(
       status => {
         if (status) {
           props.$toast.success("Transaction confirmed!");
-          // context.dispatch("refreshProposalsDataForAsset", { assetId: propos.assetId })
-          // router.push("/dao/" + params.assetId + "/proposals")
         } else {
           props.$toast.error("Transaction failed. See details in MetaMask.");
           console.log("Transaction failed. See details in MetaMask.")

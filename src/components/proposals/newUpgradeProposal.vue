@@ -49,9 +49,9 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import {ethers} from "ethers";
+import { ethers } from "ethers";
 import { ProposalTypes } from "@/models/common"
-import {CONTRACTS} from "../../services/constants" 
+import { CONTRACTS, DAO } from "../../services/constants" 
 const GOERLI_TEST = {
   governor: "0x2C4fEAaab2F640738Dfd5535cb5AB91dE4e113bA",
   signer: "0xFb3f5745dfD05bA3184156fcbd39D510136B0922"
@@ -111,7 +111,7 @@ export default {
       });
     },
     onCancel() {
-      this.$router.push("/frabric");
+      this.$router.push("/".concat(DAO));
     }
   },
   mounted() {

@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import {DAO} from "../../services/constants"
 export default {
   name: "NewProposalSelector",
   data () {
@@ -49,7 +50,7 @@ export default {
   },
   methods: {
     routeToSelectedPage() {
-      this.$router.push(`/frabric/${this.selectedAction}`);
+      this.$router.push(`/${DAO}/${this.selectedAction}`);
     },
   }
 }

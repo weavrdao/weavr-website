@@ -152,13 +152,15 @@ class DAO {
   async createPaperProposal(
     asset,
     title,
-    description
+    description,
+    daoResolution
   ) {
     const assetContract = new AssetContract(this.ethereumClient, asset);
 
     const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
       title,
       description,
+      daoResolution
     });
     if (!infoHash) return;
 

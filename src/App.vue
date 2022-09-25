@@ -10,5 +10,13 @@ export default {
   components: {
     AppWrapper,
   },
+  head: {
+    link: [
+      {
+        rel: "icon",
+        href: "./assets/favicon.ico"
+      }
+    ]
+  }
 };
 </script>

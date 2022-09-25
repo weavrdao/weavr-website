@@ -56,7 +56,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import {ethers} from "ethers";
-import { WEAVR_ADDRESS } from "../../services/constants";
+import { WEAVR_ADDRESS, DAO } from "../../services/constants";
 
 export default {
 
@@ -117,7 +117,7 @@ export default {
       });
     },
     onCancel() {
-      this.$router.push("/frabric");
+      this.$router.push("/".concat(DAO));
     }
   }
 }

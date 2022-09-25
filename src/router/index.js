@@ -9,7 +9,7 @@ import newTokenAction from "@/components/proposals/newTokenAction.vue";
 import newThreadProposal from "@/components/proposals/newThreadProposal.vue";
 import SingleProposal from "@/components/proposals/SingleProposal.vue";
 import vouch from "@/components/proposals/vouch"
-import {CONTRACTS} from "../services/constants"
+import {CONTRACTS, DAO} from "../services/constants"
 
 
 
@@ -19,48 +19,48 @@ const router = new createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/frabric"
+      redirect: "/".concat(DAO)
     },
     {
       path: "/dao/:assetId",
       component: Homepage,
       props: { assetId:  CONTRACTS.WEAVR},
-      alias: "/frabric",
+      alias: "/".concat(DAO),
       children: [
         {
           path: "paperProposal",
           component: Modal,
-          props: { assetId: "dd", component: newPaperProposal }
+          props: { assetId: "", component: newPaperProposal }
         },
         {
           path: "participantProposal",
           component: Modal,
-          props: { assetId: "dd", component: newParticipantProposal }
+          props: { assetId: "", component: newParticipantProposal }
         },
         {
           path: "upgradeProposal",
           component: Modal,
-          props: { assetId: "dd", component: newUpgradeProposal }
+          props: { assetId: "", component: newUpgradeProposal }
         },
         {
           path: "tokenProposal",
           component: Modal,
-          props: { assetId: "dd", component: newTokenAction },
+          props: { assetId: "", component: newTokenAction },
         },
         {
           path: "vouch",
           component: Modal,
-          props: { assetId: "dd", component: vouch }
+          props: { assetId: "", component: vouch }
         },
         {
           path: "threadProposal",
           component: Modal,
-          props: { assetId: "dd", component: newThreadProposal },
+          props: { assetId: "", component: newThreadProposal },
         },
         {
           path: "proposal/:proposalId",
           component: Modal,
-          props: { assetId: "dd", component: SingleProposal }
+          props: { assetId: "", component: SingleProposal }
         }
       ]
     },

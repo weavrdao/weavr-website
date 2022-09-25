@@ -15,7 +15,13 @@
       <textarea class="textarea" v-model="description" placeholder="Enter description here"></textarea>
     </div>
   </div>
-
+  <div class="field">
+    <label class="label">DAO resolution</label>
+    <div class="control">
+      <input type="checkbox" class="checkbox" v-model="daoResolution"/><span class="ml-1 has-text-mediumGray is-italic"> - check this if the proposal will make changes to the DAO</span>
+    </div>
+  </div>
+  
   <div class="is-flex is-justify-content-space-between mt-5">
     <button @click="publish"  class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
     <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
@@ -42,6 +48,7 @@ export default {
     return {
       title: "",
       description: "",
+      daoResolution: false,
       proposalType: CommonProposalType.Paper   
     }
   },
@@ -62,11 +69,12 @@ export default {
       const title = this.title;
       const description = this.description;
       const proposalType = this.proposalType
-      const proposal = await this.createPaperProposal({assetAddr, proposalType, title, description,  $toast: this.$toast} );
+      const daoResolution = this.daoResolution
+      const proposal = await this.createPaperProposal({assetAddr, proposalType, title, description, daoResolution,  $toast: this.$toast} );
       this.$emit("proposed");
     },
     onCancel() {
-      this.$router.push("/frabric").then( () => { this.$router.go() });
+      this.$router.push("/").then( () => { this.$router.go() });
     }
   },
   mounted() {
