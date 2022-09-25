@@ -31,7 +31,8 @@
     <p>Price</p>
     <input class="is-price-input" type="number" placeholder="Price" v-model="price">
     <p>Quantity</p>
-    <input class="is-price-input" type="number" placeholder="Quantity" v-model="quantity">
+    <label>Whole numbers only</label>
+    <input class="is-price-input" type="number" placeholder="Quantity" v-model="quantity" step="1">
     <div class="is-flex is-justify-content-flex-end">
       <p class="is-total">{{`Total: ${(quantity * price).toFixed(2)} USD`}}</p>
     </div>
@@ -166,6 +167,10 @@ input[type=number] {
     -moz-appearance:textfield; /* Firefox */
 }
 
+label {
+  font-size: 0.8rem;
+  margin-top: -0.8rem;
+}
 .container {
     background: $darkGray;
     border-radius: $small-radius;

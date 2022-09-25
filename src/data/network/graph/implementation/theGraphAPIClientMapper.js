@@ -8,6 +8,7 @@ import {
   mapParticipantProposals,
   mapTokenActionProposals,
 } from "./proposals";
+import { formatUnitsAsBigNumbers } from "../../../helpers/numbers";
 
 class TheGraphAPIMapper extends GraphQLAPIMapper {
   // TODO(bill): This was invalid with the data model and needs to be rewritten
@@ -37,7 +38,7 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
         rawMarketOrder.id,
         rawMarketOrder.type,
         rawMarketOrder.price,
-        rawMarketOrder.totalAmount
+        rawMarketOrder.totalAmount,
       );
     });
   }

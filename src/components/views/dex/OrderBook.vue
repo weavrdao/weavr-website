@@ -58,7 +58,7 @@ hr {
 }
 
 .container {
-  border: 2px solid #575757;
+  border: 1px solid #575757;
   border-radius: 10px;
   padding: 25px;
   margin-bottom: 30px !important;

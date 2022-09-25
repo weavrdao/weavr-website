@@ -350,15 +350,22 @@ const actions = {
 
   async createBuyOrder(_, params) {
     const { assetId, price, amount } = params;
-    
-    const decimals = await dex.getTradeTokenDecimals(assetId);
-    const totalAmount = ethers.utils.parseUnits(String(amount), ethers.BigNumber.from(decimals));
+
+    if(Number(amount) % 1 !== 0) {
+      throw Error("Quantity must be a whole number")
+    }
+
+    const tradeTokenDecimals = await dex.getTradeTokenDecimals(assetId);
   
-    await dex.createBuyOrder(assetId, price, totalAmount);
+    await dex.createBuyOrder(assetId, price, amount, tradeTokenDecimals);
   },
 
   async createSellOrder(_, params) {
     const { assetId, price, amount } = params;
+
+    if(Number(amount) % 1 !== 0) {
+      throw Error("Quantity must be a whole number")
+    }
 
     await dex.createSellOrder(assetId, price, amount);
   },

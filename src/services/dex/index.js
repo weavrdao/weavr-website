@@ -9,6 +9,7 @@ import {
   THREAD_DEX_ORDERS_QUERY,
 } from "../../data/network/graph/queries";
 import { TRADE_TOKEN_ADDRESS } from "../constants";
+import { multiplyAsBigNumbers, parseUnitsAsBigNumbers } from "../../data/helpers/numbers";
 
 /**
  * DEX service
@@ -45,7 +46,7 @@ class DEX {
     return marketOrders.length > 0 ? marketOrders : [];
   }
 
-  async createBuyOrder(frabricAddress, price, minimumAmount) {
+  async createBuyOrder(frabricAddress, price, minimumAmount, tradeTokenDecimals) {
     const daoContract = new AssetContract(this.ethereumClient, frabricAddress);
 
     const erc20 = await daoContract.erc20();
@@ -57,10 +58,12 @@ class DEX {
       process.env.VUE_APP_DEX_ROUTER
     );
 
+    const totalAmount = multiplyAsBigNumbers(minimumAmount, price);
+
     const status = await dexRouterContract.buy(
       erc20,
       TRADE_TOKEN_ADDRESS,
-      price * minimumAmount,
+      totalAmount,
       price,
       minimumAmount
     );

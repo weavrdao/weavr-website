@@ -13,6 +13,7 @@ import { THREAD_DEPLOYER_ADDRESS, BOND_ADDRESS } from "../constants";
 import AssetContract from "../../data/network/web3/contracts/assetContract";
 import { ethers } from "ethers";
 import { getBytes32FromIpfsHash } from "../../data/network/storage/ipfs/common";
+import FrabricERC20Contract from "../../data/network/web3/contracts/frabricERC20Contract";
 // TODO: Should there be a single service instance per proposal?
 
 /**
@@ -242,6 +243,15 @@ class DAO {
     const erc20Address = await assetContract.erc20();
 
     return erc20Address;
+  }
+
+  async getTokenDecimals(frabricAddress) {
+    const erc20Address = this.getTokenAddress(frabricAddress);
+    console.log(erc20Address);
+    const tokenContract = new FrabricERC20Contract(this.ethereumClient, erc20Address);
+
+    const decimals = await tokenContract.decimals();
+    return decimals;
   }
 }
 

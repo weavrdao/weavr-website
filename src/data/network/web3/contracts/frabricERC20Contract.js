@@ -206,6 +206,7 @@ class FrabricERC20Contract {
    */
   async sell(price, amount) {
     console.log(price, amount);
+    console.log(amount.toString());
     try {
       const tx = await this.mutableContract.sell(price, amount);
       return tx.wait().status;

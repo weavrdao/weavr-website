@@ -1,6 +1,6 @@
 <template>
   <div v-if="assetId" class="container p-5 is-dark">
-    <StackNavigationBar @onBack="goBack" :address="assetId" />
+    <AssetAddressDisplay @onBack="goBack" :address="assetId" />
     <NewProposalSelector/>
     <RefreshButton :assetId="assetId"/>
     <div class="columns is-variable is-8">
@@ -36,7 +36,7 @@
 <script>
 import { toFixedNumber } from "../../utils/common";
 import { mapGetters, mapActions } from "vuex";
-import StackNavigationBar from "../layout/navigation/StackNavigationBar.vue";
+import AssetAddressDisplay from "../layout/navigation/AssetAddressDisplay.vue";
 import ProposalList from "../proposals/ProposalList.vue";
 import NewProposalSelector from "../sections/NewProposalSelector.vue";
 import RefreshButton from "../sections/RefreshButton.vue";
@@ -50,7 +50,7 @@ export default {
     },
   },
   components: {
-    StackNavigationBar,
+    AssetAddressDisplay,
     ProposalList,
     NewProposalSelector,
     RefreshButton,

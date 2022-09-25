@@ -1,6 +1,12 @@
 <template>
     <div class="container">
-        <div class="columns reverse-columns">
+        <div class="is-flex is-justify-content-space-between">
+          <AssetAddressDisplay :address="this.assetId"/>
+          <button
+            @click="refresh"
+            class="button has-background-mediumBlue has-text-white">Refresh</button>
+        </div>
+        <div class="columns reverse-columns mt-3">
             <div class="column is-three-fifths">
               <OrderBook :assetId="this.assetId" :orders="getBuyOrders(orders)" :buy="true"/>
               <OrderBook :assetId="this.assetId" :orders="getSellOrders(orders)" :buy="false"/>
@@ -17,11 +23,13 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import OrderPlacer from "../views/dex/OrderPlacer.vue";
+import AssetAddressDisplay from "../layout/navigation/AssetAddressDisplay.vue";
 import OrderBook from "../views/dex/OrderBook.vue";
     
 export default {
   name: "DEX",
   components: {
+    AssetAddressDisplay,
     OrderPlacer,
     OrderBook,
   },
@@ -39,6 +47,7 @@ export default {
   methods: {
     ...mapActions({
       fetchOrders: "fetchOrders",
+      fetchTradeTokenData: "fetchTradeTokenData",
     }),
     getBuyOrders: (orders) => (orders 
       ? orders
@@ -52,6 +61,14 @@ export default {
         .sort((o1, o2) => o1.price < o2.price)
         .slice(0, 9)
       : []),
+    refresh() {
+      this.fetchOrders({
+        assetId: this.assetId,
+      });
+      this.fetchTradeTokenData({
+        assetId: this.assetId,
+      })
+    }
   },
   mounted() {
     this.fetchOrders({
@@ -77,48 +94,5 @@ export default {
         font-size: 32px;
         margin-bottom: 52px;
     }
-    
-    .has-gap {
-        gap: 17px;
-    }
-    
-    .is-simple-container {
-        border-radius: 10px;
-        border: 1px solid $mediumGray;
-        padding: 23px 38px;
-        margin-bottom: 30px;
-    }
-    
-    .is-price-input {
-        background: #2F2C38;
-        border: none !important;
-        border-radius: 15px;
-        outline: none;
-        display: block;
-        width: 100%;
-        margin: 15px 0px;
-        padding: 18px 27px;
-        font-size: 18px;
-    }
-    
-    .has-small-flex-gap {
-        gap: 17px;
-    }
-    
-    .button {
-        width: 100%;
-        font-size: 22px;
-        border-radius: 10px;
-        color: white;
-        font-weight: 600;
-        border: none;
-    }
-    
-    .buy-button {
-        background: $mint;
-    }
-    
-    .sell-button {
-        background: $red;
-    }
+  
     </style>
