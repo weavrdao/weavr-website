@@ -2,7 +2,7 @@ import * as CommonUtils from "../../utils/common"
 import StorageNetwork from "../../data/network/storage/storageNetwork"
 import { Proposal } from "../../models/proposal"
 import { VoteType } from "../../models/vote"
-import { GraphQLAPIClient, ALL_ASSETS_QUERY, PARTICIPANTS_PER_DAO, ALL_PROPOSALS } from "../../data/network/graph/graphQLAPIClient"
+import { GraphQLAPIClient, ALL_ASSETS_QUERY, PARTICIPANTS_PER_DAO, ALL_PROPOSALS, VOUCHES_PER_PARTICIPANT } from "../../data/network/graph/graphQLAPIClient"
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
 import { CONTRACTS } from "../constants"
 import AssetContract from "../../data/network/web3/contracts/assetContract"
@@ -79,6 +79,18 @@ class DAO {
     return proposals;
   }
 
+  async getUserVouches (signer) {
+    console.log("vouches")
+    let vouches = await this.graphQLAPIClient
+    .query(
+      VOUCHES_PER_PARTICIPANT,
+      { id: process.env.INITIALFRABRIC, signer: signer },
+      (mapper, response) => { return mapper.mapVouchers(response.data) }
+    )
+
+    console.log(vouches)
+    return vouches
+  }
   async createThreadProposal(
     assetId,
     name,
@@ -289,32 +301,12 @@ class DAO {
     return status;
   }
 
-  async vouch(asset, domain, participant) {
-    const signCfg = [
-      {
-        name: "Frabric Protocol",
-        version: "1",
-        chainId: 4,
-      },
-      {
-        Vouch: [{ type: "address", name: "participant" }],
-        KYCVerification: [
-          { type: "uint8", name: "participantType" },
-          { type: "address", name: "participant" },
-          { type: "bytes32", name: "kyc" },
-          { type: "uint256", name: "nonce" },
-        ],
-      },
-    ]
-    const assetContract = new AssetContract(this.ethereumClient, asset);
+  async vouch(participant, data) {
+    const assetContract = new AssetContract(this.ethereumClient, CONTRACTS.WEAVR);
 
-    let signArgs = JSON.parse(JSON.stringify(signCfg))
-    signArgs[1] = { Vouch: signArgs[1].Vouch }
-    console.log("SIGNARGS: ", signArgs, participant);
-    let signature = (await this.ethereumClient
-      .getSignature(signArgs, participant))
-    signature = ethers.utils.defaultAbiCoder.encode(signature)
-    const tx_result = await assetContract.vouch(participant, signature)
+    const status = await assetContract.vouch(participant, data);
+    
+    return status;
   }
   /**
    * Vote on a proposal

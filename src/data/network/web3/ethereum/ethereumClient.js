@@ -47,6 +47,9 @@ class EthereumClient {
     return (await this.walletSigner.getBalance()).toString()
   }
 
+  async getSignature(domain, types, data) {
+    return await this.walletSigner._signTypedData(domain, types, data)
+  }
   
 
   /* --- Contract access --- */

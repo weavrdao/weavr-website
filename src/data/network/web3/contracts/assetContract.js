@@ -188,9 +188,9 @@ class AssetContract {
       }
     );
     // this.mutableContract.signer
-    let status = (await tx.wait()).status;
-    console.log(status);
-    return status
+    
+    console.log(tx);
+    return tx
   }
 
   /** 

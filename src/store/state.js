@@ -17,7 +17,8 @@ const token = ServiceProvider.token();
 function state() {
   return {
     user: {
-      wallet: WalletState
+      wallet: WalletState,
+      vouches: []
     },
     platform: {
       assets: [],
@@ -86,6 +87,14 @@ const getters = {
   ownedAssets(state) {
     return state.platform.assets
       .filter(asset => { return asset.owners.get(state.user.wallet.address) })
+  },
+
+  vouchesPerSigner(state) {
+    let signer = state.user.wallet.address
+
+    
+    
+    return state.user.wallet.vouches
   },
 
   // TODO: Quick implementation for testing, need something smarter than that
@@ -189,6 +198,7 @@ const actions = {
 
     context.commit("setProposalsForAsset", { assetId: assetId.toLowerCase(), proposals: assetProposals })
   },
+
   /*
     AT THE MOMENT THIS IS USING THE ID, BUT WE NEED TO PASS THE ADDRESS TO THE FUNCTION
     SUGGESTION: GET THE ADDRESS FROM ID IN THE COMPONENT-SPECIFIC PROPOSAL
@@ -199,7 +209,6 @@ const actions = {
     props.$toast.info("Confirming transaction...", {
       duration: false
     });
-
 
     const status = await dao.createPaperProposal(assetAddr, title, description).then(
       status => {
@@ -350,25 +359,26 @@ const actions = {
 
   async vouchParticipant(context, props) {
     let { assetAddr, participant } = props
-    console.log("assetAddr: ", assetAddr, props);
-    const status = await dao.vouch(
-      assetAddr,
-      {
-        name: "Frabric Protocol",
-        version: "2",
-        chainId: 4,
-      },
-      participant)
-    // async vouch(params) {
-    //   console.log("PARAMS: ", params);
-    //   const domain = {
-    //     name: 'Frabric Protocol',
-    //     version: '1',
-    //     chainId: 4,
-    //   }
-    //   // const status = await this.dao.vouch(contractAddress, domain, "0x4C3D84E96EB3c7dEB30e136f5150f0D4b58C7bdB")
-    //   console.log("STATE: ", status);  
-    // },
+    console.log("assetAddr: ", assetAddr, participant);
+
+    const domain = {
+      name: "Protocol",
+      version: "1",
+      chainId: 42161,
+      verifyingContract: CONTRACTS.WEAVR
+    }
+    const types = {
+      Vouch: [
+          {type: "address", name: "participant"}
+      ]
+    }
+    const data = {participant: participant}
+    const signature = await wallet.getSignature(domain, types, data)
+    Promise.all([signature]).then( () => {
+      console.log(signature[0])
+    });    
+    const tx = await dao.vouch(participant, signature[0])
+    console.log(tx.hash)
   }
 }
 

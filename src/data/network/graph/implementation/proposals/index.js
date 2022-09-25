@@ -21,6 +21,9 @@ export function mapVotes(rawVotes) {
   }));
 }
 
+
+
+
 // Map raw paper proposals to array of vue-mc models 
 export function mapPaperProposals(rawPaperProposals) {
   let paperProposals = [];

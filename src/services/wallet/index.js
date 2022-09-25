@@ -11,7 +11,7 @@ class Wallet {
   ) {
     this.client = ethereumClient
   }
-z
+
   async getState() {
     await this.client.syncWallet()
 
@@ -23,10 +23,18 @@ z
       values[0],
       values[1] / Math.pow(10, 18),
       0,
-      "_FRBC"
+      "_FRBC",
+      0
     )
 
     return state
+  }
+
+  async getSignature (domain, types, data) {
+    const signature = await this.client.getSignature(domain, types, data);
+    const sig = Promise.all([signature]);
+    return sig;
+    
   }
 }
 

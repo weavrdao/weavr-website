@@ -23,6 +23,18 @@ export const THREAD_PROPOSAL_QUERY = gql`
   }
 `;
 
+export const VOUCHES_PER_PARTICIPANT = gql`
+  query Frabric($id: String!, $signer: String!) {
+    frabric(id: $id) {
+      id
+      voucher(signer: $signer) {
+        id
+        signer
+        participant
+      }
+    }
+}
+`
 export const ALL_ASSETS_QUERY = gql`
   query Frabric
   {
