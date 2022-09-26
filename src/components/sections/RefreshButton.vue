@@ -20,11 +20,9 @@ export default {
   methods: {
     ...mapActions({
       refresh: "refreshProposalsDataForAsset",
-      syncWallet: "syncWallet",
     }),
     refreshData() {
-      this.syncWallet();
-      this.refresh({ assetId: this.assetId });
+      this.refresh({ assetId: this.assetId, forceRefresh: true });
     }
   }
 }

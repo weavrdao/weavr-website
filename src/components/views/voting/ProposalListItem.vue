@@ -49,6 +49,7 @@ import {
   hasEnded,
 } from "@/data/helpers";
 import { PASSED } from "@/models/common";
+import { DAO } from '../../../services/constants';
 
 export default {
   name: "ProposalListItem",
@@ -133,7 +134,7 @@ export default {
     },
 
     openProposal() {
-      this.$router.push(`/frabric/proposal/${this.proposal.id}`);
+      this.$router.push(`/${DAO}/proposal/${this.proposal.id}`);
     },
   },
 
@@ -143,7 +144,7 @@ export default {
 
   routeToProposal() {
     console.log("opening proposal")
-    this.$router.push(`/frabric/proposal/${this.proposal.id}`);
+    this.$router.push(`/${DAO}/proposal/${this.proposal.id}`);
   },
 };
 </script>

@@ -10,6 +10,9 @@ import newThreadProposal from "@/components/proposals/newThreadProposal.vue";
 import SingleProposal from "@/components/proposals/SingleProposal.vue";
 import vouch from "@/components/proposals/vouch"
 import {CONTRACTS, DAO} from "../services/constants"
+import { createToaster } from '@meforma/vue-toaster';
+import store from '../store';
+
 
 
 
@@ -22,10 +25,10 @@ const router = new createRouter({
       redirect: "/".concat(DAO)
     },
     {
-      path: "/dao/:assetId",
+      path: "/".concat(DAO).concat("/:assetId"),
+      alias: "/".concat(DAO),
       component: Homepage,
       props: { assetId:  CONTRACTS.WEAVR},
-      alias: "/".concat(DAO),
       children: [
         {
           path: "paperProposal",
@@ -60,7 +63,15 @@ const router = new createRouter({
         {
           path: "proposal/:proposalId",
           component: Modal,
-          props: { assetId: "", component: SingleProposal }
+          props: { assetId: "", component: SingleProposal },
+          beforeEnter: async (to, from) => { 
+            const prop = await store.getters.proposalsPerAsset
+            if(!prop){
+              store.dispatch("refreshProposalsDataForAsset", {assetId: CONTRACTS.WEAVR })      
+            }            
+            // clear toast
+            return true
+          },
         }
       ]
     },

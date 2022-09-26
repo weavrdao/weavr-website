@@ -107,7 +107,8 @@ export default {
         description: this.description,
         version: this.version,
         signer: this.signer,
-        governor: this.governor
+        governor: this.governor,
+        $toast: this.$toast
       });
     },
     onCancel() {
@@ -115,7 +116,7 @@ export default {
     }
   },
   mounted() {
-    this.refresh({ assetId: this.assetId });
+    this.refresh({ assetId: this.assetId});
     this.syncWallet();
   },
 }

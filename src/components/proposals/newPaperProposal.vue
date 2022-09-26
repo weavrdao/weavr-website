@@ -74,11 +74,11 @@ export default {
       this.$emit("proposed");
     },
     onCancel() {
-      this.$router.push("/").then( () => { this.$router.go() });
+      this.$router.push("/");
     }
   },
   mounted() {
-    this.refresh({ assetId: this.assetId });
+    this.refresh({ assetId: this.assetId, $toast: this.$toast });
     this.syncWallet();
   },
 }

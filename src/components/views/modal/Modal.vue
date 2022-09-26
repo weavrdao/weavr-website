@@ -29,7 +29,7 @@ export default {
       refresh: ""
     }),
     goBack() {
-      this.$router.push("/".concat(DAO)).then(() => this.$router.go())
+      this.$router.push("/".concat(DAO))
     }
   }
 };

@@ -114,6 +114,7 @@ export default {
         title: this.title,
         tradeToken: this.tradeToken,
         target: this.target,
+        $toast: this.$toast
       });
     },
     onCancel() {

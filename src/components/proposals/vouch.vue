@@ -58,7 +58,7 @@ export default {
         return
       }
       // await this.vouchParticipant({assetAddr, participant})
-      this.vouch({participant: participant})
+      this.vouch({participant: participant, $toast: this.$toast})
     },
     onCancel() {
       this.$router.push("/".concat(DAO));

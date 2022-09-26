@@ -75,7 +75,8 @@ export default {
         assetId: this.assetId,
         participantType: this.pTypeList[this.selectedType],
         participant: this.address,
-        info: this.description
+        info: this.description,
+        $toast: this.$toast
       }
 
       console.log("ParticipantType:  ", props['participantType']);
@@ -83,8 +84,12 @@ export default {
       this.$emit("proposed");
     },
     onCancel() {
-      this.$router.push("/".concat(DAO)).then( () => { this.$router.go() });
+      this.$router.push("/".concat(DAO));
     }
+  },
+  mounted() {
+    this.refresh({ assetId: this.assetId});
+
   }
 }
 </script>

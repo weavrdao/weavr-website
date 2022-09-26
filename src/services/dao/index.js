@@ -9,6 +9,7 @@ import AssetContract from "../../data/network/web3/contracts/assetContract"
 import { ethers } from "ethers"
 import { getBytes32FromIpfsHash } from "../../data/network/storage/ipfs/common";
 import { ProposalTypes } from "../../models/common"
+import { createToaster } from "@meforma/vue-toaster"
 // TODO: Should there be a single service instance per proposal?
 
 /**
@@ -37,7 +38,8 @@ class DAO {
     assetId
   ) {
     // Get indexed on-chain data
-
+    const toast = createToaster({})
+    toast.info("Fetching off-chain data...")
     let proposals = await this.graphQLAPIClient
       .query(
         ALL_PROPOSALS,
@@ -53,12 +55,14 @@ class DAO {
         if (offChainData[i].value) {
           proposals[i].title = offChainData[i].value.title || "Untitled";
           proposals[i].description = offChainData[i].value.description || "No description";
+          proposals[i].daoResolution = offChainData[i].value.daoResolution || false
         } else {
           proposals[i].title = "Untitled";
           proposals[i].description = "No description";
+          proposals[i].daoResolution = false
         }
-
       }
+      toast.clear()
     } catch (e) {
       console.log(e);
     }

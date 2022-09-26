@@ -104,6 +104,7 @@ export default {
         amount: this.amount,
         title: this.title,
         description: this.description,
+        $toast: this.$toast
       });
     },
     onCancel() {

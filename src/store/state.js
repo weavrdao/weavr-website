@@ -6,7 +6,9 @@ import router from "../router/index"
 import { ethers } from "ethers";
 import { Vote } from "../models/vote"
 import { CommonProposalType, FrabricProposalType, ThreadProposalType } from "@/models/common.js"
-import { CONTRACTS } from "../services/constants"
+import { CONTRACTS, DAO } from "../services/constants"
+import { createToaster } from "@meforma/vue-toaster";
+import { params } from "stylus/lib/utils";
 
 
 const wallet = ServiceProvider.wallet()
@@ -18,6 +20,7 @@ function state() {
   return {
     user: {
       wallet: WalletState,
+      log: true,
       vouches: []
     },
     platform: {
@@ -69,7 +72,11 @@ const getters = {
 
     return assetMap
   },
-
+  proposalsPerAsset(state) {
+    if(state.platform.proposals.length < 1) {
+      dao.getProposalsForAsset()
+    }
+  },
   assetsAddressById(state) {
     var assetMap = new Map()
     state.platform.assets
@@ -191,18 +198,16 @@ const actions = {
 
   async refreshProposalsDataForAsset(context, params) {
     // NOTE (bill) Quick fix to allow loading from child paths, better solutions available
-    if (context.getters.assetProposals.length > 1) return;
-
+    const toast = params.$toast || createToaster({})
+    toast.info("Loading Data....")
     let assetId = params.assetId.toLowerCase();
     let assetProposals = await dao.getProposalsForAsset(assetId)
 
     context.commit("setProposalsForAsset", { assetId: assetId.toLowerCase(), proposals: assetProposals })
+    toast.clear()
   },
 
-  /*
-    AT THE MOMENT THIS IS USING THE ID, BUT WE NEED TO PASS THE ADDRESS TO THE FUNCTION
-    SUGGESTION: GET THE ADDRESS FROM ID IN THE COMPONENT-SPECIFIC PROPOSAL
-  */
+
   async createPaperProposal(context, props) {
     let { assetAddr, daoResolution, title, description } = props
     console.log("assetAddr: ", assetAddr, props);
@@ -224,33 +229,28 @@ const actions = {
           console.log("Transaction failed. See details in MetaMask.")
         }
       }
-
-    )
-    
-    
-    
-    
+    )    
   },
 
   async createParticipantProposal(context, props) {
     let { assetId, participantType, participant, info } = props
-
+    const toast = params.$toast || createToaster({})
     console.log(props)
     console.log('OBJ: \t', participantType, participant, info);
 
     console.log("STATE 1", " ", assetId);
     const status = await dao.createParticipantProposal(assetId, participantType, participant, info);
     console.log(status);
-    // params.$toast.clear();
+    toast.clear();
 
-    // if (status) {
-    //   params.$toast.success("Transaction confirmed!");
-    //   context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
-    //   router.push("/dao/" + params.assetId + "/proposals")
-    // } else {
-    //   params.$toast.error("Transaction failed. See details in MetaMask.");
-    //   console.log("Transaction failed. See details in MetaMask.")
-    // }
+    if (status) {
+      toast.success("Transaction confirmed!");
+      context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
+      router.push("/"+ DAO + "/" + params.assetId)
+    } else {
+      toast.error("Transaction failed. See details in MetaMask.");
+      console.log("Transaction failed. See details in MetaMask.")
+    }
   },
 
   async createUpgradeProposal(context, props) {

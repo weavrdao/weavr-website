@@ -229,7 +229,7 @@ export default {
   methods: {
     ...mapActions({
       vote: "vote",
-      loadProposalData: "refreshProposalsDataForAsset",
+      refresh: "refreshProposalsDataForAsset",
     }), // Voting action
     routeToHome() {
       this.$router.push("/".concat(DAO));
@@ -262,6 +262,7 @@ export default {
         assetAddress: this.assetId,
         proposalId: this.$route.params.proposalId,
         votes: +this.voteAmount,
+        $toast: this.$toast
       })
     },
     submitNoVote() {
@@ -269,12 +270,13 @@ export default {
         assetAddress: this.assetId,
         proposalId: this.$route.params.proposalId,
         votes: -this.voteAmount,
+        $toast: this.$toast
       })
     }
   },
   mounted() {
     this.setTimeRemainingCountdown();
-    this.loadProposalData();
+    this.refresh({ assetId: this.assetId, $toast: this.$toast });
   },
   created() {
     if(this.balance) {

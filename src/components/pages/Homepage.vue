@@ -202,7 +202,7 @@ export default {
   },
 
   mounted() {
-    this.refresh({ assetId: this.assetId });
+    this.refresh({ assetId: this.assetId, $toast: this.$toast });
     this.syncWallet();
   },
 };
