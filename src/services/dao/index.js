@@ -1,12 +1,17 @@
-import * as CommonUtils from "../../utils/common"
-import StorageNetwork from "../../data/network/storage/storageNetwork"
-import { Proposal } from "../../models/proposal"
-import { VoteType } from "../../models/vote"
-import { GraphQLAPIClient, ALL_ASSETS_QUERY, PARTICIPANTS_PER_DAO, ALL_PROPOSALS } from "../../data/network/graph/graphQLAPIClient"
-import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
-import { THREAD_DEPLOYER_ADDRESS, BOND_ADDRESS } from "../constants"
-import AssetContract from "../../data/network/web3/contracts/assetContract"
-import { ethers } from "ethers"
+import * as CommonUtils from "../../utils/common";
+import StorageNetwork from "../../data/network/storage/storageNetwork";
+import { Proposal } from "../../models/proposal";
+import { VoteType } from "../../models/vote";
+import {
+  GraphQLAPIClient,
+  ALL_ASSETS_QUERY,
+  PARTICIPANTS_PER_DAO,
+  ALL_PROPOSALS,
+} from "../../data/network/graph/graphQLAPIClient";
+import EthereumClient from "../../data/network/web3/ethereum/ethereumClient";
+import { THREAD_DEPLOYER_ADDRESS, BOND_ADDRESS } from "../constants";
+import AssetContract from "../../data/network/web3/contracts/assetContract";
+import { ethers } from "ethers";
 import { getBytes32FromIpfsHash } from "../../data/network/storage/ipfs/common";
 // TODO: Should there be a single service instance per proposal?
 
@@ -17,45 +22,48 @@ import { getBytes32FromIpfsHash } from "../../data/network/storage/ipfs/common";
  * @param {StorageNetwork} storageNetwork Storage network to use
  */
 class DAO {
-  constructor(
-    ethereumClient,
-    graphQLAPIClient,
-    storageNetwork,
-  ) {
-    this.ethereumClient = ethereumClient
-    this.graphQLAPIClient = graphQLAPIClient
-    this.storageNetwork = storageNetwork
+  constructor(ethereumClient, graphQLAPIClient, storageNetwork) {
+    this.ethereumClient = ethereumClient;
+    this.graphQLAPIClient = graphQLAPIClient;
+    this.storageNetwork = storageNetwork;
   }
 
-  /** 
+  /**
    * Get proposals that from this asset"s DAO.
    * @param {string} proposalId
    */
   // eslint-disable-next-line max-lines-per-function
-  async getProposalsForAsset(
-    assetId
-  ) {
+  async getProposalsForAsset(assetId) {
     // Get indexed on-chain data
-    let proposals = await this.graphQLAPIClient
-      .query(
-        ALL_PROPOSALS,
-        { id: assetId },
-        (mapper, response) => { return mapper.mapProposals(response.data.frabric) }
-      )
+    let proposals = await this.graphQLAPIClient.query(
+      ALL_PROPOSALS,
+      { id: assetId },
+      (mapper, response) => {
+        return mapper.mapProposals(response.data.frabric);
+      }
+    );
 
     // Fetch and append off-chain data
     try {
-      const offChainData = (await this.storageNetwork.getFiles(proposals.map(p => p.info)));
+      const offChainData = await this.storageNetwork.getFiles(
+        proposals.map((p) => p.info)
+      );
 
       for (let i = 0; i < proposals.length; i++) {
         if (offChainData[i].value) {
           proposals[i].title = offChainData[i].value.title || "Untitled";
-          proposals[i].description = offChainData[i].value.description || "No description";
+          proposals[i].description =
+            offChainData[i].value.description || "No description";
+          proposals[i].daoResolution =
+            !offChainData[i].value.daoResolution ||
+            offChainData[i].value.daoResolution === "false"
+              ? false
+              : true;
         } else {
           proposals[i].title = "Untitled";
           proposals[i].description = "No description";
+          proposals[i].daoResolution = false;
         }
-
       }
     } catch (e) {
       console.log(e);
@@ -64,7 +72,6 @@ class DAO {
     return proposals;
   }
 
-
   /**
    * Create a proposal
    * @param {String} asset Asset's contract address
@@ -72,11 +79,7 @@ class DAO {
    * @param {string} description Proposal body
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
    */
-  async createPaperProposal(
-    asset,
-    title,
-    description
-  ) {
+  async createPaperProposal(asset, title, description) {
     const assetContract = new AssetContract(this.ethereumClient, asset);
 
     const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
@@ -86,12 +89,12 @@ class DAO {
     if (!infoHash) return;
 
     const status = await assetContract.proposePaper(false, infoHash);
-    return status
+    return status;
   }
 
   /**
    * Create a proposal
-   * @param {String} asset Asset's contract address   
+   * @param {String} asset Asset's contract address
    * @param {number} participantType Proposal title
    * @param {string} description Proposal body
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
@@ -100,24 +103,27 @@ class DAO {
     assetId,
     participantType,
     participant,
-    description,
+    description
   ) {
-    const assetContract = new AssetContract(this.ethereumClient, assetId)
-    let infoHash = await this.storageNetwork
-      .uploadAndGetPathAsBytes({
-        title: `Proposing ${participant} for level ${participantType}`,
-        description
-      });
+    const assetContract = new AssetContract(this.ethereumClient, assetId);
+    let infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
+      title: `Proposing ${participant} for level ${participantType}`,
+      description,
+    });
 
     if (!infoHash) return;
 
-    let status = await assetContract.proposeParticipant(3, participant, infoHash)
-    return status
+    let status = await assetContract.proposeParticipant(
+      3,
+      participant,
+      infoHash
+    );
+    return status;
   }
 
   /**
    * Create an upgrade proposal
-   * @param {String} assetAddress Asset's contract address   
+   * @param {String} assetAddress Asset's contract address
    * @param {String} beaconAddress Address of beacon handling upgrade
    * @param {Number} version Version number (simple increment)
    * @param {String} codeAddress Address of new contract
@@ -134,24 +140,22 @@ class DAO {
     codeAddress,
     title,
     description,
-    version,
+    version
   ) {
     // Hardcoding these for simplicity
-    const ASSET_ADDRESS = assetAddress || "0xa7930bfc863b895de85307457b976b12515389fb";
+    const ASSET_ADDRESS =
+      assetAddress || "0xa7930bfc863b895de85307457b976b12515389fb";
     const DATA = ethers.utils.defaultAbiCoder.encode(
       ["address", "address"],
-      [BOND_ADDRESS, THREAD_DEPLOYER_ADDRESS],
+      [BOND_ADDRESS, THREAD_DEPLOYER_ADDRESS]
     );
 
     const assetContract = new AssetContract(this.ethereumClient, ASSET_ADDRESS);
 
-    const ipfsPathBytes = await this.storageNetwork
-      .uploadAndGetPathAsBytes(
-        {
-          title: title,
-          description: description
-        }
-      );
+    const ipfsPathBytes = await this.storageNetwork.uploadAndGetPathAsBytes({
+      title: title,
+      description: description,
+    });
 
     const status = await assetContract.proposeUpgrade(
       beaconAddress,
@@ -159,7 +163,7 @@ class DAO {
       version,
       codeAddress,
       DATA,
-      ipfsPathBytes,
+      ipfsPathBytes
     );
 
     return status;
@@ -172,12 +176,14 @@ class DAO {
     price,
     amount,
     title,
-    description,
+    description
   ) {
     const assetContract = new AssetContract(this.ethereumClient, targetAddress);
 
-    const ipfsPathBytes = await this.storageNetwork
-      .uploadAndGetPathAsBytes({ title, description });
+    const ipfsPathBytes = await this.storageNetwork.uploadAndGetPathAsBytes({
+      title,
+      description,
+    });
 
     const status = await assetContract.proposeTokenAction(
       tokenAddress,
@@ -185,7 +191,7 @@ class DAO {
       mint,
       price,
       amount,
-      ipfsPathBytes,
+      ipfsPathBytes
     );
 
     return status;
@@ -207,16 +213,18 @@ class DAO {
           { type: "uint256", name: "nonce" },
         ],
       },
-    ]
+    ];
     const assetContract = new AssetContract(this.ethereumClient, asset);
 
-    let signArgs = JSON.parse(JSON.stringify(signCfg))
-    signArgs[1] = { Vouch: signArgs[1].Vouch }
+    let signArgs = JSON.parse(JSON.stringify(signCfg));
+    signArgs[1] = { Vouch: signArgs[1].Vouch };
     console.log("SIGNARGS: ", signArgs, participant);
-    let signature = (await this.ethereumClient
-      .getSignature(signArgs, participant))
-    signature = ethers.utils.defaultAbiCoder.encode(signature)
-    const tx_result = await assetContract.vouch(participant, signature)
+    let signature = await this.ethereumClient.getSignature(
+      signArgs,
+      participant
+    );
+    signature = ethers.utils.defaultAbiCoder.encode(signature);
+    const tx_result = await assetContract.vouch(participant, signature);
   }
   /**
    * Vote on a proposal
@@ -225,15 +233,11 @@ class DAO {
    * @param {VoteType} voteType Type of the vote
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
    */
-  async vote(
-    assetAddress,
-    proposalId,
-    votes,
-  ) {
-    const assetContract = new AssetContract(this.ethereumClient, assetAddress)
+  async vote(assetAddress, proposalId, votes) {
+    const assetContract = new AssetContract(this.ethereumClient, assetAddress);
     const status = await assetContract.vote(proposalId, votes);
     return status;
   }
 }
 
-export default DAO
+export default DAO;

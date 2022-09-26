@@ -1,23 +1,19 @@
 <template>
   <div v-if="assetId" class="container p-5 is-dark">
     <StackNavigationBar @onBack="goBack" :address="assetId" />
-    <NewProposalSelector/>
-    <RefreshButton :assetId="assetId"/>
-    <div class="columns is-variable is-8">
       <ProposalList
-        :proposals="activeProposals"
+        :proposals="resolutions"
         :assetId="assetId"
-        :proposalStatus="`Active Proposals`"/>
-      <ProposalList
-        :proposals="pastProposals"
-        :assetId="assetId"
-        :proposalStatus="`Past Proposals`"/>
-    </div>
+        :proposalStatus="`Passed Resolutions`"/>
       <router-view :assetId="assetId"></router-view>
   </div>
 </template>
 
 <style scoped>
+
+.container {
+  min-height: calc(100vh - 230px);
+}
 .content.is-vcentered {
   display: flex;
   flex-wrap: wrap;
@@ -38,8 +34,8 @@ import { toFixedNumber } from "../../utils/common";
 import { mapGetters, mapActions } from "vuex";
 import StackNavigationBar from "../layout/navigation/StackNavigationBar.vue";
 import ProposalList from "../proposals/ProposalList.vue";
-import NewProposalSelector from "../sections/NewProposalSelector.vue";
-import RefreshButton from "../sections/RefreshButton.vue";
+import { getResult, isResolution } from "../../data/helpers";
+import { PASSED } from "@/models/common";
 
 export default {
   name: "Voting",
@@ -52,8 +48,6 @@ export default {
   components: {
     StackNavigationBar,
     ProposalList,
-    NewProposalSelector,
-    RefreshButton,
 },
   computed: {
     ...mapGetters({
@@ -122,7 +116,17 @@ export default {
         const currentTime = new Date();
         return currentTime > endTime;
       });
-    },  
+    },
+
+    resolutions() {
+      return this.assetProposalMap.filter((proposal) => {
+        const endTime = new Date(proposal.endTimestamp * 1000);
+        const currentTime = new Date();
+        const hasEnded =  currentTime > endTime;
+        return (isResolution(proposal) && hasEnded && getResult(proposal) === PASSED.Yes);
+      })
+    },
+
   },
 
   methods: {
@@ -203,7 +207,6 @@ export default {
 
   mounted() {
     this.refresh({ assetId: this.assetId });
-    this.syncWallet();
   },
 };
 </script>

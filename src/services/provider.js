@@ -1,14 +1,14 @@
-import Wallet from "./wallet"
-import Market from "./market"
-import DAO from "./dao"
+import Wallet from "./wallet";
+import Market from "./market";
+import DAO from "./dao";
 import Token from "./token";
-import IPFSStorageNetwork from "../data/network/storage/ipfs/IPFSStorageNetwork"
-import EthereumClient from "../data/network/web3/ethereum/ethereumClient"
-import TheGraphAPIClient from "../data/network/graph/implementation/theGraphAPIClient"
-import TheGraphAPIMapper from "../data/network/graph/implementation/theGraphAPIClientMapper"
-const graphQLAPIClient = new TheGraphAPIClient(new TheGraphAPIMapper())
-const ethereumClient = new EthereumClient()
-const storageNetwork = new IPFSStorageNetwork()
+import IPFSStorageNetwork from "../data/network/storage/ipfs/IPFSStorageNetwork";
+import EthereumClient from "../data/network/web3/ethereum/ethereumClient";
+import TheGraphAPIClient from "../data/network/graph/implementation/theGraphAPIClient";
+import TheGraphAPIMapper from "../data/network/graph/implementation/theGraphAPIClientMapper";
+const graphQLAPIClient = new TheGraphAPIClient(new TheGraphAPIMapper());
+const ethereumClient = new EthereumClient();
+const storageNetwork = new IPFSStorageNetwork();
 
 class ServiceProvider {
   /**
@@ -16,9 +16,7 @@ class ServiceProvider {
    * @returns {Wallet} Wallet service
    */
   static wallet() {
-    return new Wallet(
-      ethereumClient
-    )
+    return new Wallet(ethereumClient);
   }
 
   /**
@@ -26,29 +24,19 @@ class ServiceProvider {
    * @returns {Market} Market service
    */
   static market() {
-    return new Market(
-      ethereumClient,
-      graphQLAPIClient,
-      storageNetwork
-    )
+    return new Market(ethereumClient, graphQLAPIClient, storageNetwork);
   }
 
   /**
    * Creates DAO service
    */
   static dao() {
-    return new DAO(
-      ethereumClient,
-      graphQLAPIClient,
-      storageNetwork
-    )
+    return new DAO(ethereumClient, graphQLAPIClient, storageNetwork);
   }
 
   static token() {
-    return new Token(
-      ethereumClient,
-    )
+    return new Token(ethereumClient);
   }
 }
 
-export default ServiceProvider
+export default ServiceProvider;

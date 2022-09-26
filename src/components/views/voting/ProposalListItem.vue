@@ -21,19 +21,6 @@ import { ethers } from "ethers";
         </dd>
       </dl>
     </div>
-    <div v-if="!ended" class="is-flex is-justify-content-flex-end">
-      <Button
-        v-if="!embedded"
-        label="Details"
-        extraClasses="p-5 is-mediumBlue m-2"
-        @click="openProposal"
-      />
-    </div>
-    <div v-else class="is-flex is-justify-content-flex-end">
-      <div class="outcome-box bottom-right-corner passed" v-if="this.passed == this.PASSED.Yes">PASSED</div>
-      <div class="outcome-box bottom-right-corner failed" v-else-if="this.passed == this.PASSED.No">FAILED</div>
-      <div class="outcome-box bottom-right-corner tie" v-else>TIE</div>
-    </div>
   </section>
 </template>
 
@@ -54,7 +41,6 @@ export default {
   name: "ProposalListItem",
   components: {
     Address,
-    Button,
   },
   props: {
     assetId: {
@@ -133,7 +119,7 @@ export default {
     },
 
     openProposal() {
-      this.$router.push(`/frabric/proposal/${this.proposal.id}`);
+      this.$router.push(`/proposal/${this.proposal.id}`);
     },
   },
 
@@ -142,8 +128,7 @@ export default {
   },
 
   routeToProposal() {
-    console.log("opening proposal")
-    this.$router.push(`/frabric/proposal/${this.proposal.id}`);
+    this.$router.push(`/proposal/${this.proposal.id}`);
   },
 };
 </script>

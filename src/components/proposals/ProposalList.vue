@@ -2,31 +2,13 @@
   <div class="proposal-list column py-3 px-5">
     <h3 class="title is-size-3 my-4">{{ proposalStatus }}</h3>
     <div v-if="this.proposals.length !== 0">
-      <div class="filter-menu-toggler" @click="filterMenuIsOpen = !filterMenuIsOpen">
-        <label class="label">Filter</label>
-        <!-- Should be using an icon but whatever -->
-        <strong
-          :class="filterMenuIsOpen && 'open'">
-          V
-        </strong>
-      </div>
-      <div class="is-flex is-justify-content-center mb-4 overflow-hidden filter-button-container" :class="filterMenuIsOpen && 'container-open'">
-          <div
-            v-for="{key, class: styles, text, selected} in filterButtons"
-            @click="toggleFilter(key)"
-            class="button filter-button"
-            :class="[styles, !selected && 'unselected']"
-            :key="key">
-            {{ text }}
-          </div>
-      </div> 
       <div v-for="proposal in this.filteredProposals" v-bind:key="proposal.id">
         <ProposalListItem :proposal="proposal" :assetId="assetId"/>
       </div>
     </div>
-    <div v-else class="is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-      <img class="no-proposals-image my-5" src="../../assets/common/no-proposals.svg"/>
-      <p>No proposals right now</p>
+    <div class="loading-container is-flex is-justify-content-center is-flex-direction-column is-align-items-center " v-else>
+      <img class="loading-icon" src="../../assets/logo/new-logo-white.svg" alt="">
+      <span>Loading resolutions</span>
     </div>
   </div>
 </template>
@@ -206,6 +188,27 @@ export default {
 .unselected {
   color: white;
   background: none !important;
+}
+
+.loading-container {
+  padding: 100px 0;
+  gap: 50px;
+
+  span {
+    font-size: 1.2rem;
+  }
+}
+
+@keyframes fade {
+  0%,100% { opacity: 0 }
+  50% { opacity: 1 }
+}
+
+.loading-icon {
+  height: 3rem;
+  width: 3rem;
+  opacity: 0;
+  animation: fade 2.5s ease-in-out infinite;
 }
 
 </style>

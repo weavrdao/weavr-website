@@ -1,4 +1,4 @@
-# Weavr Governance Web Interface
+# Weavr Resolutions Web Interface
 
 ## Contribution Guidelines
 
