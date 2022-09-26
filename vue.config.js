@@ -1,26 +1,24 @@
 /* eslint-disable max-lines-per-function */
 const path = require("path");
 
-const globalSassFiles = [
-
-]
+const globalSassFiles = [];
 module.exports = {
-  publicPath: "./", 
+  publicPath: "./",
   css: {
     requireModuleExtension: true,
     loaderOptions: {
       sass: {
-        additionalData: globalSassFiles.map((src)=>'@import "' + src + '";').join('\n')
-      }
-    }
-},
+        additionalData: globalSassFiles
+          .map((src) => '@import "' + src + '";')
+          .join("\n"),
+      },
+    },
+  },
   chainWebpack: (config) => {
-    config
-      .plugin("html")
-      .tap(args => {
-        args[0].title = "The Frabric";
-        return args;
-      })
+    config.plugin("html").tap((args) => {
+      args[0].title = "Weavr Resolutions";
+      return args;
+    });
 
     const svgRule = config.module.rule("svg");
     svgRule.uses.clear();
@@ -28,32 +26,32 @@ module.exports = {
     svgRule
       .use("file-loader")
       .loader("file-loader")
-      .tap(options => {
+      .tap((options) => {
         const newOptions = {
           symbolId: "[name][hash]",
-          esModule: false
+          esModule: false,
         };
 
         return { ...options, ...newOptions };
       })
-      .end()
+      .end();
 
     config.module
       .rule("images")
       .use("url-loader")
       .loader("url-loader")
-      .tap(
-        options => Object.assign(options, {
-          esModule: false
+      .tap((options) =>
+        Object.assign(options, {
+          esModule: false,
         })
       )
-      .end()
+      .end();
 
     config.module
       .rule("vue")
       .use("vue-loader")
       .tap((options) => {
-        const transformAssetUrls = options.transformAssetUrls || {}
+        const transformAssetUrls = options.transformAssetUrls || {};
         return {
           ...options,
           transformAssetUrls: {
@@ -64,9 +62,9 @@ module.exports = {
             // ..others
             ...transformAssetUrls,
           },
-        }
+        };
       })
-      .end()
+      .end();
 
     // config.module
     //   .rule("sass")
@@ -76,7 +74,7 @@ module.exports = {
     //   .loader("css-loader")
     //   .loader("style-loader")
     //   .tap((options) => {
-        
+
     //     return {
     //       ...options,
     //       additionalData: `
@@ -85,8 +83,7 @@ module.exports = {
     //     }
     //   })
     //   .end()
-
-  }
+  },
 };
 
 // module.exports = {

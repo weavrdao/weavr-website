@@ -1,22 +1,8 @@
 <template>
 <footer class="container is-centered">
-    <hr/>
-    <div class="columns">
-        <div class="column is-third">
-            <h3>Pages</h3>
-            <ul>
-                <li>
-                    <a href="">My Assets</a>
-                </li>
-                <li>
-                    <a href="">Threads</a>
-                </li>
-                <li>
-                    <a href="">Needles</a>
-                </li>
-            </ul>
-        </div>
-        <div class="column is-third">
+    <!-- <hr/> -->
+    <!-- <div class="columns">
+        <div class="column is-half">
             <h3>Explore</h3>
             <ul>
                 <li>
@@ -27,7 +13,7 @@
                 </li>
             </ul>
         </div>
-        <div class="column is-third">
+        <div class="column is-half">
             <h3>Governance</h3>
             <ul>
                 <li>
@@ -44,7 +30,7 @@
                 </li>
             </ul>
         </div>
-    </div>
+    </div> -->
     <hr/>
     <div class="is-flex is-justify-content-space-between">
         <div class="is-flex is-align-items-center">

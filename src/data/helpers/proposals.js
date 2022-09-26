@@ -3,36 +3,40 @@ import { VoteType } from "@/models/vote";
 
 export function getProposalTypeStyling(proposalType) {
   switch (proposalType) {
-  case ProposalTypes.Paper:
-    return {
-      text: "Paper",
-      class: "paper",
-    };
-  case ProposalTypes.Upgrade:
-    return {
-      text: "Upgrade",
-      class: "upgrade"
-    };
-  case ProposalTypes.Participant:
-    return {
-      text: "Participant",
-      class: "participant"
-    };
-  case ProposalTypes.TokenAction:
-    return {
-      text: "Token Action",
-      class: "token-action",
-    };
-  default:
-    return {
-      text: "Unknown Type",
-      class: "unknown",
-    }
+    case ProposalTypes.Paper:
+      return {
+        text: "Resolution",
+        class: "paper",
+      };
+    case ProposalTypes.Upgrade:
+      return {
+        text: "Upgrade",
+        class: "upgrade",
+      };
+    case ProposalTypes.Participant:
+      return {
+        text: "Participant",
+        class: "participant",
+      };
+    case ProposalTypes.TokenAction:
+      return {
+        text: "Token Action",
+        class: "token-action",
+      };
+    default:
+      return {
+        text: "Unknown Type",
+        class: "unknown",
+      };
   }
 }
 
-export function padWithZeroes(number){
-  return (number < 10 ? "0" + number : number);
+export function isResolution(proposal) {
+  return proposal.daoResolution;
+}
+
+export function padWithZeroes(number) {
+  return number < 10 ? "0" + number : number;
 }
 
 export function dateStringForTimestamp(timestamp) {
@@ -48,18 +52,22 @@ export function dateStringForTimestamp(timestamp) {
 
   return `${date.getFullYear()}-${padWithZeroes(
     date.getMonth() + 1
-  )}-${padWithZeroes(date.getDate())}, ${padWithZeroes(
-    hours
-  )}:${padWithZeroes(minutes)} ${suffix}`;
+  )}-${padWithZeroes(date.getDate())}, ${padWithZeroes(hours)}:${padWithZeroes(
+    minutes
+  )} ${suffix}`;
 }
 
 export function getVotes(proposal) {
-  const yesVoteShares = proposal.votes.reduce((total, vote) => {
-    return vote.voteDirection === VoteType.Yes ? total + Number(vote.count) : total;
+  const yesVoteShares = proposal?.votes?.reduce((total, vote) => {
+    return vote.voteDirection === VoteType.Yes
+      ? total + Number(vote.count)
+      : total;
   }, 0);
 
-  const noVoteShares = proposal.votes.reduce((total, vote) => {
-    return vote.voteDirection === VoteType.No ? total + Number(vote.count) : total;
+  const noVoteShares = proposal?.votes?.reduce((total, vote) => {
+    return vote.voteDirection === VoteType.No
+      ? total + Number(vote.count)
+      : total;
   }, 0);
 
   return {

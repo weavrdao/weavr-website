@@ -6,7 +6,7 @@
 import AppWrapper from "./components/AppWrapper";
 
 export default {
-  name: "The Frabric",
+  name: "Weavr",
   components: {
     AppWrapper,
   },

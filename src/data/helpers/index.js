@@ -4,5 +4,6 @@ export {
   dateStringForTimestamp,
   getVotes,
   getResult,
+  isResolution,
   hasEnded,
 } from "./proposals";
