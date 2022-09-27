@@ -20,7 +20,7 @@ const app = createApp({
 
 store.$toast = app.$toast;
 
-app.config.productionTip = false
+app.config.productionTip = true
 app.use(router)
 app.use(store)
 app.use(Toaster)
