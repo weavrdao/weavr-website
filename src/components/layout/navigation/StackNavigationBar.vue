@@ -2,7 +2,7 @@
   <div class="ml-1 mb-4 is-flex is-align-items-center">
     <div>
       <span class="asset">ASSET</span>
-      <a :href="`https://goerli.etherscan.io/address/${address}`"
+      <a :href="`https://arbiscan.io/address/${address}`"
           target="_blank"
           class="address">
       {{ address.substring(0, 8) + "..." + address.substring(address.length - 4) || "No asset selected" }}
