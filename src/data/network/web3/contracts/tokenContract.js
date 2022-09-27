@@ -1,7 +1,8 @@
 const contractAbi = [
   // Get the balance of a user
   "function balanceOf(address account) view returns (uint256)",
-  "function symbol() view returns (string)"
+  "function symbol() view returns (string)",
+  "function totalSupply() view returns (uint256)"
 ];
 
 export default class TokenContract {
@@ -18,8 +19,6 @@ export default class TokenContract {
   }
   async getBalance(account) {
     try {
-
-      console.log(this.contract);
       const balance = await this.contract
         .balanceOf(account);
       return balance;
@@ -28,5 +27,15 @@ export default class TokenContract {
       console.log(e);
     }
     return 0;
+  }
+
+  async getTotalSupply() {
+    try {
+      const tSupply = await this.contract.totalSupply()
+      return tSupply;
+    } catch (e) {
+      console.log("Error fetching token total-supply")
+      console.log(e);
+    }
   }
 }

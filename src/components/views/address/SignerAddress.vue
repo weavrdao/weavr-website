@@ -1,10 +1,9 @@
 <template>
 <div>
-  
   <div class="button is-warning mr-5" @click="onVouch"><span class="mr-1">{{vouches}}</span>Vouch</div>
-  <div class="tag is-large is-flex is-address-container" v-if="address !=null">
+  <div @click="tokenDetails" style="cursor: pointer;" class="tag is-large is-flex is-address-container" v-if="address !=null">
     <div>
-      <span>{{ balance }}</span>
+      <span >{{ balance }}</span>
       <span class="has-text-medium-blue ml-1"> {{ symbol }}</span>
     </div>
     <div
@@ -25,13 +24,15 @@
   >
     <div class="has-text-white">Connect Wallet</div>
   </div>
+  <div id="toeknModal"></div>
 </div>
 </template>
 
 <script>
+import { createApp } from '@vue/runtime-dom';
 import { mapGetters, mapActions } from "vuex";
 import { DAO } from "../../../services/constants"
-
+import { Modal } from "../modal/Modal.vue"
 export default {
   name: "SignerAddress",
   computed: {
@@ -45,19 +46,40 @@ export default {
   methods: {
     ...mapActions({
       sync: "syncWallet",
+      tokenInfo: "tokenInfo"
     }),
     onClick() {
-      this.sync({ $toast: this.$toast })
       this.$toast.show("Syncing wallet...");
+      this.sync({ $toast: this.$toast })
     },
     onVouch() {
       // this.vouch({participant: "0x403383c411c0eB14eA0Bd15E7c2AD5431a7410C2"})
       this.$router.push("/".concat(DAO).concat("/vouch"))
+    },
+    async tokenDetails() {
+     
+      // const info = await this.tokenInfo({assetId: this.assetId})
+      // // Promise.all([info]).then( (res) => {
+      // //   console.log(res)
+      // // })
+      // console.log("INFO: ", info)
+      // this.$router.push(
+      // {
+      //   path: "/".concat(DAO).concat("/tokenInfo"), 
+      //   props: {
+      //     info: { totalSypply: "100000"}
+      //   }
+      // });
+
+     
+    // this.$router.push({name: "/"+DAO+"/tokenInfo", params: {assetId: this.assetId}})
     }
   },
   mounted() {
   }
+  
 };
+
 </script>
 
 <style lang="scss" scoped>

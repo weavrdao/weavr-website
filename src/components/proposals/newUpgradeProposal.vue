@@ -1,7 +1,6 @@
 <template>
   <div class="container p-5">
     <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Upgrade Proposal</div>
-    <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Upgrade Proposal</div>
     <!-- PAPER PROPOSAL FORM -->
     <div class="field">
       <label class="label">New Contract Address</label>
@@ -53,8 +52,8 @@ import { ethers } from "ethers";
 import { ProposalTypes } from "@/models/common"
 import { CONTRACTS, DAO } from "../../services/constants" 
 const GOERLI_TEST = {
-  governor: "0x2C4fEAaab2F640738Dfd5535cb5AB91dE4e113bA",
-  signer: "0xFb3f5745dfD05bA3184156fcbd39D510136B0922"
+  governor: "0xDba4eF785E003F7efc80Ba3900e260FA893804BC",
+  signer: "0x4C3D84E96EB3c7dEB30e136f5150f0D4b58C7bdB"
 }
 
 export default {

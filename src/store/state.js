@@ -1,18 +1,17 @@
-import ServiceProvider from "../services/provider"
-import WalletState from "../models/walletState"
-// import { MarketOrderType } from "../models/marketOrder"
-import { bigIntMax, bigIntMin } from "../utils/common"
 import router from "../router/index"
 import { ethers } from "ethers";
-import { Vote } from "../models/vote"
-import { CommonProposalType, FrabricProposalType, ThreadProposalType } from "@/models/common.js"
-import { CONTRACTS, DAO } from "../services/constants"
 import { createToaster } from "@meforma/vue-toaster";
 import { params } from "stylus/lib/utils";
+import ServiceProvider from "../services/provider"
+import WalletState from "../models/walletState"
+import { CONTRACTS, DAO } from "../services/constants"
 
+/**
+ * TODO - Abstrucked -
+ *  ;Implement clickable toast to link to chain explorer to review the tx
+ */
 
 const wallet = ServiceProvider.wallet()
-const market = ServiceProvider.market()
 const dao = ServiceProvider.dao()
 const token = ServiceProvider.token();
 
@@ -28,7 +27,8 @@ function state() {
       proposals: [] // new Map()
     },
     interface: {
-      alert: null
+      alert: null,
+      isLoading: false
     }
   }
 }
@@ -43,6 +43,9 @@ function state() {
  */
 
 const getters = {
+  isLoading(state) {
+    return state.interface.isLoading
+  },
   userWalletAddress(state) {
     return state.user.wallet.address
   },
@@ -69,14 +72,15 @@ const getters = {
       .forEach(asset => {
         assetMap.set(asset.id, asset)
       })
-
     return assetMap
   },
+
   proposalsPerAsset(state) {
     if(state.platform.proposals.length < 1) {
       dao.getProposalsForAsset()
     }
   },
+
   assetsAddressById(state) {
     var assetMap = new Map()
     state.platform.assets
@@ -97,39 +101,9 @@ const getters = {
   },
 
   vouchesPerSigner(state) {
-    let signer = state.user.wallet.address
-
-    
-    
+    let signer = state.user.wallet.address    
     return state.user.wallet.vouches
   },
-
-  // TODO: Quick implementation for testing, need something smarter than that
-  // bestAssetPrices(state) {
-  //   var assetPriceMap = new Map()
-
-  //   state.platform.assets
-  //     .forEach(asset => {
-  //       let buyPrices = asset.marketOrders
-  //         .filter(o => { return o.orderType == MarketOrderType.Buy })
-  //         .map(o => { return o.price })
-  //       let sellPrices = asset.marketOrders
-  //         .filter(o => { return o.orderType == MarketOrderType.Sell })
-  //         .map(o => { return o.price })
-
-  //       const prices = {
-  //         bid: bigIntMax(buyPrices),
-  //         ask: bigIntMin(sellPrices)
-  //       }
-
-  //       assetPriceMap.set(asset.id, prices)
-  //     })
-
-  //   console.log("Best asset prices:")
-  //   console.log(assetPriceMap)
-
-  //   return assetPriceMap
-  // },
 
   assetProposals(state) {
     return state.platform.proposals
@@ -150,54 +124,42 @@ const getters = {
 }
 
 const actions = {
-  async syncWallet(context) {
+
+  async fetchTokenInfo(context, params) {
+    // const toast = params.$toast || createToaster({});
+    const tokenAddress = params.tokenAddress || CONTRACTS.FRBC
+    const supply = await token.getTotalSupply(tokenAddress);
+    console.log(ethers.utils.formatEther(supply));
+    return {
+      totalSupply: ethers.utils.formatEther(supply)
+    }
+  },
+
+  async syncWallet(context, params) {
+    const toast = params.$toast || createToaster({});
     let walletState = await wallet.getState();
     console.log(walletState);
 
     const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
     const balance = await token.getTokenBalance(CONTRACTS.FRBC, walletState.address);
-  
-    
-    walletState = new WalletState(walletState.address, walletState.ethBalance, ethers.utils.formatEther(balance).toString() , symbol);
+    walletState = new WalletState(
+      walletState.address, 
+      walletState.ethBalance, 
+      ethers.utils.formatEther(balance).toString() , 
+      symbol
+      );
     context.commit("setWallet", walletState);
     console.log(await wallet.getState())
-
-  },
-
-  // TODO (bill) This needs to be reimplemented
-  async refreshOwnedAssetsData(context) {
-    // let assets = await market.getAssetsOnTheMarket()
-    // context.commit("setAssets", assets)
-  },
-
-  // TODO (bill) This needs to be reimplemented
-  async refreshMarketplaceData(context) {
-    // let assets = await market.getAssetsOnTheMarket()
-    // context.commit("setAssets", assets)
-  },
-
-  async swapToAsset(context, params) {
-    const asset = params.asset
-    const amount = params.amount
-
-    const price = context.getters.bestAssetPrices.get(asset.id).ask
-    params.$toast.info("Confirming transaction...", {
-      duration: false
-    });
-
-    const status = await market.buy(asset, amount, price);
-    params.$toast.clear();
-    console.log(params, params?.$toast);
-
-    if (status) {
-      params.$toast.success("Transaction confirmed!");
-    } else {
-      params.$toast.error("Transaction failed. See details in MetaMask.");
-    }
+    toast.clear();
+    toast.success("Wallet fully synced", {
+      duration: 1000,
+      position: "top"
+    })
   },
 
   async refreshProposalsDataForAsset(context, params) {
     // NOTE (bill) Quick fix to allow loading from child paths, better solutions available
+    if (context.getters.assetProposals.length > 1 && !params.forceRefresh) return false;
     const toast = params.$toast || createToaster({})
     toast.info("Loading Data....")
     let assetId = params.assetId.toLowerCase();
@@ -207,12 +169,19 @@ const actions = {
     toast.clear()
   },
 
-
   async createPaperProposal(context, props) {
-    let { assetAddr, daoResolution, title, description } = props
-    console.log("assetAddr: ", assetAddr, props);
-    props.$toast.info("Confirming transaction...", {
-      duration: false
+    const { 
+      assetAddr, 
+      daoResolution, 
+      title, 
+      description 
+    } = props
+    const toast = params.$toast || createToaster({})
+    
+    toast.clear();
+    toast.show("Confirming transaction...", {
+      duration: 15000,
+      position: "top"
     });
 
     const status = await dao.createPaperProposal(assetAddr, title, description, daoResolution).then(
@@ -223,9 +192,9 @@ const actions = {
     Promise.resolve([status]).then(
       status => {
         if (status) {
-          props.$toast.success("Transaction confirmed!");
+          toast.success("Transaction confirmed!");
         } else {
-          props.$toast.error("Transaction failed. See details in MetaMask.");
+          toast.error("Transaction failed. See details in MetaMask.");
           console.log("Transaction failed. See details in MetaMask.")
         }
       }
@@ -233,16 +202,25 @@ const actions = {
   },
 
   async createParticipantProposal(context, props) {
-    let { assetId, participantType, participant, info } = props
     const toast = params.$toast || createToaster({})
-    console.log(props)
-    console.log('OBJ: \t', participantType, participant, info);
+    const { 
+      assetId, 
+      participantType, 
+      participant, 
+      info 
+    } = props
 
-    console.log("STATE 1", " ", assetId);
-    const status = await dao.createParticipantProposal(assetId, participantType, participant, info);
-    console.log(status);
+    toast.show("Confirming transaction...", {
+      duration: 15000,
+      position: "top"
+    });
+    const status = await dao.createParticipantProposal(
+      assetId, 
+      participantType, 
+      participant, 
+      info
+    );
     toast.clear();
-
     if (status) {
       toast.success("Transaction confirmed!");
       context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
@@ -254,6 +232,7 @@ const actions = {
   },
 
   async createUpgradeProposal(context, props) {
+    const toast = params.$toast || createToaster({})
     const {
       assetAddress,
       beaconAddress,
@@ -266,7 +245,10 @@ const actions = {
       governor
     } = props;
     
-    
+    toast.show("Confirming transaction...", {
+      duration: 15000,
+      position: "top"
+    });
     const status = await dao.createUpgradeProposal(
       assetAddress,
       beaconAddress,
@@ -279,10 +261,23 @@ const actions = {
       governor
     )
 
-    console.log(status);
+    toast.clear();
+    if (status) {
+      toast.success("Transaction confirmed...", {
+        duration: 2000,
+        position: "top"
+      });
+      context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
+      router.push("/"+ DAO + "/" + params.assetId)
+    } else {
+      toast.error("Transaction failed. See details in MetaMask.");
+      console.log("Transaction failed. See details in MetaMask.")
+    }
   },
 
   async createTokenActionProposal(context, props) {
+    const toast = params.$toast || createToaster({})
+
     const {
       tokenAddress,
       targetAddress,
@@ -294,9 +289,12 @@ const actions = {
       tradeToken,
       target,
     } = props;
-
-    console.dir(props);
-
+    
+    toast.show("Confirming transaction...", {
+      duration: 15000,
+      position: "top"
+    });
+    
     const status = await dao.createTokenActionProposal(
       tokenAddress,
       targetAddress,
@@ -308,12 +306,25 @@ const actions = {
       tradeToken,
       target,
     );
-
-    console.log(status);
+    
+    toast.clear();
+    if (status) {
+      toast.success("Transaction confirmed...", {
+        duration: 2000,
+        position: "top"
+      });
+      context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
+      router.push("/"+ DAO + "/" + params.assetId)
+    } else {
+      toast.error("Transaction failed. See details in MetaMask.");
+      console.log("Transaction failed. See details in MetaMask.")
+    }
     return status;
   },
 
   async createThreadProposal(context, props) {
+    const toast = params.$toast || createToaster({})
+
     const {
       assetId,
       name,
@@ -334,12 +345,24 @@ const actions = {
       tradeToken,
       target,
     );
-
+    if (status) {
+      toast.success("Transaction confirmed...", {
+        duration: 2000,
+        position: "top"
+      });
+      context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
+      router.push("/"+ DAO + "/" + params.assetId)
+    } else {
+      toast.error("Transaction failed. See details in MetaMask.");
+      console.log("Transaction failed. See details in MetaMask.")
+    }
     console.log(status)
     return status;
   },
 
   async vote(context, props) {
+    const toast = params.$toast || createToaster({})
+
     const {
       assetAddress,
       proposalId,
@@ -351,32 +374,56 @@ const actions = {
       proposalId,
       votes,
     );
-
+    if (status) {
+      toast.success("Transaction confirmed...", {
+        duration: 2000,
+        position: "top"
+      });
+      context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
+      router.push("/"+ DAO + "/" + params.assetId)
+    } else {
+      toast.error("Transaction failed. See details in MetaMask.");
+      console.log("Transaction failed. See details in MetaMask.")
+    }
     console.log(status);
   },
 
   async vouchParticipant(context, props) {
-    let { assetAddr, participant } = props
-    console.log("assetAddr: ", assetAddr, participant);
-
-    const domain = {
+    const toast = params.$toast || createToaster({})
+    const { customDomain, participant } = props
+    const networks = {
+      goerli: 5,
+      arbitrum: 42161
+    }
+    const domain = customDomain || {
       name: "Protocol",
       version: "1",
-      chainId: 42161,
+      chainId: networks.arbitrum,
       verifyingContract: CONTRACTS.WEAVR
-    }
+    } 
     const types = {
       Vouch: [
           {type: "address", name: "participant"}
       ]
     }
     const data = {participant: participant}
+    toast.info("Waiting for signature..", {position: "top"})
     const signature = await wallet.getSignature(domain, types, data)
     Promise.all([signature]).then( () => {
       console.log(signature[0])
     });    
-    const tx = await dao.vouch(participant, signature[0])
-    console.log(tx.hash)
+    const status = await dao.vouch(participant, signature[0])
+    if (status) {
+      toast.success("Transaction confirmed...", {
+        duration: 2000,
+        position: "top"
+      });
+      context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetId })
+      router.push("/"+ DAO + "/" + params.assetId)
+    } else {
+      toast.error("Transaction failed. See details in MetaMask.");
+      console.log("Transaction failed. See details in MetaMask.")
+    }
   }
 }
 
@@ -407,6 +454,10 @@ const mutations = {
 
   setTokenSymbol(state, symbol) {
     state.user.wallet.tokenSymbol = symbol;
+  },
+
+  setLoadingState(state, isLoading) {
+    state.interface.isLoading = isLoading
   }
 }
 

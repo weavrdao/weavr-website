@@ -71,7 +71,17 @@
 
   <label class="label">Description</label>
   <div class="description-container p-3">
-    <p class="has-text-white">{{ proposal.description }}</p>
+    <vue-markdown class="content" :options="{html: true}"  :source="proposal.description" />
+  </div>
+  <label class="label">DAO Resolution</label>
+  <div  :class="['p-3'].concat(proposal.daoResolution ? ['has-text-warning'] : ['has-text-success'])">
+  <div> 
+    {{ 
+      proposal.daoResolution==true 
+        ? "This proposal will influence the DAO" 
+        : "This proposal will not influence the DAO" 
+      }}
+    </div>
   </div>
   <label class="label">Consensus</label>
   <div class="votes-container">
@@ -155,6 +165,7 @@ import {
 import { PASSED } from "../../models/common";
 import Address from "../views/address/Address.vue";
 import { DAO } from "../../services/constants"
+import VueMarkdown from "vue-markdown-render";
 
 export default {
   // (bill) TODO: Make this reload data if loaded directly
@@ -163,6 +174,7 @@ export default {
   components: {
     Address,
     slider,
+    VueMarkdown
   },
   data () {
     return {
@@ -288,7 +300,9 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../styles/frabric-custom.scss";
-
+.container {
+  min-width: 80% !important;
+}
 .relative {
   position: relative;
 }
@@ -352,7 +366,8 @@ export default {
 }
 
 .description-container {
-  background: $mediumDarkGray;
+  background: #111;
+  padding: 15px;
   border-radius: $tiny-radius;
 
   p {

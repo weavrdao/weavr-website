@@ -63,9 +63,14 @@ export default {
       createProposal: "createParticipantProposal",
     }),
     async publish() {
-      if (this.address.length < 1) {
-        return;
+      if(!ethers.utils.isAddress(this.address)) {
+        this.$toast.error("Address not valid", {
+          position: "top"
+        });
+        this.address=""
+        return
       }
+      
       this.$emit("submited");
       const assetId = this.assetId;
       const description = this.description;

@@ -5,7 +5,7 @@
       <a :href="`https://goerli.etherscan.io/address/${address}`"
           target="_blank"
           class="address">
-      {{ address || "No asset selected" }}
+      {{ address.substring(0, 8) + "..." + address.substring(address.length - 4) || "No asset selected" }}
       </a>
     </div>
   </div>

@@ -9,6 +9,7 @@ import newTokenAction from "@/components/proposals/newTokenAction.vue";
 import newThreadProposal from "@/components/proposals/newThreadProposal.vue";
 import SingleProposal from "@/components/proposals/SingleProposal.vue";
 import vouch from "@/components/proposals/vouch"
+import tokenDetails from "@/components/sections/TokenDetails.vue"
 import {CONTRACTS, DAO} from "../services/constants"
 import { createToaster } from '@meforma/vue-toaster';
 import store from '../store';
@@ -30,6 +31,11 @@ const router = new createRouter({
       component: Homepage,
       props: { assetId:  CONTRACTS.WEAVR},
       children: [
+        {
+          path: "tokenInfo",
+          component: Modal,
+          props: {assetId: "", component: tokenDetails}
+        },
         {
           path: "paperProposal",
           component: Modal,

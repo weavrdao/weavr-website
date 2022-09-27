@@ -2,9 +2,8 @@
   <Portal target="#modal-portal-target">
     <div class="modal is-active">
       <div class="modal-background" @click="goBack()"></div>
-      <div class="modal-content has-background-darkGray animate__animated animate__fadeInDown animate__faster">
-        <PulseLoader></PulseLoader>
-        <component :is="component" v-bind="$attrs" @proposed="goBack()" @submited="() => { isSubmited=true }" v-show="!isSubmited"/>
+      <div class="modal-content has-background-darkGray animate__animated animate__fadeInDown animate__faster w-100">
+        <component :is="component" v-bind="$attrs" @proposed="goBack()" @submited="() => { isSubmited=true }" />
       </div>
     </div>
   </Portal>
@@ -12,12 +11,10 @@
 
 <script>
 import "animate.css";
-import PulseLoader from "vue-spinner/src/PulseLoader.vue"
 import { DAO } from "../../../services/constants";
 import { mapActions } from 'vuex';
 export default {
   name: "Modal",
-  components: [PulseLoader],
   props: ["component"],
   data(){
     return {
@@ -31,6 +28,9 @@ export default {
     goBack() {
       this.$router.push("/".concat(DAO))
     }
+  },
+  computed: {
+   
   }
 };
 </script>

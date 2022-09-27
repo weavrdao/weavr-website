@@ -193,8 +193,8 @@ class DAO {
       });
 
     if (!infoHash) return;
-
-    let status = await assetContract.proposeParticipant(3, participant, infoHash)
+    
+    let status = await assetContract.proposeParticipant(participantType, participant, infoHash)
     return status
   }
 

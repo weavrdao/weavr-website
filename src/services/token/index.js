@@ -26,5 +26,11 @@ export default class Token {
     const symbol = await tokenContract.getSymbol()
     return symbol
   }
+
+  async getTotalSupply(tokenAddress) {
+    const tokenContract =  new TokenContract(this.ethereumClient, tokenAddress);
+    const supply = await tokenContract.getTotalSupply()
+    return supply
+  }
 }
 

@@ -61,6 +61,9 @@ $card-radius: 0.50rem;
 $tiny-radius: 5px;
 $small-radius: 10px;
 
+
+$modal-content-width: min(100%, 1000px);
+
 input {
   border: $mediumBlue solid 1px !important;
 }
@@ -137,3 +140,4 @@ $colors: map-merge($colors, $addColors);
   border-color: $mediumBlue  !important;
   border-radius: $tiny-radius;
 }
+

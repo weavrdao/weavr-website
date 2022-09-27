@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 <template>
   <section @click="openProposal" class="proposal has-radius-md mb-5" aria-labelledby="proposal">
     <span class="proposal-type" :class="this.typeStylingData.class">
@@ -200,7 +199,7 @@ export default {
   line-height: 1.2rem;
   max-height: 7.2rem;
   white-space: nowrap;
-  max-width: 56ch;
+  max-width: min(30ch, 56ch);
   overflow: hidden;
   text-overflow: ellipsis;
 }

@@ -12,8 +12,16 @@
   <div class="field">
     <label class="label">Description</label>
     <div class="control">
-      <textarea class="textarea" v-model="description" placeholder="Enter description here"></textarea>
+      <textarea class="textarea" v-model="description" @change="updateMarkdown" placeholder="Enter description here"></textarea>
+      
+      
+        <div class="button" @click="!preview">Preview</div>
+      
+      
     </div>
+    <!-- <div class="control markdown">
+      <vue-markdown ref="markdownSource" v-show="preview" class="textarea" :source="description" placeholder="Enter description here"></vue-markdown>
+    </div> -->
   </div>
   <div class="field">
     <label class="label">DAO resolution</label>
@@ -33,10 +41,21 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+
 import { CommonProposalType } from "@/models/common.js"
+import VueMarkdown from "vue-markdown-render";
+import AppVue from '../../App.vue';
+import { createApp } from '@vue/runtime-dom';
+
+
+const mk = createApp({extends: VueMarkdown})
+
 export default {
 
   name: "newPaperProposal",
+  components: {
+    // VueMarkdown
+  },
   props: {
     assetId: {
       type: String,
@@ -44,12 +63,18 @@ export default {
     }
   },
   emits: ['submited', "proposed"],
+  computed: {
+    
+  },
   data(){
     return {
       title: "",
       description: "",
       daoResolution: false,
-      proposalType: CommonProposalType.Paper   
+      proposalType: CommonProposalType.Paper,
+      preview: false,
+      markdownSource: null
+
     }
   },
   methods: {
@@ -58,6 +83,9 @@ export default {
       syncWallet: "syncWallet",
       createPaperProposal: "createPaperProposal",
     }),
+    updateMarkdown() {
+    
+    },
     async publish() {
       this.$emit("submited")
       console.dir(this.trigger);

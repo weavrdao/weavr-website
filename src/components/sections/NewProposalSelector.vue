@@ -1,14 +1,17 @@
 <template>
-<div class="proposal-selector is-flex is-justify-content-space-between is-align-items-center my-5 mx-0 p-5">
-  <div>
+<div class="proposal-selector  my-5 mx-0 p-5">
+  <div class="column is-half-desktop">
     <label for="proposal-selector">Type of Proposal</label>
     <select class="select is-medium has-background-darkGray has-text-white px-3 my-2"  v-model="selectedAction">
       <option v-for="option in actionTypes" :value="option.id" v-bind:key="option.id">
         {{ option.name }}
       </option>
     </select>
+    
   </div>
-  <button class="has-background-mediumBlue button has-text-white mt-5 p-5" @click="routeToSelectedPage">Create Proposal</button>
+  <div class="column is-half-desktop">
+    <button class="has-background-mediumBlue button has-text-white mt-5 p-5" @click="routeToSelectedPage">Create Proposal</button>
+  </div>
 </div>
 </template>
 
@@ -40,10 +43,6 @@ export default {
         {
           id: "threadProposal",
           name: "Thread Proposal",
-        },
-        {
-          id: "vouch",
-          name: "Participant Vouch",
         }
       ],
     }

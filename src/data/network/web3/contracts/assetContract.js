@@ -11,7 +11,7 @@ const contractAbi = [
   "function proposePaper(bool supermajority, bytes32 info) returns (uint256)",
 
   // Create a participant proposal
-  "function proposeParticipant(uint16 participantType, address _participant, bytes32 info) returns (uint256 id)",
+  "function proposeParticipant(uint8 participantType, address _participant, bytes32 info) returns (uint256 id)",
 
   // Create an upgrade proposal
   "function proposeUpgrade(address beacon, address instance, uint256 version, address code, bytes data, bytes32 info) returns (uint256 id)",
@@ -79,6 +79,9 @@ class AssetContract {
     participant,
     info
   ) {
+    console.log({participantType,
+      participant,
+      info})
     let tx = await this.mutableContract
       .proposeParticipant(
         participantType,
