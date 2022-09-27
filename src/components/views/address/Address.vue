@@ -1,5 +1,5 @@
 <template>
-  <div class="tag is-mediumBlue is-medium is-clickable has-radius-lg" @click="onClick">
+  <a :href="`https://arbiscan.io/address/${value}`" target="_blank" rel="noopener" class="tag is-mediumBlue is-medium is-clickable has-radius-lg">
     <span class="icon">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +21,7 @@
         address.substring(0, 8) + "..." + address.substring(address.length - 4)
       }}
     </span>
-  </div>
+  </a>
 </template>
 
 <script>
@@ -38,16 +38,6 @@ export default {
       address: "",
     };
   },
-  methods: {
-    async onClick() {
-      try {
-        await navigator.clipboard.writeText(this.address);
-        this.$toast.success("Copied!");
-      } catch (e) {
-        this.$toast.error("Error copying to clipboard.");
-      }
-    },
-  },
   created() {
     this.address = this.value;
   },
@@ -57,6 +47,7 @@ export default {
 <style scoped lang="scss">
 .tag {
   transition: all 150ms;
+  text-decoration: none !important;
   &:hover {
     filter: contrast(120%);
   }

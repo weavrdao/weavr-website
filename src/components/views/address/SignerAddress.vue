@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="button is-warning mr-5" @click="onVouch"><span class="mr-1">{{vouches}}</span>Vouch</div>
+  <!-- <div class="button is-warning mr-5" @click="onVouch"><span class="mr-1">{{vouches}}</span>Vouch</div> -->
   <div @click="tokenDetails" style="cursor: pointer;" class="tag is-large is-flex is-address-container" v-if="address !=null">
     <div>
       <span >{{ balance }}</span>

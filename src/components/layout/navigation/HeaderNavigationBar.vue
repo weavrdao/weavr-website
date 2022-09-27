@@ -63,7 +63,7 @@ export default {
     return {
       navigation: {
         isOpen: false,
-        items: [{ name: 'Governance', path: '/#/frabric' }],
+        items: [{ name: 'Governance', path: '/#/weavr' }],
       },
     }
   },
