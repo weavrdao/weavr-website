@@ -22,6 +22,7 @@ export default class Token {
   }
 
   async getTokenSymbol(tokenAddress) {
+    console.log("SYMBOL", this.ethereumClient.walletProvider);
     const tokenContract =  new TokenContract(this.ethereumClient, tokenAddress);
     const symbol = await tokenContract.getSymbol()
     return symbol

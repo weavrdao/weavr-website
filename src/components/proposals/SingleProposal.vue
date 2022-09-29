@@ -11,6 +11,7 @@
   <h2 class="is-size-5 has-text-mediumBlue">
     {{ this.startDate }}
   </h2>
+  <h3 :class="[proposal.state=='Cancelled' || proposal.state=='Failed' ? 'has-text-red' : 'has-text-success', 'p-2',]">{{proposal.state}}</h3>
   <h1 class="title has-text-white mb-5">{{ proposal.title }}</h1>
   <label class="label">Creator</label>
   <Address :value="proposal.creator" />
@@ -71,7 +72,7 @@
 
   <label class="label">Description</label>
   <div class="description-container p-3">
-    <vue-markdown class="content" :options="{html: true}"  :source="proposal.description" />
+    <vue-markdown class="content markdown-body" :options="{html: true}"  :source="proposal.description" />
   </div>
   <label class="label">DAO Resolution</label>
   <div  :class="['p-3'].concat(proposal.daoResolution ? ['has-text-warning'] : ['has-text-success'])">
@@ -135,9 +136,9 @@
             <button @click="voteAmount = Number(balance)" class="button">100%</button>
           </div>
       </div>
-      <div class="is-flex is-justify-content-space-between is-align-items-center mt-5">
-        <button @click="submitYesVote" :disabled="!address" class="button has-text-white has-background-mint has-text-weight-semibold">VOTE FOR</button>
-        <button @click="submitNoVote" :disabled="!address" class="button has-text-white has-background-red has-text-weight-semibold">VOTE AGAINST</button>
+      <div class="is-flex is-justify-content-space-between is-align-items-center mt-5" v-if="!cancelled || !ended">
+        <button @click="submitYesVote" :disabled="!address" class="button has-text-white has-background-mint has-text-weight-semibold">VOTE FOR </button>
+        <button @click="submitNoVote" :disabled="!address"  class="button has-text-white has-background-red has-text-weight-semibold">VOTE AGAINST</button>
       </div>
       <div class="mt-5">
         <p>Voting ends on <strong>{{ endDateString }}</strong></p> 
@@ -211,6 +212,9 @@ export default {
     },
     passed() {
       return getResult(this.proposal);
+    },
+    cancelled() {
+      return this.proposal.state === "Cancelled"
     },
     startDate() {
       const startDate = new Date(this.proposal.startTimestamp * 1000);
@@ -300,6 +304,8 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../styles/frabric-custom.scss";
+@import "../../styles/markdown.scss";
+
 .container {
   min-width: 80% !important;
 }
@@ -366,10 +372,10 @@ export default {
 }
 
 .description-container {
-  background: #111;
-  padding: 15px;
+  background: transparent;
+  padding: 25px;
   border-radius: $tiny-radius;
-
+  
   p {
     max-width: 56ch;
   }

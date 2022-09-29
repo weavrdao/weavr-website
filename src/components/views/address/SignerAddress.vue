@@ -16,6 +16,7 @@
         }}
       </div>
     </div>
+    <div class="m-0 p-0"><unicon class="m-0 p-0" :width="30" name="signout" fill="magenta"></unicon> </div>
   </div>
   <div
     v-else
@@ -33,6 +34,7 @@ import { createApp } from '@vue/runtime-dom';
 import { mapGetters, mapActions } from "vuex";
 import { DAO } from "../../../services/constants"
 import { Modal } from "../modal/Modal.vue"
+import { ethers } from 'ethers';
 export default {
   name: "SignerAddress",
   computed: {
@@ -49,8 +51,12 @@ export default {
       tokenInfo: "tokenInfo"
     }),
     onClick() {
-      this.$toast.show("Syncing wallet...");
-      this.sync({ $toast: this.$toast })
+      if(ethers.utils.isAddress(this.address)){
+        this.sync({$toast: this.$toast})
+      }else {
+        this.$router.push("/walletConnect")
+      }
+      
     },
     onVouch() {
       // this.vouch({participant: "0x403383c411c0eB14eA0Bd15E7c2AD5431a7410C2"})

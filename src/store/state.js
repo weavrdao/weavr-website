@@ -5,6 +5,7 @@ import { params } from "stylus/lib/utils";
 import ServiceProvider from "../services/provider";
 import WalletState from "../models/walletState";
 import { CONTRACTS, DAO } from "../services/constants";
+const {getMetaMaskProvider, getCoinbaseWalletProvider, getBraveProvider} = require("../data/network/web3/ethereum/providers.js")
 
 /**
  * TODO - Abstrucked -
@@ -136,17 +137,49 @@ const actions = {
       totalSupply: ethers.utils.formatEther(supply),
     };
   },
-
-  async syncWallet(context, params) {
-    const toast = params.$toast || createToaster({});
-    let walletState = await wallet.getState();
-    console.log(walletState);
-
+  async connectWallet(context, params) {
+    console.log("into connectwallet: ", params.wallet);
+    let provider, walletState
+    
     const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
     const balance = await token.getTokenBalance(
       CONTRACTS.FRBC,
       walletState.address
     );
+    Promise.all([symbol, balance]).then(
+      (res) => {
+        console.log(res)
+      }
+    )
+    walletState = new WalletState(
+    walletState.address,
+    walletState.ethBalance,
+    ethers.utils.formatEther(balance).toString(),
+    symbol
+    );
+    context.commit("setWallet", walletState);
+},
+
+  async syncWallet(context, params) {
+    console.log("SYNC");
+    let { $toast} = params
+    // const toast = createToaster({});
+    
+    let walletState = await wallet.getState(params.wallet);
+    
+    
+    
+    const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
+    const balance = await token.getTokenBalance(
+      CONTRACTS.FRBC,
+      walletState.address
+    );
+    Promise.all([symbol, balance]).then(
+      () => {
+        
+      }
+    )
+    
     walletState = new WalletState(
       walletState.address,
       walletState.ethBalance,
@@ -155,8 +188,8 @@ const actions = {
     );
     context.commit("setWallet", walletState);
     console.log(await wallet.getState());
-    toast.clear();
-    toast.success("Wallet fully synced", {
+    $toast.clear();
+    $toast.success("Wallet fully synced", {
       duration: 1000,
       position: "top",
     });
@@ -463,6 +496,11 @@ const mutations = {
   setLoadingState(state, isLoading) {
     state.interface.isLoading = isLoading;
   },
+
+  setWalletConnetected(state) {
+    if(state.user.wallet.connected != null)
+    !state.user.wallet.connected;
+  }
 };
 
 export default {

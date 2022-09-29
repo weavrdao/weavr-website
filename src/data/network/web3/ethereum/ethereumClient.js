@@ -1,10 +1,17 @@
-require("dotenv").config()
-const { ethers } = require("ethers")
-
+import { createToaster } from "@meforma/vue-toaster";
+const {  getCoinbaseWalletProvider, getMetaMaskProvider} = require("./providers")
+require("dotenv").config();
+const { ethers } = require("ethers");
+const { CoinbaseWalletSDK } = require("@coinbase/wallet-sdk");
 /**
  * @property {ethers.JsonRpcSigner} walletProvider
  * @property {ethers.JsonRpcSigner} walletSigner
  */
+
+class customSigner extends ethers.Signer {
+  
+}
+
 class EthereumClient {
   constructor() { }
 
@@ -20,33 +27,114 @@ class EthereumClient {
 
   /* --- Wallet access --- */
 
-  async syncWallet() {
-    if (this.walletProvider != null && this.walletSigner != null) { return }
-
+  async syncWallet(wallet) {
+    // if (this.walletProvider != null && this.walletSigner != null) { return }
+    console.log(wallet)
     // Using in-browser wallet to access wallet state and sign transactions
-    if (window.ethereum) {
-      try {
-        await window.ethereum.request({ method: "eth_requestAccounts" });
+    if(wallet == "metamask") {
+      console.log("METAMASK OK")
+      try{
+        const metamask = await getMetaMaskProvider()
+        console.log(metamask);
+        this.walletProvider = new ethers.providers.Web3Provider(metamask)
+        this.walletSigner = this.walletProvider.getSigner()
       } catch(error) {
         console.log(error)
+        const toast = createToaster({});
+        toast.error("Something went wrong connecting to Metamask", {
+          position: "top"
+        })
         return
       }
     }
-
-    this.walletProvider = new ethers.providers.Web3Provider(window.ethereum)
-    this.walletSigner = this.walletProvider.getSigner()
-
-    return true
+    if(wallet == "coinbase") {  
+      console.log("COINBASAE");
+      const coinbase = getCoinbaseWalletProvider()
+      console.log(coinbase);
+      this.walletProvider = coinbase
+      
+      console.log(this.walletProvider);
+      this.account = await this.getWalletAddress()
+      return 
+    } 
   }
 
+
+
+  async connectWallet(provider) {
+    console.log();
+    if(provider.provider){
+      this.provider=provider.provider
+    }
+    try {
+      // Get accounts for connected wallet
+      
+      const accounts = await this.provider.request({
+        method: "eth_requestAccounts",
+      });
+      if (accounts) {
+        console.log(accounts)
+        this.account = accounts[0];
+      }
+      // Get current chain ID for connected wallet
+      const chainId = await this.provider.request({
+        method: "eth_chainId",
+      });
+      this.chainId = Number(chainId);
+      console.log(this.chainId, this.account)
+      this.walletProvider = new ethers.providers.Web3Provider(this.provider)
+      this.walletSigner = this.walletProvider.getSigner()
+      this.walletSigner.connect(this.provider)
+      console.log(this.walletSigner);
+      return {
+        account: this.account,
+        chainId: this.chainId
+      }
+    } catch (error) {
+      this.error = error;
+    }
+  
+  }
+
+
   async getWalletAddress() {
-    return this.walletSigner.getAddress()
+    if(this.walletProvider.isCoinbaseWallet){
+      this.getCoinbaseEthereumAddress()      
+      
+    }else {
+      return this.walletSigner.getAddress()
+    }
+     
+  }
+
+  getCoinbaseEthereumAddress() {
+    return this.walletProvider.request({ method: 'eth_requestAccounts' }).then(response => {
+      const accounts = response
+      console.log(`User's address is ${accounts[0]}`)
+      this.account = accounts[0]
+      return accounts[0]  
+    })
   }
 
   async getWalletEthBalance() {
+    if(this.walletProvider.isCoinbaseWallet){
+      console.log("isCoinbase");
+      const account = await this.getCoinbaseEthereumAddress()
+      console.log(account);
+      this.walletProvider.request({ method: 'eth_getBalance', params: [ this.account || account, "latest"] }).then(response => {
+        const accounts = response
+        console.log(`User's bal is ${accounts}`)
+        return response
+      })
+      
+    }else {
     return (await this.walletSigner.getBalance()).toString()
+    }
   }
 
+  /**
+   * @ToDo Implement coinbase Signature
+   */
   async getSignature(domain, types, data) {
     return await this.walletSigner._signTypedData(domain, types, data)
   }
@@ -61,7 +149,7 @@ class EthereumClient {
    * @returns Read-only contract instance
    */
   getContract(address, abi) {
-    return new ethers.Contract(address, abi, this.walletSigner)
+    return new ethers.Contract(address, abi, this.walletSigner || this.walletProvider)
   }
 
   /**

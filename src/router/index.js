@@ -10,6 +10,7 @@ import newThreadProposal from "@/components/proposals/newThreadProposal.vue";
 import SingleProposal from "@/components/proposals/SingleProposal.vue";
 import vouch from "@/components/proposals/vouch"
 import tokenDetails from "@/components/sections/TokenDetails.vue"
+import walletConnect from "@/components/sections/WalletConnect.vue"
 import {CONTRACTS, DAO} from "../services/constants"
 import { createToaster } from '@meforma/vue-toaster';
 import store from '../store';
@@ -24,6 +25,11 @@ const router = new createRouter({
     {
       path: "/",
       redirect: "/".concat(DAO)
+    },
+    {
+      path: "/walletConnect",
+      component: Modal,
+      props: {component: walletConnect}
     },
     {
       path: "/".concat(DAO).concat("/:assetId"),

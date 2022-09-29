@@ -84,7 +84,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/_variables.sass";
 @import "../../styles/frabric-custom.scss";
 
 .proposal-list {

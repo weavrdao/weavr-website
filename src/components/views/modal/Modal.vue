@@ -2,7 +2,7 @@
   <Portal target="#modal-portal-target">
     <div class="modal is-active">
       <div class="modal-background" @click="goBack()"></div>
-      <div class="modal-content has-background-darkGray animate__animated animate__fadeInDown animate__faster w-100">
+      <div class="modal-content has-background-darkGray animate__animated animate__fadeInDown animate__faster">
         <component :is="component" v-bind="$attrs" @proposed="goBack()" @submited="() => { isSubmited=true }" />
       </div>
     </div>

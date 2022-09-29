@@ -7,9 +7,8 @@ import "./styles/frabric-custom.scss";
 // import "bulma/css/bulma.css"
 import Toaster from "@meforma/vue-toaster";
 import Unicon from "vue-unicons"
-import { uniMultiplySolid, uniAppsSolid, uniListUlSolid, uniConstructor } from "vue-unicons/dist/icons"
-
-Unicon.add([uniMultiplySolid, uniAppsSolid, uniListUlSolid, uniConstructor])
+import { uniTimesCircle, uniTimes, uniTimesSquare, uniSignout } from 'vue-unicons/dist/icons'
+Unicon.add([uniTimes, uniTimesSquare, uniSignout ])
 require("dotenv").config()
 const unsync = sync(store, router) // done. Returns an unsync callback fn
 
