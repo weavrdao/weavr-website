@@ -1,13 +1,16 @@
 import { createToaster } from "@meforma/vue-toaster";
-const {  getCoinbaseWalletProvider, getMetaMaskProvider} = require("./providers")
+const {  getCoinbaseWalletProvider, getMetaMaskProvider,  DEFAULT_CHAIN_ID} = require("./providers")
 import {CoinbaseConnector} from "./walletProviders/CoinbaseConnector.js"
-
+import {toHex} from "@/utils/common.js"
 require("dotenv").config();
 const { ethers } = require("ethers");
 const { CoinbaseWalletSDK } = require("@coinbase/wallet-sdk");
 /**
  * @property {ethers.JsonRpcSigner} walletProvider
  * @property {ethers.JsonRpcSigner} walletSigner
+ */
+/**
+ * @NOTE Need to implent whatchers for chianID, chain-changes and switchToNetwork  
  */
 
 
@@ -69,6 +72,17 @@ class EthereumClient {
     } 
   }
 
+  switchNetwork = async  (network) => {
+    try {
+      await this.walletProvider.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: toHex(this.chainId || DEFAULT_CHAIN_ID) }],
+      });
+    } catch (error) {
+      this.error = error;
+    }
+  }
+  
   async getWalletAddress() {
       return await this.walletSigner.getAddress()
   }

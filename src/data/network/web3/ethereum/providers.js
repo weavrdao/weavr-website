@@ -7,7 +7,7 @@ const DEFAULT_ETH_JSONRPC_URL = "https://l2-mainnet.wallet.coinbase.com?targetNa
 
 const INFURA_ID = process.env.VUE_APP_INFURA_ID;
 const INFURA_RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
-const DEFAULT_CHAIN_ID = 42161
+export const DEFAULT_CHAIN_ID = 42161
 
 // Coinbase Wallet Provider
 export const getCoinbaseWalletProvider = () => {

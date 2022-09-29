@@ -4,9 +4,8 @@
 @import "../../node_modules/bulma/sass/utilities/functions";
 
 
-
-// Add font family
 $family-sans-serif: "Poppins Sans", "sans";
+
 
 //####################################
 //#          FRABRIC THEME           #
@@ -65,6 +64,10 @@ $small-radius: 10px;
 
 
 $modal-content-width: min(100%, 1000px);
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
 
 input {
   border: $mediumBlue solid 1px !important;
