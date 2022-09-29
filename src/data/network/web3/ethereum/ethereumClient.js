@@ -98,7 +98,7 @@ class EthereumClient {
 
 
   async getWalletAddress() {
-    if(this.walletProvider.isCoinbaseWallet){
+    if(this.walletProvider['isCoinbaseWallet']){
       this.getCoinbaseEthereumAddress()      
       
     }else {
@@ -117,8 +117,8 @@ class EthereumClient {
   }
 
   async getWalletEthBalance() {
-    if(this.walletProvider.isCoinbaseWallet){
-      console.log("isCoinbase");
+    if(this.walletProvider['isCoinbaseWallet']){
+   
       const account = await this.getCoinbaseEthereumAddress()
       console.log(account);
       this.walletProvider.request({ method: 'eth_getBalance', params: [ this.account || account, "latest"] }).then(response => {
