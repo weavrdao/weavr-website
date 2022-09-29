@@ -34,10 +34,13 @@ class EthereumClient {
     if(wallet == "metamask") {
       console.log("METAMASK OK")
       try{
-        const metamask = await getMetaMaskProvider()
+        console.log(window.ethereum);
+        console.log(window.ethereum?.providers);
+        const metamask =  window.ethereum
         console.log(metamask);
         this.walletProvider = new ethers.providers.Web3Provider(metamask)
         this.walletSigner = this.walletProvider.getSigner()
+        console.log("WalletSigner: ", this.walletSigner);
       } catch(error) {
         console.log(error)
         const toast = createToaster({});
@@ -98,10 +101,11 @@ class EthereumClient {
 
 
   async getWalletAddress() {
-    if(this.walletProvider['isCoinbaseWallet']){
+    let coinbase = false
+    if(coinbase){
       this.getCoinbaseEthereumAddress()      
-      
     }else {
+
       return this.walletSigner.getAddress()
     }
      
@@ -117,7 +121,8 @@ class EthereumClient {
   }
 
   async getWalletEthBalance() {
-    if(this.walletProvider['isCoinbaseWallet']){
+    let coinbase = false
+    if(coinbase){
    
       const account = await this.getCoinbaseEthereumAddress()
       console.log(account);

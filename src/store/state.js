@@ -174,7 +174,7 @@ const actions = {
       CONTRACTS.FRBC,
       walletState.address
     );
-    Promise.all([symbol, balance]).then(
+    Promise.all([walletState, symbol, balance]).then(
       () => {
         
       }
