@@ -1,5 +1,7 @@
 import { createToaster } from "@meforma/vue-toaster";
 const {  getCoinbaseWalletProvider, getMetaMaskProvider} = require("./providers")
+import {CoinbaseConnector} from "./walletProviders/CoinbaseConnector.js"
+
 require("dotenv").config();
 const { ethers } = require("ethers");
 const { CoinbaseWalletSDK } = require("@coinbase/wallet-sdk");
@@ -8,9 +10,6 @@ const { CoinbaseWalletSDK } = require("@coinbase/wallet-sdk");
  * @property {ethers.JsonRpcSigner} walletSigner
  */
 
-class customSigner extends ethers.Signer {
-  
-}
 
 class EthereumClient {
   constructor() { }
@@ -22,119 +21,59 @@ class EthereumClient {
    */
   async getBlockNumber() {
     const number = await this.readProvider.getBlockNumber()
-    console.log(number)
   }
 
   /* --- Wallet access --- */
 
   async syncWallet(wallet) {
-    // if (this.walletProvider != null && this.walletSigner != null) { return }
-    console.log(wallet)
     // Using in-browser wallet to access wallet state and sign transactions
     if(wallet == "metamask") {
-      console.log("METAMASK OK")
       try{
-        console.log(window.ethereum);
-        console.log(window.ethereum?.providers);
-        const metamask =  window.ethereum
-        console.log(metamask);
+        
+        const metamask = window.ethereum?.providers ? getMetaMaskProvider() : window.ethereum
         this.walletProvider = new ethers.providers.Web3Provider(metamask)
         this.walletSigner = this.walletProvider.getSigner()
-        console.log("WalletSigner: ", this.walletSigner);
-      } catch(error) {
+      
+      } 
+      catch(error) {
+        
         console.log(error)
         const toast = createToaster({});
         toast.error("Something went wrong connecting to Metamask", {
           position: "top"
         })
         return
+      
       }
     }
-    if(wallet == "coinbase") {  
-      console.log("COINBASAE");
-      const coinbase = getCoinbaseWalletProvider()
-      console.log(coinbase);
-      this.walletProvider = coinbase
+    if(wallet == "coinbase") {
+      try {
+        
+        const coinbase = getCoinbaseWalletProvider()
+        this.walletProvider = coinbase
+        const connector =  new CoinbaseConnector(coinbase)
+        this.account = await connector.getAddress()
+        this.walletSigner = await connector.getSigner(await connector.getChainId());
+        return   
       
-      console.log(this.walletProvider);
-      this.account = await this.getWalletAddress()
-      return 
+      } catch (error) {
+      
+        console.log(error)
+        const toast = createToaster({});
+        toast.error("Something went wrong connecting to Coinbase", {
+          position: "top"
+        })
+        return
+      
+      }  
     } 
   }
 
-
-
-  async connectWallet(provider) {
-    console.log();
-    if(provider.provider){
-      this.provider=provider.provider
-    }
-    try {
-      // Get accounts for connected wallet
-      
-      const accounts = await this.provider.request({
-        method: "eth_requestAccounts",
-      });
-      if (accounts) {
-        console.log(accounts)
-        this.account = accounts[0];
-      }
-      // Get current chain ID for connected wallet
-      const chainId = await this.provider.request({
-        method: "eth_chainId",
-      });
-      this.chainId = Number(chainId);
-      console.log(this.chainId, this.account)
-      this.walletProvider = new ethers.providers.Web3Provider(this.provider)
-      this.walletSigner = this.walletProvider.getSigner()
-      this.walletSigner.connect(this.provider)
-      console.log(this.walletSigner);
-      return {
-        account: this.account,
-        chainId: this.chainId
-      }
-    } catch (error) {
-      this.error = error;
-    }
-  
-  }
-
-
   async getWalletAddress() {
-    let coinbase = false
-    if(coinbase){
-      this.getCoinbaseEthereumAddress()      
-    }else {
-
-      return this.walletSigner.getAddress()
-    }
-     
+      return await this.walletSigner.getAddress()
   }
-
-  getCoinbaseEthereumAddress() {
-    return this.walletProvider.request({ method: 'eth_requestAccounts' }).then(response => {
-      const accounts = response
-      console.log(`User's address is ${accounts[0]}`)
-      this.account = accounts[0]
-      return accounts[0]  
-    })
-  }
-
   async getWalletEthBalance() {
-    let coinbase = false
-    if(coinbase){
-   
-      const account = await this.getCoinbaseEthereumAddress()
-      console.log(account);
-      this.walletProvider.request({ method: 'eth_getBalance', params: [ this.account || account, "latest"] }).then(response => {
-        const accounts = response
-        console.log(`User's bal is ${accounts}`)
-        return response
-      })
-      
-    }else {
     return (await this.walletSigner.getBalance()).toString()
-    }
   }
 
   /**

@@ -3,7 +3,7 @@ import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 
 const APP_NAME = "WeavrDAO"
 const APP_LOGO_URL = "@/assets/logo/new-logo.png"
-const DEFAULT_ETH_JSONRPC_URL = "https://arb1.arbitrum.io/rpc"
+const DEFAULT_ETH_JSONRPC_URL = "https://l2-mainnet.wallet.coinbase.com?targetName=arbitrum"
 
 const INFURA_ID = process.env.VUE_APP_INFURA_ID;
 const INFURA_RPC_URL = `https://mainnet.infura.io/v3/${INFURA_ID}`;
@@ -17,7 +17,7 @@ export const getCoinbaseWalletProvider = () => {
     darkMode: false,
     overrideIsMetaMask: false
   });
-  return coinbaseWallet.makeWeb3Provider(INFURA_RPC_URL, DEFAULT_CHAIN_ID);
+  return coinbaseWallet.makeWeb3Provider(DEFAULT_ETH_JSONRPC_URL, DEFAULT_CHAIN_ID);
 };
 
 // MetaMask Provider

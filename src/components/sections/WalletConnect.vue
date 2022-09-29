@@ -44,7 +44,7 @@ export default {
         coinbase: {
           name: "coinbase",
           icon: require("@/assets/icons/coinbase-wallet.png"),
-          disabled: true
+          disabled: false
         }
       }
     }

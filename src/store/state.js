@@ -164,19 +164,15 @@ const actions = {
     console.log("SYNC");
     let { $toast} = params
     // const toast = createToaster({});
-    
     let walletState = await wallet.getState(params.wallet);
-    
-    
-    
     const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
     const balance = await token.getTokenBalance(
       CONTRACTS.FRBC,
       walletState.address
     );
     Promise.all([walletState, symbol, balance]).then(
-      () => {
-        
+      (val) => {
+        console.log(val);
       }
     )
     

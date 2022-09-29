@@ -13,8 +13,10 @@ export default class TokenContract {
     this.contract = ethereumClient.getContract(contractAddress, contractAbi);
     this.mutableContract = ethereumClient.getMutableContract(this.contract);
   }
-  async getSymbol() {    
-    let symbol = await this.contract.symbol();
+  async getSymbol() {  
+    console.log(this.contract)  
+    const symbol = await this.contract.symbol();
+    console.log(symbol)
     return symbol
   }
   async getBalance(account) {
