@@ -4,7 +4,7 @@
         {{ order.totalAmount }} FBRC
     </div>
     <div class="column">
-        {{ Number(order.price).toFixed(2) }} USD
+        {{ formatUSDC(order.price) }} USD
     </div>
     <div class="column">
       {{ getTotalAmount(order) }}
@@ -21,6 +21,7 @@
 
 <script>
 import { ethers } from "ethers";
+import { multiplyAsBigNumbers } from "../../../data/helpers/numbers";
 
 export default {
   name: "OrderListItem",
@@ -30,9 +31,13 @@ export default {
     }
   },
   methods: {
+    multiply: multiplyAsBigNumbers,
+    formatUSDC: (amount) => Number(ethers.utils.formatUnits(amount, 6)).toFixed(2),
+    parseUSDC: (amount) => Number(ethers.utils.parseUnits(amount, 6)).toFixed(2),
     formatEther: (amount) => Number(ethers.utils.formatEther(amount)).toFixed(2),
     getTotalAmount: (order) => {
-      return (Number(order.totalAmount) * Number(order.price)).toFixed(2);
+      console.log(order);
+      return Number(ethers.utils.formatUnits(multiplyAsBigNumbers(order.totalAmount, order.price), 6)).toFixed(2);
     }
   }
 }

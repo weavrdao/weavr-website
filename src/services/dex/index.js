@@ -9,7 +9,10 @@ import {
   THREAD_DEX_ORDERS_QUERY,
 } from "../../data/network/graph/queries";
 import { TRADE_TOKEN_ADDRESS } from "../constants";
-import { multiplyAsBigNumbers, parseUnitsAsBigNumbers } from "../../data/helpers/numbers";
+import {
+  multiplyAsBigNumbers,
+  parseUnitsAsBigNumbers,
+} from "../../data/helpers/numbers";
 
 /**
  * DEX service
@@ -46,7 +49,7 @@ class DEX {
     return marketOrders.length > 0 ? marketOrders : [];
   }
 
-  async createBuyOrder(frabricAddress, price, minimumAmount, tradeTokenDecimals) {
+  async createBuyOrder(frabricAddress, price, minimumAmount) {
     const daoContract = new AssetContract(this.ethereumClient, frabricAddress);
 
     const erc20 = await daoContract.erc20();
@@ -58,13 +61,16 @@ class DEX {
       process.env.VUE_APP_DEX_ROUTER
     );
 
-    const totalAmount = multiplyAsBigNumbers(minimumAmount, price);
+    const decimals = await this.getTradeTokenDecimals(frabricAddress);
+    const amount = parseUnitsAsBigNumbers(minimumAmount, decimals);
+    const convertedPrice = parseUnitsAsBigNumbers(price, decimals);
+    const totalAmount = multiplyAsBigNumbers(amount, price);
 
     const status = await dexRouterContract.buy(
       erc20,
       TRADE_TOKEN_ADDRESS,
       totalAmount,
-      price,
+      convertedPrice,
       minimumAmount
     );
     return status;
@@ -74,53 +80,75 @@ class DEX {
     const daoContract = new AssetContract(this.ethereumClient, frabricAddress);
 
     const erc20 = await daoContract.erc20();
+    const decimals = await this.getTradeTokenDecimals(frabricAddress);
+    const convertedPrice = parseUnitsAsBigNumbers(price, decimals);
 
     const frabricTokenContract = new FrabricERC20Contract(
       this.ethereumClient,
       erc20
     );
 
-    const status = await frabricTokenContract.sell(price, amount);
+    const status = await frabricTokenContract.sell(convertedPrice, amount);
     return status;
   }
 
   async getTradeTokenAddress(frabricAddress) {
     try {
-      const daoContract = new AssetContract(this.ethereumClient, frabricAddress);
+      const daoContract = new AssetContract(
+        this.ethereumClient,
+        frabricAddress
+      );
       const erc20Address = await daoContract.erc20();
-      const frabricERC20Contract = new FrabricERC20Contract(this.ethereumClient, erc20Address);
+      const frabricERC20Contract = new FrabricERC20Contract(
+        this.ethereumClient,
+        erc20Address
+      );
       const tradeTokenAddress = await frabricERC20Contract.tradeToken();
       return tradeTokenAddress;
-    } catch(e) {
+    } catch (e) {
       console.log("Error fetching trade token address");
       console.error(e);
       return null;
     }
-
   }
 
   async getAllowance(frabricAddress, userAddress) {
     const tradeTokenAddress = this.getTradeTokenAddress(frabricAddress);
-    const usdcContract = new USDCContract(this.ethereumClient, tradeTokenAddress);
-    return (await usdcContract.allowance(userAddress, process.env.VUE_APP_DEX_ROUTER));
+    const usdcContract = new USDCContract(
+      this.ethereumClient,
+      tradeTokenAddress
+    );
+    return await usdcContract.allowance(
+      userAddress,
+      process.env.VUE_APP_DEX_ROUTER
+    );
   }
 
   async approveTradeToken(frabricAddress) {
     const tradeTokenAddress = this.getTradeTokenAddress(frabricAddress);
-    const usdcContract = new USDCContract(this.ethereumClient, tradeTokenAddress);
-    return (await usdcContract.approve(process.env.VUE_APP_DEX_ROUTER));
+    const usdcContract = new USDCContract(
+      this.ethereumClient,
+      tradeTokenAddress
+    );
+    return await usdcContract.approve(process.env.VUE_APP_DEX_ROUTER);
   }
 
   async getBalance(frabricAddress, userAddress) {
     const tradeTokenAddress = this.getTradeTokenAddress(frabricAddress);
-    const usdcContract = new USDCContract(this.ethereumClient, tradeTokenAddress);
-    return (await usdcContract.balanceOf(userAddress));
+    const usdcContract = new USDCContract(
+      this.ethereumClient,
+      tradeTokenAddress
+    );
+    return await usdcContract.balanceOf(userAddress);
   }
 
   async getTradeTokenDecimals(frabricAddress) {
     const tradeTokenAddress = this.getTradeTokenAddress(frabricAddress);
-    const usdcContract = new USDCContract(this.ethereumClient, tradeTokenAddress);
-    return (await usdcContract.decimals());
+    const usdcContract = new USDCContract(
+      this.ethereumClient,
+      tradeTokenAddress
+    );
+    return await usdcContract.decimals();
   }
 }
 

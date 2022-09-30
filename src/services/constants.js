@@ -3,4 +3,4 @@ export const WEAVR_ADDRESS = "0x0d443712225ad4d31c9086fc7564cc86f8219567"; // In
 export const THREAD_DEPLOYER_ADDRESS =
   "0xf033246E5301FD64de5C2bE408262eCeFd2A3aC4"; // Thread deployer address
 export const BOND_ADDRESS = "0x4e8DEF7A306C50c99c8f434bFA0D98aE6B790878"; // Bond address;
-export const TRADE_TOKEN_ADDRESS = process.env.VUE_APP_TRADE_TOKEN;
+export const TRADE_TOKEN_ADDRESS = process.env.VUE_APP_TRADE_TOKEN_ADDRESS;
