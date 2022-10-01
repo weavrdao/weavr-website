@@ -5,6 +5,12 @@ import { params } from "stylus/lib/utils";
 import ServiceProvider from "../services/provider";
 import WalletState from "../models/walletState";
 import { CONTRACTS, DAO } from "../services/constants";
+import {
+  whitelistState,
+  whitelistGetters,
+  whitelistActions,
+  whitelistMutations
+} from "../whitelist";
 const {getMetaMaskProvider, getCoinbaseWalletProvider, getBraveProvider} = require("../data/network/web3/ethereum/providers.js")
 
 /**
@@ -15,6 +21,7 @@ const {getMetaMaskProvider, getCoinbaseWalletProvider, getBraveProvider} = requi
 const wallet = ServiceProvider.wallet();
 const dao = ServiceProvider.dao();
 const token = ServiceProvider.token();
+const whitelist = ServiceProvider.whitelist();
 
 function state() {
   return {
@@ -31,6 +38,7 @@ function state() {
       alert: null,
       isLoading: false,
     },
+    ...whitelistState(),
   };
 }
 
@@ -125,6 +133,8 @@ const getters = {
   activeAlert(state) {
     return state.interface.alert;
   },
+
+  ...whitelistGetters,
 };
 
 const actions = {
@@ -458,6 +468,8 @@ const actions = {
       console.log("Transaction failed. See details in MetaMask.");
     }
   },
+
+  ...whitelistActions(whitelist),
 };
 
 const mutations = {
@@ -496,7 +508,9 @@ const mutations = {
   setWalletConnetected(state) {
     if(state.user.wallet.connected != null)
     !state.user.wallet.connected;
-  }
+  },
+
+  ...whitelistMutations,
 };
 
 export default {

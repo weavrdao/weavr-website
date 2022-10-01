@@ -2,6 +2,7 @@ import Wallet from "./wallet"
 import Market from "./market"
 import DAO from "./dao"
 import Token from "./token";
+import { Whitelist } from "../whitelist";
 import IPFSStorageNetwork from "../data/network/storage/ipfs/IPFSStorageNetwork"
 import EthereumClient from "../data/network/web3/ethereum/ethereumClient"
 import TheGraphAPIClient from "../data/network/graph/implementation/theGraphAPIClient"
@@ -46,6 +47,12 @@ class ServiceProvider {
 
   static token() {
     return new Token(
+      ethereumClient,
+    )
+  }
+
+  static whitelist() {
+    return new Whitelist(
       ethereumClient,
     )
   }
