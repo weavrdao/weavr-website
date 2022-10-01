@@ -11,20 +11,22 @@ import SingleProposal from "@/components/proposals/SingleProposal.vue";
 import vouch from "@/components/proposals/vouch"
 import tokenDetails from "@/components/sections/TokenDetails.vue"
 import walletConnect from "@/components/sections/WalletConnect.vue"
+import { WhitelistPage } from "../whitelist";
 import {CONTRACTS, DAO} from "../services/constants"
 import { createToaster } from '@meforma/vue-toaster';
 import store from '../store';
-
-
-
-
+import { ethers } from "ethers";
 
 const router = new createRouter({
   history: createWebHashHistory(),
   routes: [
     {
       path: "/",
-      redirect: "/".concat(DAO)
+      redirect: "/whitelist",
+    },
+    {
+      path: "/whitelist",
+      component: WhitelistPage,
     },
     {
       path: "/walletConnect",
@@ -91,8 +93,39 @@ const router = new createRouter({
   ],
 });
 
-// router.beforeEach((to, from) => {
+let originalPath = "";
+let hasOriginalPathBeenSet = false;
+let hasRedirectedAfterWhitelisting = false;
 
-// });
+router.beforeEach((to, from) => {
+  if(!hasOriginalPathBeenSet) {
+    originalPath = to.fullPath;
+    hasOriginalPathBeenSet = true;
+    console.log(originalPath);
+  }
+
+  if(to.fullPath === "/whitelist") {
+    return true;
+  }
+
+  if(to.fullPath === "/walletConnect") {
+    return true;
+  }
+  const address = store.getters.userWalletAddress;
+  const isConnected = ethers.utils.isAddress(address);
+  if(!isConnected) {
+    router.push("/");
+  }
+  const whitelisted = store.getters.isWhitelisted;
+  if(whitelisted) {
+    if(!hasRedirectedAfterWhitelisting) {
+      router.push(originalPath);
+      hasRedirectedAfterWhitelisting = true;
+    }
+    return true;
+  }
+
+  return true;
+});
 
 export default router;

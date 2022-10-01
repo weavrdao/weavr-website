@@ -13,13 +13,13 @@ export const whitelistGetters = {
 export const whitelistActions = (whitelistService) => ({
   async checkWhitelistStatus(context, params) {
     const userWalletAddress = context.getters.userWalletAddress;
-    const { assetId } = params;
+    const assetId = params.assetId || process.env.VUE_APP_WEAVR_ADDRESS;
     try {
       const whitelisted = await whitelistService.checkWhitelistedStatus(
         assetId,
         userWalletAddress
       );
-
+      console.log(`WHITELISTED: ${whitelisted}`);
       context.commit("setWhitelisted", whitelisted);
     } catch(error) {
       console.log("Error fethcing whitelist status");

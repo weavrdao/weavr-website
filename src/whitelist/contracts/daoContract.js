@@ -1,5 +1,5 @@
 const simpleWeavrAbi = [
-  "funciton erc20() view returns (address)"
+  "function erc20() view returns (address)"
 ]
 
 class WeavrContract {
@@ -10,7 +10,7 @@ class WeavrContract {
     this.contract = ethereumClient.getContract(contractAddress, simpleWeavrAbi);
   }
 
-  async erc20() {
+  async getERC20Address() {
     const erc20Address = await this.contract.erc20();
     return erc20Address;
   }

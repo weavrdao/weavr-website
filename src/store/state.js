@@ -185,6 +185,13 @@ const actions = {
         console.log(val);
       }
     )
+
+    const isWhitelisted = await whitelist.checkWhitelistedStatus(
+      CONTRACTS.WEAVR,
+      walletState.address,
+    )
+
+    context.commit("setWhitelisted", isWhitelisted);
     
     walletState = new WalletState(
       walletState.address,
@@ -192,6 +199,7 @@ const actions = {
       ethers.utils.formatEther(balance).toString(),
       symbol
     );
+  
     context.commit("setWallet", walletState);
     console.log(await wallet.getState());
     $toast.clear();
