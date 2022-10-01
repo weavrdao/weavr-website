@@ -190,7 +190,8 @@ const actions = {
       CONTRACTS.WEAVR,
       walletState.address,
     )
-
+    
+    console.log("Setting whitelist getter" + isWhitelisted);
     context.commit("setWhitelisted", isWhitelisted);
     
     walletState = new WalletState(

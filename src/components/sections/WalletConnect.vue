@@ -55,9 +55,11 @@ export default {
       sync: "syncWallet"
     }),
     onClick(wllt) {
-        this.$toast.show("Syncing wallet... ");
-        this.sync({ wallet: wllt, $toast: this.$toast})
-        this.routeToHome()
+      this.$toast.show("Syncing wallet... ");
+      this.sync({ wallet: wllt, $toast: this.$toast})
+        .then(() => {
+          this.routeToHome();
+        });
     },
     routeToHome() {
       this.$router.push("/".concat(DAO));

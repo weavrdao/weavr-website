@@ -123,6 +123,8 @@ router.beforeEach((to, from) => {
       hasRedirectedAfterWhitelisting = true;
     }
     return true;
+  } else {
+    router.push("/whitelist");
   }
 
   return true;
