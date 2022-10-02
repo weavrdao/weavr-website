@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
-const network = require("../../../../utils/network")
-const { create } = require("ipfs-http-client")
+const network = require("../../../../utils/network");
+const { create } = require("ipfs-http-client");
 import StorageNetwork from "../storageNetwork";
 import { getBytes32FromIpfsHash, getIpfsAuthHeader } from "./common";
 import "dotenv/config";
@@ -9,7 +9,7 @@ const baseInfuraURL = "https://ipfs.infura.io:5001/api/v0";
 
 class IPFSStorageNetwork extends StorageNetwork {
   constructor() {
-    super()
+    super();
     this.ipfsAPIClient = create({
       host: "ipfs.infura.io",
       port: 5001,
@@ -21,44 +21,43 @@ class IPFSStorageNetwork extends StorageNetwork {
   }
 
   async addFile(file) {
-    let jsonString = JSON.stringify(file, null, 2)
+    let jsonString = JSON.stringify(file, null, 2);
     console.log("JSON: ", jsonString);
     const test = await this.ipfsAPIClient.add(jsonString, { pin: true });
     return test;
   }
 
-  getFile = (
-    name
-  ) => new Promise((resolve) => {
-    const url = `${baseInfuraURL}/cat`;
+  async addImage(imageFile) {
+    const image = await this.ipfsAPIClient.add(imageFile, { pin: true });
+    return image;
+  }
 
-    let params = {
-      arg: name
-    }
+  getFile = (name) =>
+    new Promise((resolve) => {
+      const url = `${baseInfuraURL}/cat`;
 
-    let headers = {
-      Authorization: getIpfsAuthHeader(),
-    }
+      let params = {
+        arg: name,
+      };
 
-    let data = {}
-    network
-      .postRequest(
-        url,
-        params,
-        headers,
-        data
-      )
-      .then((res) => {
-        resolve(res.value || null)
-      })
-      .catch((err) => {
-        resolve(null)
-      })
-  })
+      let headers = {
+        Authorization: getIpfsAuthHeader(),
+      };
+
+      let data = {};
+      network
+        .postRequest(url, params, headers, data)
+        .then((res) => {
+          resolve(res.value || null);
+        })
+        .catch((err) => {
+          resolve(null);
+        });
+    });
 
   // eslint-disable-next-line class-methods-use-this
   async getFiles(names) {
-    console.log("Requesting files from IPFS")
+    console.log("Requesting files from IPFS");
 
     const requestURL = `${baseInfuraURL}/cat`;
 
@@ -68,29 +67,24 @@ class IPFSStorageNetwork extends StorageNetwork {
 
     const data = {};
 
-    const requests = names.map(async name => {
+    const requests = names.map(async (name) => {
       let params = {
-        arg: name
-      }
+        arg: name,
+      };
 
       return new Promise((resolve) => {
         network
-          .postRequest(
-            requestURL,
-            params,
-            headers,
-            data
-          )
-          .then(res => {
-            resolve(res || null)
+          .postRequest(requestURL, params, headers, data)
+          .then((res) => {
+            resolve(res || null);
           })
           .catch(() => {
-            console.log("Request failed")
+            console.log("Request failed");
             resolve(null);
-          })
-      })
-    })
-    return (await Promise.allSettled(requests));
+          });
+      });
+    });
+    return await Promise.allSettled(requests);
   }
 
   async uploadAndGetPathAsBytes(file) {
@@ -104,4 +98,4 @@ class IPFSStorageNetwork extends StorageNetwork {
   }
 }
 
-export default IPFSStorageNetwork
+export default IPFSStorageNetwork;
