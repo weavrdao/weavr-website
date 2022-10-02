@@ -9,9 +9,13 @@ import {
   whitelistState,
   whitelistGetters,
   whitelistActions,
-  whitelistMutations
+  whitelistMutations,
 } from "../whitelist";
-const {getMetaMaskProvider, getCoinbaseWalletProvider, getBraveProvider} = require("../data/network/web3/ethereum/providers.js")
+const {
+  getMetaMaskProvider,
+  getCoinbaseWalletProvider,
+  getBraveProvider,
+} = require("../data/network/web3/ethereum/providers.js");
 
 /**
  * TODO - Abstrucked -
@@ -149,30 +153,28 @@ const actions = {
   },
   async connectWallet(context, params) {
     console.log("into connectwallet: ", params.wallet);
-    let provider, walletState
-    
+    let provider, walletState;
+
     const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
     const balance = await token.getTokenBalance(
       CONTRACTS.FRBC,
       walletState.address
     );
-    Promise.all([symbol, balance]).then(
-      (res) => {
-        console.log(res)
-      }
-    )
+    Promise.all([symbol, balance]).then((res) => {
+      console.log(res);
+    });
     walletState = new WalletState(
-    walletState.address,
-    walletState.ethBalance,
-    ethers.utils.formatEther(balance).toString(),
-    symbol
+      walletState.address,
+      walletState.ethBalance,
+      ethers.utils.formatEther(balance).toString(),
+      symbol
     );
     context.commit("setWallet", walletState);
-},
+  },
 
   async syncWallet(context, params) {
     console.log("SYNC");
-    let { $toast} = params
+    let { $toast } = params;
     // const toast = createToaster({});
     let walletState = await wallet.getState(params.wallet);
     const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
@@ -180,27 +182,24 @@ const actions = {
       CONTRACTS.FRBC,
       walletState.address
     );
-    Promise.all([walletState, symbol, balance]).then(
-      (val) => {
-        console.log(val);
-      }
-    )
+    Promise.all([walletState, symbol, balance]).then((val) => {
+      console.log(val);
+    });
 
     const isWhitelisted = await whitelist.checkWhitelistedStatus(
       CONTRACTS.WEAVR,
-      walletState.address,
-    )
-    
-    console.log("Setting whitelist getter" + isWhitelisted);
+      walletState.address
+    );
+
     context.commit("setWhitelisted", isWhitelisted);
-    
+
     walletState = new WalletState(
       walletState.address,
       walletState.ethBalance,
       ethers.utils.formatEther(balance).toString(),
       symbol
     );
-  
+
     context.commit("setWallet", walletState);
     console.log(await wallet.getState());
     $toast.clear();
@@ -515,8 +514,7 @@ const mutations = {
   },
 
   setWalletConnetected(state) {
-    if(state.user.wallet.connected != null)
-    !state.user.wallet.connected;
+    if (state.user.wallet.connected != null) !state.user.wallet.connected;
   },
 
   ...whitelistMutations,

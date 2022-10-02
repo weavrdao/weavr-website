@@ -1,13 +1,13 @@
 export function whitelistState() {
   return {
     whitelisted: null,
-  }
+  };
 }
 
 export const whitelistGetters = {
   isWhitelisted(state) {
     return state.whitelisted;
-  }
+  },
 };
 
 export const whitelistActions = (whitelistService) => ({
@@ -19,17 +19,16 @@ export const whitelistActions = (whitelistService) => ({
         assetId,
         userWalletAddress
       );
-      console.log(`WHITELISTED: ${whitelisted}`);
       context.commit("setWhitelisted", whitelisted);
-    } catch(error) {
+    } catch (error) {
       console.log("Error fethcing whitelist status");
       console.error(error);
     }
-  }
+  },
 });
 
 export const whitelistMutations = {
   setWhitelisted(state, whitelisted) {
     state.whitelisted = whitelisted;
-  }
-}
+  },
+};
