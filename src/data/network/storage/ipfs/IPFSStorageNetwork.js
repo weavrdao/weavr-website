@@ -96,6 +96,9 @@ class IPFSStorageNetwork extends StorageNetwork {
       throw new Error("Could not upload files to IPFS");
     }
   }
-}
+  async uploadImage(file) {
+        
+  }
 
-export default IPFSStorageNetwork;
+}
+  export default IPFSStorageNetwork;

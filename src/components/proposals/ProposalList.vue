@@ -32,7 +32,7 @@ export default {
   name: "ProposalList",
   data() {
     return {
-      filterMenuIsOpen: false,
+      filterMenuIsOpen: true,
       // Create object with shape { [proposalType]: true }
       proposalTypesFilter: Object.fromEntries(
         Object.values(ProposalTypes)
@@ -59,6 +59,7 @@ export default {
   },
   computed: {
     filteredProposals() {
+      console.log(this.proposals)
       return this.proposals
         .filter(proposal => this.proposalTypesFilter[proposal.type])
         .sort((p1, p2) => p1.endTimestamp < p2.endTimestamp);

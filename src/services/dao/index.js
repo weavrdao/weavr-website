@@ -47,7 +47,7 @@ class DAO {
         return mapper.mapProposals(response.data.frabric);
       }
     );
-
+      console.log("PROPOSAL FROM DAO.GET_PROPOSALS_FOR_ASSETS\n\n", proposals)
     // Fetch and append off-chain data
     try {
       const offChainData = await this.storageNetwork.getFiles(
@@ -86,7 +86,7 @@ class DAO {
     } catch (e) {
       console.log(e);
     }
-
+    console.log("DAO_@2:\n\n", proposals);
     return proposals;
   }
 

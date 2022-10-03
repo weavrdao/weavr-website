@@ -35,7 +35,11 @@ export default {
         {
           id: "threadProposal",
           name: "Thread Proposal",
-        }
+        },
+         {
+          id: "dummyProposal",
+          name: "Dummy Proposal",
+        },
       ],
     }
   },

@@ -143,74 +143,20 @@ export default {
       this.$router.back();
     },
 
-    createProposal() {
-      this.$router.push(`/dao/${this.assetId}/paperProposal`);
-    },
-  
-    isNumber(evt) {
-      evt = evt ? evt : window.event;
-      var charCode = evt.which ? evt.which : evt.keyCode;
-      if (
-        charCode > 31 &&
-        (charCode < 48 || charCode > 57) &&
-        charCode !== 46
-      ) {
-        evt.preventDefault();
-      } else {
-        return true;
-      }
-    },
-    /* eslint-disable indent */
-    orderInputUpdated(index, event) {
-      switch (index) {
-        case 0:
-          this.orderFromValue = event.target.value;
-          this.orderToValue = this.convertToShares(
-            this.orderFromValue
-          ).toString();
-          break;
-        case 1:
-          this.orderToValue = event.target.value;
-          this.orderFromValue = this.convertToETH(this.orderToValue).toString();
-          break;
-        default:
-          break;
-      }
-    },
-  
-    convertToETH(shares) {
-      return shares * this.askPrice;
-    },
-  
-    convertToShares(eth) {
-      return eth / this.askPrice;
-    },
-  
-    async performSwap() {
-      await this.swap({
-        asset: this.asset,
-        amount: this.orderToValue,
-        $toast: this.$toast,
-      });
-      this.orderFromValue = 0;
-      this.orderToValue = 0;
+    data() {
+      return {
+        numberFormat: new Intl.NumberFormat("en-US", {
+          maximumSignificantDigits: 3,
+        }),
+        orderFromValue: "",
+        orderToValue: "",
+        proposalsList: this.proposals,
+      };
     },
   },
-
-  data() {
-    return {
-      numberFormat: new Intl.NumberFormat("en-US", {
-        maximumSignificantDigits: 3,
-      }),
-      orderFromValue: "",
-      orderToValue: "",
-      proposalsList: this.proposals,
-    };
-  },
-
   mounted() {
     this.refresh({ assetId: this.assetId, $toast: this.$toast });
     // this.syncWallet();
-  },
+  }
 };
 </script>

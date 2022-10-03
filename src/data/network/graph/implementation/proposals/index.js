@@ -207,6 +207,7 @@ export function mapTokenActionProposals(rawTokenActionProposals) {
 export function mapThreadProposals(rawThreadProposals) {
   let threadProposals = [];
   try {
+    console.log(rawThreadProposals.startTimestamp);
     threadProposals = rawThreadProposals.map(({
       id,
       governor,
@@ -231,7 +232,7 @@ export function mapThreadProposals(rawThreadProposals) {
         null, // thread
         null, // frabric
         creator,
-        ProposalTypes.TokenAction,
+        ProposalTypes.Thread,
         state,
         mappedVotes,
         supermajority,

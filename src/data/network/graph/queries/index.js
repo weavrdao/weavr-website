@@ -16,6 +16,8 @@ export const THREAD_PROPOSAL_QUERY = gql`
           voteDirection
           count
         }
+        startTimestamp
+        endTimestamp
         supermajority
         info
       }
@@ -160,6 +162,8 @@ query ALL_PROPOSALS($id: String!) {
           voteDirection
           count
         }
+        startTimestamp
+        endTimestamp
         supermajority
         info
       }
