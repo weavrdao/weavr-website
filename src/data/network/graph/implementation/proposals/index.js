@@ -207,7 +207,6 @@ export function mapTokenActionProposals(rawTokenActionProposals) {
 export function mapThreadProposals(rawThreadProposals) {
   let threadProposals = [];
   try {
-    console.log(rawThreadProposals.startTimestamp);
     threadProposals = rawThreadProposals.map(({
       id,
       governor,

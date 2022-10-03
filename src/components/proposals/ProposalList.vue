@@ -32,7 +32,7 @@ export default {
   name: "ProposalList",
   data() {
     return {
-      filterMenuIsOpen: true,
+      filterMenuIsOpen: false,
       // Create object with shape { [proposalType]: true }
       proposalTypesFilter: Object.fromEntries(
         Object.values(ProposalTypes)

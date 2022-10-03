@@ -7,7 +7,6 @@ import newParticipantProposal from "@/components/proposals/newParticipantProposa
 import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue";
 import newTokenAction from "@/components/proposals/newTokenAction.vue";
 import newThreadProposal from "@/components/proposals/newThreadProposal.vue";
-import newDummyProposal from "@/dummyProposal/newDummyProposal.vue";
 import SingleProposal from "@/components/proposals/SingleProposal.vue";
 import vouch from "@/components/proposals/vouch"
 import tokenDetails from "@/components/sections/TokenDetails.vue"
@@ -74,11 +73,6 @@ const router = new createRouter({
           path: "threadProposal",
           component: Modal,
           props: { assetId: "", component: newThreadProposal },
-        },
-        {
-          path: "dummyProposal",
-          component: Modal,
-          props: { assetId: "", component: newDummyProposal },
         },
         {
           path: "proposal/:proposalId",
