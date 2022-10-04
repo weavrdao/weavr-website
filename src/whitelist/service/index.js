@@ -1,10 +1,11 @@
 import DaoContract from "../contracts/daoContract";
 import WhitelistInterface from "../contracts/whitelistContract";
 import gql from "graphql-tag";
+import { CONTRACTS } from "../../services/constants";
 
 
 const WHITELIST_QUERY = gql`
-  query Whitelist($weav: String!, $address: String! ) {
+  query Whitelist($weav: String! ) {
     frabric(id: $weav){  
     token {
       whitelist {
@@ -12,7 +13,7 @@ const WHITELIST_QUERY = gql`
         kycHash
       }
     }
-    participants(address: $address) {
+    participants {
       id
       address
       type
@@ -39,11 +40,10 @@ class Whitelist {
       .query(
         WHITELIST_QUERY, 
         {
-          weav: process.env.VUE_APP_WEAVR_ADDRESS,
-          address: userAddress
+          weav: CONTRACTS.WEAVR.toLowerCase(),
         }, 
         (mapper, response) => { 
-          console.log(response.data);
+          console.log("WHITELIST_SERVICE___",response.data);
           return mapper.mapWeavrWhitelist(response.data)
         
         }

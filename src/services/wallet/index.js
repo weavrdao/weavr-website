@@ -16,21 +16,21 @@ class Wallet {
     console.log("WALLET_PROVIDER: ", provider)
     
     Promise.all([await this.client.syncWallet(provider)])
-    // const address = await this.client.getWalletAddress()
-    // const balance = await this.client.getWalletEthBalance()
-    // let values = await Promise.all([
-    //   address, 
-    //   balance
-    // ])
-    // console.log(values);
+    const address = await this.client.getWalletAddress()
+    const balance = await this.client.getWalletEthBalance()
+    let values = await Promise.all([
+      address, 
+      balance
+    ])
+    console.log(values);
     const state = new WalletState(
-      "sadsa",
-      "sadsadsad",
+      values[0],
+      values[1],
       0,
       "_FRBC",
       0
     )
-    console.log("end of wallet");
+    console.log("end of wallet ", state);
     return state
   }
 

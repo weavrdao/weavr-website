@@ -176,7 +176,7 @@ const actions = {
     // const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
     
     const tokenInfo = await token.getTokenInfo()
-
+    console.log("STATE_TOKENINFO___", tokenInfo);
     Promise.all([walletState]).then((val) => {
       console.log(val);
     });

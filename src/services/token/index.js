@@ -1,9 +1,11 @@
 import TokenContract from "../../data/network/web3/contracts/tokenContract";
 import gql from "graphql-tag";
+import { CONTRACTS } from "../constants";
 
 const TOKEN_INFO_QUERY = gql`
   query WeavTokenInfo($weav: String!){
     frabric(id: $weav) {
+      
       token{
         id
         name
@@ -34,19 +36,21 @@ export default class Token {
   }
 
   async getTokenInfo() {
-    var tokenInfo = await this.graphQLAPIClient
+    console.log(CONTRACTS.WEAVR);
+    const toke = "0x43240c0f5dedb375afd28206e02110e8fed8cfc0".toLowerCase()
+    let tokenInfo = await this.graphQLAPIClient
     .query(
       TOKEN_INFO_QUERY, 
       {
-        weav: process.env.VUE_APP_TOKEN_ADDRESS,
+        weav: toke,
       }, 
       (mapper, response) => { 
-        console.log("TOKEN_INFO_TOKEN_SERVICE\n",response.data.frabric.token);
+        console.log("TOKEN_INFO_TOKEN_SERVICE\n",response.data);
         return mapper.mapTokenInfo(response.data)
       
       }
     )
-
+    console.log("TOIKEN_INFO___", tokenInfo);
     return tokenInfo
   }
   async getTokenBalance(tokenAddress, userAddress) {

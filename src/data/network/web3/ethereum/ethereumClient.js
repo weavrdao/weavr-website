@@ -41,7 +41,9 @@ class EthereumClient {
         this.walletProvider = new ethers.providers.Web3Provider(metamask)
         const connector = new MetaMaskConnector(metamask)
         this.account = await connector.getAddress()
+        this.walletSigner = await connector.getSigner(await connector.getChainId());
         console.log(this.account)
+        return
       } 
       catch(error) {   
         console.log(error)
