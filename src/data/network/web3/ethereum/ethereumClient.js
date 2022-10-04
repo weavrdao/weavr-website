@@ -30,11 +30,13 @@ class EthereumClient {
 
   async syncWallet(wallet) {
     // Using in-browser wallet to access wallet state and sign transactions
+    console.log("WALLET_PROVIDER 2:", wallet)
     if(wallet == "metamask") {
       try{
         
         const metamask = window.ethereum
         this.walletProvider = new ethers.providers.Web3Provider(metamask)
+         console.log(this.walletProvider ? "WALLET_PROVIDER_OK": "ERROR EROOR EOORORRORO");
         this.walletSigner = this.walletProvider.getSigner()
         if(this.walletSigner) return
         else throw new Error("Error in provider creation")
