@@ -34,7 +34,7 @@ class EthereumClient {
     if(wallet == "metamask") {
       try{
         
-        const metamask = window.ethereum
+        const metamask = getMetaMaskProvider()
         this.walletProvider = new ethers.providers.Web3Provider(metamask)
          console.log(this.walletProvider ? "WALLET_PROVIDER_OK": "ERROR EROOR EOORORRORO");
         this.walletSigner = this.walletProvider.getSigner()
