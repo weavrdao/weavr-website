@@ -12,7 +12,7 @@
           The first totally decentralized Real estate market. Invest in
           tokenized Real Estate, Manage it, earn, and sell anytime.
         </p>
-        <div class="button is-primary mt-3 is-size-5">Authenticate</div>
+        <div class="button is-primary mt-3 is-size-5" @click="openConnectWalletPage">Authenticate</div>
       </div>
       <div class="column">
         <div class="image">
