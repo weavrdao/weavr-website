@@ -38,7 +38,10 @@ class EthereumClient {
         this.walletProvider = new ethers.providers.Web3Provider(metamask)
          console.log(this.walletProvider ? "WALLET_PROVIDER_OK": "ERROR EROOR EOORORRORO");
         this.walletSigner = this.walletProvider.getSigner()
-        if(this.walletSigner) return
+        if(this.walletSigner) {
+          console.log("ALL_GOOD_RETURN_JOME")
+          return
+        }
         else throw new Error("Error in provider creation")
       
       } 
