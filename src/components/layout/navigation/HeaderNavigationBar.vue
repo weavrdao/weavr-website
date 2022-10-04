@@ -44,7 +44,7 @@
 
       <div class="navbar-end">
         <div class="navbar-item">
-          <SignerAddress />
+          <!-- <SignerAddress /> -->
         </div>
       </div>
     </div>
@@ -54,13 +54,13 @@
 </template>
 
 <script>
-import SignerAddress from '../../views/address/SignerAddress.vue'
+// import SignerAddress from '../../views/address/SignerAddress.vue'
 import { useRoute } from 'vue-router'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'HeaderHavigationBar',
   components: {
-    SignerAddress,
+    // SignerAddress,
   },
   data() {
     return {
