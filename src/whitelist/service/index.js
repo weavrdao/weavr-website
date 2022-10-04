@@ -2,24 +2,6 @@ import DaoContract from "../contracts/daoContract";
 import WhitelistInterface from "../contracts/whitelistContract";
 import gql from "graphql-tag";
 
-/**
- * 
-      frabrics {
-    id
-    token {
-      whitelist {
-        person
-        kycHash
-      }
-    }
-    participants {
-      id
-      address
-      type
-    }
-    
-	}
- */
 
 const WHITELIST_QUERY = gql`
   query Whitelist($weav: String!, $address: String! ) {
@@ -48,8 +30,6 @@ class Whitelist {
     this.client = ethereumClient;
     this.graphQLAPIClient = graphApiClient
   }
-
-  
 
   async checkWhitelistedStatus(userAddress) {
     // const daoContract = new DaoContract(this.client, weavrAddress);

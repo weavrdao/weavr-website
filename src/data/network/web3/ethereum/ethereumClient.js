@@ -37,7 +37,7 @@ class EthereumClient {
         const metamask = getMetaMaskProvider()
         this.walletProvider = new ethers.providers.Web3Provider(metamask)
          console.log(this.walletProvider ? "WALLET_PROVIDER_OK": "ERROR EROOR EOORORRORO");
-        this.walletSigner = this.walletProvider.getSigner()
+        this.walletSigner =  this.walletProvider.getSigner(0)
         if(this.walletSigner) {
           console.log("ALL_GOOD_RETURN_JOME")
           this.walletSigner.getAddress()
