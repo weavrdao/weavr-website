@@ -1,25 +1,34 @@
 <template>
-<div class="container">
-<div class="columns is-desktop is-centered">
-    <div class="column p-5">
-      <h1 class="title has-text-white is-size-1">
-        Buy, Sell
-      <br />and
-      <span class="has-text-mediumBlue">Build</span>
-      </h1>
-     
-      <p class="is-size-4">
-        The first totally decentralized Real estate market. Invest in
-                    tokenized Real Estate, Manage it, earn, and sell anytime.
-      </p>
-       <div class="button is-primary mt-3 is-size-5">Authenticate</div>
+<div class="container p-5">
+  <div class="columns is-desktop is-centered ">
+      <div class="column p-5">
+        <h1 class="title has-text-white is-size-1">
+          Buy, Sell
+        <br />and
+        <span class="has-text-mediumBlue">Build</span>
+        </h1>
+      
+        <p class="is-size-4">
+          The first totally decentralized Real estate market. Invest in
+          tokenized Real Estate, Manage it, earn, and sell anytime.
+        </p>
+        <div class="button is-primary mt-3 is-size-5">Authenticate</div>
+      </div>
+      <div class="column">
+        <div class="image">
+          <img src="../../assets/whitelist-img.png" alt="">
+        </div>
+      </div>
+  </div>
+  <div class="box has-background-white p-5 has-text-darkGray columns">
+    <div class="column is-two-thirds p-3">
+      <h1 class="is-size-3"><b>Gain Access to our Marketplace</b></h1>
     </div>
     <div class="column">
-      <div class="image">
-        <img src="../../assets/whitelist-img.png" alt="">
-      </div>
+      the rest
     </div>
-</div>
+   
+  </div>
 </div>
 
 </template>
