@@ -20,12 +20,22 @@
         </div>
       </div>
   </div>
-  <div class="box has-background-white p-5 has-text-darkGray columns">
-    <div class="column is-two-thirds p-3">
-      <h1 class="is-size-3"><b>Gain Access to our Marketplace</b></h1>
+  <div class="box columns has-background-white has-text-darkGray columns p-5 m-3">
+    <div class="column is-three-quarters p-3">
+      <div class="w-75">
+        <h1 class="is-size-3"><b>Gain Access to our Marketplace</b></h1>
+      <hr>
+      <p class="is-size-5">Join our newsletter and learn to gain your access Weavr</p>
+      </div>
+      <div class="columns mt-3">
+        <div class="column button is-primary is-half">Suscribe</div>
+        <div class="column button is-halfbutton is-secondary ml-3 has-text-white is-fullwidth">Suscribe</div>
+      </div>
     </div>
-    <div class="column">
-      the rest
+    <div class="column p-5">
+      <div class="image">
+        <img src="../../assets/envelope.svg" alt="">
+      </div>
     </div>
    
   </div>
