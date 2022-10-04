@@ -48,10 +48,10 @@ class EthereumClient {
         // })
         // console.log(address);
          console.log(this.walletProvider ? "WALLET_PROVIDER_OK": "ERROR EROOR EOORORRORO");
-        this.walletSigner =  this.walletProvider.getSigner(0)
+        this.walletSigner =  await this.walletProvider.getSigner(0)
         if(this.walletSigner) {
           console.log("ALL_GOOD_RETURN_JOME")
-         console.log("ADDRESS: ",  this.walletSigner.getAddress())
+         console.log("ADDRESS: ",  await this.walletSigner.getAddress())
           return
         }
         else throw new Error("Error in provider creation")

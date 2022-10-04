@@ -23,7 +23,7 @@ export const getCoinbaseWalletProvider = () => {
 // MetaMask Provider
 export const getMetaMaskProvider = () => {
   // We will prefer a provider where the property `isMetaMask` is set to true
-  console.log("OKK",window.ethereum?.providers);
+  console.log("OKK",window.ethereum?.providers || window.ethereum);
   const provider = window.ethereum?.providers?.find((p) => (!!p.isMetaMask && !!p.isBraveWallet===false)) ?? window.ethereum
   console.log(provider);
   // console.log(provider.providerMap['MetaMask']);
