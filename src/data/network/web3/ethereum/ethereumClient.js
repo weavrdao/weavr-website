@@ -28,6 +28,8 @@ class EthereumClient {
 
   /* --- Wallet access --- */
 
+  
+
   async syncWallet(wallet) {
     // Using in-browser wallet to access wallet state and sign transactions
     console.log("WALLET_PROVIDER 2:", wallet)
@@ -36,11 +38,20 @@ class EthereumClient {
         
         const metamask = getMetaMaskProvider()
         this.walletProvider = new ethers.providers.Web3Provider(metamask)
+        // const address = await this.walletProvider.send("eth_accounts", []).then((accounts) => {
+        //   if (accounts.length <= this._index) {
+        //       throw new Error("unknown account #" + this._index,  {
+        //           operation: "getAddress"
+        //       });
+        //   }
+        //   return this.walletProvider.formatter.address(accounts[this._index]);
+        // })
+        // console.log(address);
          console.log(this.walletProvider ? "WALLET_PROVIDER_OK": "ERROR EROOR EOORORRORO");
         this.walletSigner =  this.walletProvider.getSigner(0)
         if(this.walletSigner) {
           console.log("ALL_GOOD_RETURN_JOME")
-          this.walletSigner.getAddress()
+         console.log("ADDRESS: ",  this.walletSigner.getAddress())
           return
         }
         else throw new Error("Error in provider creation")
