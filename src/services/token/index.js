@@ -38,7 +38,7 @@ export default class Token {
     .query(
       TOKEN_INFO_QUERY, 
       {
-        weav: process.env.VUE_APP_WEAVR_ADDRESS,
+        weav: process.env.VUE_APP_TOKEN_ADDRESS,
       }, 
       (mapper, response) => { 
         console.log("TOKEN_INFO_TOKEN_SERVICE\n",response.data.frabric.token);
