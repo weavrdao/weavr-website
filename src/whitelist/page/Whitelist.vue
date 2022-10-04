@@ -1,22 +1,21 @@
 <template>
 <div class="container p-5">
   <div class="columns is-desktop is-centered ">
-      <div class="column p-5">
-        <h1 class="title has-text-white is-size-1">
+      <div class="column p-5 mt-6 connect-container">
+        <h1 class="title has-text-white is-size-1 p-6" >
           Buy, Sell
         <br />and
         <span class="has-text-mediumBlue">Build</span>
         </h1>
       
         <p class="is-size-4">
-          The first totally decentralized Real estate market. Invest in
-          tokenized Real Estate, Manage it, earn, and sell anytime.
+          
         </p>
-        <div class="button is-primary mt-3 is-size-5" @click="openConnectWalletPage">Authenticate</div>
+        <div class="button is-primary ml-6  is-size-5 " @click="openConnectWalletPage">Authenticate</div>
       </div>
-      <div class="column">
-        <div class="image">
-          <img src="../../assets/whitelist-img.png" alt="">
+      <div class="column logo-container p-6">
+        <div class="image is-fullwidth p-4">
+          <img class="p-6" src="../../assets/whitelist-img.png" alt="">
         </div>
       </div>
   </div>
@@ -28,8 +27,8 @@
       <p class="is-size-5">Join our newsletter and learn to gain your access Weavr</p>
       </div>
       <div class="columns mt-3">
-        <div class="column button is-primary is-half">Suscribe</div>
-        <div class="column button is-halfbutton is-secondary ml-3 has-text-white is-fullwidth">Suscribe</div>
+        <div class="column button is-primary is-fullwidth">Suscribe</div>
+        <div class="column button  is-secondary ml-3 has-text-white is-fullwidth">Suscribe</div>
       </div>
     </div>
     <div class="column p-5">

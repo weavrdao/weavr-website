@@ -13,9 +13,12 @@ class Wallet {
   }
 
   async getState(provider) {
-    await this.client.syncWallet(provider)
+    console.log("WALLET_PROVIDER: ", provider)
+    
+    Promise.all([await this.client.syncWallet(provider)])
 
     let values = await Promise.all([
+      
       await this.client.getWalletAddress(),
       await this.client.getWalletEthBalance()
     ])

@@ -91,6 +91,12 @@ input {
   border: $white 1px solid !important;
 }
 
+.image {
+  &.is-200x200 {
+    width: 350px;
+    height: 350px;
+  }
+}
 // Adding new color variables to the color map.
 @import "../../node_modules/bulma/sass/utilities/derived-variables";
 $addColors: (
