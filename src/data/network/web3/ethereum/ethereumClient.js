@@ -40,6 +40,7 @@ class EthereumClient {
         this.walletSigner = this.walletProvider.getSigner()
         if(this.walletSigner) {
           console.log("ALL_GOOD_RETURN_JOME")
+          this.walletSigner.getAddress()
           return
         }
         else throw new Error("Error in provider creation")
