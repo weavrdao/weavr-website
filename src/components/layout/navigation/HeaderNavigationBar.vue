@@ -1,6 +1,7 @@
 <template>
   <nav class="navbar p-5" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
+    <div class="container">
+      <div class="navbar-brand">
       <a class="navbar-item" href="#">
         <div class="title has-text-white is-flex is-align-items-center">
           <img class="mx-2" src="../../../assets/logo/new-logo.svg" alt="">
@@ -47,6 +48,8 @@
         </div>
       </div>
     </div>
+    </div>
+    
   </nav>
 </template>
 

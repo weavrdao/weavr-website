@@ -27,7 +27,7 @@ class Wallet {
       "_FRBC",
       0
     )
-
+    console.log("end of wallet");
     return state
   }
 

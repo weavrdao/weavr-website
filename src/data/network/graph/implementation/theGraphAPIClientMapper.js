@@ -8,7 +8,8 @@ import {
   mapParticipantProposals,
   mapTokenActionProposals,
   mapThreadProposals,
-  mapVouchers
+  mapVouchers,
+  mapWeavrWhitelist
 } from "./proposals";
 
 class TheGraphAPIMapper extends GraphQLAPIMapper {
@@ -23,6 +24,25 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
     if (!rawVouchers || !rawVouchers.length < 1) return [];
 
     return  rawVouchers.length
+  }
+
+  mapWeavrWhitelist(rawWeavrWhitelistRecords) {
+    console.log(rawWeavrWhitelistRecords.frabric.participants)
+    const participants = rawWeavrWhitelistRecords.frabric.participants.map( record => {
+      console.log("1\n",record.address);
+      return record.address
+    })
+    const whitelisted = rawWeavrWhitelistRecords.frabric.token.whitelist.map( record => {
+      console.log("2\n",record.person)
+      return record.person
+    })
+    
+    return [... new Set(participants.concat( whitelisted))]
+  }
+
+  mapTokenInfo(rawWeavrTokenInfo) {
+    console.log(rawWeavrTokenInfo.frabric.token)
+    return rawWeavrTokenInfo.frabric.token
   }
 
   // Map all proposal types to a single array to be written to global state

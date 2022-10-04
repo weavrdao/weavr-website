@@ -33,9 +33,11 @@ class EthereumClient {
     if(wallet == "metamask") {
       try{
         
-        const metamask = window.ethereum?.providers ? getMetaMaskProvider() : window.ethereum
+        const metamask = window.ethereum
         this.walletProvider = new ethers.providers.Web3Provider(metamask)
         this.walletSigner = this.walletProvider.getSigner()
+        if(this.walletSigner) return
+        else throw new Error("Error in provider creation")
       
       } 
       catch(error) {

@@ -48,12 +48,14 @@ class ServiceProvider {
   static token() {
     return new Token(
       ethereumClient,
+      graphQLAPIClient
     )
   }
 
   static whitelist() {
     return new Whitelist(
       ethereumClient,
+      graphQLAPIClient
     )
   }
 }

@@ -1,19 +1,8 @@
 <template>
   <div v-if="assetId" class="container p-5 is-dark">
-    <StackNavigationBar @onBack="goBack" :address="assetId" />
-    <NewProposalSelector/>
-    <RefreshButton :assetId="assetId"/>
-    <div class="columns is-variable is-8">
-      <ProposalList
-        :proposals="activeProposals"
-        :assetId="assetId"
-        :proposalStatus="`Active Proposals`"/>
-      <ProposalList
-        :proposals="pastProposals.concat(cancelledProposals)"
-        :assetId="assetId"
-        :proposalStatus="`Past Proposals`"/>
+    <div class="container">
+      hahahahaha
     </div>
-      <router-view :assetId="assetId"></router-view>
   </div>
 </template>
 
@@ -36,10 +25,8 @@
 <script>
 import { toFixedNumber } from "../../utils/common";
 import { mapGetters, mapActions } from "vuex";
-import StackNavigationBar from "../layout/navigation/StackNavigationBar.vue";
-import ProposalList from "../proposals/ProposalList.vue";
-import NewProposalSelector from "../sections/NewProposalSelector.vue";
-import RefreshButton from "../sections/RefreshButton.vue";
+
+
 
 export default {
   name: "Voting",
@@ -50,10 +37,7 @@ export default {
     },
   },
   components: {
-    StackNavigationBar,
-    ProposalList,
-    NewProposalSelector,
-    RefreshButton,
+
 },
   computed: {
     ...mapGetters({

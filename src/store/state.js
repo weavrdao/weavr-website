@@ -155,19 +155,15 @@ const actions = {
     console.log("into connectwallet: ", params.wallet);
     let provider, walletState;
 
-    const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
-    const balance = await token.getTokenBalance(
-      CONTRACTS.FRBC,
-      walletState.address
-    );
-    Promise.all([symbol, balance]).then((res) => {
-      console.log(res);
-    });
+    console.log("TOKEN_INFO: ", await token.getTokenInfo())
+    // Promise.all([symbol, balance]).then((res) => {
+    //   console.log(res);
+    // });
     walletState = new WalletState(
       walletState.address,
       walletState.ethBalance,
-      ethers.utils.formatEther(balance).toString(),
-      symbol
+      ethers.utils.formatEther(1).toString(),
+      "WEAV"
     );
     context.commit("setWallet", walletState);
   },
@@ -177,27 +173,28 @@ const actions = {
     let { $toast } = params;
     // const toast = createToaster({});
     let walletState = await wallet.getState(params.wallet);
-    const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
-    const balance = await token.getTokenBalance(
-      CONTRACTS.FRBC,
-      walletState.address
-    );
-    Promise.all([walletState, symbol, balance]).then((val) => {
+    // const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
+    
+    const tokenInfo = await token.getTokenInfo()
+
+    Promise.all([walletState]).then((val) => {
       console.log(val);
     });
-
-    const isWhitelisted = await whitelist.checkWhitelistedStatus(
-      CONTRACTS.WEAVR,
+     const isWhitelisted =
+      await whitelist.checkWhitelistedStatus(
       walletState.address
     );
 
     context.commit("setWhitelisted", isWhitelisted);
-
+    const balance = await token.getTokenBalance(
+      CONTRACTS.FRBC,
+      walletState.address
+    );
     walletState = new WalletState(
       walletState.address,
       walletState.ethBalance,
-      ethers.utils.formatEther(balance).toString(),
-      symbol
+      balance,
+      tokenInfo.symbol
     );
 
     context.commit("setWallet", walletState);

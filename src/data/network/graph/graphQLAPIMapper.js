@@ -3,6 +3,8 @@ class GraphQLAPIMapper {
   mapProposals(rawProposals) {}
   mapVotes(rawVotes) {}
   mapVouchers(rawVouchers) {}
+  mapWeavrWhitelist(rawWeavrWhitelistRecords) {}
+  // mapTokenInfo(rawWeavrTokenInfo) {}
 }
 
 export default GraphQLAPIMapper

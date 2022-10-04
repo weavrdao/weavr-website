@@ -1,20 +1,30 @@
 <template>
-<div class="container flex-center">
-    <div class="is-flex is-flex-direction-column is-centered mb-5 logo-container">
-      <img class="image is-128x128" src="../../assets/logo/new-logo.svg" alt="Weavr logo">
-      <h3 class="title has-text-white">WEAVR</h3>
+<div class="container">
+<div class="columns is-desktop is-centered">
+    <div class="column p-5">
+      <h1 class="title has-text-white is-size-1">
+        Buy, Sell
+      <br />and
+      <span class="has-text-mediumBlue">Build</span>
+      </h1>
+     
+      <p class="is-size-4">
+        The first totally decentralized Real estate market. Invest in
+                    tokenized Real Estate, Manage it, earn, and sell anytime.
+      </p>
+       <div class="button is-primary mt-3 is-size-5">Authenticate</div>
     </div>
-    <div class="flex-center connect-container">
-      <h3 v-if="!address">Please connect your wallet to continue</h3 >
-      <button class="button tag is-primary has-radius-xs is-large is-clickable " v-if="!address" @click="openConnectWalletPage">Connect Wallet</button>
-      <button class="button tag is-primary has-radius-xs is-large is-clickable " v-else-if="whitelisted" @click="continueToHomepage">Continue to Homepage</button>
-      <div class="flex-center" v-else>
-        <h3>We're sorry, you have not yet been whitelisted</h3>
-        <p>You are not currently able to access this application</p>
+    <div class="column">
+      <div class="image">
+        <img src="../../assets/whitelist-img.png" alt="">
       </div>
     </div>
 </div>
+</div>
+
 </template>
+
+
 
 <script>
 import { mapActions, mapGetters } from "vuex";

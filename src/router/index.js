@@ -22,7 +22,7 @@ const router = new createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/whitelist",
+      redirect: "/weavr",
     },
     {
       path: "/whitelist",
@@ -34,60 +34,60 @@ const router = new createRouter({
       props: {component: walletConnect}
     },
     {
-      path: "/".concat(DAO).concat("/:assetId"),
-      alias: "/".concat(DAO),
+      path: "/weavr",
+      alias: "/weavr",
       component: Homepage,
       props: { assetId:  CONTRACTS.WEAVR},
-      children: [
-        {
-          path: "tokenInfo",
-          component: Modal,
-          props: {assetId: "", component: tokenDetails}
-        },
-        {
-          path: "paperProposal",
-          component: Modal,
-          props: { assetId: "", component: newPaperProposal }
-        },
-        {
-          path: "participantProposal",
-          component: Modal,
-          props: { assetId: "", component: newParticipantProposal }
-        },
-        {
-          path: "upgradeProposal",
-          component: Modal,
-          props: { assetId: "", component: newUpgradeProposal }
-        },
-        {
-          path: "tokenProposal",
-          component: Modal,
-          props: { assetId: "", component: newTokenAction },
-        },
-        {
-          path: "vouch",
-          component: Modal,
-          props: { assetId: "", component: vouch }
-        },
-        {
-          path: "threadProposal",
-          component: Modal,
-          props: { assetId: "", component: newThreadProposal },
-        },
-        {
-          path: "proposal/:proposalId",
-          component: Modal,
-          props: { assetId: "", component: SingleProposal },
-          beforeEnter: async (to, from) => { 
-            const prop = await store.getters.proposalsPerAsset
-            if(!prop){
-              store.dispatch("refreshProposalsDataForAsset", {assetId: CONTRACTS.WEAVR })      
-            }            
-            // clear toast
-            return true
-          },
-        }
-      ]
+      // children: [
+      //   {
+      //     path: "tokenInfo",
+      //     component: Modal,
+      //     props: {assetId: "", component: tokenDetails}
+      //   },
+      //   {
+      //     path: "paperProposal",
+      //     component: Modal,
+      //     props: { assetId: "", component: newPaperProposal }
+      //   },
+      //   {
+      //     path: "participantProposal",
+      //     component: Modal,
+      //     props: { assetId: "", component: newParticipantProposal }
+      //   },
+      //   {
+      //     path: "upgradeProposal",
+      //     component: Modal,
+      //     props: { assetId: "", component: newUpgradeProposal }
+      //   },
+      //   {
+      //     path: "tokenProposal",
+      //     component: Modal,
+      //     props: { assetId: "", component: newTokenAction },
+      //   },
+      //   {
+      //     path: "vouch",
+      //     component: Modal,
+      //     props: { assetId: "", component: vouch }
+      //   },
+      //   {
+      //     path: "threadProposal",
+      //     component: Modal,
+      //     props: { assetId: "", component: newThreadProposal },
+      //   },
+      //   {
+      //     path: "proposal/:proposalId",
+      //     component: Modal,
+      //     props: { assetId: "", component: SingleProposal },
+      //     beforeEnter: async (to, from) => { 
+      //       const prop = await store.getters.proposalsPerAsset
+      //       if(!prop){
+      //         store.dispatch("refreshProposalsDataForAsset", {assetId: CONTRACTS.WEAVR })      
+      //       }            
+      //       // clear toast
+      //       return true
+      //     },
+      //   }
+      // ]
     },
     { path: "/:pathMatch(.*)*", name: "not-found", component: PageNotFound },
   ],
