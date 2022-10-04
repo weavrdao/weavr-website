@@ -1,6 +1,7 @@
 import { createToaster } from "@meforma/vue-toaster";
 const {  getCoinbaseWalletProvider, getMetaMaskProvider,  DEFAULT_CHAIN_ID} = require("./providers")
 import {CoinbaseConnector} from "./walletProviders/CoinbaseConnector.js"
+import {MetaMaskConnector} from "./walletProviders/MetaMaskConnector"
 import {toHex} from "@/utils/common.js"
 require("dotenv").config();
 const { ethers } = require("ethers");
@@ -38,27 +39,11 @@ class EthereumClient {
         
         const metamask = getMetaMaskProvider()
         this.walletProvider = new ethers.providers.Web3Provider(metamask)
-        // const address = await this.walletProvider.send("eth_accounts", []).then((accounts) => {
-        //   if (accounts.length <= this._index) {
-        //       throw new Error("unknown account #" + this._index,  {
-        //           operation: "getAddress"
-        //       });
-        //   }
-        //   return this.walletProvider.formatter.address(accounts[this._index]);
-        // })
-        // console.log(address);
-         console.log(this.walletProvider ? "WALLET_PROVIDER_OK": "ERROR EROOR EOORORRORO");
-        this.walletSigner =  await this.walletProvider.getSigner(0)
-        if(this.walletSigner) {
-          console.log("ALL_GOOD_RETURN_JOME")
-         console.log("ADDRESS: ",  await this.walletSigner.getAddress())
-          return
-        }
-        else throw new Error("Error in provider creation")
-      
+        const connector = new MetaMaskConnector(metamask)
+        this.account = await connector.getAddress()
+        console.log(this.account)
       } 
-      catch(error) {
-        
+      catch(error) {   
         console.log(error)
         const toast = createToaster({});
         toast.error("Something went wrong connecting to Metamask", {
