@@ -16,16 +16,16 @@ class Wallet {
     console.log("WALLET_PROVIDER: ", provider)
     
     Promise.all([await this.client.syncWallet(provider)])
-
-    let values = await Promise.all([
-      
-      await this.client.getWalletAddress(),
-      await this.client.getWalletEthBalance()
-    ])
-    console.log(values);
+    // const address = await this.client.getWalletAddress()
+    // const balance = await this.client.getWalletEthBalance()
+    // let values = await Promise.all([
+    //   address, 
+    //   balance
+    // ])
+    // console.log(values);
     const state = new WalletState(
-      values[0],
-      values[1] / Math.pow(10, 18),
+      "sadsa",
+      "sadsadsad",
       0,
       "_FRBC",
       0
