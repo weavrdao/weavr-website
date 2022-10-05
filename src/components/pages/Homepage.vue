@@ -2,7 +2,7 @@
  <div class="container p-5 is-dark">
   <div class="columns is-desktop is-centered  ">
       <div class="column p-5 mt-6 connect-container">
-        <h1 class="title has-text-white is-1 p-3" >
+        <h1 class="title  is-extra-large has-text-white is-large  p-3" >
           Buy, Sell
         <br />and
           <span class="has-text-mediumBlue">Build</span>
@@ -43,37 +43,37 @@
 
   <div class="columns mt-0">
       <div class="column is-full has-text-lightGray has-text-centered ">
-        <span class="is-size-3 has-border-bottom primary-border-2">
+        <span class="is-size-2 subtitle has-border-bottom primary-border-2">
           <!-- <unicon name="eye-slash" fill="lightGray"></unicon> -->
-          Real Estate Membership Community
+          <b>Real Estate Membership Community</b>
         </span>        
       </div>
   </div>
   
   <div class="box columns has-text-white p-5 ">
-    <div class="column is-half">
-      <div class="image">
+    <div class="column is-half is-5">
+      <div class="image p-3">
         <img src="../../assets/for-buyers.svg" alt="">
       </div>
     </div>  
     <div class="column is-half">
-      <div class="subtitle is-1 has-text-primary">For Buyers</div>
+      <div class="subtitle is-size-3 has-text-primary "><b>For Buyers</b></div>
       <div class="has-radius-md mb-3 has-background-darkGray py-3 px-0" v-for="text in forBuyers" :key="text">     
         <span class="has-radius-md p-3 has-background-primary">◉</span>
-        <span class="mx-2 has-radius-md has-text-white p-3">{{text}}</span>
+        <span class="has-radius-md has-text-white p-3">{{text}}</span>
       </div>
     </div>  
   </div>
 
   <div class="box columns has-text-white p-5 ">
     <div class="column is-half">
-      <div class="subtitle is-1 has-text-primary">For Builders</div>
+      <div class="subtitle is-size-3 has-text-primary"><b>For Builders</b></div>
       <div class="has-radius-md mb-3 has-background-darkGray py-3 px-0" v-for="text in forBuilders" :key="text">     
         <span class="has-radius-md p-3 has-background-primary">◉</span>
         <span class="mx-2 has-radius-md has-text-white p-3">{{text}}</span>
       </div>
     </div>
-    <div class="column is-half">
+    <div class="column is-half is-5">
       <div class="image">
         <img src="../../assets/for-builders.svg" alt="">
       </div>
@@ -81,10 +81,10 @@
   </div>
 
   <div class="box columns is-6 has-background-dimmedBlue">
-    <div class="column is-vcentered is-one-fifth p-6">
+    <div class="column is-vcentered is-one-fifth p-6 is-3">
       <div class="title is-1 text-align-">What makes us Unique?</div>
     </div> 
-    <div class="column is-full p-0">
+    <div class="column is-full p-5">
       <div class="columns is-multiline ">
         <div 
           class="column is-one-third has-radius-lg has-background-darkGray mt-4" 
@@ -134,7 +134,7 @@
       </div>
     </div>
   </div>
-  
+
 </div>
 </template>
 

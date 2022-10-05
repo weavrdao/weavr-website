@@ -5,13 +5,18 @@
 
 
 $family-sans-serif: "Poppins", sans-serif ;
-$family-sans: "Poppins", sans ;
+
+// $family-sans: "Poppins", sans ;
 @font-face {
-  font-family: "Poppins";
+  font-family: $family-sans-serif;
   src: "../assets/Poppins-Regular.ttf" format("truetype");
   
 }
 
+@font-face {
+  font-family: "Space Grotesk", sans-serif;
+  src: "../assets/SpaceGrotesk-Regular.ttf" format("truetype");
+}
 //####################################
 //#          FRABRIC THEME           #
 //####################################
@@ -55,8 +60,8 @@ $danger: $lightBlue;
 $transparent: rgba(0, 0, 0, 0);
 
 // Setup the new serif family
-$family-primary: $family-sans-serif;
-
+$family-primary: "Poppins", sans-serif;
+$familiy-secondary: "Space Grotesk", sans-serif;
 // Components and tags Styling
 $input-color: $lightBlue;
 
@@ -70,7 +75,9 @@ $small-radius: 10px;
 
 
 $modal-content-width: min(100%, 1000px);
-
+html {
+  font-family: $family-primary;
+}
 body {
   font-family: $family-primary;
 }
@@ -167,6 +174,11 @@ $colors: map-merge($colors, $addColors);
 }
 
 .title {
-  color: $lightGray
+  color: $lightGray;
+  font-family: serif !important;
+
+  &.is-extra-large {
+    font-size: 4rem;
+  }
 }
 @import "./markdown.scss";
