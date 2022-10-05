@@ -4,11 +4,12 @@
 @import "../../node_modules/bulma/sass/utilities/functions";
 
 
-$family-sans: "Poppins Sans", "sans-serif" ;
+$family-sans: "Poppins", "sans" ;
 
 @font-face {
   font-family: $family-sans;
   src: "../assets/Poppins-Regular.ttf";
+  
 }
 
 //####################################
@@ -147,6 +148,10 @@ $colors: map-merge($colors, $addColors);
   &:hover {
     filter: contrast(140%);
   }
+
+  &.is-secondary {
+    border: solid 1px $primary
+  }
 }
 
 .select {
@@ -157,5 +162,7 @@ $colors: map-merge($colors, $addColors);
   border-radius: $tiny-radius;
 }
 
-
+.title {
+  color: $lightGray
+}
 @import "./markdown.scss";
