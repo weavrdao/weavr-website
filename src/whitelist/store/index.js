@@ -1,6 +1,8 @@
+import { AUTH_COOKIE_KEY } from "../constants";
+import { getCookie } from "../cookie";
 export function whitelistState() {
   return {
-    whitelisted: null,
+    whitelisted: getCookie(AUTH_COOKIE_KEY) || null,
   };
 }
 
