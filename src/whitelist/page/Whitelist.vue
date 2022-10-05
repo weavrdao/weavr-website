@@ -78,6 +78,7 @@ export default {
     ...mapGetters({
       address: "userWalletAddress",
       whitelisted: "isWhitelisted",
+      guest: "isGuest"
     })
   },
   props: {
