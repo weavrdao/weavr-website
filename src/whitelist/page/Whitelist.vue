@@ -5,13 +5,34 @@
         <h1 class="title has-text-white is-size-1 p-6" >
           Buy, Sell
         <br />and
-        <span class="has-text-mediumBlue">Build</span>
-        </h1>
-      
-        <p class="is-size-4">
-          
-        </p>
-        <div class="button is-primary ml-6  is-size-5 " @click="openConnectWalletPage">Authenticate</div>
+          <span class="has-text-mediumBlue">Build</span>
+        </h1>    
+        <!-- <p class="is-size-4"></p> -->
+        <div class="columns is-3-desktop">
+          <div class="column">
+            <div class="
+              button 
+              is-primary 
+              is-fullwidth
+              is-size-5 " 
+              @click="openConnectWalletPage"
+            >
+              Authenticate
+            </div>
+          </div>
+          <div class="column">
+            <div class="
+              button 
+              is-secondary 
+              is-fullwidth 
+              has-text-white  
+              is-size-5 " @click="openGuestLogin"
+            >
+              Enter as Guest
+            </div>
+          </div>
+        </div>
+        
       </div>
       <div class="column logo-container p-6">
         <div class="image is-fullwidth p-4">
@@ -26,9 +47,13 @@
       <hr>
       <p class="is-size-5">Join our newsletter and learn to gain your access Weavr</p>
       </div>
-      <div class="columns mt-3">
-        <div class="column button is-primary is-fullwidth">Suscribe</div>
-        <div class="column button  is-secondary ml-3 has-text-white is-fullwidth">Suscribe</div>
+      <div class="columns is-3-desktop mt-3 ">
+        <div class="column">
+          <div class="button is-primary is-fullwidth">Suscribe</div>
+        </div>
+        <div class="column">
+          <div class="button is-secondary has-text-white is-fullwidth">Suscribe</div>
+        </div>
       </div>
     </div>
     <div class="column p-5">
@@ -66,6 +91,9 @@ export default {
     }),
     openConnectWalletPage () {
       this.$router.push("/walletConnect")
+    },
+    openGuestLogin() {
+      this.$router.push("/login")
     },
     continueToHomepage () {
       this.$router.push("/weavr");

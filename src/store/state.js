@@ -31,6 +31,7 @@ function state() {
   return {
     user: {
       wallet: WalletState,
+      isGuest: false,
       log: true,
       vouches: [],
     },
@@ -58,6 +59,9 @@ function state() {
 const getters = {
   isLoading(state) {
     return state.interface.isLoading;
+  },
+  isGuest(state) {
+    return state.user.isGuest;
   },
   userWalletAddress(state) {
     return state.user.wallet.address;
@@ -142,6 +146,16 @@ const getters = {
 };
 
 const actions = {
+  connectGuest(context, params) {
+    console.log(params.passwd===process.env.VUE_APP_DAILY_PASSWORD ? "yess":"noooo")
+    if(
+      params.passwd===process.env.VUE_APP_DAILY_PASSWORD
+    ){
+      context.commit("setConnectedAsGuest")
+    }
+     
+  },
+
   async fetchTokenInfo(context, params) {
     // const toast = params.$toast || createToaster({});
     const tokenAddress = params.tokenAddress || CONTRACTS.FRBC;
@@ -151,22 +165,22 @@ const actions = {
       totalSupply: ethers.utils.formatEther(supply),
     };
   },
-  async connectWallet(context, params) {
-    console.log("into connectwallet: ", params.wallet);
-    let provider, walletState;
+  // async connectWallet(context, params) {
+  //   console.log("into connectwallet: ", params.wallet);
+  //   let provider, walletState;
 
-    console.log("TOKEN_INFO: ", await token.getTokenInfo())
-    // Promise.all([symbol, balance]).then((res) => {
-    //   console.log(res);
-    // });
-    walletState = new WalletState(
-      walletState.address,
-      walletState.ethBalance,
-      ethers.utils.formatEther(1).toString(),
-      "WEAV"
-    );
-    context.commit("setWallet", walletState);
-  },
+  //   console.log("TOKEN_INFO: ", await token.getTokenInfo())
+  //   // Promise.all([symbol, balance]).then((res) => {
+  //   //   console.log(res);
+  //   // });
+  //   walletState = new WalletState(
+  //     walletState.address,
+  //     walletState.ethBalance,
+  //     ethers.utils.formatEther(1).toString(),
+  //     "WEAV"
+  //   );
+  //   context.commit("setWallet", walletState);
+  // },
 
   async syncWallet(context, params) {
     console.log("SYNC");
@@ -186,19 +200,29 @@ const actions = {
     );
 
     context.commit("setWhitelisted", isWhitelisted);
-    const balance = await token.getTokenBalance(
+    const balancePromise = await token.getTokenBalance(
       CONTRACTS.FRBC,
       walletState.address
     );
-    walletState = new WalletState(
-      walletState.address,
-      walletState.ethBalance,
-      balance,
-      tokenInfo.symbol
-    );
+    let balance = Promise.all([balancePromise]).then(
+      (bal) => {
+        console.log("BALANCE___", bal[0])
+        console.log(tokenInfo.symbol)
+        balance = ethers.utils.formatEther(bal[0])
+        walletState = new WalletState(
+          walletState.address,
+          walletState.ethBalance,
+          balance,
+          tokenInfo.symbol
+        );
+        context.commit("setWallet", walletState);
+        console.log(context.state.user.wallet);
+        return bal
+      }
+    )
+   
 
-    context.commit("setWallet", walletState);
-    console.log(await wallet.getState());
+    
     $toast.clear();
     $toast.success("Wallet fully synced", {
       duration: 1000,
@@ -513,9 +537,14 @@ const mutations = {
   setWalletConnetected(state) {
     if (state.user.wallet.connected != null) !state.user.wallet.connected;
   },
+  setConnectedAsGuest(state) {
+    state.user.isGuest = true
+  },
 
   ...whitelistMutations,
 };
+
+
 
 export default {
   state,

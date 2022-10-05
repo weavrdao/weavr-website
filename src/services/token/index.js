@@ -37,7 +37,7 @@ export default class Token {
 
   async getTokenInfo() {
     console.log(CONTRACTS.WEAVR);
-    const toke = "0x43240c0f5dedb375afd28206e02110e8fed8cfc0".toLowerCase()
+    const toke = CONTRACTS.WEAVR.toLowerCase()
     let tokenInfo = await this.graphQLAPIClient
     .query(
       TOKEN_INFO_QUERY, 

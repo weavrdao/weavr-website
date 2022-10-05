@@ -42,7 +42,7 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
 
   mapTokenInfo(rawWeavrTokenInfo) {
     console.log("MAPPER___", rawWeavrTokenInfo.frabric.token)
-    return {token: rawWeavrTokenInfo.frabric.token}
+    return rawWeavrTokenInfo.frabric.token
   }
 
   // Map all proposal types to a single array to be written to global state

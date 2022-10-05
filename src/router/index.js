@@ -2,14 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue"
 import Homepage from "@/components/pages/Homepage.vue"
-import newPaperProposal from "@/components/proposals/newPaperProposal.vue"
-import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue";
-import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue";
-import newTokenAction from "@/components/proposals/newTokenAction.vue";
-import newThreadProposal from "@/components/proposals/newThreadProposal.vue";
-import SingleProposal from "@/components/proposals/SingleProposal.vue";
-import vouch from "@/components/proposals/vouch"
-import tokenDetails from "@/components/sections/TokenDetails.vue"
+import Login from "@/components/sections/Login.vue"
 import walletConnect from "@/components/sections/WalletConnect.vue"
 import { WhitelistPage } from "../whitelist";
 import {CONTRACTS, DAO} from "../services/constants"
@@ -34,60 +27,14 @@ const router = new createRouter({
       props: {component: walletConnect}
     },
     {
+      path: "/login",
+      component: Modal,
+      props: {component: Login}
+    },
+    {
       path: "/weavr",
       alias: "/weavr",
-      component: Homepage,
-      props: { assetId:  CONTRACTS.WEAVR},
-      // children: [
-      //   {
-      //     path: "tokenInfo",
-      //     component: Modal,
-      //     props: {assetId: "", component: tokenDetails}
-      //   },
-      //   {
-      //     path: "paperProposal",
-      //     component: Modal,
-      //     props: { assetId: "", component: newPaperProposal }
-      //   },
-      //   {
-      //     path: "participantProposal",
-      //     component: Modal,
-      //     props: { assetId: "", component: newParticipantProposal }
-      //   },
-      //   {
-      //     path: "upgradeProposal",
-      //     component: Modal,
-      //     props: { assetId: "", component: newUpgradeProposal }
-      //   },
-      //   {
-      //     path: "tokenProposal",
-      //     component: Modal,
-      //     props: { assetId: "", component: newTokenAction },
-      //   },
-      //   {
-      //     path: "vouch",
-      //     component: Modal,
-      //     props: { assetId: "", component: vouch }
-      //   },
-      //   {
-      //     path: "threadProposal",
-      //     component: Modal,
-      //     props: { assetId: "", component: newThreadProposal },
-      //   },
-      //   {
-      //     path: "proposal/:proposalId",
-      //     component: Modal,
-      //     props: { assetId: "", component: SingleProposal },
-      //     beforeEnter: async (to, from) => { 
-      //       const prop = await store.getters.proposalsPerAsset
-      //       if(!prop){
-      //         store.dispatch("refreshProposalsDataForAsset", {assetId: CONTRACTS.WEAVR })      
-      //       }            
-      //       // clear toast
-      //       return true
-      //     },
-      //   }
-      // ]
+      component: Homepage
     },
     { path: "/:pathMatch(.*)*", name: "not-found", component: PageNotFound },
   ],
@@ -108,16 +55,19 @@ router.beforeEach((to, from) => {
     return true;
   }
 
-  if(to.fullPath === "/walletConnect") {
+  if(to.fullPath === "/walletConnect" || to.fullPath === "/login") {
     return true;
   }
+
   const address = store.getters.userWalletAddress;
-  const isConnected = ethers.utils.isAddress(address);
+  const guest = store.getters.isGuest;
+  const isConnected = ethers.utils.isAddress(address) || guest;
   if(!isConnected) {
     router.push("/");
   }
   const whitelisted = store.getters.isWhitelisted;
-  if(whitelisted) {
+  
+  if(whitelisted || guest) {
     if(!hasRedirectedAfterWhitelisting) {
       router.push(originalPath);
       hasRedirectedAfterWhitelisting = true;
