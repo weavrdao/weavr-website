@@ -4,7 +4,7 @@
 @import "../../node_modules/bulma/sass/utilities/functions";
 
 
-$family-sans: "Poppins", "sans" ;
+$family-sans: "Poppins Sans Regular", "sans" ;
 
 @font-face {
   font-family: $family-sans;
@@ -16,7 +16,8 @@ $family-sans: "Poppins", "sans" ;
 //#          FRABRIC THEME           #
 //####################################
 
-// COLORS
+// COLORS\
+$dimmedBlue: rgb(31, 28, 47 );
 $darkBlue: #000044;
 $mediumBlue: #5A50D8;
 $lightBlue: #968EFF;
@@ -41,7 +42,7 @@ $magenta-invert: findColorInvert($magenta);
 $mint-invert: findColorInvert($mint);
 $red-invert: findColorInver($red);
 $cyan-invert: findColorInver($cyan);
-
+$dimmedBlue-invert:  findColorInver($dimmedBlue);
 // SCHEME SETUP
 $scheme-main: $black;
 $scheme-color: $lightGray;
@@ -95,7 +96,9 @@ input {
 .has-full-borders {
   border: $white 1px solid !important;
 }
-
+.has-full-borders-primary {
+  border: $primary 1px solid !important;
+}
 .image {
   &.is-200x200 {
     width: 350px;
@@ -105,6 +108,7 @@ input {
 // Adding new color variables to the color map.
 @import "../../node_modules/bulma/sass/utilities/derived-variables";
 $addColors: (
+  "dimmedBlue": ($dimmedBlue, $dimmedBlue-invert),
   "darkBlue": ($darkBlue, $darkBlue-invert),
   "mediumBlue": ($mediumBlue, $mediumBlue-invert),
   "lightBlue": ($lightBlue, $lightBlue-invert),
