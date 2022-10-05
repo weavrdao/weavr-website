@@ -4,10 +4,10 @@
 @import "../../node_modules/bulma/sass/utilities/functions";
 
 
-$family-sans-serif: "Poppins Sans", "sans" ;
+$family-sans: "Poppins Sans", "sans-serif" ;
 
 @font-face {
-  font-family: $family-sans-serif;
+  font-family: $family-sans;
   src: "../assets/Poppins-Regular.ttf";
 }
 
