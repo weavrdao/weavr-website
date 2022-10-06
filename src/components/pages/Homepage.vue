@@ -10,33 +10,34 @@
         <!-- <p class="is-size-4"></p> -->
         <div class="columns is-3-desktop">
           <div class="column">
-            <div class="
+            <a class="
               button 
               is-primary 
               is-fullwidth
               is-size-5 " 
-              @click="openConnectWalletPage"
+              href="https://weavr-dao.gitbook.io/weavr-dao/" target="_blank"
             >
               Whitepaper
-            </div>
+            </a>
           </div>
           <div class="column">
-            <div class="
+            <a class="
               button 
               is-secondary 
               is-fullwidth 
               has-text-white  
-              is-size-5 " @click="openGuestLogin"
+              is-size-5 " 
+              href="https://gov.weavr.org" target="_blank"
             >
               Governance
-            </div>
+            </a>
           </div>
         </div>
         
       </div>
       <div class="column logo-container p-6">
         <div class="image is-fullwidth p-4">
-          <img class="p-6" src="../../assets/hero-image.svg" alt="">
+          <img class="p-6" src="../../assets/for-builders.svg" alt="">
         </div>
       </div>
   </div>
@@ -50,7 +51,7 @@
       </div>
   </div>
   
-  <div class="box columns has-text-white p-5 ">
+  <div class="box columns is-centered has-text-white p-5 ">
     <div class="column is-half is-5">
       <div class="image p-3">
         <img src="../../assets/for-buyers.svg" alt="">
@@ -59,23 +60,23 @@
     <div class="column is-half">
       <div class="subtitle is-size-3 has-text-primary "><b>For Buyers</b></div>
       <div class="has-radius-md mb-3 has-background-darkGray py-3 px-0" v-for="text in forBuyers" :key="text">     
-        <span class="has-radius-md p-3 has-background-primary">◉</span>
-        <span class="has-radius-md has-text-white p-3">{{text}}</span>
+        <span class="has-radius-md p-3 has-background-primary ">◉</span>
+        <span class="has-radius-md has-text-white p-3 is-size-7">{{text}}</span>
       </div>
     </div>  
   </div>
 
-  <div class="box columns has-text-white p-5 ">
+  <div class="box columns is-centered has-text-white p-5 ">
     <div class="column is-half">
       <div class="subtitle is-size-3 has-text-primary"><b>For Builders</b></div>
       <div class="has-radius-md mb-3 has-background-darkGray py-3 px-0" v-for="text in forBuilders" :key="text">     
         <span class="has-radius-md p-3 has-background-primary">◉</span>
-        <span class="mx-2 has-radius-md has-text-white p-3">{{text}}</span>
+        <span class="mx-2 has-radius-md has-text-white p-3 is-size-7 has-text-left">{{text}}</span>
       </div>
     </div>
-    <div class="column is-half is-5">
+    <div class="column is-half is-4">
       <div class="image">
-        <img src="../../assets/for-builders.svg" alt="">
+        <img src="../../assets/hero-image.svg" alt="">
       </div>
     </div>  
   </div>
@@ -108,7 +109,7 @@
     <div class="column is-half is-5">
       <div class="subtitle is-1 has-text-primary">Arbitrum Network</div>
       <div class="text has-text-lightGray">Arbitrum is a Layer 2 protocol that enables super fast and cheap EVM transactions, while relying on the Ethereum mainnet for security.</div>
-      <div class="button is-primary mt-4">Learn more</div>
+      <a class="button is-primary mt-4" href="https://arbitrum.io/" target="_blank" >Learn more</a>
     </div>  
   </div>
 
@@ -119,14 +120,11 @@
       <hr>
       <p class="is-size-5">Join our newsletter and learn to gain your access Weavr</p>
       </div>
-      <div class="columns is-3-desktop mt-3 ">
-        <div class="column">
-          <div class="button is-primary is-fullwidth">Suscribe</div>
-        </div>
-        <div class="column">
-          <div class="button is-secondary has-text-white is-fullwidth">Suscribe</div>
-        </div>
-      </div>
+        <a 
+          class="button is-primary"
+          href="https://3a567f7a.sibforms.com/serve/MUIEAAkS53zR0h7rhxExKB1X1JotCHaM4o7FBy9qRH3V7h92zXfDojr8PpuqQVRtRIYoeLgWddoOz_IVgW3DofxtESXPIwfentMntmPtVWwU_sTQTpYSt6ESaeVmSheGFH20mDIsMgM1UbzffXQ9ghnsJl8wKxqmH0Lxs7_Ppe1Kd6CVHsywoa4e0jFJBCru4UTyeIdV_z53X2yd"
+        >Subscribe
+      </a>
     </div>
     <div class="column p-5">
       <div class="image">
@@ -156,6 +154,10 @@
   transition: all 150ms;
   cursor: pointer;
   }
+.list-text{
+  text-align: left !important;
+  
+}
 .primary-border {
   border-color: $primary !important ;
 
@@ -183,12 +185,12 @@ export default {
       forBuyers:[
         "Buy property token in our marketplace",
         "Manage it collaboratively",
-        "Earn appreciation/rental in come",
+        "See your token value increase",
         "Sell anytime"
       ],
       forBuilders: [
         "Find the Real estate project of your dream",
-        "Submit your proposal to Frabric",
+        "Submit your proposal to Weavr",
         "Find likeminded investors who will help to buy it"
       ],
       uniquePoints: [
@@ -200,7 +202,7 @@ export default {
     {
         id: 2,
         heading: 'Full Control',
-        text: 'At Frabric, you are in control. You can always have a voice on how to manage assets. Want to repurpose the building and turn it into a vertical garden? You can.'
+        text: 'At Weavr, you are in control. You can always have a voice on how to manage assets. Want to repurpose the building and turn it into a vertical garden? You can.'
     },
     {
         id: 3,
@@ -210,7 +212,7 @@ export default {
     {
         id: 4,
         heading: 'Decentralized governance',
-        text: 'The Frabric is run and managed by its members. If you have an idea on how to make an even better product, join the community and let’s build it together.'
+        text: 'The Weavr is run and managed by its members. If you have an idea on how to make an even better product, join the community and let’s build it together.'
     },
     {
         id: 5,

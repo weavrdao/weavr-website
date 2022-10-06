@@ -2,11 +2,11 @@
 <div class="container p-5">
   <div class="columns is-desktop is-centered ">
       <div class="column p-5 mt-6 connect-container">
-        <h1 class="title has-text-white is-size-1 p-6" >
+       <h1 class="title  is-extra-large has-text-white is-large  p-3" >
           Buy, Sell
         <br />and
           <span class="has-text-mediumBlue">Build</span>
-        </h1>    
+        </h1>      
         <!-- <p class="is-size-4"></p> -->
         <div class="columns is-3-desktop">
           <div class="column">
@@ -45,16 +45,13 @@
       <div class="w-75">
         <h1 class="is-size-3"><b>Gain Access to our Marketplace</b></h1>
       <hr>
-      <p class="is-size-5">Join our newsletter and learn to gain your access Weavr</p>
+     <p class="is-size-5">Join our newsletter and learn to gain your access Weavr</p>
       </div>
-      <div class="columns is-3-desktop mt-3 ">
-        <div class="column">
-          <div class="button is-primary is-fullwidth">Suscribe</div>
-        </div>
-        <div class="column">
-          <div class="button is-secondary has-text-white is-fullwidth">Suscribe</div>
-        </div>
-      </div>
+        <a 
+          class="button is-primary"
+          href="https://3a567f7a.sibforms.com/serve/MUIEAAkS53zR0h7rhxExKB1X1JotCHaM4o7FBy9qRH3V7h92zXfDojr8PpuqQVRtRIYoeLgWddoOz_IVgW3DofxtESXPIwfentMntmPtVWwU_sTQTpYSt6ESaeVmSheGFH20mDIsMgM1UbzffXQ9ghnsJl8wKxqmH0Lxs7_Ppe1Kd6CVHsywoa4e0jFJBCru4UTyeIdV_z53X2yd"
+        >Subscribe
+      </a>
     </div>
     <div class="column p-5">
       <div class="image">

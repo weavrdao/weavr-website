@@ -4,7 +4,7 @@
       <div class="navbar-brand">
       <a class="navbar-item" href="#">
         <div class="title has-text-white is-flex is-align-items-center">
-          <img class="mx-2" src="../../../assets/logo/new-logo.svg" alt="">
+          <div class="image p-2"><img class="mx-2" src="../../../assets/logo/new-logo.svg" alt=""></div>
           Weavr</div>
       </a>
 
@@ -32,11 +32,14 @@
         <a
           :class="[
             isItemCurrent(item) ? 'has-border-bottom' : '',
-            'navbar-item',
+            'navbar-item navlink',
+            '',
+            'p-3 mt-2 is-primary'
           ]"
           v-for="item in navigation.items"
           :key="item.name"
           v-on:click="transitTo(item.path)"
+          :href="item.path"
         >
           {{ item.name }}
         </a>
@@ -66,7 +69,7 @@ export default {
     return {
       navigation: {
         isOpen: false,
-        items: [{ name: 'Governance', path: '/#/weavr' }],
+        items: [{ name: 'Governance', path: 'https://gov.weavr.org' }],
       },
     }
   },
