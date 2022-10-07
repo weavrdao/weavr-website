@@ -10,7 +10,6 @@ $family-sans-serif: "Poppins", sans-serif ;
 @font-face {
   font-family: $family-sans-serif;
   src: "../assets/Poppins-Regular.ttf" format("truetype");
-  
 }
 
 @font-face {
@@ -180,5 +179,9 @@ $colors: map-merge($colors, $addColors);
   &.is-extra-large {
     font-size: 4rem;
   }
+}
+
+.brand {
+ font-family: "Poppins", sans !important;
 }
 @import "./markdown.scss";

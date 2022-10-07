@@ -2,7 +2,7 @@
 <footer class="container is-centered">
     <hr/>
     <div class="columns">
-        <div class="column is-third">
+        <!-- <div class="column is-third">
             <h3>Pages</h3>
             <ul>
                 <li>
@@ -15,32 +15,32 @@
                     <a href="">Needles</a>
                 </li>
             </ul>
-        </div>
-        <div class="column is-third">
+        </div> -->
+        <div class="column is-half">
             <h3>Explore</h3>
             <ul>
                 <li>
-                    <a href="">Whitepaper</a>
+                    <a href="https://weavr-dao.gitbook.io/weavr-dao/">Whitepaper</a>
                 </li>
                 <li>
-                    <a href="">FAQ</a>
+                    <a href="https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics">FAQ</a>
                 </li>
             </ul>
         </div>
-        <div class="column is-third">
+        <div class="column is-half">
             <h3>Governance</h3>
             <ul>
                 <li>
-                    <a href="">Forum</a>
+                    <a href="https://forum.weavr.org/">Forum</a>
                 </li>
                 <li>
-                    <a href="">Vote</a>
+                    <a href="https://gov.weavr.org">Vote</a>
                 </li>
                 <li>
-                    <a href="">Proposals</a>
+                    <a href="https://gov.weavr.org">Proposals</a>
                 </li>
                 <li>
-                    <a href="">Discord</a>
+                    <a href="https://discord.gg/xFgHwqb3">Discord</a>
                 </li>
             </ul>
         </div>
@@ -51,10 +51,10 @@
             <img class="logo" src="../../../assets/logo/new-logo-white.svg" alt="WEAVR logo" />
             <h3 class="my-0">Weavr</h3>
         </div>
-        <div class="is-flex socials-container">
-            <a href="https://twitter.com/WeavrDAO"><img src="../../../assets/logo/3rd-party/twitter/twitter-blue.svg" alt=""></a>
-            <a href="https://github.com/fractional-finance"><img src="../../../assets/logo/3rd-party/github/github-blue.svg" alt=""></a>
-            <a href="https://discord.gg/xFgHwqb3"><img src="../../../assets/logo/3rd-party/discord/discord-blue.svg" alt=""></a>
+        <div class="is-flex is-flex-grow-0"> 
+            <a href="https://twitter.com/WeavrDAO"> <unicon width="40" height="40" name="twitter" fill="white"></unicon></a>
+            <a href="https://github.com/fractional-finance"> <unicon width="40" height="40" name="github" fill="white"></unicon></a>
+            <a href="https://discord.gg/xFgHwqb3"> <unicon width="40" height="40" name="discord" fill="white"></unicon></a>
         </div>
     </div>
 </footer>
@@ -80,12 +80,7 @@ hr {
     margin: 0 10px;
 }
 
-.socials-container {
-    img {
-        margin: 0 10px;
-        height: 1.8rem;
-    }
-}
+
 .container {
     color: white;
     margin: 20px auto 50px auto;

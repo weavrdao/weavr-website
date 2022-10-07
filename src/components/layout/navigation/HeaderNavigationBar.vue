@@ -3,7 +3,7 @@
     <div class="container">
       <div class="navbar-brand">
       <a class="navbar-item" href="#">
-        <div class="title has-text-white is-flex is-align-items-center">
+        <div class="title brand has-text-white is-flex is-align-items-center">
           <div class="image p-2"><img class="mx-2" src="../../../assets/logo/new-logo.svg" alt=""></div>
           Weavr</div>
       </a>
