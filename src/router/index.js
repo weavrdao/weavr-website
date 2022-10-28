@@ -2,6 +2,8 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue"
 import Homepage from "@/components/pages/Homepage.vue"
+import PrivacyPage from "@/components/pages/PrivacyPage.vue"
+import TermsPage from "@/components/pages/TermsPage.vue"
 import Login from "@/components/sections/Login.vue"
 import walletConnect from "@/components/sections/WalletConnect.vue"
 import { WhitelistPage } from "../whitelist";
@@ -35,6 +37,14 @@ const router = new createRouter({
       path: "/weavr",
       alias: "/weavr",
       component: Homepage
+    },
+    {
+      path: "/privacy",
+      component: PrivacyPage,
+    },
+    {
+      path: "/toc",
+      component: TermsPage,
     },
     { path: "/:pathMatch(.*)*", name: "not-found", component: PageNotFound },
   ],
