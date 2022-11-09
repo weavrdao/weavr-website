@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import {createRouter, createWebHashHistory} from "vue-router";
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue"
 import Homepage from "@/components/pages/Homepage.vue"
@@ -6,11 +6,11 @@ import PrivacyPage from "@/components/pages/PrivacyPage.vue"
 import TermsPage from "@/components/pages/TermsPage.vue"
 import Login from "@/components/sections/Login.vue"
 import walletConnect from "@/components/sections/WalletConnect.vue"
-import { WhitelistPage } from "../whitelist";
+import {WhitelistPage} from "../whitelist";
 import {CONTRACTS, DAO} from "../services/constants"
-import { createToaster } from '@meforma/vue-toaster';
-import store from '../store';
-import { ethers } from "ethers";
+import {createToaster} from "@meforma/vue-toaster";
+import store from "../store";
+import {ethers} from "ethers";
 
 const router = new createRouter({
   history: createWebHashHistory(),
@@ -46,7 +46,7 @@ const router = new createRouter({
       path: "/toc",
       component: TermsPage,
     },
-    { path: "/:pathMatch(.*)*", name: "not-found", component: PageNotFound },
+    {path: "/:pathMatch(.*)*", name: "not-found", component: PageNotFound},
   ],
 });
 
@@ -55,30 +55,30 @@ let hasOriginalPathBeenSet = false;
 let hasRedirectedAfterWhitelisting = false;
 
 router.beforeEach((to, from) => {
-  if(!hasOriginalPathBeenSet) {
+  if (!hasOriginalPathBeenSet) {
     originalPath = to.fullPath;
     hasOriginalPathBeenSet = true;
     console.log(originalPath);
   }
 
-  if(to.fullPath === "/whitelist") {
+  if (to.fullPath === "/whitelist") {
     return true;
   }
 
-  if(to.fullPath === "/walletConnect" || to.fullPath === "/login") {
+  if (to.fullPath === "/walletConnect" || to.fullPath === "/login") {
     return true;
   }
 
   const address = store.getters.userWalletAddress;
   const guest = store.getters.isGuest;
   const isConnected = ethers.utils.isAddress(address) || guest;
-  if(!isConnected) {
+  if (!isConnected) {
     router.push("/");
   }
   const whitelisted = store.getters.isWhitelisted;
-  
-  if(whitelisted || guest) {
-    if(!hasRedirectedAfterWhitelisting) {
+
+  if (whitelisted || guest) {
+    if (!hasRedirectedAfterWhitelisting) {
       router.push(originalPath);
       hasRedirectedAfterWhitelisting = true;
     }

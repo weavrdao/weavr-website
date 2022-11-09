@@ -1,7 +1,7 @@
 import {createRouter, createWebHashHistory} from "vue-router";
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue";
-import Homepage from "@/components/pages/Homepage.vue";
+import Governance from "@/components/pages/Governance.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue";
 import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue";
@@ -39,7 +39,7 @@ const router = new createRouter({
     {
       path: "/".concat(DAO).concat("/:assetId"),
       alias: "/".concat(DAO),
-      component: Homepage,
+      component: Governance,
       props: {assetId: CONTRACTS.WEAVR},
       children: [
         {
