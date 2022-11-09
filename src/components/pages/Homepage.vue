@@ -14,10 +14,10 @@
               button 
               is-primary 
               is-fullwidth
-              is-size-5 " 
+              is-size-4 "
               href="https://weavr-dao.gitbook.io/weavr-dao/" target="_blank"
             >
-              Whitepaper
+              Documentation
             </a>
           </div>
           <div class="column">
@@ -26,10 +26,22 @@
               is-secondary 
               is-fullwidth 
               has-text-white  
-              is-size-5 " 
+              is-size-4 "
               href="https://gov.weavr.org" target="_blank"
             >
               Governance
+            </a>
+          </div>
+          <div class="column">
+            <a class="
+              button
+              is-secondary
+              is-fullwidth
+              has-text-white
+              is-size-4 "
+               href="https://app.weavr.org" target="_blank"
+            >
+              DApp
             </a>
           </div>
         </div>

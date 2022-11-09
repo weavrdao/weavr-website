@@ -58,10 +58,10 @@
 
 <script>
 // import SignerAddress from '../../views/address/SignerAddress.vue'
-import { useRoute } from 'vue-router'
-import { mapGetters, mapActions } from 'vuex'
+import { useRoute } from "vue-router"
+import { mapGetters, mapActions } from "vuex"
 export default {
-  name: 'HeaderHavigationBar',
+  name: "HeaderHavigationBar",
   components: {
     // SignerAddress,
   },
@@ -69,15 +69,18 @@ export default {
     return {
       navigation: {
         isOpen: false,
-        items: [{ name: 'Governance', path: 'https://gov.weavr.org' }],
+        items: [
+          { name: "Governance", path: "https://gov.weavr.org" },
+          {name: "Dapp", path: "https://app.weavr.org" },
+          { name: "resolutions", path: "https://resolutions.weavr.org" }],
       },
     }
   },
   computed: {
-    ...mapGetters(['currentNavigationItem']),
+    ...mapGetters(["currentNavigationItem"]),
   },
   methods: {
-    ...mapActions(['goBack']),
+    ...mapActions(["goBack"]),
     isItemCurrent(item) {
       return item.path == useRoute().path
     },
