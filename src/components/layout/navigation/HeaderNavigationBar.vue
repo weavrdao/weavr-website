@@ -70,9 +70,9 @@ export default {
       navigation: {
         isOpen: false,
         items: [
-          { name: "Governance", path: "https://gov.weavr.org" },
-          {name: "Dapp", path: "https://app.weavr.org" },
-          { name: "resolutions", path: "https://resolutions.weavr.org" }],
+          {name: "Marketplace", path: "https://app.weavr.org/marketplace" },
+          { name: "Governance", path: "https://app.weavr.org/gov" },
+          { name: "Resolutions", path: "https://resolutions.weavr.org" }],
       },
     }
   },
