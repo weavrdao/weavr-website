@@ -247,8 +247,6 @@ export default {
       var route;
       if (location.href.includes("localhost")) {
         route = "http://localhost:9090/"+path;
-      } else if(location.href.includes("netlify")) {
-        route = "https://deploy-preview-28--weavr-app.netlify.app/"+path;
       } else {
         route = "https://app.weavr.org/"+path;
       }
@@ -257,10 +255,9 @@ export default {
     navigateToStatic(path) {
       var route;
       if (location.href.includes("localhost")) {
-        route = "http://localhost:8080/"+path;
-      } else if(location.href.includes("netlify")) {
-        route = "https://deploy-preview-2--weavr-static.netlify.app/"+path;
-      } else {
+        route = "http://localhost:8080/" + path;
+      }
+        else {
         route = "https://weavr.org/"+path;
       }
       location.href = route;
