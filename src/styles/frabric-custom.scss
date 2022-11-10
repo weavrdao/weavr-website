@@ -4,12 +4,12 @@
 @import "../../node_modules/bulma/sass/utilities/functions";
 
 
-$family-sans-serif: "Poppins", sans-serif ;
+$family-sans-serif: "Poppins Sans", sans-serif;
 
 // $family-sans: "Poppins", sans ;
 @font-face {
   font-family: $family-sans-serif;
-  
+
   src: "../assets/Poppins-Regular.ttf" format("truetype");
 }
 
@@ -36,6 +36,9 @@ $magenta: #D841DE;
 $mint: #00EDC4;
 $red: #FF3200;
 $cyan: #00BDFF;
+$lightNavy: #2F2C38;
+$boxGray: #16171A;
+$gold: #e6c300;
 $darkBlue-invert: findColorInvert($darkBlue);
 $mediumBlue-invert: findColorInvert($mediumBlue);
 $lightBlue-invert: findColorInvert($lightBlue);

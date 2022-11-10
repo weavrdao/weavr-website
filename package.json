@@ -1,6 +1,6 @@
 {
   "name": "weavr-website",
-  "version": "1.0.0.1",
+  "version": "1.0.1",
   "license": "AGPL-3.0-only",
   "private": true,
   "scripts": {
@@ -28,8 +28,10 @@
     "deepmerge": "^1.5.2",
     "dotenv": "^7.0.0",
     "ethers": "^5.7.1",
+    "faker": "^5.5.3",
     "graphql": "^15.5.1",
     "graphql-tag": "^2.12.5",
+    "hooper-vue3": "^0.4.5",
     "ipfs-http-client": "^52.0.2",
     "lodash": "^4.17.21",
     "sass": "~1.32",
@@ -44,6 +46,7 @@
     "vue-toaster": "^2.0.0",
     "vue-unicons": "^3.3.1",
     "vue3-slider": "^1.8.0",
+    "vue3-carousel": "^0.2.4",
     "vuex": "^4.0.2",
     "vuex-router-sync": "^5.0.0"
   },

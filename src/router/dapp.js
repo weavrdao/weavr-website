@@ -2,6 +2,8 @@ import {createRouter, createWebHashHistory} from "vue-router";
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue";
 import Governance from "@/components/pages/Governance.vue";
+import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.vue";
+import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue";
 import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue";
@@ -14,9 +16,11 @@ import Complete from "@/components/proposals/Complete"
 import VerifyParticipant from "@/components/proposals/VerifyParticipant";
 import tokenDetails from "@/components/sections/TokenDetails.vue";
 import walletConnect from "@/components/sections/WalletConnect.vue";
-import {WhitelistPage} from "../whitelist";
-import {CONTRACTS, DAO} from "../services/constants";
-import store from "../store";
+import {WhitelistPage} from "@/whitelist";
+import {CONTRACTS, DAO} from "@/services/constants";
+import store from "@/store";
+import ComingSoon from "@/components/sections/ComingSoon/ComingSoon.vue";
+import SingleComingSoonPage from "@/components/sections/ComingSoon/SingleComingSoonPage.vue";
 import {ethers} from "ethers";
 import SumSub from "@/components/SumSub.vue";
 
