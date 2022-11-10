@@ -248,7 +248,7 @@ export default {
       if (process.env.NODE_ENV === 'development') {
         route = "http://localhost:9090/"+path;
       } else {
-        route = "https://dapp.weavr.org"/+path;
+        route = "https://app.weavr.org/"+path;
       }
       location.href = route;
     },
