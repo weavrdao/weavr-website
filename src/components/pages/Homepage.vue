@@ -15,8 +15,7 @@
               is-primary 
               is-fullwidth
               is-size-4 "
-              href="https://weavr-dao.gitbook.io/weavr-dao/" target="_blank"
-            >
+              href="https://weavr-dao.gitbook.io/weavr-dao/" target="_blank">
               Documentation
             </a>
           </div>
@@ -27,7 +26,7 @@
               is-fullwidth 
               has-text-white  
               is-size-4 "
-               href="https://gov.lvh.me" target="_blank">
+               @click="toGovernance">
               Governance
             </a>
           </div>
@@ -243,7 +242,16 @@ export default {
   methods: {
     goBack() {
       this.$router.back();
-    }, 
+    },
+    toGovernance() {
+      var route;
+      if (location.protocol !== "https:") {
+        route = "https://"
+      } else {
+        route = "http://"
+      }
+      location.href = route + "." + window.location.host.split('.')[1] + "." + window.location.host.split('.')[2]
+    },
   }
 };
 </script>

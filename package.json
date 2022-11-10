@@ -4,8 +4,10 @@
   "license": "AGPL-3.0-only",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve:dapp": "vue-cli-service serve --dest dist/dapp src/dapp.js",
+    "serve:static": "vue-cli-service serve --dest dist/static src/static.js",
+    "build:dapp": "vue-cli-service build --dest dist/dapp src/dapp.js",
+    "build:static": "vue-cli-service build --dest dist/static src/static.js",
     "lint": "vue-cli-service lint",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"

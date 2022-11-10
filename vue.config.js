@@ -85,7 +85,4 @@ module.exports = {
       .set("@ledgerhq/devices", "@ledgerhq/devices/lib-es")
       .end()
   },
-  devServer: {
-    disableHostCheck: true
-  }
 };
