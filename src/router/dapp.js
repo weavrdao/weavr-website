@@ -37,6 +37,26 @@ const router = new createRouter({
       props: {component: walletConnect},
     },
     {
+      path: "/marketplace/needle-market",
+      name: "needle-market",
+      component: NeedlesMarketplace,
+    },
+    {
+      path: "/needle/:needleId",
+      name: "needle",
+      component: SingleNeedle,
+    },
+    {
+      path: "/coming-soon",
+      name: "comingSoon",
+      component: ComingSoon,
+    },
+    {
+      path: "/coming-soon/:comingSoonId",
+      name: "singleComingSoon",
+      component: SingleComingSoonPage,
+    },
+    {
       path: "/".concat(DAO).concat("/:assetId"),
       alias: "/".concat(DAO),
       component: Governance,
@@ -127,6 +147,10 @@ router.beforeEach((to, from) => {
   if (!hasOriginalPathBeenSet) {
     originalPath = to.fullPath === "/auth" ? "/weavr" : to.fullPath;
     hasOriginalPathBeenSet = true;
+  }
+
+  if(to.fullPath.includes("coming-soon")) {
+    return true;
   }
 
   if (to.fullPath === "/auth") {
