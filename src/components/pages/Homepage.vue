@@ -26,7 +26,7 @@
               is-fullwidth 
               has-text-white  
               is-size-4 "
-               @click="toSite('gov')">
+               @click="navigateToApp('gov')">
               Governance
             </a>
           </div>
@@ -37,7 +37,7 @@
               is-fullwidth
               has-text-white
               is-size-4 "
-               @click="toSite('marketplace')">
+               @click="navigateToApp('marketplace')">
               marketplace
             </a>
           </div>
@@ -243,15 +243,28 @@ export default {
     goBack() {
       this.$router.back();
     },
-    toSite(path) {
+    navigateToApp(path) {
       var route;
-      if (process.env.NODE_ENV === 'development') {
+      if (location.href.includes("localhost")) {
         route = "http://localhost:9090/"+path;
+      } else if(location.href.includes("netlify")) {
+        route = "https://deploy-preview-28--weavr-app.netlify.app/"+path;
       } else {
         route = "https://app.weavr.org/"+path;
       }
       location.href = route;
     },
+    navigateToStatic(path) {
+      var route;
+      if (location.href.includes("localhost")) {
+        route = "http://localhost:8080/"+path;
+      } else if(location.href.includes("netlify")) {
+        route = "https://deploy-preview-2--weavr-static.netlify.app/"+path;
+      } else {
+        route = "https://weavr.org/"+path;
+      }
+      location.href = route;
+    }
   }
 };
 </script>
