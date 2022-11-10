@@ -2,10 +2,10 @@
  <div class="container p-5 is-dark">
   <div class="columns is-desktop is-centered  ">
       <div class="column p-5 mt-6 connect-container">
-        <h1 class="title  is-extra-large has-text-white is-large  p-3" >
-          Buy, Sell
-        <br />and
-          <span class="has-text-mediumBlue">Build</span>
+        <h1 class="title  is-extra-large has-text-white  p-2" >
+          The Decentralized
+        <br />Real Estate
+          <span class="has-text-mediumBlue">Club</span>
         </h1>    
         <!-- <p class="is-size-4"></p> -->
         <div class="columns is-3-desktop">
@@ -26,20 +26,20 @@
               is-fullwidth 
               has-text-white  
               is-size-4 "
-               @click="toGovernance">
+               @click="toSite('gov')">
               Governance
             </a>
           </div>
           <div class="column">
-            <router-link class="
+            <a class="
               button
               is-secondary
               is-fullwidth
               has-text-white
               is-size-4 "
-               to="{name: Dapp}">
-              DApp
-            </router-link>
+               @click="toSite('marketplace')">
+              marketplace
+            </a>
           </div>
         </div>
         
@@ -55,7 +55,7 @@
       <div class="column is-full has-text-lightGray has-text-centered ">
         <span class="is-size-2 subtitle has-border-bottom primary-border-2">
           <!-- <unicon name="eye-slash" fill="lightGray"></unicon> -->
-          <b>Real Estate Membership Community</b>
+          <b>Welcome to the Community, you belong here.</b>
         </span>        
       </div>
   </div>
@@ -243,14 +243,14 @@ export default {
     goBack() {
       this.$router.back();
     },
-    toGovernance() {
+    toSite(path) {
       var route;
-      if (location.protocol !== "https:") {
-        route = "https://"
+      if (process.env.NODE_ENV === 'development') {
+        route = "http://localhost:9090/"+path;
       } else {
-        route = "http://"
+        route = "https://dapp.weavr.org"/+path;
       }
-      location.href = route + "." + window.location.host.split('.')[1] + "." + window.location.host.split('.')[2]
+      location.href = route;
     },
   }
 };

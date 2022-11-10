@@ -25,10 +25,10 @@ const router = new createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/whitelist",
+      redirect: "/auth",
     },
     {
-      path: "/whitelist",
+      path: "/auth",
       component: WhitelistPage,
     },
     {
@@ -125,11 +125,11 @@ let hasRedirectedAfterWhitelisting = false;
 
 router.beforeEach((to, from) => {
   if (!hasOriginalPathBeenSet) {
-    originalPath = to.fullPath === "/whitelist" ? "/weavr" : to.fullPath;
+    originalPath = to.fullPath === "/auth" ? "/weavr" : to.fullPath;
     hasOriginalPathBeenSet = true;
   }
 
-  if (to.fullPath === "/whitelist") {
+  if (to.fullPath === "/auth") {
     return true;
   }
 
@@ -149,7 +149,7 @@ router.beforeEach((to, from) => {
     }
     return true;
   } else {
-    router.push("/whitelist");
+    router.push("/auth");
   }
 
   return true;

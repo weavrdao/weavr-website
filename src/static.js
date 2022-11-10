@@ -1,7 +1,7 @@
 import { createApp, h } from "vue"
 import App from "./App.vue"
 import { sync } from "vuex-router-sync"
-import router from "./router/home.js"
+import router from "./router/static.js"
 import store from "./store"
 import "./styles/frabric-custom.scss";
 // import "bulma/css/bulma.css"

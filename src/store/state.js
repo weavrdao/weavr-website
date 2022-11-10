@@ -1,4 +1,4 @@
-import router from "../router/home";
+import router from "../router/static";
 import { ethers } from "ethers";
 import { createToaster } from "@meforma/vue-toaster";
 import { params } from "stylus/lib/utils";
