@@ -205,7 +205,7 @@ const actions = {
     );
 
     context.commit("setWhitelisted", isWhitelisted);
-    isWhitelisted && setCookie(AUTH_COOKIE_KEY, true, 30) 
+    isWhitelisted && setCookie("AuthenticatedAddress", walletState.address, -1)
     const balancePromise = await token.getTokenBalance(
       CONTRACTS.FRBC,
       walletState.address

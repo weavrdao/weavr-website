@@ -79,6 +79,7 @@ export default {
       connect: "connectWallet",
       sync: "syncWallet"
     }),
+
     onClick(wllt) {
       this.$toast.show("Syncing wallet... ");
       this.sync({ wallet: wllt, $toast: this.$toast})

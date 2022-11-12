@@ -7,6 +7,7 @@
     <div class="flex-center connect-container">
       <h3 v-if="!address">Please connect your wallet to continue</h3 >
       <button class="button tag is-primary has-radius-xs is-large is-clickable " v-if="!address" @click="openConnectWalletPage">Connect Wallet</button>
+      <button class="button tag is-primary has-radius-xs is-large is-clickable " v-else-if="whitelisted" @click="continueToHomepage">Continue to Homepage</button>
       <div class="flex-center" v-else>
         <h3 class="has-text-centered">We're sorry, you have not yet been whitelisted</h3>
         <p class="has-text-centered mb-3">Check the account selected in your wallet if you believe this is not the case</p>
@@ -30,15 +31,17 @@ export default {
   props: {
     assetId: {
       type: String,
-    },
+    }
   },
-
   methods: {
     ...mapActions({
       checkWhitelisted: "checkWhitelistStatus"
     }),
     openConnectWalletPage () {
-        this.$router.push("/walletConnect");
+      this.$router.push("/walletConnect")
+    },
+    continueToHomepage () {
+      this.$router.push("/weavr");
     },
   },
 }

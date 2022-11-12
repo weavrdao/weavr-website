@@ -29,16 +29,28 @@ const router = new createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/auth",
+      redirect: "/whitelist",
     },
     {
-      path: "/auth",
+      path: "/whitelist",
+      name: "whitelist",
       component: WhitelistPage,
     },
     {
       path: "/walletConnect",
+      name: "wallet-connect",
       component: Modal,
       props: {component: walletConnect},
+    },
+    {
+      path: "/governance",
+      name: "governance",
+      redirect: "governance"
+    },
+    {
+      path: "/marketplace",
+      name: "marketplace",
+      redirect: "/marketplace/coming-soon",
     },
     {
       path: "/marketplace/needle-market",
@@ -51,7 +63,7 @@ const router = new createRouter({
       component: SingleNeedle,
     },
     {
-      path: "/coming-soon",
+      path: "/marketplace/coming-soon",
       name: "comingSoon",
       component: ComingSoon,
     },
@@ -63,6 +75,7 @@ const router = new createRouter({
     {
       path: "/".concat(DAO).concat("/:assetId"),
       alias: "/".concat(DAO),
+      name: "governance",
       component: Governance,
       props: {assetId: CONTRACTS.WEAVR},
       children: [
@@ -149,15 +162,11 @@ let hasRedirectedAfterWhitelisting = false;
 
 router.beforeEach((to, from) => {
   if (!hasOriginalPathBeenSet) {
-    originalPath = to.fullPath === "/auth" ? "/weavr" : to.fullPath;
+    originalPath = to.fullPath === "/whitelist" ? "/weavr" : to.fullPath;
     hasOriginalPathBeenSet = true;
   }
 
-  if(to.fullPath.includes("coming-soon")) {
-    return true;
-  }
-
-  if (to.fullPath === "/auth") {
+  if (to.fullPath === "/whitelist") {
     return true;
   }
 
@@ -177,7 +186,7 @@ router.beforeEach((to, from) => {
     }
     return true;
   } else {
-    router.push("/auth");
+    router.push("/whitelist");
   }
 
   return true;
