@@ -40,7 +40,7 @@
                     <a href="https://forum.weavr.org/">Forum</a>
                 </li>
                 <li>
-                    <a href="https://app.weavr.org/weavr">Vote</a>
+                    <a href="https://app.weavr.org/#/weavr">Vote</a>
                 </li>
                 <li>
                     <a href="https://resolutions.weavr.org">Resolutions</a>

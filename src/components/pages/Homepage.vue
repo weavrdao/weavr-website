@@ -246,19 +246,19 @@ export default {
     navigateToApp(path) {
       var route;
       if (location.href.includes("localhost")) {
-        route = "http://localhost:9090/weavr";
+        route = "http://localhost:9090/#/weavr";
       } else {
-        route = "https://app.weavr.org/weavr";
+        route = "https://app.weavr.org/#/weavr";
       }
       location.href = route;
     },
     navigateToStatic(path) {
       var route;
       if (location.href.includes("localhost")) {
-        route = "http://localhost:8080/weavr";
+        route = "http://localhost:8080/#/weavr";
       }
         else {
-        route = "https://weavr.org/weavr";
+        route = "https://weavr.org/#/weavr";
       }
       location.href = route;
     }
