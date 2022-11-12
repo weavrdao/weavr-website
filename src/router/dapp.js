@@ -173,6 +173,11 @@ router.beforeEach((to, from) => {
   if (to.fullPath === "/walletConnect") {
     return true;
   }
+
+  if (to.fullPath === "/marketplace/coming-soon") {
+    return true;
+  }
+
   const address = store.getters.userWalletAddress;
   const isConnected = ethers.utils.isAddress(address);
   if (!isConnected) {
