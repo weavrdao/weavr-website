@@ -65,6 +65,14 @@ router.beforeEach((to, from) => {
     return true;
   }
 
+  if (to.fullPath === "/privacy") {
+    return true;
+  }
+
+  if (to.fullPath === "/toc") {
+    return true;
+  }
+
   if (to.fullPath === "/walletConnect" || to.fullPath === "/login") {
     return true;
   }
