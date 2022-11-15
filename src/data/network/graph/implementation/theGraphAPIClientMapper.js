@@ -55,7 +55,7 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
       ...mapUpgradeProposals(rawProposals.upgradeProposals),
       ...mapParticipantProposals(rawProposals.participantProposals),
       ...mapTokenActionProposals(rawProposals.tokenActionProposals),
-      ...mapThreadProposals(rawProposals.threadProposal),
+      ...mapThreadProposals(rawProposals.threadProposals),
     ];
   }
 }
