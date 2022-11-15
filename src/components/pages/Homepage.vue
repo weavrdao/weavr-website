@@ -2,10 +2,10 @@
  <div class="container p-5 is-dark">
   <div class="columns is-desktop is-centered  ">
       <div class="column p-5 mt-6 connect-container">
-        <h1 class="title  is-extra-large has-text-white is-large  p-3" >
-          Buy, Sell
-        <br />and
-          <span class="has-text-mediumBlue">Build</span>
+        <h1 class="title  is-extra-large has-text-white  p-2" >
+          The Decentralized
+        <br />Real Estate
+          <span class="has-text-mediumBlue">Club</span>
         </h1>    
         <!-- <p class="is-size-4"></p> -->
         <div class="columns is-3-desktop">
@@ -15,8 +15,7 @@
               is-primary 
               is-fullwidth
               is-size-4 "
-              href="https://weavr-dao.gitbook.io/weavr-dao/" target="_blank"
-            >
+              href="https://weavr-dao.gitbook.io/weavr-dao/" target="_blank">
               Documentation
             </a>
           </div>
@@ -27,8 +26,7 @@
               is-fullwidth 
               has-text-white  
               is-size-4 "
-              href="https://gov.weavr.org" target="_blank"
-            >
+               @click="navigateToApp('governance')">
               Governance
             </a>
           </div>
@@ -39,9 +37,8 @@
               is-fullwidth
               has-text-white
               is-size-4 "
-               href="https://app.weavr.org" target="_blank"
-            >
-              DApp
+               @click="navigateToApp('marketplace')">
+              marketplace
             </a>
           </div>
         </div>
@@ -58,7 +55,7 @@
       <div class="column is-full has-text-lightGray has-text-centered ">
         <span class="is-size-2 subtitle has-border-bottom primary-border-2">
           <!-- <unicon name="eye-slash" fill="lightGray"></unicon> -->
-          <b>Real Estate Membership Community</b>
+          <b>Welcome to the Community, you belong here.</b>
         </span>        
       </div>
   </div>
@@ -245,7 +242,26 @@ export default {
   methods: {
     goBack() {
       this.$router.back();
-    }, 
+    },
+    navigateToApp(path) {
+      var route;
+      if (location.href.includes("localhost")) {
+        route = "http://localhost:9090/weavr";
+      } else {
+        route = "https://app.weavr.org/weavr";
+      }
+      location.href = route;
+    },
+    navigateToStatic(path) {
+      var route;
+      if (location.href.includes("localhost")) {
+        route = "http://localhost:8080/weavr";
+      }
+        else {
+        route = "https://weavr.org/weavr";
+      }
+      location.href = route;
+    }
   }
 };
 </script>

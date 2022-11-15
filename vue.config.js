@@ -5,15 +5,16 @@ const globalSassFiles = [
 
 ]
 module.exports = {
-  publicPath: "./", 
+  publicPath: "./",
   css: {
     requireModuleExtension: true,
     loaderOptions: {
       sass: {
-        additionalData: globalSassFiles.map((src)=>'@import "' + src + '";').join('\n')
+        additionalData: globalSassFiles.map((src)=>"@import \"" + src + "\";").join("\n")
       }
-    }
-},
+    },
+
+  },
   chainWebpack: (config) => {
     config
       .plugin("html")
@@ -68,33 +69,20 @@ module.exports = {
       })
       .end()
 
-    // config.module
-    //   .rule("sass")
-    //   .test(/\.sass$/)
-    //   .use("sass-loader")
-    //   .loader("sass-loader")
-    //   .loader("css-loader")
-    //   .loader("style-loader")
-    //   .tap((options) => {
-        
-    //     return {
-    //       ...options,
-    //       additionalData: `
-    //         @import "@/bulma/bulma.sass"
-    //       `
-    //     }
-    //   })
-    //   .end()
+    config.merge({
+      devServer: {
+        proxy: {
+          "/api": {
+            ws: true,
+            changeOrigin: true,
+            target: "'https://api.sumsub.com'"
+          }
+        }
+      }
+    })
 
-  }
+    config.resolve.alias
+      .set("@ledgerhq/devices", "@ledgerhq/devices/lib-es")
+      .end()
+  },
 };
-
-// module.exports = {
-//   css: {
-//     loaderOptions: {
-//       sass: {
-//         // additionalData: `@import "@/styles/variables.sass"`
-//       }
-//     }
-//   },
-// }

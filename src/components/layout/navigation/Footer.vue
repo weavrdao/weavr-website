@@ -20,10 +20,16 @@
             <h3>Explore</h3>
             <ul>
                 <li>
-                    <a href="https://weavr-dao.gitbook.io/weavr-dao/">Whitepaper</a>
+                    <a href="https://weavr-dao.gitbook.io/weavr-dao/">Documentation</a>
                 </li>
                 <li>
                     <a href="https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics">FAQ</a>
+                </li>
+                <li>
+                  <a href="https://weavr.org/#/privacy">Privacy Policy</a>
+                </li>
+                <li>
+                  <a href="https://weavr.org/#/toc">Terms and Conditions</a>
                 </li>
             </ul>
         </div>
@@ -34,11 +40,12 @@
                     <a href="https://forum.weavr.org/">Forum</a>
                 </li>
                 <li>
-                    <a href="https://gov.weavr.org">Vote</a>
+                    <a href="https://app.weavr.org/weavr">Vote</a>
                 </li>
                 <li>
-                    <a href="https://gov.weavr.org">Proposals</a>
+                    <a href="https://resolutions.weavr.org">Resolutions</a>
                 </li>
+
                 <li>
                     <a href="https://discord.gg/xFgHwqb3">Discord</a>
                 </li>

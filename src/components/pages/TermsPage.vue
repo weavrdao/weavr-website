@@ -174,7 +174,7 @@ In the event that it is impossible or impracticable or illegal for 12321 DAO LLC
 
 GENERAL PROVISIONS
 
-Notice: All notices from 12321 DAO LLC will be served by email to your registered email address or by general notification on the Platform. Any notice provided to 12321 DAO LLC  pursuant to these Terms should be sent to [address] or to our Grievance Officer.
+Notice: All notices from 12321 DAO LLC will be served by email to your registered email address or by general notification on the Platform. Any notice provided to 12321 DAO LLC  pursuant to these Terms should be sent to info@weavr.org or to our Grievance Officer.
 Assignment: You cannot assign or otherwise transfer these Terms, or any rights granted hereunder to any third party. 12321 DAO LLC’s rights under these Terms are freely transferable by 12321 DAO LLC to any third party without the requirement of seeking your consent.
 Severability: If, for any reason, a court of competent jurisdiction finds any provision of these Terms, or any portion thereof, to be unenforceable, that provision shall be enforced to the maximum extent permissible so as to give effect to the intent of the parties as reflected by that provision, and the remainder of these Terms shall continue in full force and effect.
 Waiver: Any failure by 12321 DAO LLC to enforce or exercise any provision of these Terms, or any related right, shall not constitute a waiver by the 12321 DAO LLC of that provision or right.
@@ -182,7 +182,7 @@ Waiver: Any failure by 12321 DAO LLC to enforce or exercise any provision of the
 
 
 
-Please provide us with a detailed description of the complaint/grievance, and we will endeavour to resolve your grievances within [.] (in words) days from the date of receipt of such grievance, or within such timeframe stipulated under applicable laws.
+Please provide us with a detailed description of the complaint/grievance, and we will endeavour to resolve your grievances within ten days from the date of receipt of such grievance, or within such timeframe stipulated under applicable laws.
 18.  Survival
 
 22.1  All sections which by their nature should survive the termination of these Terms shall continue in full force and effect subsequent to and notwithstanding any termination of these Terms by Fabric or you. Termination will not limit any of 12321 DAO LLC’s other rights or remedies at law or in equity.
