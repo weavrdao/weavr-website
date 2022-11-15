@@ -17,7 +17,7 @@ const router = new createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/weavr",
+      redirect: "/whitelist",
     },
     {
       path: "/whitelist",
