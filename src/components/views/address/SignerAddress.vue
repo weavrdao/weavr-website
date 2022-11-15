@@ -59,7 +59,6 @@ export default {
       
     },
     onVouch() {
-      // this.vouch({participant: "0x403383c411c0eB14eA0Bd15E7c2AD5431a7410C2"})
       this.$router.push("/".concat(DAO).concat("/vouch"))
     },
     async tokenDetails() {
@@ -82,6 +81,9 @@ export default {
     }
   },
   mounted() {
+    if(this.address) {
+      this.sync()
+    }
   }
   
 };

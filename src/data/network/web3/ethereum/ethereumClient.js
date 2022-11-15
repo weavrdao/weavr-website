@@ -3,6 +3,7 @@ const {  getCoinbaseWalletProvider, getMetaMaskProvider,  DEFAULT_CHAIN_ID} = re
 import {CoinbaseConnector} from "./walletProviders/CoinbaseConnector.js"
 import {MetaMaskConnector} from "./walletProviders/MetaMaskConnector"
 import {toHex} from "@/utils/common.js"
+import { NETWORK } from "../../../../services/constants.js";
 require("dotenv").config();
 const { ethers } = require("ethers");
 const { CoinbaseWalletSDK } = require("@coinbase/wallet-sdk");
@@ -37,13 +38,30 @@ class EthereumClient {
     if(wallet == "metamask") {
       try{
         
-        const metamask = getMetaMaskProvider()
-        this.walletProvider = new ethers.providers.Web3Provider(metamask)
-        const connector = new MetaMaskConnector(metamask)
-        this.account = await connector.getAddress()
-        this.walletSigner = await connector.getSigner(await connector.getChainId());
-        console.log(this.account)
-        return
+        const metamask = getMetaMaskProvider();
+        if(metamask.chainId !== ethers.utils.hexValue(NETWORK.id)) {
+          const toast = createToaster({});
+          toast.error(`Please connect to ${NETWORK.name} Network`, {
+            position: "top",
+          });
+          return false
+        }
+        
+        this.walletProvider = metamask;
+        this._connector = new MetaMaskConnector(metamask);
+        this.account = await this._connector.getAddress();
+        await this._connector.getChainId()
+        metamask.on("accountsChanged", (log, event) => {
+          window.location.reload()
+        })
+        metamask.on("chainChanged", (log, event) => { 
+          window.location.reload()
+        })
+        console.log("CHAIN_ID___", this._connector.chainId)
+        this.walletSigner = await this._connector.getSigner(
+          this._connector.chainId
+        );
+        return true
       } 
       catch(error) {   
         console.log(error)
@@ -76,6 +94,23 @@ class EthereumClient {
       
       }  
     } 
+
+   if(this.walletProvider) {
+      // Subscribe to accounts change
+    this.walletProvider.on("accountsChanged", (log, event) => {
+      window.location.reload()
+    })
+
+    // Subscribe to chainId change
+    this.walletProvider.on("chainChanged",  (log, event) => {
+      window.location.reload()
+    });
+
+    // Subscribe to session disconnection
+    this.walletProvider.on("disconnect",  (log, event) => {
+      window.location.reload()
+    });
+    }
   }
 
   switchNetwork = async  (network) => {

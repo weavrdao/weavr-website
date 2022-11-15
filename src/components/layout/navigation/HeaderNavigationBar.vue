@@ -2,8 +2,8 @@
   <nav class="navbar p-5" role="navigation" aria-label="main navigation">
     <div class="container">
       <div class="navbar-brand">
-      <a class="navbar-item" href="#">
-        <div class="title brand has-text-white is-flex is-align-items-center">
+      <a class="navbar-item" >
+        <div class="title brand has-text-white is-flex is-align-items-center" >
           <div class="image p-2"><img class="mx-2" src="../../../assets/logo/new-logo.svg" alt=""></div>
           Weavr</div>
       </a>
@@ -47,7 +47,7 @@
 
       <div class="navbar-end">
         <div class="navbar-item">
-          <!-- <SignerAddress /> -->
+          <SignerAddress />
         </div>
       </div>
     </div>
@@ -57,22 +57,22 @@
 </template>
 
 <script>
-// import SignerAddress from '../../views/address/SignerAddress.vue'
+import SignerAddress from '../../views/address/SignerAddress.vue'
 import { useRoute } from "vue-router"
 import { mapGetters, mapActions } from "vuex"
 export default {
   name: "HeaderHavigationBar",
   components: {
-    // SignerAddress,
+    SignerAddress,
   },
   data() {
     return {
       navigation: {
         isOpen: false,
         items: [
-          {name: "Marketplace", path: "/marketplace" },
-          { name: "Governance", path: "/gov" },
-          { name: "Resolutions", path: "/resolutions" }],
+          {name: "Marketplace", path: "marketplace" },
+          { name: "Governance", path: "weavr" },
+          { name: "Resolutions", path: "resolutions" }],
       },
     }
   },
@@ -85,7 +85,7 @@ export default {
       return item.path == useRoute().path
     },
     transitTo(path) {
-      this.$router.push(path)
+      this.$router.push({name: path})
       this.menuToggle()
     },
     menuToggle() {

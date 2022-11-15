@@ -1,7 +1,8 @@
-import {createRouter, createWebHashHistory} from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue";
 import Governance from "@/components/pages/Governance.vue";
+import Marketplace from "@/components/pages/Marketplace"
 import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.vue";
 import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
@@ -26,12 +27,14 @@ import SumSub from "@/components/SumSub.vue";
 import { getCookie } from "../whitelist";
 import { USER_COOKIE_KEY } from "../whitelist/constants";
 
+
+
 const router = new createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes: [
     {
       path: "/",
-      redirect: "/whitelist",
+      redirect: "whitelist",
     },
     {
       path: "/whitelist",
@@ -50,34 +53,36 @@ const router = new createRouter({
       redirect: "governance"
     },
     {
-      path: '/gov',
-      beforeEnter() {location.href = 'https://gov.weavr.org'}
-    },
-    {
       path: "/marketplace",
       name: "marketplace",
-      redirect: "/marketplace/coming-soon",
-    },
-    {
-      path: "/marketplace/needles",
-      name: "needle-market",
-      component: NeedlesMarketplace,
-    },
-    {
-      path: "/needle/:needleId",
-      name: "needle",
-      component: SingleNeedle,
-    },
-    {
-      path: "/marketplace/coming-soon",
-      name: "comingSoon",
-      component: ComingSoon,
-    },
-    {
-      path: "/coming-soon/:comingSoonId",
-      name: "singleComingSoon",
-      component: SingleComingSoonPage,
-    },
+      component: Marketplace,
+      children: [
+        {
+          path: "/",
+          redirect: "coming-soon",
+        },
+        {
+          path: "needles",
+          name: "needle-market",
+          component: NeedlesMarketplace,
+        },
+        {
+          path: "needle/:needleId",
+          name: "needle",
+          component: SingleNeedle,
+        },
+        {
+          path: "coming-soon",
+          name: "comingSoon",
+          component: ComingSoon,
+        },
+        {
+          path: "coming-soon/:comingSoonId",
+          name: "singleComingSoon",
+          component: SingleComingSoonPage,
+        },
+      ]
+    },  
     {
       path: "/".concat(DAO).concat("/:assetId"),
       alias: "/".concat(DAO),
@@ -168,7 +173,8 @@ let hasRedirectedAfterWhitelisting = false;
 
 router.beforeEach((to, from) => {
   if (!hasOriginalPathBeenSet) {
-    originalPath = to.fullPath === "/whitelist" ? "/weavr" : to.fullPath;
+    originalPath = to.fullPath
+    console.log(originalPath)
     hasOriginalPathBeenSet = true;
   }
 
@@ -179,6 +185,8 @@ router.beforeEach((to, from) => {
   if (to.fullPath === "/walletConnect") {
     return true;
   }
+
+  // console.log("__TO_FULL_PATH__", to.fullPath.)
 
   // Should check for cookie or wallet connected
   const address = getCookie(USER_COOKIE_KEY) || store.getters.userWalletAddress;
@@ -194,7 +202,7 @@ router.beforeEach((to, from) => {
     }
     return true;
   } else {
-    router.push("/whitelist");
+    router.replace("/whitelist");
   }
 
   return true;
