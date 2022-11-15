@@ -26,4 +26,4 @@ export const _NETWORKS = {
   avalanche: { name: "Avalanche", id: 43114 },
 }
 export const DAO = "weavr";
-export const NETWORK = _NETWORKS.arbitrum
+export const NETWORK = _NETWORKS.arbitrum_goerli

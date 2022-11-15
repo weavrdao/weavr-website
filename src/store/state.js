@@ -14,6 +14,7 @@ import {
   getCookie,
   setCookie,
 } from "../whitelist";
+import { USER_COOKIE_KEY } from "../whitelist/constants";
 
 const {
   getMetaMaskProvider,
@@ -35,7 +36,7 @@ function state() {
   return {
     user: {
       wallet: WalletState,
-      isGuest: getCookie(AUTH_COOKIE_KEY) || null,
+      isGuest: getCookie(USER_COOKIE_KEY) === "GUEST" ? true : null,
       log: true,
       vouches: [],
     },
@@ -205,7 +206,7 @@ const actions = {
     );
 
     context.commit("setWhitelisted", isWhitelisted);
-    isWhitelisted && setCookie("AuthenticatedAddress", walletState.address, -1)
+    isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address, 1)
     const balancePromise = await token.getTokenBalance(
       CONTRACTS.FRBC,
       walletState.address

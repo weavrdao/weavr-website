@@ -42,7 +42,7 @@ import NewProposalSelector from "../sections/NewProposalSelector.vue";
 import RefreshButton from "../sections/RefreshButton.vue";
 
 export default {
-  name: "Voting",
+  name: "Governance",
   props: {
     assetId: {
       type: String,

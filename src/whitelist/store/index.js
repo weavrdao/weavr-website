@@ -1,14 +1,18 @@
-import { AUTH_COOKIE_KEY } from "../constants";
+import { ethers } from "ethers";
+import { AUTH_COOKIE_KEY, USER_COOKIE_KEY } from "../constants";
 import { getCookie } from "../cookie";
 export function whitelistState() {
   return {
-    whitelisted: getCookie(AUTH_COOKIE_KEY) || null,
+    whitelisted: getCookie(USER_COOKIE_KEY) || null,
   };
 }
 
 export const whitelistGetters = {
   isWhitelisted(state) {
-    return state.whitelisted;
+    console.log("??? WHITELISTED____", state.whitelisted)
+    const x = getCookie(USER_COOKIE_KEY) 
+    console.log(x);
+    return ethers.utils.isAddress(x);
   },
 };
 

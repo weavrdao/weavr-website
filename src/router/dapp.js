@@ -23,6 +23,8 @@ import ComingSoon from "@/components/sections/ComingSoon/ComingSoon.vue";
 import SingleComingSoonPage from "@/components/sections/ComingSoon/SingleComingSoonPage.vue";
 import {ethers} from "ethers";
 import SumSub from "@/components/SumSub.vue";
+import { getCookie } from "../whitelist";
+import { USER_COOKIE_KEY } from "../whitelist/constants";
 
 const router = new createRouter({
   history: createWebHashHistory(),
@@ -48,12 +50,16 @@ const router = new createRouter({
       redirect: "governance"
     },
     {
+      path: '/gov',
+      beforeEnter() {location.href = 'https://gov.weavr.org'}
+    },
+    {
       path: "/marketplace",
       name: "marketplace",
       redirect: "/marketplace/coming-soon",
     },
     {
-      path: "/marketplace/needle-market",
+      path: "/marketplace/needles",
       name: "needle-market",
       component: NeedlesMarketplace,
     },
@@ -173,7 +179,9 @@ router.beforeEach((to, from) => {
   if (to.fullPath === "/walletConnect") {
     return true;
   }
-  const address = store.getters.userWalletAddress;
+
+  // Should check for cookie or wallet connected
+  const address = getCookie(USER_COOKIE_KEY) || store.getters.userWalletAddress;
   const isConnected = ethers.utils.isAddress(address);
   if (!isConnected) {
     router.push("/");

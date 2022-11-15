@@ -4,3 +4,4 @@
  */
 
 export const AUTH_COOKIE_KEY = "AUTH_WEAVR_COOKIE"
+export const USER_COOKIE_KEY = "USER_WEAVR_ADDRESS"
