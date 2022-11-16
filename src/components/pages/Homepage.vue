@@ -26,7 +26,7 @@
               is-fullwidth 
               has-text-white  
               is-size-4 "
-               @click="navigateToApp('governance')">
+               @click="navigateToApp('weavr')">
               Governance
             </a>
           </div>
@@ -37,7 +37,7 @@
               is-fullwidth
               has-text-white
               is-size-4 "
-               @click="navigateToApp('marketplace')">
+               @click="navigateToApp('marketplace/coming-soon')">
               marketplace
             </a>
           </div>
@@ -246,19 +246,19 @@ export default {
     navigateToApp(path) {
       var route;
       if (location.href.includes("localhost")) {
-        route = "http://localhost:9090/weavr";
+        route = "http://localhost:9090/#/";+path
       } else {
-        route = "https://app.weavr.org/weavr";
+        route = "https://app.weavr.org/#/"+path;
       }
       location.href = route;
     },
     navigateToStatic(path) {
       var route;
       if (location.href.includes("localhost")) {
-        route = "http://localhost:8080/weavr";
+        route = "http://localhost:8080/#/"+path;
       }
         else {
-        route = "https://weavr.org/weavr";
+        route = "https://weavr.org/#/"+path;
       }
       location.href = route;
     }

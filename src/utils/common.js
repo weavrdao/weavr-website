@@ -45,11 +45,34 @@ const toHex = (num) => {
   return "0x" + val.toString(16);
 };
 
+const navigateToApp = (path) => {
+  var route;
+  if (location.href.includes("localhost")) {
+    route = "http://localhost:9090/#/";+path
+  } else {
+    route = "https://app.weavr.org/#/"+path;
+  }
+  location.href = route;
+}
+
+const navigateToStatic = (path) => {
+  var route;
+  if (location.href.includes("localhost")) {
+    route = "http://localhost:8080/#/"+path;
+  }
+    else {
+    route = "https://weavr.org/#/"+path;
+  }
+  location.href = route;
+}
+
 export {
   truncateAddress,
   toHex,
   pathFromURL,
   bigIntMax,
   bigIntMin,
-  toFixedNumber
+  toFixedNumber,
+  navigateToApp,
+  navigateToStatic
 }

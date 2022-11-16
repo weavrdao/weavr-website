@@ -1,4 +1,4 @@
-import {createRouter, createWebHashHistory} from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue"
 import Homepage from "@/components/pages/Homepage.vue"
@@ -6,14 +6,15 @@ import PrivacyPage from "@/components/pages/PrivacyPage.vue"
 import TermsPage from "@/components/pages/TermsPage.vue"
 import Login from "@/components/sections/Login.vue"
 import walletConnect from "@/components/sections/WalletConnect.vue"
-import {WhitelistPage} from "../whitelist";
+import {getCookie, WhitelistPage} from "../whitelist";
 import {CONTRACTS, DAO} from "../services/constants"
 import {createToaster} from "@meforma/vue-toaster";
 import store from "../store";
 import {ethers} from "ethers";
+import { USER_COOKIE_KEY } from "../whitelist/constants";
 
 const router = new createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes: [
     {
       path: "/",
@@ -65,12 +66,22 @@ router.beforeEach((to, from) => {
     return true;
   }
 
+  if (to.fullPath === "/privacy") {
+    return true;
+  }
+
+  if (to.fullPath === "/toc") {
+    return true;
+  }
+
   if (to.fullPath === "/walletConnect" || to.fullPath === "/login") {
     return true;
   }
 
   const address = store.getters.userWalletAddress;
-  const guest = store.getters.isGuest;
+  const cookie = getCookie(USER_COOKIE_KEY)
+  const guest =  cookie === "GUEST"
+  console.log("ADDRESS___", address)
   const isConnected = ethers.utils.isAddress(address) || guest;
   if (!isConnected) {
     router.push("/");

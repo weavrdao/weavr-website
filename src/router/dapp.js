@@ -27,6 +27,7 @@ import SumSub from "@/components/SumSub.vue";
 import { getCookie } from "../whitelist";
 import { USER_COOKIE_KEY } from "../whitelist/constants";
 
+import Login from "@/components/sections/Login.vue"
 
 
 const router = new createRouter({
@@ -48,9 +49,10 @@ const router = new createRouter({
       props: {component: walletConnect},
     },
     {
-      path: "/governance",
-      name: "governance",
-      redirect: "governance"
+      path: "/login",
+      name: "login",
+      component: Modal,
+      props: {component: Login}
     },
     {
       path: "/marketplace",
@@ -185,6 +187,11 @@ router.beforeEach((to, from) => {
   if (to.fullPath === "/walletConnect") {
     return true;
   }
+
+  if(to.fullPath.includes("coming-soon")) {
+    return true;
+  }
+
 
   // console.log("__TO_FULL_PATH__", to.fullPath.)
 

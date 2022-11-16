@@ -4,7 +4,7 @@ import { createToaster } from "@meforma/vue-toaster";
 import { params } from "stylus/lib/utils";
 import ServiceProvider from "../services/provider";
 import WalletState from "../models/walletState";
-import { CONTRACTS, DAO } from "../services/constants";
+import { CONTRACTS, DAO, GUEST } from "../services/constants";
 import {
   whitelistState,
   whitelistGetters,
@@ -35,7 +35,7 @@ function state() {
   return {
     user: {
       wallet: WalletState,
-      isGuest: getCookie(USER_COOKIE_KEY) === "GUEST" ? true : null,
+      isGuest: getCookie(USER_COOKIE_KEY) === GUEST ? true : null,
       log: true,
       vouches: [],
     },
@@ -155,7 +155,7 @@ const actions = {
     if(
       params.passwd===process.env.VUE_APP_DAILY_PASSWORD
     ){
-      setCookie(USER_COOKIE_KEY, "0x0000000000000000000000000000000000000000", 1)
+      setCookie(USER_COOKIE_KEY, GUEST, 1)
       context.commit("setConnectedAsGuest")
     }
      
@@ -190,16 +190,15 @@ const actions = {
   async syncWallet(context, params) {
     console.log("SYNC");
     let { $toast } = params;
-    // const toast = createToaster({});
     let walletState = await wallet.getState(params.wallet);
-    // const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
     
     const tokenInfo = await token.getTokenInfo()
     console.log("STATE_TOKENINFO___", tokenInfo);
     Promise.all([walletState]).then((val) => {
       console.log(val);
     });
-     const isWhitelisted =
+
+    const isWhitelisted =
       await whitelist.checkWhitelistedStatus(
       walletState.address
     );
@@ -226,9 +225,7 @@ const actions = {
         return bal
       }
     )
-   
-
-    
+ 
     $toast.clear();
     $toast.success("Wallet fully synced", {
       duration: 1000,

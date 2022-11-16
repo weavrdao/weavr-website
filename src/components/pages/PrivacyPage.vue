@@ -62,7 +62,7 @@
  Withdrawal of consent: Where we rely on consent to process your personal information, you have the right to withdraw this consent at any time In certain circumstances it may be lawful for us to continue processing without consent if we have a legitimate reason (other than consent) for doing so.
  The aforementioned rights are not absolute and may be limited by law.
  Requests and Complaints -
- If you have complaints about how we process your personal information, please contact us at [.] and we shall respond to your request as soon as possible.
+ If you have complaints about how we process your personal information, please contact us at info@weavr.org and we shall respond to your request as soon as possible.
  If you think an infringement of your data protection rights has occurred, you may file a claim with the data protection supervisory authority in the EEA country of your residence.
  ADDITIONAL DISCLOSURES UNDER CALIFORNIA PRIVACY LAW
  Under the California Consumer Privacy Act of 2018 (“CCPA”), California residents are afforded certain rights to know, delete and opt out. It additionally also requires notices to be provided and means to exercise consumer rights by businesses collecting and/or disclosing personal information.
@@ -75,7 +75,7 @@
  Weavr reserves the right to modify, update and/or change the Privacy Policy contained herein from time to time. Such changes shall be reflected in the Privacy Policy of Weavr and continuing usage shall imply acceptance of the new Privacy Policy.
 
  CONTACT US
- For further information on the collection, use, disclosure, transfer, or processing of personal information or the exercise of any of the rights listed above, please contact Weavr by sending an email on [.] or contacting us on [.]
+ For further information on the collection, use, disclosure, transfer, or processing of personal information or the exercise of any of the rights listed above, please contact Weavr by sending an email on info@weavr.org or contacting us on twitter at @weavrdao.
 
  </body>
 </template>

@@ -24,6 +24,7 @@ export const _NETWORKS = {
   polygon: { name: "Polygon", id: 137 },
   optimism: { name: "Optimism", id: 10 },
   avalanche: { name: "Avalanche", id: 43114 },
-}
+};
 export const DAO = "weavr";
-export const NETWORK = _NETWORKS.arbitrum
+export const GUEST = "0x0000000000000000000000000000000000000000";
+export const NETWORK = _NETWORKS.arbitrum_goerli;
