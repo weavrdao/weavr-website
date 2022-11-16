@@ -90,7 +90,13 @@ export default {
       }
       const PORT = window.location.port 
       console.log(PORT)
-      if(PORT === "8080") {
+      if( path === "resolutions") {
+        console.log("navigatin to resoluuuu");
+        location.href = "https://resolutions.weavr.org";
+      }
+      
+      else if(PORT === "8080") {
+        console.log("here too");
         this.navigateToApp(path)
       }
       path === "governance" ? route.params = { assetId: CONTRACTS.WEAVR} : null;
@@ -104,9 +110,10 @@ export default {
       var route;
       if (location.href.includes("localhost")) {
         route = "http://localhost:9090/#/";+path
-      } else {
-        route = "https://app.weavr.org/#/"+path;
       }
+      else {
+        route = "https://app.weavr.org/#/"+path;
+      } 
       location.href = route;
     },
     navigateToStatic() {
