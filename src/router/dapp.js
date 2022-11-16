@@ -29,10 +29,12 @@ import { getCookie } from "../whitelist";
 import { USER_COOKIE_KEY } from "../whitelist/constants";
 
 import Login from "@/components/sections/Login.vue"
+import { GUEST } from "../services/constants";
+import { createToaster } from "@meforma/vue-toaster";
 
 
 const router = new createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes: [
     {
       path: "/",
@@ -58,11 +60,13 @@ const router = new createRouter({
     {
       path: "/marketplace",
       name: "marketplace",
+      alisa: "marketplace",
       component: Marketplace,
       children: [
         {
           path: "",
-          component: ComingSoon
+          component: ComingSoon,
+          meta: { requiresAuth: false}
         },
         {
           path: "needles",
@@ -92,6 +96,7 @@ const router = new createRouter({
       name: "governance",
       component: Governance,
       props: {assetId: CONTRACTS.WEAVR},
+      meta: { requiresAuth: true },
       children: [
         {
           path: "kyc",
@@ -175,58 +180,57 @@ let hasOriginalPathBeenSet = false;
 let hasRedirectedAfterWhitelisting = false;
 
 router.beforeEach((to, from) => {
-  if (!hasOriginalPathBeenSet) {
-    originalPath = to.fullPath
-    console.log(originalPath)
-    hasOriginalPathBeenSet = true;
-  }
-
-  console.log(
-    {
-      paths: {
-        originalPath,
-        to: to.fullPath
-      },
-      hasOriginalPathBeenSet,
-      hasRedirectedAfterWhitelisting
-    }
-  )
-
-  if (to.fullPath === "/whitelist") {
-    return true;
-  }
-
-  if (to.fullPath === "/walletConnect") {
-    return true;
-  }
-
-  if(to.fullPath.includes("coming-soon")) {
-    
-    return true;
-  }
-
-
-  // console.log("__TO_FULL_PATH__", to.fullPath.)
-
-  // Should check for cookie or wallet connected33333F
+ /**
+  * NOTES
+  * Should authorize navigation if:
+  * ( isConnected + isWhitelisted || isConnected + isGuest )
+  * 
+  * ON not connected and COOKIE should AUTOCONNECT
+  * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
+  * 
+  */
+  
   const address = store.getters.userWalletAddress;
   const isConnected = ethers.utils.isAddress(address);
-
-  if (!isConnected) {
-    router.push("/");
-  }
-  const whitelisted = store.getters.isWhitelisted;
-  if (whitelisted) {
-    if (!hasRedirectedAfterWhitelisting) {
-      router.push(originalPath);
-      hasRedirectedAfterWhitelisting = true;
+  const isWhitelisted = store.getters.isWhitelisted;
+  const isGuest = store.getters.isGuest;
+  const cookie = getCookie(USER_COOKIE_KEY)
+  console.log(cookie)
+  console.log(to,{
+    path: to.path,
+    isConnected,
+    isWhitelisted
+  })
+  if(!isConnected) {
+    if(cookie != GUEST && ethers.utils.isAddress(cookie)) {
+      console.log("Ready to sync!!!")
+      const logging = new Promise( 
+        (res) => {
+          store.dispatch(
+            "syncWallet", 
+            {
+              $toast: createToaster({
+                message: "sync"
+            }) ,
+          wallet: "metamask"
+        })
+     })
+     Promise.resolve(logging)
     }
-    return true;
-  } else {
-    router.replace("/");
   }
-
-  return true;
+  if(isConnected && isWhitelisted || isGuest) {
+    console.log("all connected", to.path);
+    let route = {
+      path: to.path
+    }
+    to.path === "/weavr" ? route.params = { assetId: CONTRACTS.WEAVR } : null;
+    return true
+  }
+  if((to.meta.requiresAuth && !isConnected) || (to.meta.requiresAuth && !isGuest)) {
+    console.log(router)
+    router.push({name: "whitelist"})
+    console.log("AUTH")
+  }
 });
 
 export default router;

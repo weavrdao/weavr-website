@@ -166,7 +166,7 @@ const actions = {
       params.passwd===process.env.VUE_APP_DAILY_PASSWORD
     ){
       setCookie(USER_COOKIE_KEY, GUEST, 1)
-      context.commit("setConnectedAsGuest")
+      
     }
      
   },

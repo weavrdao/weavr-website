@@ -260,7 +260,7 @@ export default {
         else {
         route = "https://weavr.org/#/"+path;
       }
-      location.href = route;
+      this.$router.push()
     }
   }
 };

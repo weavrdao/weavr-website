@@ -19,11 +19,12 @@ export default {
   components: {
     ComingSoonListItem,
   },
-  data() {
-    return {
-      properties,
+  computed: {
+    properties() {
+      return properties
     }
   }
+  
 }
 </script>
 <style scoped lang="scss">

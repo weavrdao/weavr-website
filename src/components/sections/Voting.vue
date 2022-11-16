@@ -12,7 +12,6 @@
         :assetId="assetId"
         :proposalStatus="`Past Proposals`"/>
     </div>
-      <router-view :assetId="assetId"></router-view>
   </div>
 </template>
 

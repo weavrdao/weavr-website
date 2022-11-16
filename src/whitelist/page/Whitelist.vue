@@ -20,6 +20,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { CONTRACTS } from '../../services/constants';
 
 export default {
   name: "Whitelist",
@@ -42,7 +43,7 @@ export default {
       this.$router.push("/walletConnect")
     },
     continueToHomepage () {
-      this.$router.push("/weavr");
+      this.$router.push({name: "governance", params: { assetId: CONTRACTS.WEAVR}});
     },
     openLoginModal () {
       this.$router.push("/login")
