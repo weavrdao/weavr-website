@@ -75,6 +75,9 @@ router.beforeEach((to, from) => {
     hasOriginalPathBeenSet = true;
     console.log(originalPath);
   }
+  if (to.fullPath === "/weavr") {
+    return true;
+  }
 
   if (to.fullPath === "/whitelist") {
     return true;
