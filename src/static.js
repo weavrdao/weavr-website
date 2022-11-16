@@ -7,8 +7,8 @@ import "./styles/frabric-custom.scss";
 // import "bulma/css/bulma.css"
 import Toaster from "@meforma/vue-toaster";
 import Unicon from "vue-unicons"
-import { uniTimesCircle, uniTimes, uniTimesSquare, uniSignout, uniEyeSlash, uniBullseye, uniTwitter, uniDiscord, uniGithub } from 'vue-unicons/dist/icons'
-Unicon.add([uniTimes, uniTimesSquare, uniSignout, uniEyeSlash, uniBullseye, uniTwitter, uniDiscord, uniGithub  ])
+import { uniTimesCircle, uniTimes, uniTimesSquare, uniSignout, uniEyeSlash, uniBullseye, uniTwitter, uniDiscord,   uniAngleDown, uniGithub } from 'vue-unicons/dist/icons'
+Unicon.add([uniTimes, uniTimesSquare, uniSignout, uniEyeSlash, uniBullseye, uniTwitter, uniDiscord,  uniAngleDown, uniGithub  ])
 require("dotenv").config()
 
 
