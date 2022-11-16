@@ -183,7 +183,7 @@ const actions = {
  
   async syncWallet(context, params) {
     console.log("SYNC");
-    let { $toast } = params;
+    let {$toast} = params !== undefined ? params : {};
     let walletState = await wallet.getState(params.wallet);
     const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
     const balance = await token.getTokenBalance(
