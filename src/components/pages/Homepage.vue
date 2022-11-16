@@ -7,29 +7,29 @@
         <br />Real Estate
           <span class="has-text-mediumBlue">Club</span>
         </h1>    
-        <!-- <p class="is-size-4"></p> -->
+         <p class="is-size-4"></p>
         <div class="columns is-3-desktop">
           <div class="column">
             <a class="
-              button 
-              is-primary 
+              button
+              is-primary
               is-fullwidth
               is-size-4 "
               href="https://weavr-dao.gitbook.io/weavr-dao/" target="_blank">
               Documentation
             </a>
           </div>
-          <div class="column">
-            <a class="
-              button 
-              is-secondary 
-              is-fullwidth 
-              has-text-white  
-              is-size-4 "
-               @click="navigateToApp('weavr')">
-              Governance
-            </a>
-          </div>
+<!--          <div class="column">-->
+<!--            <a class="-->
+<!--              button -->
+<!--              is-secondary -->
+<!--              is-fullwidth -->
+<!--              has-text-white  -->
+<!--              is-size-4 "-->
+<!--               @click="navigateToApp('weavr')">-->
+<!--              Governance-->
+<!--            </a>-->
+<!--          </div>-->
           <div class="column">
             <a class="
               button
