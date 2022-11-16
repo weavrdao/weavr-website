@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from "vue-router";
+import {createRouter, createWebHistory, createWebHashHistory} from "vue-router";
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue"
 import Homepage from "@/components/pages/Homepage.vue"
@@ -95,7 +95,7 @@ router.beforeEach((to, from) => {
     }
     return true;
   } else {
-    router.push("/whitelist");
+    router.push("/");
   }
 
   return true;

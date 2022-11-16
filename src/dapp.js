@@ -1,19 +1,17 @@
 import { createApp, h } from "vue"
 import App from "./App.vue"
-import { sync } from "vuex-router-sync"
 import router from "./router/dapp.js"
 import store from "./store"
 import "./styles/frabric-custom.scss";
 // import "bulma/css/bulma.css"
 import Toaster from "@meforma/vue-toaster";
 import Unicon from "vue-unicons"
-import { uniTimesCircle, uniTimes, uniTimesSquare, uniSignout, uniEyeSlash, uniBullseye, uniTwitter,  uniAngleDown, uniDiscord, uniGithub } from 'vue-unicons/dist/icons'
-Unicon.add([uniTimes, uniTimesSquare, uniSignout, uniEyeSlash, uniBullseye, uniTwitter,  uniAngleDown, uniDiscord, uniGithub  ])
+import { uniTimesCircle, uniEyeSlash, uniTimes, uniTimesSquare, uniSignout, uniFilePlusAlt, uniCamera, uniBullseye, uniTwitter, uniDiscord,  uniAngleDoubleLeft, uniAngleDown, uniGithub, uniUserCheck } from 'vue-unicons/dist/icons'
+Unicon.add([uniTimes,uniEyeSlash, uniTimesSquare, uniSignout, uniFilePlusAlt, uniCamera, uniAngleDown, uniUserCheck, uniBullseye, uniTwitter, uniDiscord, uniAngleDoubleLeft, uniAngleDown, uniGithub])
 require("dotenv").config()
 
 
 
-const unsync = sync(store, router) // done. Returns an unsync callback fn
 
 
 const app = createApp({

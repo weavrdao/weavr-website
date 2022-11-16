@@ -1,8 +1,9 @@
-import {createRouter, createWebHistory} from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue";
 import Governance from "@/components/pages/Governance.vue";
 import Marketplace from "@/components/pages/Marketplace"
+import TermsPage from "@/components/pages/TermsPage"
 import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.vue";
 import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
@@ -60,8 +61,8 @@ const router = new createRouter({
       component: Marketplace,
       children: [
         {
-          path: "/",
-          redirect: "coming-soon",
+          path: "",
+          component: ComingSoon
         },
         {
           path: "needles",
@@ -180,6 +181,17 @@ router.beforeEach((to, from) => {
     hasOriginalPathBeenSet = true;
   }
 
+  console.log(
+    {
+      paths: {
+        originalPath,
+        to: to.fullPath
+      },
+      hasOriginalPathBeenSet,
+      hasRedirectedAfterWhitelisting
+    }
+  )
+
   if (to.fullPath === "/whitelist") {
     return true;
   }
@@ -189,15 +201,17 @@ router.beforeEach((to, from) => {
   }
 
   if(to.fullPath.includes("coming-soon")) {
+    
     return true;
   }
 
 
   // console.log("__TO_FULL_PATH__", to.fullPath.)
 
-  // Should check for cookie or wallet connected
-  const address = getCookie(USER_COOKIE_KEY) || store.getters.userWalletAddress;
+  // Should check for cookie or wallet connected33333F
+  const address = store.getters.userWalletAddress;
   const isConnected = ethers.utils.isAddress(address);
+
   if (!isConnected) {
     router.push("/");
   }
@@ -209,7 +223,7 @@ router.beforeEach((to, from) => {
     }
     return true;
   } else {
-    router.replace("/whitelist");
+    router.replace("/");
   }
 
   return true;
