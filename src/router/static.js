@@ -18,7 +18,7 @@ const router = new createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/whitelist",
+      redirect: "/home",
     },
     {
       path: "/whitelist",
@@ -94,7 +94,7 @@ router.beforeEach((to, from) => {
       })
       Promise.resolve(logging).then( () => {
         console.log("GOING____");
-        router.push({path: "/home"})
+        return { path: "/home"}
       })
      }
    }
@@ -108,7 +108,7 @@ router.beforeEach((to, from) => {
    }
    if((to.meta.requiresAuth && !isConnected) || (to.meta.requiresAuth && !isGuest)) {
      console.log(router)
-     router.push({name: "whitelist"})
+     router.push({path: "/whitelist"})
      console.log("AUTH")
    }
  });

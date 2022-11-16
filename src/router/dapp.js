@@ -38,7 +38,7 @@ const router = new createRouter({
   routes: [
     {
       path: "/",
-      redirect: "whitelist",
+      redirect: "/marketplace",
     },
     {
       path: "/whitelist",
@@ -217,6 +217,12 @@ router.beforeEach((to, from) => {
      })
      Promise.resolve(logging)
     }
+
+  }
+  if((to.meta.requiresAuth && !cookie) || (to.meta.requiresAuth && !cookie)) {
+    console.log(router)
+    console.log("AUTH")
+
   }
   if(isConnected && isWhitelisted || isGuest) {
     console.log("all connected", to.path);
@@ -226,11 +232,7 @@ router.beforeEach((to, from) => {
     to.path === "/weavr" ? route.params = { assetId: CONTRACTS.WEAVR } : null;
     return true
   }
-  if((to.meta.requiresAuth && !isConnected) || (to.meta.requiresAuth && !isGuest)) {
-    console.log(router)
-    router.push({name: "whitelist"})
-    console.log("AUTH")
-  }
+  
 });
 
 export default router;

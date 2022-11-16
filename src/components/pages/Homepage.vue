@@ -38,7 +38,7 @@
               has-text-white
               is-size-4 "
                @click="navigateToApp('marketplace/coming-soon')">
-              marketplace
+              Marketplace
             </a>
           </div>
         </div>

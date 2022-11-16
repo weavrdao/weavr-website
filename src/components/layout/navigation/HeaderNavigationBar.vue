@@ -91,7 +91,6 @@ export default {
       const PORT = window.location.port 
       console.log(PORT)
       if(PORT === "8080") {
-        window.location.port = "9090"
         this.navigateToApp(path)
       }
       path === "governance" ? route.params = { assetId: CONTRACTS.WEAVR} : null;
@@ -101,7 +100,7 @@ export default {
     menuToggle() {
       this.navigation.isOpen = !this.navigation.isOpen
     },
-    navigateToApp(path = "") {
+    navigateToApp(path) {
       var route;
       if (location.href.includes("localhost")) {
         route = "http://localhost:9090/#/";+path

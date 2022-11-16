@@ -159,41 +159,6 @@ export default {
         return true;
       }
     },
-    /* eslint-disable indent */
-    orderInputUpdated(index, event) {
-      switch (index) {
-        case 0:
-          this.orderFromValue = event.target.value;
-          this.orderToValue = this.convertToShares(
-              this.orderFromValue
-          ).toString();
-          break;
-        case 1:
-          this.orderToValue = event.target.value;
-          this.orderFromValue = this.convertToETH(this.orderToValue).toString();
-          break;
-        default:
-          break;
-      }
-    },
-
-    convertToETH(shares) {
-      return shares * this.askPrice;
-    },
-
-    convertToShares(eth) {
-      return eth / this.askPrice;
-    },
-
-    async performSwap() {
-      await this.swap({
-        asset: this.asset,
-        amount: this.orderToValue,
-        $toast: this.$toast,
-      });
-      this.orderFromValue = 0;
-      this.orderToValue = 0;
-    },
   },
 
   data() {
