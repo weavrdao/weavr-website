@@ -10,7 +10,6 @@ import {
   whitelistGetters,
   whitelistActions,
   whitelistMutations,
-  AUTH_COOKIE_KEY,
   getCookie,
   setCookie,
 } from "../whitelist";
@@ -156,7 +155,7 @@ const actions = {
     if(
       params.passwd===process.env.VUE_APP_DAILY_PASSWORD
     ){
-      setCookie(AUTH_COOKIE_KEY, true, 1)
+      setCookie(USER_COOKIE_KEY, "0x0000000000000000000000000000000000000000", 1)
       context.commit("setConnectedAsGuest")
     }
      
@@ -206,7 +205,7 @@ const actions = {
     );
 
     context.commit("setWhitelisted", isWhitelisted);
-    isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address, 1)
+    isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address, 100)
     const balancePromise = await token.getTokenBalance(
       CONTRACTS.FRBC,
       walletState.address
