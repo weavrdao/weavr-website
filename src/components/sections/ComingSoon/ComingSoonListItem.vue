@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     routeToPropertyPage() {
-      this.$router.push(`/coming-soon/${this.property.id}`);
+      this.$router.push(`/marketplace/coming-soon/${this.property.id}`);
     },
     getDisplayTarget() {
       return Number(this.property.target).toLocaleString("en-US")

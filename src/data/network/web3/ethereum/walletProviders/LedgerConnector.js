@@ -3,20 +3,20 @@ const { ethers } = require("ethers");
 
 
 export class LedgerConnector {
+  
   constructor(ledgerApp) {
     this.provider = ledgerApp;
-    // this.getCoinbaseEthereumAddress()
-    // this.getChainId()
   }
-
+  
+    
   getAddress = async () => {
     try {
       let i;
-      for(i=0; i<10; i++) {
-        const address = await this.provider.getAddress("44'/60'/"+i+"'/0/0").then(o => o.address)
-        console.log(address)
-      }
-      return await this.provider.getAddress("44'/60'/"+i+"'/0/0").then(o => o.address)
+      // for(i=0; i<10; i++) {
+      //   const address = await this.provider.getAddress("44'/60'/"+i+"'/0/0").then(o => o.address)
+      //   console.log(address)
+      // }
+      return await this.provider.getAddress("44'/60'/"+"1"+"'/0/0").then(o => o.address)
     } catch (error) {}
   };
 
@@ -57,4 +57,4 @@ export class LedgerConnector {
   };
 }
 
-export default MetaMaskConnector;
+export default LedgerConnector;

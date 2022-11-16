@@ -13,7 +13,6 @@
           :assetId="assetId"
           :proposalStatus="`Past Proposals`"/>
     </div>
-    <router-view :assetId="assetId"></router-view>
   </div>
 </template>
 
@@ -42,7 +41,7 @@ import NewProposalSelector from "../sections/NewProposalSelector.vue";
 import RefreshButton from "../sections/RefreshButton.vue";
 
 export default {
-  name: "Voting",
+  name: "Governance",
   props: {
     assetId: {
       type: String,
@@ -159,41 +158,6 @@ export default {
       } else {
         return true;
       }
-    },
-    /* eslint-disable indent */
-    orderInputUpdated(index, event) {
-      switch (index) {
-        case 0:
-          this.orderFromValue = event.target.value;
-          this.orderToValue = this.convertToShares(
-              this.orderFromValue
-          ).toString();
-          break;
-        case 1:
-          this.orderToValue = event.target.value;
-          this.orderFromValue = this.convertToETH(this.orderToValue).toString();
-          break;
-        default:
-          break;
-      }
-    },
-
-    convertToETH(shares) {
-      return shares * this.askPrice;
-    },
-
-    convertToShares(eth) {
-      return eth / this.askPrice;
-    },
-
-    async performSwap() {
-      await this.swap({
-        asset: this.asset,
-        amount: this.orderToValue,
-        $toast: this.$toast,
-      });
-      this.orderFromValue = 0;
-      this.orderToValue = 0;
     },
   },
 

@@ -1,25 +1,24 @@
-import router from "../router/static";
+/* eslint-disable max-lines-per-function */
+// import router from "../router/index";
 import { ethers } from "ethers";
 import { createToaster } from "@meforma/vue-toaster";
 import { params } from "stylus/lib/utils";
 import ServiceProvider from "../services/provider";
 import WalletState from "../models/walletState";
-import { CONTRACTS, DAO } from "../services/constants";
+import { CONTRACTS, DAO, GUEST, NETWORK } from "../services/constants";
 import {
   whitelistState,
   whitelistGetters,
   whitelistActions,
   whitelistMutations,
-  AUTH_COOKIE_KEY,
   getCookie,
   setCookie,
+  WHITELIST_COOKIE_KEY,
+  WALLET_STATE_COOKIE_KEY,
+  addressMatchesCookie,
 } from "../whitelist";
+import { USER_COOKIE_KEY } from "../whitelist/constants";
 
-const {
-  getMetaMaskProvider,
-  getCoinbaseWalletProvider,
-  getBraveProvider,
-} = require("../data/network/web3/ethereum/providers.js");
 
 /**
  * TODO - Abstrucked -
@@ -32,10 +31,12 @@ const token = ServiceProvider.token();
 const whitelist = ServiceProvider.whitelist();
 
 function state() {
+  // const walletCookie = getCookie(WALLET_STATE_COOKIE_KEY);
+
   return {
     user: {
       wallet: WalletState,
-      isGuest: getCookie(AUTH_COOKIE_KEY) || null,
+      isGuest: getCookie(USER_COOKIE_KEY) === GUEST ? true : null,
       log: true,
       vouches: [],
     },
@@ -69,6 +70,15 @@ const getters = {
   },
   userWalletAddress(state) {
     return state.user.wallet.address;
+  },
+
+  connectedNetwork() {
+
+    return wallet.getChainId()
+  },
+  
+  isConnected(state) {
+    return ethers.utils.isAddress(state.user.wallet.address)
   },
 
   userTokenBalance(state) {
@@ -155,8 +165,8 @@ const actions = {
     if(
       params.passwd===process.env.VUE_APP_DAILY_PASSWORD
     ){
-      setCookie(AUTH_COOKIE_KEY, true, 1)
-      context.commit("setConnectedAsGuest")
+      setCookie(USER_COOKIE_KEY, GUEST, 1)
+      
     }
      
   },
@@ -170,70 +180,58 @@ const actions = {
       totalSupply: ethers.utils.formatEther(supply),
     };
   },
-  // async connectWallet(context, params) {
-  //   console.log("into connectwallet: ", params.wallet);
-  //   let provider, walletState;
-
-  //   console.log("TOKEN_INFO: ", await token.getTokenInfo())
-  //   // Promise.all([symbol, balance]).then((res) => {
-  //   //   console.log(res);
-  //   // });
-  //   walletState = new WalletState(
-  //     walletState.address,
-  //     walletState.ethBalance,
-  //     ethers.utils.formatEther(1).toString(),
-  //     "WEAV"
-  //   );
-  //   context.commit("setWallet", walletState);
-  // },
-
+ 
   async syncWallet(context, params) {
     console.log("SYNC");
     let { $toast } = params;
-    // const toast = createToaster({});
     let walletState = await wallet.getState(params.wallet);
-    // const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
+    const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
+    const balance = await token.getTokenBalance(
+      CONTRACTS.FRBC,
+      walletState.address
+    );
     
-    const tokenInfo = await token.getTokenInfo()
-    console.log("STATE_TOKENINFO___", tokenInfo);
-    Promise.all([walletState]).then((val) => {
+    Promise.all([walletState, symbol, balance]).then((val) => {
       console.log(val);
     });
-     const isWhitelisted =
-      await whitelist.checkWhitelistedStatus(
+
+    const isWhitelisted = await whitelist.checkWhitelistedStatus(
+      CONTRACTS.WEAVR,
       walletState.address
     );
 
     context.commit("setWhitelisted", isWhitelisted);
-    isWhitelisted && setCookie("AuthenticatedAddress", walletState.address, -1)
+    isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address, 100)
     const balancePromise = await token.getTokenBalance(
       CONTRACTS.FRBC,
       walletState.address
     );
-    let balance = Promise.all([balancePromise]).then(
-      (bal) => {
-        console.log("BALANCE___", bal[0])
-        console.log(tokenInfo.symbol)
-        balance = ethers.utils.formatEther(bal[0])
-        walletState = new WalletState(
-          walletState.address,
-          walletState.ethBalance,
-          balance,
-          tokenInfo.symbol
-        );
-        context.commit("setWallet", walletState);
-        console.log(context.state.user.wallet);
-        return bal
-      }
-    )
-   
-
     
+    const hasKyc = await whitelist.hasKyc(
+      CONTRACTS.WEAVR,
+      walletState.address
+    );
+
+    walletState = new WalletState(
+      walletState.address,
+      walletState.ethBalance,
+      ethers.utils.formatEther(balance).toString(),
+      symbol,
+      wallet.getChainId()
+    );
+    context.commit("setKyc", hasKyc);
+    context.commit("setWallet", walletState);
+
     $toast.clear();
     $toast.success("Wallet fully synced", {
       duration: 1000,
       position: "top",
     });
+  },
+
+  async logout(context) {
+    const state = wallet.disconnect();
+    context.commit("setWallet", state)
   },
 
   async refreshProposalsDataForAsset(context, params) {
@@ -253,7 +251,7 @@ const actions = {
   },
 
   async createPaperProposal(context, props) {
-    const { assetAddr, daoResolution, title, description } = props;
+    const { assetAddr, daoResolution, title, description, forumLink } = props;
     const toast = params.$toast || createToaster({});
 
     toast.clear();
@@ -263,7 +261,7 @@ const actions = {
     });
 
     const status = await dao
-      .createPaperProposal(assetAddr, title, description, daoResolution)
+      .createPaperProposal(assetAddr, title, description, forumLink, daoResolution)
       .then(() => {
         props.$toast.clear();
       });
@@ -279,7 +277,7 @@ const actions = {
 
   async createParticipantProposal(context, props) {
     const toast = params.$toast || createToaster({});
-    const { assetId, participantType, participant, info } = props;
+    const { assetId, participantType, participant, description, forumLink } = props;
 
     toast.show("Confirming transaction...", {
       duration: 15000,
@@ -289,7 +287,8 @@ const actions = {
       assetId,
       participantType,
       participant,
-      info
+      description,
+      forumLink
     );
     toast.clear();
     if (status) {
@@ -297,7 +296,7 @@ const actions = {
       context.dispatch("refreshProposalsDataForAsset", {
         assetId: params.assetId,
       });
-      router.push("/" + DAO + "/" + params.assetId);
+      // router.push("/" + DAO + "/" + params.assetId);
     } else {
       toast.error("Transaction failed. See details in MetaMask.");
       console.log("Transaction failed. See details in MetaMask.");
@@ -314,6 +313,7 @@ const actions = {
       codeAddress,
       title,
       description,
+      forumLink,
       signer,
       governor,
     } = props;
@@ -329,6 +329,7 @@ const actions = {
       codeAddress,
       title,
       description,
+      forumLink,
       version,
       signer,
       governor
@@ -343,7 +344,7 @@ const actions = {
       context.dispatch("refreshProposalsDataForAsset", {
         assetId: params.assetId,
       });
-      router.push("/" + DAO + "/" + params.assetId);
+      // router.push("/" + DAO + "/" + params.assetId);
     } else {
       toast.error("Transaction failed. See details in MetaMask.");
       console.log("Transaction failed. See details in MetaMask.");
@@ -353,16 +354,17 @@ const actions = {
   async createTokenActionProposal(context, props) {
     const toast = params.$toast || createToaster({});
 
+    console.log("Calling!");
+
     const {
-      tokenAddress,
-      targetAddress,
+      assetId,
       mint,
+      target,
       price,
       amount,
       title,
       description,
-      tradeToken,
-      target,
+      forumLink,
     } = props;
 
     toast.show("Confirming transaction...", {
@@ -370,28 +372,28 @@ const actions = {
       position: "top",
     });
 
+    const tokenAddress = await dao.getTokenAddress(CONTRACTS.WEAVR);
+
+    const atomicAmount = ethers.utils.parseEther(String(amount));
+
     const status = await dao.createTokenActionProposal(
+      assetId,
       tokenAddress,
-      targetAddress,
+      target,
       mint,
       price,
-      amount,
+      atomicAmount,
       title,
       description,
-      tradeToken,
-      target
+      forumLink,
     );
-
+    // router.push(DAO);
     toast.clear();
     if (status) {
       toast.success("Transaction confirmed...", {
         duration: 2000,
         position: "top",
       });
-      context.dispatch("refreshProposalsDataForAsset", {
-        assetId: params.assetId,
-      });
-      router.push("/" + DAO + "/" + params.assetId);
     } else {
       toast.error("Transaction failed. See details in MetaMask.");
       console.log("Transaction failed. See details in MetaMask.");
@@ -408,10 +410,18 @@ const actions = {
       descriptor,
       title,
       description,
+      forumLink,
       symbol,
       tradeToken,
       target,
+      images,
+      documents,
     } = props;
+
+    toast.info("Uploading files to IPFS (this may take some time)", {
+      duration: 10000,
+      position: "bottom",
+    });
 
     const status = await dao.createThreadProposal(
       assetId,
@@ -419,9 +429,12 @@ const actions = {
       descriptor,
       title,
       description,
+      forumLink,
       symbol,
       tradeToken,
-      target
+      target,
+      images,
+      documents,
     );
     if (status) {
       toast.success("Transaction confirmed...", {
@@ -431,7 +444,7 @@ const actions = {
       context.dispatch("refreshProposalsDataForAsset", {
         assetId: params.assetId,
       });
-      router.push("/" + DAO + "/" + params.assetId);
+      // router.push(`/${DAO}/${params.assetId}`);
     } else {
       toast.error("Transaction failed. See details in MetaMask.");
       console.log("Transaction failed. See details in MetaMask.");
@@ -458,7 +471,7 @@ const actions = {
       context.dispatch("refreshProposalsDataForAsset", {
         assetId: params.assetId,
       });
-      router.push("/" + DAO + "/" + params.assetId);
+      // router.push("/" + DAO + "/" + params.assetId);
     } else {
       toast.error("Transaction failed. See details in MetaMask.");
       console.log("Transaction failed. See details in MetaMask.");
@@ -466,29 +479,77 @@ const actions = {
     console.log(status);
   },
 
+  async withdraw(context, props) {
+    const toast = params.$toast || createToaster({});
+
+    const { assetAddress, proposalId } = props;
+    
+    const status = await dao.withdraw(
+      assetAddress || CONTRACTS.WEAVR,
+      proposalId,
+    );
+
+    if (status) {
+      toast.success("Transaction confirmed...", {
+        duration: 2000,
+        position: "top",
+      });
+    } else {
+      toast.error("Transaction failed. See details in MetaMask.");
+      console.log("Transaction failed. See details in MetaMask.");
+    }
+    console.log(status);
+  },
+
+  async queueProposal(context, props) {
+    const toast = params.$toast || createToaster({});
+    const id = ethers.BigNumber.from(props.proposalId)
+    
+    const status = await dao.queue(id);
+    console.log(status)
+
+  },
+
+  async completeProposal(context, props) {
+    const toast = params.$toast || createToaster({});
+    const id = ethers.BigNumber.from(props.proposalId)
+    const DATA = params.data || "0x000000"
+    const status = await dao.complete(id, DATA);
+    console.log(status)
+  },
+
   async vouchParticipant(context, props) {
     const toast = params.$toast || createToaster({});
     const { customDomain, participant } = props;
-    const networks = {
-      goerli: 5,
-      arbitrum: 42161,
-    };
+    
     const domain = customDomain || {
-      name: "Protocol",
+      name: "Weavr Protocol",
       version: "1",
-      chainId: networks.arbitrum,
-      verifyingContract: CONTRACTS.WEAVR,
+      chainId: NETWORK.id,
+      verifyingContract: CONTRACTS.WEAVR
     };
     const types = {
       Vouch: [{ type: "address", name: "participant" }],
     };
-    const data = { participant: participant };
+    const data = { 
+      participant: participant 
+    };
+    
     toast.info("Waiting for signature..", { position: "top" });
-    const signature = await wallet.getSignature(domain, types, data);
-    Promise.all([signature]).then(() => {
-      console.log(signature[0]);
+    
+    const signatures = await wallet.getSignature(domain, types, data);
+    Promise.all([signatures])
+    .then(() => {
+      // console.log(signature[0]);
+      const expectedSignerAddress = context.state.user.wallet.address;
+      const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
+      console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
+      console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
     });
-    const status = await dao.vouch(participant, signature[0]);
+    const signature = signatures[0]
+    console.log(signature);
+    const status = await dao.vouch(participant, signature);
+    
     if (status) {
       toast.success("Transaction confirmed...", {
         duration: 2000,
@@ -497,13 +558,72 @@ const actions = {
       context.dispatch("refreshProposalsDataForAsset", {
         assetId: params.assetId,
       });
-      router.push("/" + DAO + "/" + params.assetId);
+      // router.push("/" + DAO + "/" + params.assetId);
     } else {
       toast.error("Transaction failed. See details in MetaMask.");
       console.log("Transaction failed. See details in MetaMask.");
     }
   },
 
+  async verifyParticipant(context, props) {
+    const toast = params.$toast || createToaster({});
+    const { customDomain, participant, pType, kycHash, nonce } = props;
+    console.log({ customDomain, participant, pType, kycHash, nonce })
+    const domain = customDomain || {
+      name: "Weavr Protocol",
+      version: "1",
+      chainId: NETWORK.id,
+      verifyingContract: CONTRACTS.WEAVR
+    };
+    const types = {
+      KYCVerification: [
+        { type: "uint8",   name: "participantType" },
+        { type: "address", name: "participant" },
+        { type: "bytes32", name: "kyc" },
+        { type: "uint256", name: "nonce" }
+    ]
+    };
+    const data = { 
+      participantType: pType,
+      participant: participant,
+      kyc: ethers.utils.id(kycHash),
+      nonce: ethers.BigNumber.from(nonce) 
+    };
+    
+    toast.info("Waiting for signature..", { position: "top" });
+    
+    const signatures = await wallet.getSignature(domain, types, data);
+    Promise.all([signatures])
+    .then(() => {
+      // // console.log(signature[0]);
+      // const expectedSignerAddress = context.state.user.wallet.address;
+      // const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
+      // console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
+      // console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
+    });
+    const signature = signatures[0]
+    console.log(signature);
+    const status = await dao.approve(data.participantType, data.participant, data.kyc, signature);
+    
+    if (status) {
+      toast.success("Transaction confirmed...", {
+        duration: 2000,
+        position: "top",
+      });
+      context.dispatch("refreshProposalsDataForAsset", {
+        assetId: params.assetId,
+      });
+      // router.push("/" + DAO + "/" + params.assetId);
+    } else {
+      toast.error("Transaction failed. See details in MetaMask.");
+      console.log("Transaction failed. See details in MetaMask.");
+    }
+  },
+
+  async participantsByType(context, params) {
+    const type = params.type || 2;
+    // await dao.getParticipantsByType(type)
+  },
   ...whitelistActions(whitelist),
 };
 
@@ -543,14 +663,9 @@ const mutations = {
   setWalletConnetected(state) {
     if (state.user.wallet.connected != null) !state.user.wallet.connected;
   },
-  setConnectedAsGuest(state) {
-    state.user.isGuest = true
-  },
 
   ...whitelistMutations,
 };
-
-
 
 export default {
   state,

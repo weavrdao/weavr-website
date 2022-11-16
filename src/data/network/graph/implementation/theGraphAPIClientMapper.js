@@ -41,7 +41,7 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
   }
 
   mapTokenInfo(rawWeavrTokenInfo) {
-    console.log("MAPPER___", rawWeavrTokenInfo.frabric.token)
+    console.log("MAPPER___", rawWeavrTokenInfo)
     return rawWeavrTokenInfo.frabric.token
   }
 

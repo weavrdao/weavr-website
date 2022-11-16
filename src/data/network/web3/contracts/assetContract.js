@@ -1,10 +1,8 @@
 /* global BigInt */
 import { ethers } from "ethers";
 import EthereumClient from "../ethereum/ethereumClient";
-import { ParticipantType } from "@/models/common";
-import { base58 } from "ethers/lib/utils";
-const contractArtifact = require("./abi/Frabric.json");
-console.log(contractArtifact);
+
+
 const contractAbi = [
   // Make a buy order
   "function buy(uint256 amount, uint256 price) payable",
@@ -24,14 +22,29 @@ const contractAbi = [
   // Vote on a proposal
   "function vote(uint256[] ids, int112[] votes)",
 
+  // Get ERC20 address of asset
+  "function erc20() view returns (address)",
+
   // Propose a thread dissolution
   "function proposeDissolution(string info, address purchaser, address token, uint256 purchaseAmount)",
 
   // Can Propose
   "function canPropose(address proposer) returns (bool)",
 
+  // Withdraw proposal
+  "function withdrawProposal(uint256 id)",
+  
+  // Queue proposal
+  "function queueProposal(uint256 id)",
+
+  // Complete proposal
+  "function completeProposal(uint256 id, bytes data)",
+
   // Vouch a participant
   "function vouch(address participant, bytes signature)",
+
+  // Approve (KYC) a participant
+  "function approve( uint8 pType, address approving,  bytes32 kycHash, bytes signature)",
 
   // Propose a new thread
   "function proposeThread(uint8 variant, string name, string symbol, bytes32 descriptor, bytes data, bytes32 info) returns (uint256 id)",
@@ -49,7 +62,7 @@ class AssetContract {
   constructor(ethereumClient, contractAddress) {
     this.contract = ethereumClient.getContract(
       contractAddress,
-      contractArtifact.abi
+      contractAbi
     );
     this.mutableContract = ethereumClient.getMutableContract(this.contract);
   }
@@ -119,7 +132,7 @@ class AssetContract {
 
   async proposeThread(variant, name, symbol, descriptorHash, data, infoHash) {
     console.log("Creating thread proposal...");
-    console.dir({
+    console.log({
       variant,
       name,
       symbol,
@@ -135,18 +148,6 @@ class AssetContract {
       data,
       infoHash
     );
-
-    // const tx = await this.mutableContract.proposeThread(
-    //   ethers.BigNumber.from(0),
-    //   'THREAD4',
-    //   "SYMBL",
-    //   "0xb0c16bad9e73e9744fd75e73e344b895e718b61438d0c83ba8727b5442c8160f",
-    //   "0x000000000000000000000000d87ba7a50b2e7e660f678a895e4b72e7cb4ccd9c00000000000000000000000000000000000000000000000000000000000003e8",
-    //   "0x5a3c1b7907feb4653b1ed39fde329e28db7b958d2e3bf92e48d448c9d1914900",
-    //   {
-    //     gasLimit: 4000000,
-    //   }
-    // );
     const status = (await tx.wait()).status;
     return status;
   }
@@ -155,16 +156,55 @@ class AssetContract {
    * Vouch a participant
    */
   async vouch(participant, signature) {
+    
     // const bytesSignature = ethers.utils.id(signature);
-    console.log("ASSETCONTRACT: ", participant, signature);
-    let tx = this.mutableContract.vouch(participant, signature, {
-      gasLimit: 5000000,
-    });
+    console.log("ASSETCONTRACT: ", signature);
+    let tx = this.mutableContract.vouch(participant, signature);
     // this.mutableContract.signer
 
     console.log(tx);
     return tx;
   }
+
+  /**
+   * Queue a proposal
+   */
+  async queueProposal(proposalId) {
+    
+    console.log("ASSETCONTRACT: ", proposalId);
+    let tx = await this.mutableContract.queueProposal(proposalId);
+
+    console.log(tx);
+    return tx;
+  }
+
+  /**
+   * Complete a proposal
+   */
+  async completeProposal(proposalId, data) {
+    
+    console.log("ASSETCONTRACT: ", proposalId);
+    let tx = await this.mutableContract.completeProposal(proposalId, data);
+
+    console.log(tx);
+    return tx;
+  }
+
+  /**
+   * Approve a KYC vendor verified participant
+   */
+  async approve(
+    pType,
+    approving,
+    kycHash,
+    signature
+  ) {
+    console.log({pType, approving, kycHash, signature})
+    const tx = await this.mutableContract.approve(pType, approving, kycHash, signature);
+    let status = (await tx.wait()).status;
+    return status;
+  }
+
 
   /**
    * Check if participant can make a proposal
@@ -213,6 +253,11 @@ class AssetContract {
     return (await tx.wait()).status;
   }
 
+  async withdrawProposal(proposalId) {
+    const tx = await this.mutableContract.withdrawProposal(proposalId);
+    return (await tx.wait()).status;
+  }
+
   /**
    * Propose a thread dissolution
    * @param {string} info Proposal info
@@ -237,6 +282,11 @@ class AssetContract {
     );
 
     return (await tx.wait()).status;
+  }
+
+  async erc20() {
+    const address = await this.contract.erc20();
+    return address;
   }
 }
 

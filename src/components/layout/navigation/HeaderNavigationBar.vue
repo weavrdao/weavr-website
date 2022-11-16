@@ -2,8 +2,8 @@
   <nav class="navbar p-5" role="navigation" aria-label="main navigation">
     <div class="container">
       <div class="navbar-brand">
-      <a class="navbar-item" href="#">
-        <div class="title brand has-text-white is-flex is-align-items-center">
+      <a class="navbar-item" @click="navigateToStatic()">
+        <div class="title brand has-text-white is-flex is-align-items-center" >
           <div class="image p-2"><img class="mx-2" src="../../../assets/logo/new-logo.svg" alt=""></div>
           Weavr</div>
       </a>
@@ -39,7 +39,6 @@
           v-for="item in navigation.items"
           :key="item.name"
           v-on:click="transitTo(item.path)"
-          :href="item.path"
         >
           {{ item.name }}
         </a>
@@ -47,7 +46,7 @@
 
       <div class="navbar-end">
         <div class="navbar-item">
-          <!-- <SignerAddress /> -->
+          <SignerAddress />
         </div>
       </div>
     </div>
@@ -57,22 +56,23 @@
 </template>
 
 <script>
-// import SignerAddress from '../../views/address/SignerAddress.vue'
+import SignerAddress from '../../views/address/SignerAddress.vue'
 import { useRoute } from "vue-router"
 import { mapGetters, mapActions } from "vuex"
+import { CONTRACTS, DAO } from '../../../services/constants'
 export default {
   name: "HeaderHavigationBar",
   components: {
-    // SignerAddress,
+    SignerAddress,
   },
   data() {
     return {
       navigation: {
         isOpen: false,
         items: [
-          {name: "Marketplace", path: "https://app.weavr.org/#/marketplace" },
-          { name: "Governance", path: "https://app.weavr.org/#/weavr" },
-          { name: "Resolutions", path: "https://resolutions.weavr.org" }],
+          {name: "Marketplace", path: "marketplace" },
+          { name: "Governance", path: "governance" },
+          { name: "Resolutions", path: "resolutions"}],
       },
     }
   },
@@ -85,12 +85,47 @@ export default {
       return item.path == useRoute().path
     },
     transitTo(path) {
-      this.$router.push(path)
+      let route = {
+        name: path
+      }
+      const PORT = window.location.port 
+      console.log(PORT)
+      if( path === "resolutions") {
+        console.log("navigatin to resoluuuu");
+        location.href = "https://resolutions.weavr.org";
+      }
+      
+      else if(PORT === "8080") {
+        console.log("here too");
+        this.navigateToApp(path)
+      }
+      path === "governance" ? route.params = { assetId: CONTRACTS.WEAVR} : null;
+      this.$router.push(route)
       this.menuToggle()
     },
     menuToggle() {
       this.navigation.isOpen = !this.navigation.isOpen
     },
+    navigateToApp(path) {
+      var route;
+      if (location.href.includes("localhost")) {
+        route = "http://localhost:9090/#/";+path
+      }
+      else {
+        route = "https://app.weavr.org/#/"+path;
+      } 
+      location.href = route;
+    },
+    navigateToStatic() {
+      var route;
+      if (location.href.includes("localhost")) {
+        route = "http://localhost:8080/#/";
+      }
+        else {
+        route = "https://weavr.org/#/";
+      }
+      location.href = route;
+    }
   },
 }
 </script>

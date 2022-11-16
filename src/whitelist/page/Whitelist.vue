@@ -7,6 +7,7 @@
     <div class="flex-center connect-container">
       <h3 v-if="!address">Please connect your wallet to continue</h3 >
       <button class="button tag is-primary has-radius-xs is-large is-clickable " v-if="!address" @click="openConnectWalletPage">Connect Wallet</button>
+      <button class="button tag is-primary has-radius-xs is-large is-clickable mt-3" v-if="!address" @click="openLoginModal">Login as Guest</button>
       <button class="button tag is-primary has-radius-xs is-large is-clickable " v-else-if="whitelisted" @click="continueToHomepage">Continue to Homepage</button>
       <div class="flex-center" v-else>
         <h3 class="has-text-centered">We're sorry, you have not yet been whitelisted</h3>
@@ -19,6 +20,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { CONTRACTS } from '../../services/constants';
 
 export default {
   name: "Whitelist",
@@ -41,8 +43,11 @@ export default {
       this.$router.push("/walletConnect")
     },
     continueToHomepage () {
-      this.$router.push("/weavr");
+      this.$router.push({name: "governance", params: { assetId: CONTRACTS.WEAVR}});
     },
+    openLoginModal () {
+      this.$router.push("/login")
+    }
   },
 }
 </script>

@@ -1,7 +1,9 @@
-import {createRouter, createWebHashHistory} from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue";
 import Governance from "@/components/pages/Governance.vue";
+import Marketplace from "@/components/pages/Marketplace"
+import TermsPage from "@/components/pages/TermsPage"
 import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.vue";
 import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
@@ -23,13 +25,20 @@ import ComingSoon from "@/components/sections/ComingSoon/ComingSoon.vue";
 import SingleComingSoonPage from "@/components/sections/ComingSoon/SingleComingSoonPage.vue";
 import {ethers} from "ethers";
 import SumSub from "@/components/SumSub.vue";
+import { getCookie } from "../whitelist";
+import { USER_COOKIE_KEY } from "../whitelist/constants";
+
+import Login from "@/components/sections/Login.vue"
+import { GUEST } from "../services/constants";
+import { createToaster } from "@meforma/vue-toaster";
+
 
 const router = new createRouter({
   history: createWebHashHistory(),
   routes: [
     {
       path: "/",
-      redirect: "/whitelist",
+      redirect: "/marketplace",
     },
     {
       path: "/whitelist",
@@ -43,41 +52,51 @@ const router = new createRouter({
       props: {component: walletConnect},
     },
     {
-      path: "/governance",
-      name: "governance",
-      redirect: "governance"
+      path: "/login",
+      name: "login",
+      component: Modal,
+      props: {component: Login}
     },
     {
       path: "/marketplace",
       name: "marketplace",
-      redirect: "/marketplace/coming-soon",
-    },
-    {
-      path: "/marketplace/needle-market",
-      name: "needle-market",
-      component: NeedlesMarketplace,
-    },
-    {
-      path: "/needle/:needleId",
-      name: "needle",
-      component: SingleNeedle,
-    },
-    {
-      path: "/marketplace/coming-soon",
-      name: "comingSoon",
-      component: ComingSoon,
-    },
-    {
-      path: "/coming-soon/:comingSoonId",
-      name: "singleComingSoon",
-      component: SingleComingSoonPage,
-    },
+      alisa: "marketplace",
+      component: Marketplace,
+      children: [
+        {
+          path: "",
+          component: ComingSoon,
+          meta: { requiresAuth: false}
+        },
+        {
+          path: "needles",
+          name: "needle-market",
+          component: NeedlesMarketplace,
+        },
+        {
+          path: "needle/:needleId",
+          name: "needle",
+          component: SingleNeedle,
+        },
+        {
+          path: "coming-soon",
+          name: "comingSoon",
+          component: ComingSoon,
+        },
+        {
+          path: "coming-soon/:comingSoonId",
+          name: "singleComingSoon",
+          component: SingleComingSoonPage,
+        },
+      ]
+    },  
     {
       path: "/".concat(DAO).concat("/:assetId"),
       alias: "/".concat(DAO),
       name: "governance",
       component: Governance,
       props: {assetId: CONTRACTS.WEAVR},
+      meta: { requiresAuth: true },
       children: [
         {
           path: "kyc",
@@ -161,40 +180,59 @@ let hasOriginalPathBeenSet = false;
 let hasRedirectedAfterWhitelisting = false;
 
 router.beforeEach((to, from) => {
-  if (!hasOriginalPathBeenSet) {
-    originalPath = to.fullPath === "/whitelist" ? "/weavr" : to.fullPath;
-    hasOriginalPathBeenSet = true;
-  }
-
-  if (to.fullPath === "/whitelist") {
-    return true;
-  }
-
-  if (to.fullPath === "/walletConnect") {
-    return true;
-  }
-
-  if (to.fullPath === "/marketplace/coming-soon") {
-    return true;
-  }
-
+ /**
+  * NOTES
+  * Should authorize navigation if:
+  * ( isConnected + isWhitelisted || isConnected + isGuest )
+  * 
+  * ON not connected and COOKIE should AUTOCONNECT
+  * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
+  * 
+  */
+  
   const address = store.getters.userWalletAddress;
   const isConnected = ethers.utils.isAddress(address);
-  if (!isConnected) {
-    router.push("/");
-  }
-  const whitelisted = store.getters.isWhitelisted;
-  if (whitelisted) {
-    if (!hasRedirectedAfterWhitelisting) {
-      router.push(originalPath);
-      hasRedirectedAfterWhitelisting = true;
+  const isWhitelisted = store.getters.isWhitelisted;
+  const isGuest = store.getters.isGuest;
+  const cookie = getCookie(USER_COOKIE_KEY)
+  console.log(cookie)
+  console.log(to,{
+    path: to.path,
+    isConnected,
+    isWhitelisted
+  })
+  if(!isConnected) {
+    if(cookie != GUEST && ethers.utils.isAddress(cookie)) {
+      console.log("Ready to sync!!!")
+      const logging = new Promise( 
+        (res) => {
+          store.dispatch(
+            "syncWallet", 
+            {
+              $toast: createToaster({
+                message: "sync"
+            }) ,
+          wallet: "metamask"
+        })
+     })
+     Promise.resolve(logging)
     }
-    return true;
-  } else {
-    router.push("/whitelist");
-  }
 
-  return true;
+  }
+  if((to.meta.requiresAuth && !cookie) || (to.meta.requiresAuth && !cookie)) {
+    console.log(router)
+    console.log("AUTH")
+
+  }
+  if(isConnected && isWhitelisted || isGuest) {
+    console.log("all connected", to.path);
+    let route = {
+      path: to.path
+    }
+    to.path === "/weavr" ? route.params = { assetId: CONTRACTS.WEAVR } : null;
+    return true
+  }
+  
 });
 
 export default router;

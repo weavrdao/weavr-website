@@ -38,7 +38,7 @@
               has-text-white
               is-size-4 "
                @click="navigateToApp('marketplace/coming-soon')">
-              marketplace
+              Marketplace
             </a>
           </div>
         </div>
@@ -260,7 +260,7 @@ export default {
         else {
         route = "https://weavr.org/#/"+path;
       }
-      location.href = route;
+      this.$router.push()
     }
   }
 };

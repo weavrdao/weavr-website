@@ -1,5 +1,6 @@
 const whitelistAbi = [
-  "function whitelisted(address person) view returns (bool)"
+  "function whitelisted(address person) view returns (bool)",
+  "function hasKYC(address person) view returns (bool)"
 ];
 
 class WhitelistInterface {
@@ -13,6 +14,11 @@ class WhitelistInterface {
   async whitelisted(address) {
     const isWhitelisted = await this.contract.whitelisted(address);
     return isWhitelisted;
+  }
+
+  async hasKyc(address) {
+    const hasKyc = await this.contract.hasKYC(address);
+    return hasKyc;
   }
 }
 
