@@ -38,7 +38,7 @@
           ]"
           v-for="item in navigation.items"
           :key="item.name"
-          v-on:click="transitTo(item.path)"
+          v-on:click="transitTo(item.name)"
         >
           {{ item.name }}
         </a>
@@ -70,9 +70,10 @@ export default {
       navigation: {
         isOpen: false,
         items: [
-          {name: "FAQ", path: "faq" },
-          { name: "Governance", path: "governance" },
-          { name: "Resolutions", path: "resolutions"}],
+          {name: "FAQ" },
+          {name: "Marketplace"},
+          { name: "Governance"},
+          { name: "Resolutions"}],
       },
     }
   },
@@ -84,50 +85,19 @@ export default {
     isItemCurrent(item) {
       return item.path == useRoute().path
     },
-    transitTo(path) {
-      let route = {
-        name: path,
-        params: ""
-      }
-      if( path === "resolutions") {
-        location.href = "https://resolutions.weavr.org";
-      }
-      if (path === "faq") {
-        location.href = "https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics"
-      }
-      
-      else if(!location.host.includes("app.")) {
-        path === "governance" ? path = "weavr" : null;
-        console.log("here too");
-        this.navigateToApp(path)
-      }
-      path === "/weavr" ? route.params = { assetId: CONTRACTS.WEAVR} : null
-      console.log(path, route)
-      this.$router.push(route)
-      this.menuToggle()
-    },
     menuToggle() {
       this.navigation.isOpen = !this.navigation.isOpen
     },
-    navigateToApp(path) {
-      var route;
-      if (location.href.includes("localhost")) {
-        route = "http://localhost:9090/#/";+path
-      }
-      else {
-        route = "https://app.weavr.org/#/"+path;
-      } 
-      location.href = route;
+    transitTo(path) {
+      this.$router.push({name: path})
+      this.menuToggle()
     },
     navigateToStatic() {
-      var route;
-      if (location.href.includes("localhost")) {
-        route = "http://localhost:8080/#/";
+      if(window.location.href.includes("localhost")) {
+        window.location.href = "http://localhost:8080/#/"
+      } else {
+        window.location.href = "https://www.weavr.org"
       }
-        else {
-        route = "https://weavr.org/#/";
-      }
-      location.href = route;
     }
   },
 }
