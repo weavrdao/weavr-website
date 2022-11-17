@@ -12,13 +12,14 @@ import {createToaster} from "@meforma/vue-toaster";
 import store from "../store";
 import {ethers} from "ethers";
 import { USER_COOKIE_KEY } from "../whitelist/constants";
-
+import Vouch from "@/components/proposals/Vouch";
+import SumSub from "@/components/SumSub.vue";
 const router = new createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes: [
     {
       path: "/",
-      redirect: "/home",
+      redirect: "/weavr",
     },
     {
       path: "/whitelist",
@@ -35,8 +36,20 @@ const router = new createRouter({
       props: {component: Login}
     },
     {
-      path: "/home",
-      alias: "/home",
+      path: "/weavr/vouch",
+      name: "vouch",
+      component: Modal,
+      props: {assetId: CONTRACTS.WEAVR, component: Vouch},
+    },
+    {
+      path: "/weavr/kyc",
+      name: "kyc",
+      component: Modal,
+      props: {assetId: CONTRACTS.WEAVR, component: SumSub}
+    },
+    {
+      path: "/weavr",
+      alias: "/weavr",
       name: "home",
       component: Homepage
     },
