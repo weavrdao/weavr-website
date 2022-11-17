@@ -88,14 +88,12 @@ export default {
       let route = {
         name: path
       }
-      const PORT = window.location.port 
-      console.log(PORT)
       if( path === "resolutions") {
         console.log("navigatin to resoluuuu");
         location.href = "https://resolutions.weavr.org";
       }
       
-      else if(PORT === "8080") {
+      else if(!location.href.includes("app.")) {
         console.log("here too");
         this.navigateToApp(path)
       }
