@@ -70,7 +70,7 @@ export default {
       navigation: {
         isOpen: false,
         items: [
-          {name: "Marketplace", path: "marketplace" },
+          {name: "FAQ", path: "faq" },
           { name: "Governance", path: "governance" },
           { name: "Resolutions", path: "resolutions"}],
       },

@@ -178,7 +178,7 @@ $colors: map-merge($colors, $addColors);
 
 .title {
   color: $lightGray;
-  font-family: serif !important;
+  font-family: "Poppins", sans !important;
 
   &.is-extra-large {
     font-size: 4rem;
