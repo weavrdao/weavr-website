@@ -218,7 +218,7 @@ export default {
     {
         id: 2,
         heading: 'Full Control',
-        text: 'At Weavr, you are in control. You can always have a voice on how to manage assets. Want to repurpose the building and turn it into a vertical garden? You can.'
+        text: 'With Weavr, you are in control. You can always have a voice on how to manage assets. Want to repurpose the building and turn it into a vertical garden? You can.'
     },
     {
         id: 3,
@@ -228,12 +228,12 @@ export default {
     {
         id: 4,
         heading: 'Decentralized governance',
-        text: 'The Weavr is run and managed by its members. If you have an idea on how to make an even better product, join the community and let’s build it together.'
+        text: 'WeavrDAO is run and managed by its members. If you have an idea on how to make an even better product, join the community and let’s build it together.'
     },
     {
         id: 5,
         heading: 'Defi enabled',
-        text: 'Both the FRBC and Thread Tokens are ERC20 tokens and are freely tradable. Any approved DeFi protocol can be utilized instantly, without any limitations or restrictions.'
+        text: 'Both the WEAV and Thread Tokens are ERC20 tokens and are freely tradable. Any approved DeFi protocol can be utilized instantly, without any limitations or restrictions.'
     },
     {
         id: 6,
