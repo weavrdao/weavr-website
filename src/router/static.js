@@ -47,7 +47,7 @@ const router = new createRouter({
       path: "/resolutions",
       name: "Resolutions",
         beforeEnter: (to, from, next) => {
-        window.local.href = "https://resolutions.weavr.org";
+        window.location.href = "https://resolutions.weavr.org";
         }
     },
     {
