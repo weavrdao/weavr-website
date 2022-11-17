@@ -57,60 +57,39 @@ let hasOriginalPathBeenSet = false;
 let hasRedirectedAfterWhitelisting = false;
 
 router.beforeEach((to, from) => {
-  /**
-   * NOTES
-   * Should authorize navigation if:
-   * ( isConnected + isWhitelisted || isConnected + isGuest )
-   * 
-   * ON not connected and COOKIE should AUTOCONNECT
-   * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
-   * 
-   */
-   
-   const address = store.getters.userWalletAddress;
-   const isConnected = ethers.utils.isAddress(address);
-   const isWhitelisted = store.getters.isWhitelisted;
-   const isGuest = store.getters.isGuest;
-   const cookie = getCookie(USER_COOKIE_KEY)
-   console.log(cookie)
-   console.log(to,{
-     path: to.path,
-     isConnected,
-     isWhitelisted
-   })
-   if(!isConnected) {
-     if(cookie != GUEST && ethers.utils.isAddress(cookie)) {
-       console.log("Ready to sync!!!")
-       const logging = new Promise( 
-         (res) => {
-           store.dispatch(
-             "syncWallet", 
-             {
-               $toast: createToaster({
-                 message: "sync"
-             }) ,
-           wallet: "metamask"
-         })
-      })
-      Promise.resolve(logging).then( () => {
-        console.log("GOING____");
-        return { path: "/home"}
-      })
-     }
-   }
-   if(isConnected && isWhitelisted || isGuest) {
-     console.log("all connected", to.path);
-     let route = {
-       path: to.path
-     }
-     to.path === "/home" ? route.params = { assetId: CONTRACTS.WEAVR } : null;
-     return true
-   }
-   if((to.meta.requiresAuth && !isConnected) || (to.meta.requiresAuth && !isGuest)) {
-     console.log(router)
-     router.push({path: "/whitelist"})
-     console.log("AUTH")
-   }
- });
+  if (!hasOriginalPathBeenSet) {
+    originalPath = to.fullPath;
+    hasOriginalPathBeenSet = true;
+    console.log(originalPath);
+  }
+
+  if (to.fullPath === "/whitelist") {
+    return true;
+  }
+
+  if (to.fullPath === "/walletConnect" || to.fullPath === "/login") {
+    return true;
+  }
+
+  const address = store.getters.userWalletAddress;
+  const guest = store.getters.isGuest;
+  const isConnected = ethers.utils.isAddress(address) || guest;
+  if (!isConnected) {
+    router.push("/");
+  }
+  const whitelisted = store.getters.isWhitelisted;
+
+  if (whitelisted || guest) {
+    if (!hasRedirectedAfterWhitelisting) {
+      router.push(originalPath);
+      hasRedirectedAfterWhitelisting = true;
+    }
+    return true;
+  } else {
+    router.push("/whitelist");
+  }
+
+  return true;
+});
 
 export default router;

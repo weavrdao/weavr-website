@@ -232,7 +232,9 @@ router.beforeEach((to, from) => {
     to.path === "/weavr" ? route.params = { assetId: CONTRACTS.WEAVR } : null;
     return true
   }
-  
+  else {
+    return true
+  }
 });
 
 export default router;

@@ -93,7 +93,7 @@ export default {
         location.href = "https://resolutions.weavr.org";
       }
       
-      else if(!location.href.includes("app.")) {
+      else if(!location.host.includes("app.")) {
         console.log("here too");
         this.navigateToApp(path)
       }

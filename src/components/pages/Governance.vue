@@ -13,6 +13,7 @@
           :assetId="assetId"
           :proposalStatus="`Past Proposals`"/>
     </div>
+    <router-view></router-view>
   </div>
 </template>
 
