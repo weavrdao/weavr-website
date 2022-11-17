@@ -37,11 +37,18 @@ const router = new createRouter({
       name: "Governance",
       beforeEnter: (to, from, next) => {
         if(window.location.href.includes("localhost")) {
-          window.location.href = "http://localhost:9090/#/weavr"
+          window.location.href = "http://localhost:9090/#/weavr";
         } else {
           window.location.href = "https://app.weavr.org/#/weavr";
         }
       }
+    },
+    {
+      path: "/resolutions",
+      name: "Resolutions",
+        beforeEnter: (to, from, next) => {
+        window.local.href = "https://resolutions.weavr.org";
+        }
     },
     {
       path: "/faq",
