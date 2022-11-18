@@ -180,61 +180,69 @@ let hasOriginalPathBeenSet = false;
 let hasRedirectedAfterWhitelisting = false;
 
 router.beforeEach((to, from) => {
- /**
-  * NOTES
-  * Should authorize navigation if:
-  * ( isConnected + isWhitelisted || isConnected + isGuest )
-  * 
-  * ON not connected and COOKIE should AUTOCONNECT
-  * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
-  * 
-  */
-  
-  const address = store.getters.userWalletAddress;
-  const isConnected = ethers.utils.isAddress(address);
-  const isWhitelisted = store.getters.isWhitelisted;
-  const isGuest = store.getters.isGuest;
-  const cookie = getCookie(USER_COOKIE_KEY)
-  console.log(cookie)
-  console.log(to,{
-    path: to.path,
-    isConnected,
-    isWhitelisted
-  })
-  if(!isConnected) {
-    if(cookie != GUEST && ethers.utils.isAddress(cookie)) {
-      console.log("Ready to sync!!!")
-      const logging = new Promise( 
-        (res) => {
-          store.dispatch(
-            "syncWallet", 
-            {
-              $toast: createToaster({
-                message: "sync"
-            }) ,
-          wallet: "metamask"
+  /**
+   * NOTES
+   * Should authorize navigation if:
+   * ( isConnected + isWhitelisted || isConnected + isGuest )
+   * 
+   * ON not connected and COOKIE should AUTOCONNECT
+   * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
+   * 
+   */
+   
+   const address = store.getters.userWalletAddress;
+   const isConnected = ethers.utils.isAddress(address);
+   const isWhitelisted = store.getters.isWhitelisted;
+   const isGuest = store.getters.isGuest;
+   const cookie = getCookie(USER_COOKIE_KEY)
+   console.log(cookie)
+   console.log(to,{
+     path: to.path,
+     isConnected,
+     isWhitelisted
+   })
+   if (to.meta.requiresAuth) {
+     if(!isConnected) {
+       if(cookie != GUEST && ethers.utils.isAddress(cookie)) {
+         const logging = new Promise( 
+           (res) => {
+             store.dispatch(
+               "syncWallet", 
+               {
+                 $toast: createToaster({
+                   message: "sync"
+               }) ,
+             wallet: "metamask"
+           })
         })
-     })
-     Promise.resolve(logging)
-    }
-
-  }
-  if((to.meta.requiresAuth && !cookie) || (to.meta.requiresAuth && !cookie)) {
-    console.log(router)
-    console.log("AUTH")
-
-  }
-  if(isConnected && isWhitelisted || isGuest) {
-    console.log("all connected", to.path);
-    let route = {
-      path: to.path
-    }
-    to.path === "/weavr" ? route.params = { assetId: CONTRACTS.WEAVR } : null;
-    return true
-  }
-  else {
-    return true
-  }
-});
+        Promise.resolve(logging)
+       }
+       
+       if( !cookie && !hasRedirectedAfterWhitelisting) {
+         console.log("COOKIE__AUTH___", cookie);
+         hasRedirectedAfterWhitelisting = true
+         return {path: "whitelist"}
+         
+   
+       }
+     }
+     if((to.meta.requiresAuth && !cookie) || (to.meta.requiresAuth && !cookie)) {
+       
+     }
+     if(isConnected && isWhitelisted || isGuest) {
+       console.log("all connected", to.path);
+       let route = {
+         path: to.path
+       }
+       to.path === "/weavr" ? route.params = { assetId: CONTRACTS.WEAVR } : null;
+       return true
+     }
+     else {
+       return true
+     }
+   } else {
+     return true
+   }
+  })
 
 export default router;

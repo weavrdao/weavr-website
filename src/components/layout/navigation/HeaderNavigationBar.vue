@@ -86,11 +86,10 @@ export default {
     },
     transitTo(path) {
       let route = {
-        name: path
+        name: path,
+        params: ""
       }
-      path === "governance" ? route.params = { assetId: CONTRACTS.WEAVR} : null;
       if( path === "resolutions") {
-        console.log("navigatin to resoluuuu");
         location.href = "https://resolutions.weavr.org";
       }
       if (path === "faq") {
@@ -98,10 +97,12 @@ export default {
       }
       
       else if(!location.host.includes("app.")) {
+        path === "governance" ? path = "/weavr" : null;
         console.log("here too");
         this.navigateToApp(path)
       }
-      
+      path === "/weavr" ? route.params = { assetId: CONTRACTS.WEAVR} : null
+      console.log(path, route)
       this.$router.push(route)
       this.menuToggle()
     },
