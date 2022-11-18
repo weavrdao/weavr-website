@@ -92,7 +92,9 @@ export default {
         console.log("navigatin to resoluuuu");
         location.href = "https://resolutions.weavr.org";
       }
-      
+      if (path === "faq") {
+        location.href = "https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics"
+      }
       else if(!location.host.includes("app.")) {
         console.log("here too");
         this.navigateToApp(path)
