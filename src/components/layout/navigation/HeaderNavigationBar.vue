@@ -88,6 +88,7 @@ export default {
       let route = {
         name: path
       }
+      path === "governance" ? route.params = { assetId: CONTRACTS.WEAVR} : null;
       if( path === "resolutions") {
         console.log("navigatin to resoluuuu");
         location.href = "https://resolutions.weavr.org";
@@ -95,11 +96,12 @@ export default {
       if (path === "faq") {
         location.href = "https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics"
       }
+      
       else if(!location.host.includes("app.")) {
         console.log("here too");
         this.navigateToApp(path)
       }
-      path === "governance" ? route.params = { assetId: CONTRACTS.WEAVR} : null;
+      
       this.$router.push(route)
       this.menuToggle()
     },

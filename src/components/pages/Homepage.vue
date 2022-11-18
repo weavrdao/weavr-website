@@ -80,7 +80,7 @@
       <div class="subtitle is-size-3 has-text-primary"><b>For Builders</b></div>
       <div class="has-radius-md mb-3 has-background-darkGray py-3 px-0" v-for="text in forBuilders" :key="text">     
         <span class="has-radius-md p-3 has-background-primary">◉</span>
-        <span class="mx-2 has-radius-md has-text-white p-3 is-size-7 has-text-left">{{text}}</span>
+        <span class="mx-2 has-radius-md has-text-white p-3 is-size-7 bullet-text has-text-left">{{text}}</span>
       </div>
     </div>
     <div class="column is-half is-4">
@@ -182,6 +182,13 @@
   margin-right: unset !important;
   margin-top: 1.5rem;
   gap: 1.5rem;
+}
+
+
+.bullet-text {
+  @media screen and (max-width: 350) {
+    font-size: 0.6rem !important;
+  }
 }
 </style>
 

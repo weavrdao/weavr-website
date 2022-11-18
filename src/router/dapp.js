@@ -38,7 +38,7 @@ const router = new createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/marketplace",
+      redirect: "/weavr",
     },
     {
       path: "/whitelist",
