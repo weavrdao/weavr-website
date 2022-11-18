@@ -97,7 +97,7 @@ export default {
       }
       
       else if(!location.host.includes("app.")) {
-        path === "governance" ? path = "/weavr" : null;
+        path === "governance" ? path = "weavr" : null;
         console.log("here too");
         this.navigateToApp(path)
       }
