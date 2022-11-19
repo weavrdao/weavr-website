@@ -56,6 +56,18 @@ const router = new createRouter({
       component: PrivacyPage
     },
     {
+      path: "/resolutions",
+      beforeEnter(){
+        location.href = "https://resolutions.weavr.org"
+      }
+    },
+    {
+      path: "/faq",
+      beforeEnter(){
+        location.href = "https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics"
+      }
+    },
+    {
       path: "/whitelist",
       name: "whitelist",
       component: WhitelistPage,
@@ -218,7 +230,7 @@ router.beforeEach((to, from) => {
      isConnected,
      isWhitelisted
    })
-   
+
    if (to.meta.requiresAuth) {
       console.log("Requires LOG");
     // NOT_CONNECTED
