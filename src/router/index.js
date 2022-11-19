@@ -33,6 +33,7 @@ import { USER_COOKIE_KEY } from "../whitelist/constants";
 import Login from "@/components/sections/Login.vue"
 import { GUEST } from "../services/constants";
 import { createToaster } from "@meforma/vue-toaster";
+import { ro } from "faker/lib/locales";
 
 
 const router = new createRouter({
@@ -201,7 +202,7 @@ router.beforeEach((to, from) => {
    * 
    * ON not connected and COOKIE should AUTOCONNECT
    * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
-   * ON not connected + cookie -> will connect and hsould redirect to the original path
+   * ON not
    */
    console.log("HAS_REDIRECTED___", hasRedirectedAfterWhitelisting);
 
@@ -210,16 +211,16 @@ router.beforeEach((to, from) => {
    const isWhitelisted = store.getters.isWhitelisted;
    const isGuest = store.getters.isGuest;
    const cookie = getCookie(USER_COOKIE_KEY)
+   
    console.log(cookie)
    console.log(to,{
      path: to.path,
      isConnected,
      isWhitelisted
    })
+   
    if (to.meta.requiresAuth) {
       console.log("Requires LOG");
-      originalPath = to.fullPath
-      console.log("ORIGINAL_PATH___", originalPath);
     // NOT_CONNECTED
      if(!isConnected) {
       // NO_COOKIE AND BEFORE REDIRECT
@@ -228,13 +229,9 @@ router.beforeEach((to, from) => {
         hasRedirectedAfterWhitelisting = true
         return {path: "/whitelist"}
       }
-      if( hasRedirectedAfterWhitelisting) {
-        console.log("should go to original_path")
-        router.push(originalPath)
-      }
       // COOKIE NOT GUEST
       if(ethers.utils.isAddress(cookie)) {
-        if(!GUEST) {
+        if(cookie != GUEST) {
           const logging = new Promise( 
             (res) => {
               store.dispatch(
@@ -248,16 +245,20 @@ router.beforeEach((to, from) => {
           })
           Promise.resolve(logging)
         }
-        
+        return originalPath
       }  
     }
     // CONNECTED AND WHITELISTED
     if(isConnected && isWhitelisted || isGuest) {
+      if(hasRedirectedAfterWhitelisting) {
+        console.log("HAS_REDIRECTED AND RETURN");
+        return originalPath
+      }
       console.log("all connected", to.path);
       let route = {
         path: to.path
       }
-      to.path === "/weavr" ? route.params = { assetId: CONTRACTS.WEAVR } : null;
+      
       return true
     }
     // IN ANY CASE OF REQUIRED AUTH AND NON OF THE ABOVE
