@@ -87,9 +87,7 @@ export default {
       return useRoute().fullPath.includes(item.path)
     },
     transitTo(path) {
-      this.$router.push(path)
-      // console.log("matched", useRoute());
-      
+      this.$router.push(path)      
       this.menuToggle()
     },
     menuToggle() {

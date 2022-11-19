@@ -26,7 +26,7 @@ export default {
       refresh: ""
     }),
     goBack() {
-      this.$router.push("/".concat(DAO))
+      this.$router.back();
     }
   },
   computed: {

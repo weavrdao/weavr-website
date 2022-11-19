@@ -49,11 +49,13 @@ const router = new createRouter({
     },
     {
       path: "/toc",
-      component: TermsPage
+      component: Modal,
+      props: { component: TermsPage}
     },
     {
       path: "/privacy",
-      component: PrivacyPage
+      component: Modal,
+      props: { component: PrivacyPage }
     },
     {
       path: "/resolutions",
