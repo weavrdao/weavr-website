@@ -1,6 +1,6 @@
 import { createApp, h } from "vue"
 import App from "./App.vue"
-import router from "./router/dapp.js"
+import router from "./router/index.js"
 import store from "./store"
 import "./styles/frabric-custom.scss";
 // import "bulma/css/bulma.css"

@@ -231,6 +231,7 @@ const actions = {
 
   async logout(context) {
     const state = wallet.disconnect();
+    setCookie(USER_COOKIE_KEY, "NULL", 1)
     context.commit("setWallet", state)
   },
 

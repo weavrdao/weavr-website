@@ -4,7 +4,7 @@
   "license": "AGPL-3.0-only",
   "private": true,
   "scripts": {
-    "serve:dapp": "vue-cli-service serve --dest dist/dapp src/dapp.js --port 9090",
+    "serve": "vue-cli-service serve",
     "serve:static": "vue-cli-service serve --dest dist/static src/static.js --port 8080",
     "build:dapp": "vue-cli-service build --dest dist/dapp src/dapp.js",
     "build:static": "vue-cli-service build --dest dist/static src/static.js",

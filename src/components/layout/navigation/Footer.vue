@@ -26,10 +26,10 @@
                     <a href="https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics">FAQ</a>
                 </li>
                 <li>
-                  <a href="https://weavr.org/#/privacy">Privacy Policy</a>
+                  <a @click="() => { this.$router.push('/privacy') }">Privacy Policy</a>
                 </li>
                 <li>
-                  <a href="https://weavr.org/#/toc">Terms and Conditions</a>
+                  <a @click="() => { this.$router.push('/toc') }">Terms and Conditions</a>
                 </li>
             </ul>
         </div>
@@ -40,12 +40,11 @@
                     <a href="https://forum.weavr.org/">Forum</a>
                 </li>
                 <li>
-                    <a href="https://app.weavr.org/#/weavr">Vote</a>
+                    <a @click="() => { this.$router.push('/weavr') }">Vote</a>
                 </li>
                 <li>
                     <a href="https://resolutions.weavr.org">Resolutions</a>
                 </li>
-
                 <li>
                     <a href="https://discord.gg/ehEfjrcapk">Discord</a>
                 </li>

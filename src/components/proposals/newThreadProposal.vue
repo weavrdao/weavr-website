@@ -56,7 +56,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import {ethers} from "ethers";
-import { WEAVR_ADDRESS, DAO } from "../../services/constants";
+import { CONTRACTS, DAO } from "../../services/constants";
 
 export default {
 
@@ -106,7 +106,7 @@ export default {
       })
 
       await this.createThreadProposal({
-        assetId: this.assetId || WEAVR_ADDRESS,
+        assetId: this.assetId || CONTRACTS.WEAVR,
         name: this.name,
         descriptor: this.descriptor,     
         description: this.description,

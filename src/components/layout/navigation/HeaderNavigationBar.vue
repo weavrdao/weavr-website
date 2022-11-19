@@ -2,7 +2,7 @@
   <nav class="navbar p-5" role="navigation" aria-label="main navigation">
     <div class="container">
       <div class="navbar-brand">
-      <a class="navbar-item" @click="navigateToStatic()">
+      <a class="navbar-item" @click="transitTo('/')">
         <div class="title brand has-text-white is-flex is-align-items-center" >
           <div class="image p-2"><img class="mx-2" src="../../../assets/logo/new-logo.svg" alt=""></div>
           Weavr</div>
@@ -70,9 +70,11 @@ export default {
       navigation: {
         isOpen: false,
         items: [
-          {name: "FAQ", path: "faq" },
-          { name: "Governance", path: "governance" },
-          { name: "Resolutions", path: "resolutions"}],
+          { name: "Governance", path: "/weavr" },
+          { name: "Marketplace", path: "/marketplace"},
+          { name: "Resolutions", path: "/resolutions"},
+          { name: "FAQ", path: "faq" }
+        ],
       },
     }
   },
@@ -85,50 +87,12 @@ export default {
       return item.path == useRoute().path
     },
     transitTo(path) {
-      let route = {
-        name: path,
-        params: ""
-      }
-      if( path === "resolutions") {
-        location.href = "https://resolutions.weavr.org";
-      }
-      if (path === "faq") {
-        location.href = "https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics"
-      }
-      
-      else if(!location.host.includes("app.")) {
-        path === "governance" ? path = "weavr" : null;
-        console.log("here too");
-        this.navigateToApp(path)
-      }
-      path === "/weavr" ? route.params = { assetId: CONTRACTS.WEAVR} : null
-      console.log(path, route)
-      this.$router.push(route)
+      this.$router.push(path)
       this.menuToggle()
     },
     menuToggle() {
       this.navigation.isOpen = !this.navigation.isOpen
     },
-    navigateToApp(path) {
-      var route;
-      if (location.href.includes("localhost")) {
-        route = "http://localhost:9090/#/";+path
-      }
-      else {
-        route = "https://app.weavr.org/#/"+path;
-      } 
-      location.href = route;
-    },
-    navigateToStatic() {
-      var route;
-      if (location.href.includes("localhost")) {
-        route = "http://localhost:8080/#/";
-      }
-        else {
-        route = "https://weavr.org/#/";
-      }
-      location.href = route;
-    }
   },
 }
 </script>
