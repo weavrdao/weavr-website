@@ -31,7 +31,7 @@
       <div class="navbar-start">
         <a
           :class="[
-            isItemCurrent(item) ? 'has-border-bottom' : '',
+            isItemCurrent(item) ? 'active-link' : '',
             'navbar-item navlink',
             '',
             'p-3 mt-2 is-primary'
@@ -84,10 +84,12 @@ export default {
   methods: {
     ...mapActions(["goBack"]),
     isItemCurrent(item) {
-      return item.path == useRoute().path
+      return useRoute().fullPath.includes(item.path)
     },
     transitTo(path) {
       this.$router.push(path)
+      // console.log("matched", useRoute());
+      
       this.menuToggle()
     },
     menuToggle() {
@@ -122,5 +124,10 @@ export default {
     color: white !important;
     background: $mediumBlue !important;
   }
+}
+
+.active-link {
+  background: linear-gradient(to top,  rgba(255,255,255,0) 20%,$mediumBlue 100%);
+
 }
 </style>
