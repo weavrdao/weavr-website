@@ -37,7 +37,7 @@
               is-fullwidth
               has-text-white
               is-size-4 "
-               @click="navigateToApp('marketplace/coming-soon')">
+               @click="() => {this.$router.push('/marketplace')}">
               Marketplace
             </a>
           </div>

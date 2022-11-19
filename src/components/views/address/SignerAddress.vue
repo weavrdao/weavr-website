@@ -37,15 +37,14 @@
         </div>
         <div class="dropdown-menu" id="dropdown-menu3" role="menu">
           <div class="dropdown-content ">
-            <a  class="dropdown-item is-disabled has-text-mediumGray">
-              <!-- <span class="mr-1"><unicon name="eye-slash" fill="mediumGray" width="15" height="15"></unicon></span> -->
+            <!-- <a  class="dropdown-item is-disabled has-text-mediumGray">
               Token Overview
-            </a>
-            
-            <hr class="dropdown-divider">
+            </a> -->
             <a @click="onLogout" class="dropdown-item">
               Logout
             </a>
+            <hr class="dropdown-divider">
+            
           </div>
         </div>
       </div>
@@ -162,7 +161,9 @@
     // .has-text-medium-blue {
     //   color: $mediumBlue;
     // }
-  
+    .dropdown-menu {
+
+    }
     .is-dropdown-icon {
   display: inline-flex !important;
       background: $darkGray !important;

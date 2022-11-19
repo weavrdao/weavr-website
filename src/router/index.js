@@ -259,7 +259,8 @@ router.beforeEach((to, from) => {
           })
           Promise.resolve(logging)
         }
-        return originalPath
+        this.$router.push(originalPath)
+
       }  
     }
     // CONNECTED AND WHITELISTED

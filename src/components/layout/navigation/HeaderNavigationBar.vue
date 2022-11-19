@@ -1,13 +1,12 @@
 <template>
-  <nav class="navbar p-5" role="navigation" aria-label="main navigation">
-    <div class="container">
+  <nav class="navbar  p-5" role="navigation" aria-label="main navigation">
+    <div class="container ">
       <div class="navbar-brand">
       <a class="navbar-item" @click="transitTo('/')">
         <div class="title brand has-text-white is-flex is-align-items-center" >
           <div class="image p-2"><img class="mx-2" src="../../../assets/logo/new-logo.svg" alt=""></div>
           Weavr</div>
       </a>
-
       <a
         role="button"
         ref="menuButton"
@@ -126,6 +125,5 @@ export default {
 
 .active-link {
   background: linear-gradient(to top,  rgba(255,255,255,0) 20%,$mediumBlue 100%);
-
 }
 </style>
