@@ -5,9 +5,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "serve:static": "vue-cli-service serve --dest dist/static src/static.js --port 8080",
-    "build:dapp": "vue-cli-service build --dest dist/dapp src/dapp.js",
-    "build:static": "vue-cli-service build --dest dist/static src/static.js",
+    "build:static": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
