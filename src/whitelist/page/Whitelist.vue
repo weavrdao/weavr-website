@@ -19,7 +19,9 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
 import { mapActions, mapGetters } from "vuex";
+import { ORIGINAL_PATH } from "../../router";
 import { CONTRACTS } from '../../services/constants';
 
 export default {
@@ -43,12 +45,15 @@ export default {
       this.$router.push("/walletConnect")
     },
     continueToHomepage () {
-      this.$router.push({name: "governance", params: { assetId: CONTRACTS.WEAVR}});
+      this.$router.push({path: "/weavr"});
     },
     openLoginModal () {
       this.$router.push("/login")
     }
   },
+  beforeRouteEnter() {
+    
+  }
 }
 </script>
 

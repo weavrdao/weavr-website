@@ -33,7 +33,7 @@ import { USER_COOKIE_KEY } from "../whitelist/constants";
 import Login from "@/components/sections/Login.vue"
 import { GUEST } from "../services/constants";
 import { createToaster } from "@meforma/vue-toaster";
-import { ro } from "faker/lib/locales";
+
 
 
 const router = new createRouter({
@@ -208,7 +208,7 @@ let originalPath = "";
 let hasOriginalPathBeenSet = false;
 let hasRedirectedAfterWhitelisting = false;
 
-router.beforeEach((to, from) => {
+router.beforeEach(async (to, from) => {
   /**
    * NOTES
    * Should authorize navigation if:
@@ -235,12 +235,17 @@ router.beforeEach((to, from) => {
 
    if (to.meta.requiresAuth) {
       console.log("Requires LOG");
+      if(!hasOriginalPathBeenSet) {
+        originalPath = to.fullPath
+        hasOriginalPathBeenSet = true
+      }
     // NOT_CONNECTED
      if(!isConnected) {
       // NO_COOKIE AND BEFORE REDIRECT
       if( !cookie && !hasRedirectedAfterWhitelisting) {
         console.log("COOKIE__AUTH___", cookie);
         hasRedirectedAfterWhitelisting = true
+        originalPath = to.fullPath
         return {path: "/whitelist"}
       }
       // COOKIE NOT GUEST
@@ -257,35 +262,47 @@ router.beforeEach((to, from) => {
               wallet: "metamask"
             })
           })
-          Promise.resolve(logging)
+          Promise.resolve(logging).then( () => {
+            console.log("AFTER_CONNECT___");
+            return hasOriginalPathBeenSet ? originalPath : to.path
+          })
         }
-        this.$router.push(originalPath)
-
       }  
     }
     // CONNECTED AND WHITELISTED
     if(isConnected && isWhitelisted || isGuest) {
       if(hasRedirectedAfterWhitelisting) {
         console.log("HAS_REDIRECTED AND RETURN");
-        return originalPath
+        await store.dispatch("checkWhitelistStatus", {}).then( () => {
+          console.log("DONE");
+        })
+        return hasOriginalPathBeenSet ? originalPath : to.path
       }
       console.log("all connected", to.path);
       let route = {
         path: to.path
       }
-      
-      return true
-    }
-    // IN ANY CASE OF REQUIRED AUTH AND NON OF THE ABOVE
-    else {
+      hasRedirectedAfterWhitelisting = true  
       return { name: "whitelist"}
     }
+    // IN ANY CASE OF REQUIRED AUTH AND NON OF THE ABOVE
+    
+    console.log(from.path, to.path)
+    
+    
+    
   } 
   // AUTH NOT REQUIRED 
   else {
-    // it goes ahead to the path
+    console.log("// it goes ahead to the path", hasOriginalPathBeenSet)
+    // return true
+    if(hasRedirectedAfterWhitelisting) {
+      console.log("SET___ NAVIGATE TO....", originalPath);
+      hasRedirectedAfterWhitelisting = false
+      return {path: originalPath}
+    }
     return true
   }
 })
-
+export const ORIGINAL_PATH = originalPath
 export default router;

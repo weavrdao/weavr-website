@@ -58,9 +58,9 @@
             <h3 class="my-0">Weavr</h3>
         </div>
         <div class="is-flex is-flex-grow-0"> 
-            <a href="https://twitter.com/WeavrDAO"> <unicon width="40" height="40" name="twitter" fill="white"></unicon></a>
-            <a href="https://github.com/weavrdao"> <unicon width="40" height="40" name="github" fill="white"></unicon></a>
-            <a href="https://discord.gg/ehEfjrcapk"> <unicon width="40" height="40" name="discord" fill="white"></unicon></a>
+            <a href="https://twitter.com/WeavrDAO"> <unicon width="30" height="30" name="twitter" fill="white"></unicon></a>
+            <a href="https://github.com/weavrdao"> <unicon width="30" height="30" name="github" fill="white"></unicon></a>
+            <a href="https://discord.gg/ehEfjrcapk"> <unicon width="30" height="30" name="discord" fill="white"></unicon></a>
         </div>
     </div>
 </footer>
