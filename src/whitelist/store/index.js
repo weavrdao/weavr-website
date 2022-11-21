@@ -1,3 +1,4 @@
+import { CONTRACTS } from "../../services/constants";
 import { WHITELIST_COOKIE_KEY } from "../constants";
 import { getCookie } from "../cookies";
 
@@ -20,7 +21,7 @@ export const whitelistGetters = {
 export const whitelistActions = (whitelistService) => ({
   async checkWhitelistStatus(context, params) {
     const userWalletAddress = context.getters.userWalletAddress;
-    const assetId = params.assetId || process.env.VUE_APP_WEAVR_ADDRESS;
+    const assetId = params.assetId || CONTRACTS.WEAVR;
     console.log({userWalletAddress, assetId})
     try {
       const whitelisted = await whitelistService.checkWhitelistedStatus(

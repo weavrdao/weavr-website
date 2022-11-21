@@ -225,84 +225,60 @@ router.beforeEach(async (to, from) => {
    const isWhitelisted = store.getters.isWhitelisted;
    const isGuest = store.getters.isGuest;
    const cookie = getCookie(USER_COOKIE_KEY)
-   
-   console.log(cookie)
-   console.log(to,{
-     path: to.path,
-     isConnected,
-     isWhitelisted
-   })
-
-   if (to.meta.requiresAuth) {
-      console.log("Requires LOG");
-      if(!hasOriginalPathBeenSet) {
-        originalPath = to.fullPath
-        hasOriginalPathBeenSet = true
-      }
-    // NOT_CONNECTED
-     if(!isConnected) {
-      // NO_COOKIE AND BEFORE REDIRECT
-      if( !cookie && !hasRedirectedAfterWhitelisting) {
-        console.log("COOKIE__AUTH___", cookie);
-        hasRedirectedAfterWhitelisting = true
-        originalPath = to.fullPath
-        return {path: "/whitelist"}
-      }
-      // COOKIE NOT GUEST
-      if(ethers.utils.isAddress(cookie)) {
-        if(cookie != GUEST) {
-          const logging = new Promise( 
-            (res) => {
-              store.dispatch(
-                "syncWallet", 
-                {
-                  $toast: createToaster({
-                    message: "sync"
-                }) ,
-              wallet: "metamask"
-            })
-          })
-          Promise.resolve(logging).then( () => {
-            console.log("AFTER_CONNECT___");
-            return hasOriginalPathBeenSet ? originalPath : to.path
-          })
-        }
-      }  
-    }
-    // CONNECTED AND WHITELISTED
-    if(isConnected && isWhitelisted || isGuest) {
-      if(hasRedirectedAfterWhitelisting) {
-        console.log("HAS_REDIRECTED AND RETURN");
-        await store.dispatch("checkWhitelistStatus", {}).then( () => {
-          console.log("DONE");
+  // require auth
+  if( to.meta.requiresAuth ) {
+    console.log("META_AUTH_ TRUE");
+    // not connected
+    if( !isConnected ) {
+      // cookie
+      if( ethers.utils.isAddress(cookie) ) {
+        // - autoconnect and navigate
+        const isSameAddress = cookie === 
+        console.log("autoconnect and navigate");
+        const toast = createToaster({})
+        await store.dispatch("syncWallet", { wallet: "metamask", $toast: toast})
+        await store.dispatch("checkWhitelistStatus", {assetId: CONTRACTS.WEAVR}).then( () => {
+          if( !isWhitelisted ) {
+            // not whitelisted
+            console.log("not whitelisted");
+            return { path: "/whitelist" }
+          }
+          else if ( isWhitelisted ) {
+            // whitelisted
+            console.log("whitelisted");
+            return true
+          }
         })
-        return hasOriginalPathBeenSet ? originalPath : to.path
+        
       }
-      console.log("all connected", to.path);
-      let route = {
-        path: to.path
+      // !cookie
+      else if( !ethers.utils.isAddress(cookie)  ) { 
+        // - go to walletconnect
+        console.log("go to whitelist")
+        return { path: "/whitelist"}
       }
-      hasRedirectedAfterWhitelisting = true  
-      return { name: "whitelist"}
     }
-    // IN ANY CASE OF REQUIRED AUTH AND NON OF THE ABOVE
-    
-    console.log(from.path, to.path)
-    
-    
-    
-  } 
-  // AUTH NOT REQUIRED 
-  else {
-    console.log("// it goes ahead to the path", hasOriginalPathBeenSet)
-    // return true
-    if(hasRedirectedAfterWhitelisting) {
-      console.log("SET___ NAVIGATE TO....", originalPath);
-      hasRedirectedAfterWhitelisting = false
-      return {path: originalPath}
+    // connected
+    if ( isConnected ) {
+      console.log("navigate to route");
+        // -navigate to route
+
+      return true
     }
-    return true
   }
+  // to.whitelist
+  if( to.path === "whitelist" ) {
+    // - navigating to whitelist and set vars
+    console.log("into whitelist");
+  }
+  // from.whitelist
+  if( from.path === "whitelist" ) {
+    // - navigate path and reset vars
+  }
+  // no auth
+    // - navigate to path
+  console.log("no auth required");
+  return true  
 })
-export const ORIGINAL_PATH = originalPath
+
 export default router;
