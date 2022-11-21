@@ -144,8 +144,7 @@
     async mounted() {
       this.participantsList({type: "GENESIS"})
       console.log("Calling kyc...")
-      
-    }
+    },
     
   };
   

@@ -55,12 +55,6 @@ export default {
         this.$router.push("/".concat(DAO))
       }
       })
-      // this.sync({ wallet: wllt, $toast: this.$toast})
-      //   .then(() => {
-      //     this.routeToHome();
-      //   });
-      
-      
     },
     routeToHome() {
       this.$router.push("/".concat(DAO));
