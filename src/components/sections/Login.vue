@@ -49,9 +49,9 @@ export default {
     async onClick() {
       this.$toast.show("Checking for password ");
       console.log(this.isGuest)
-      await this.login({passwd: this.passwd}).then( (LOOGED) => {
+      await this.login({passwd: this.passwd}).then( (LOGGED) => {
         console.log(this.isGuest)
-        if(LOOGED){
+        if(LOGGED){
           this.$router.push("/".concat(DAO))
         }
       })
