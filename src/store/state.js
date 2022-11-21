@@ -167,8 +167,9 @@ const actions = {
     ){
       setCookie(USER_COOKIE_KEY, GUEST, 1)
       context.state.isGuest = getCookie(USER_COOKIE_KEY) === GUEST ? true : false
+      return true
     }
-     
+    return false
   },
 
   async fetchTokenInfo(context, params) {

@@ -29,8 +29,11 @@ export default {
   name: "Login",
   computed: {
     ...mapGetters({
-      isGuest: "guestCookie",
+      guestCookie: "guestCookie",
     }),
+    isGuest() {
+      return this.guestCookie
+    },
     hover: false,
   },
   data() {
@@ -46,9 +49,9 @@ export default {
     async onClick() {
       this.$toast.show("Checking for password ");
       console.log(this.isGuest)
-      await this.login({passwd: this.passwd}).then( () => {
+      await this.login({passwd: this.passwd}).then( (LOOGED) => {
         console.log(this.isGuest)
-      if(this.isGuest){
+      if(LOOGED){
         this.$router.push("/".concat(DAO))
       }
       })
