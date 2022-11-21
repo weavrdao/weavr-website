@@ -13,7 +13,7 @@
         <div class="is-flex is-justify-content-space-evenly">
             <div class="form">
               <div class="label field is-size-4">Enter Guest Password</div>
-              <input class="input field" type="password" v-model="passwd"/>
+              <input ref="password" class="input field" type="password" v-model="passwd"/>
               <div class="button is-primary" @click="onClick">Login</div>
             </div>
         </div>
@@ -38,7 +38,7 @@ export default {
   },
   data() {
     return {
-     passwd: ""
+      passwd: ""
     }
   },
   methods: {
@@ -51,14 +51,17 @@ export default {
       console.log(this.isGuest)
       await this.login({passwd: this.passwd}).then( (LOOGED) => {
         console.log(this.isGuest)
-      if(LOOGED){
-        this.$router.push("/".concat(DAO))
-      }
+        if(LOOGED){
+          this.$router.push("/".concat(DAO))
+        }
       })
     },
     routeToHome() {
       this.$router.push("/".concat(DAO));
     },
+  },
+  mounted() {
+    this.$refs.password.focus()
   }    
 }
 </script>
