@@ -223,7 +223,7 @@ router.beforeEach(async (to, from) => {
    const address = store.getters.userWalletAddress;
    const isConnected = ethers.utils.isAddress(address);
    const isWhitelisted = store.getters.isWhitelisted;
-   const isGuest = store.getters.isGuest;
+   const isGuest = store.getters.guestCookie;
    const cookie = getCookie(USER_COOKIE_KEY)
   // require auth
   if( to.meta.requiresAuth ) {
@@ -232,8 +232,11 @@ router.beforeEach(async (to, from) => {
     if( !isConnected ) {
       // cookie
       if( ethers.utils.isAddress(cookie) ) {
+        if( cookie === GUEST ) {
+          console.log("IS GUEST");
+          return true
+        }
         // - autoconnect and navigate
-        const isSameAddress = cookie === 
         console.log("autoconnect and navigate");
         const toast = createToaster({})
         await store.dispatch("syncWallet", { wallet: "metamask", $toast: toast})

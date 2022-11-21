@@ -29,7 +29,7 @@ export default {
   name: "Login",
   computed: {
     ...mapGetters({
-      isGuest: "isGuest",
+      isGuest: "guestCookie",
     }),
     hover: false,
   },
@@ -43,18 +43,20 @@ export default {
       login: "connectGuest",
       
     }),
-    onClick() {
+    async onClick() {
       this.$toast.show("Checking for password ");
       console.log(this.isGuest)
-      this.login({passwd: this.passwd})
+      await this.login({passwd: this.passwd}).then( () => {
+        console.log(this.isGuest)
+      if(this.isGuest){
+        this.$router.push("/".concat(DAO))
+      }
+      })
       // this.sync({ wallet: wllt, $toast: this.$toast})
       //   .then(() => {
       //     this.routeToHome();
       //   });
-      console.log(this.isGuest)
-      if(this.isGuest){
-        this.$router.push("/".concat(DAO))
-      }
+      
       
     },
     routeToHome() {

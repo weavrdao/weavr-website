@@ -49,12 +49,18 @@
         </div>
       </div>
     </div>
+    
     <div
       v-else
-      class="tag is-primary has-radius-xs is-large is-clickable connect"
+      class="has-radius-xs is-large is-clickable connect"
       @click="onClick"
+      :aria-disabled="true"
     >
-      <div class="has-text-white">Connect Wallet</div>
+      
+      <div 
+        :class="[isGuest? 'is-warning has-text-darkGray': 'is-primary has-text-white', ' button']">
+        {{ isGuest ? "GUEST" : "Connect"}}
+      </div>
     </div>
     <div id="toeknModal"></div>
   </div>
@@ -75,10 +81,14 @@
         address: "userWalletAddress",
         balance: "userTokenBalance",
         symbol: "assetTokenSymbol",
-        vouches: "vouchesPerSigner"
+        vouches: "vouchesPerSigner",
+        guestCookie: "guestCookie"
       }),
       isConnected() {
         return ethers.utils.isAddress(this.address)
+      },
+      isGuest() {
+        return this.guestCookie
       }
     },
     methods: {

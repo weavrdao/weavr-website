@@ -65,8 +65,8 @@ const getters = {
   isLoading(state) {
     return state.interface.isLoading;
   },
-  isGuest(state) {
-    return state.user.isGuest;
+  guestCookie(state) {
+    return state.user.isGuest
   },
   userWalletAddress(state) {
     return state.user.wallet.address;
@@ -166,7 +166,7 @@ const actions = {
       params.passwd===process.env.VUE_APP_DAILY_PASSWORD
     ){
       setCookie(USER_COOKIE_KEY, GUEST, 1)
-      
+      context.state.isGuest = getCookie(USER_COOKIE_KEY) === GUEST ? true : false
     }
      
   },
