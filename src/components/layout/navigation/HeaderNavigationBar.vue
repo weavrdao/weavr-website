@@ -40,6 +40,9 @@
           v-on:click="transitTo(item.route)"
         >
           {{ item.name }}
+          <span v-if="item.icon">
+            <unicon width="15" height="15" :name="item.icon" fill="gray"></unicon>
+          </span>
         </a>
       </div>
 
@@ -69,10 +72,10 @@ export default {
       navigation: {
         isOpen: false,
         items: [
-          { name: "Governance", route: {path: `/${CONTRACTS.WEAVR}`}},
+          { name: "Governance", route: `/${CONTRACTS.WEAVR}`},
           { name: "Marketplace", route: "/marketplace"},
-          { name: "Resolutions", route: "/resolutions"},
-          { name: "FAQ", path: "faq" }
+          { name: "Resolutions", route: "/resolutions", icon: "arrow-up-right"},
+          { name: "FAQ", path: "faq", icon: "arrow-up-right" }
         ],
       },
     }
