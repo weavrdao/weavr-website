@@ -49,7 +49,7 @@ export default {
     },
   },
   mounted() {
-    this.info = this.tokenInfo(CONTRACTS.FRBC)
+    this.info = this.tokenInfo(CONTRACTS.TOKEN_ADDRESS)
   },
   created() {
 

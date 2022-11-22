@@ -1,10 +1,5 @@
 const axios = require('axios');
 
-const BASE_URL = {
-  local: process.env.VUE_APP_SUMSUB_LOCAL,
-  server: process.env.VUE_APP_SUMSUB_SERVER
-}; 
-
 const headers = { 
 }
 const netlify = ".netlify/functions/api"

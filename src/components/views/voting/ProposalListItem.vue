@@ -138,7 +138,7 @@ export default {
     },
 
     openProposal() {
-      this.$router.push(`/${DAO}/proposal/${this.proposal.id}`);
+      this.$router.push(this.$route.path+`/proposal/${this.proposal.id}`);
     },
   },
 

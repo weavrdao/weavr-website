@@ -46,6 +46,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { CONTRACTS } from '../../../services/constants';
 
 
 const orderTypes = {
@@ -64,7 +65,7 @@ export default {
       orderType: orderTypes.buy,
       price: 0,
       quantity: 0,
-      assetId: this.$route.query.assetId || process.env.VUE_APP_FRABRIC_ADDRESS
+      assetId: this.$route.query.assetId || CONTRACTS.WEAVR
     }
   },
   methods: {

@@ -36,7 +36,7 @@ export const whitelistActions = (whitelistService) => ({
   },
   async  checkKyc(context, params) {
     const userWalletAddress = context.getters.userWalletAddress;
-    const assetId = params.assetId || process.env.VUE_APP_WEAVR_ADDRESS;
+    const assetId = params.assetId || CONTRACTS.WEAVR;
     try {
       const kyc = await whitelistService.hasKyc(
         assetId,

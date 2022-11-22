@@ -94,7 +94,7 @@ class DAO {
     console.log("vouches");
     let vouches = await this.graphQLAPIClient.query(
       VOUCHES_PER_PARTICIPANT,
-      { id: process.env.INITIALFRABRIC, signer: signer },
+      { id: CONTRACTS.WEAVR, signer: signer },
       (mapper, response) => {
         return mapper.mapVouchers(response.data);
       }
@@ -103,39 +103,65 @@ class DAO {
     console.log(vouches);
     return vouches;
   }
+ /**
+   * Create a Paper Proposal
+   * @param {String} assetId Asset's contract address
+   * @param {String} name Chosen name for the thread
+   * @param {String} descriptor of the thread
+   * @param {String} title Proposal title
+   * @param {String} description Proposal body
+   * @param {String} forumLink Link to forum discussion
+   * @param {String} tradeToken addess of the token used for the crowdfund
+   * @param {Number} target amount to be raised through the crowdfund
+   * @param {String} images of the property
+   * @param {String} documents of the property
+   * @returns {Boolean} Transaction status (true — mined; false - reverted)
+   */
   async createThreadProposal(
     assetId,
     name,
     descriptor,
     title,
     description,
+    forumLink,
     symbol,
     tradeToken,
-    target
+    target,
+    images,
+    documents,
   ) {
     const assetContract = new AssetContract(this.ethereumClient, assetId);
 
+    let imagesHashes;
+    try {
+      imagesHashes = await Promise.all(Array.from(images).map(
+        async (image) => (await this.storageNetwork.addArbitraryFile(image))
+      ));
+    } catch(e) {
+      console.log("Error uploading images");
+    }
+
+    let documentHashes;
+    try {
+      documentHashes = await Promise.all(Array.from(documents).map(
+        async (document) => (await this.storageNetwork.addArbitraryFile(document))
+      ));
+    } catch(e) {
+      console.log("Error uploading documents");
+    }
+  
     const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
       title,
       description,
+      forumLink,
     });
 
-    const descriptorHash = await this.storageNetwork.uploadAndGetPathAsBytes(
-      descriptor
-    );
-
-    console.dir({
-      assetId,
-      name,
+    const descriptorHash = await this.storageNetwork.uploadAndGetPathAsBytes({
       descriptor,
-      title,
-      description,
-      symbol,
-      tradeToken,
-      target,
+      name,
+      imagesHashes,
+      documentHashes,
     });
-
-    console.log(tradeToken, target);
 
     const data = new ethers.utils.AbiCoder().encode(
       ["address", "uint112"],
@@ -143,6 +169,7 @@ class DAO {
     );
 
     if (!infoHash) return;
+    if (!descriptorHash) return;
 
     const status = await assetContract.proposeThread(
       ethers.BigNumber.from(0), // Only valid "variant" number
@@ -163,6 +190,7 @@ class DAO {
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
    */
   async createPaperProposal(asset, title, description, daoResolution) {
+    console.log("ASSET_ID___", asset)
     const assetContract = new AssetContract(this.ethereumClient, asset);
 
     const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({

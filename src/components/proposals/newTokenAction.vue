@@ -75,16 +75,13 @@ export default {
       mintTypes: MintType,
     }
   },
-  props: {
-    assetId: {
-      type: String,
-      required: true,
-    },
-  },
   computed: {
     ...mapGetters({
       assetMap: "assetsById",
     }),
+    assetId() {
+      return this.$route.params.assetId
+    }
   },
   methods: {
     ...mapActions({
@@ -108,7 +105,7 @@ export default {
       });
     },
     onCancel() {
-      this.$router.push("/".concat(DAO));
+      this.$router.back();
     }
   }
 }

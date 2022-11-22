@@ -37,7 +37,7 @@
           ]"
           v-for="item in navigation.items"
           :key="item.name"
-          v-on:click="transitTo(item.path)"
+          v-on:click="transitTo(item.route)"
         >
           {{ item.name }}
         </a>
@@ -69,9 +69,9 @@ export default {
       navigation: {
         isOpen: false,
         items: [
-          { name: "Governance", path: "/weavr" },
-          { name: "Marketplace", path: "/marketplace"},
-          { name: "Resolutions", path: "/resolutions"},
+          { name: "Governance", route: {path: `/${CONTRACTS.WEAVR}`}},
+          { name: "Marketplace", route: "/marketplace"},
+          { name: "Resolutions", route: "/resolutions"},
           { name: "FAQ", path: "faq" }
         ],
       },
@@ -83,7 +83,7 @@ export default {
   methods: {
     ...mapActions(["goBack"]),
     isItemCurrent(item) {
-      return useRoute().fullPath.includes(item.path)
+      return useRoute().fullPath.includes(item.route)
     },
     transitTo(path) {
       this.$router.push(path)      

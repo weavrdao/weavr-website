@@ -174,7 +174,7 @@ const actions = {
 
   async fetchTokenInfo(context, params) {
     // const toast = params.$toast || createToaster({});
-    const tokenAddress = params.tokenAddress || CONTRACTS.FRBC;
+    const tokenAddress = params.tokenAddress || CONTRACTS.TOKEN_ADDRESS;
     const supply = await token.getTotalSupply(tokenAddress);
     console.log(ethers.utils.formatEther(supply));
     return {
@@ -186,9 +186,9 @@ const actions = {
     console.log("SYNC");
     let {$toast} = params !== undefined ? params : {};
     let walletState = await wallet.getState(params.wallet);
-    const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
+    const symbol = await token.getTokenSymbol(CONTRACTS.TOKEN_ADDRESS);
     const balance = await token.getTokenBalance(
-      CONTRACTS.FRBC,
+      CONTRACTS.TOKEN_ADDRESS,
       walletState.address
     );
     
@@ -204,7 +204,7 @@ const actions = {
     context.commit("setWhitelisted", isWhitelisted);
     isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address, 100)
     const balancePromise = await token.getTokenBalance(
-      CONTRACTS.FRBC,
+      CONTRACTS.TOKEN_ADDRESS,
       walletState.address
     );
     

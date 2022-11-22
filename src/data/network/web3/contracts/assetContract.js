@@ -86,7 +86,10 @@ class AssetContract {
     let tx = await this.mutableContract.proposeParticipant(
       participantType,
       participant,
-      info
+      info,
+      {
+        gasLimit: 3000000,
+      }
     );
     await tx.wait();
   }
@@ -146,7 +149,10 @@ class AssetContract {
       symbol,
       descriptorHash,
       data,
-      infoHash
+      infoHash,
+      {
+        gasLimit: 3000000
+      }
     );
     const status = (await tx.wait()).status;
     return status;

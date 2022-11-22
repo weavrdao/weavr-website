@@ -1,4 +1,4 @@
-import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory, useRoute} from "vue-router";
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue";
 import Homepage from "@/components/pages/Homepage.vue"
@@ -33,6 +33,7 @@ import { USER_COOKIE_KEY } from "../whitelist/constants";
 import Login from "@/components/sections/Login.vue"
 import { GUEST } from "../services/constants";
 import { createToaster } from "@meforma/vue-toaster";
+import options from "dotenv/lib/env-options";
 
 
 
@@ -120,63 +121,65 @@ const router = new createRouter({
       ]
     },  
     {
-      path: "/".concat(DAO).concat("/:assetId"),
-      alias: "/".concat(DAO),
-      name: "governance",
+      path: `/:assetId`,
       component: Governance,
-      props: {assetId: CONTRACTS.WEAVR},
+      
       meta: { requiresAuth: true },
       children: [
         {
+          path: `${CONTRACTS.WEAVR}`,
+          alias: "weavr",
+        },
+        {
           path: "kyc",
           component: Modal,
-          props: {assetId: "", component: SumSub}
+          props: { component: SumSub }
         },
         {
           path: "tokenInfo",
           component: Modal,
-          props: {assetId: "", component: tokenDetails},
+          props: { component: tokenDetails },
         },
-
         {
           path: "paperProposal",
           component: Modal,
-          props: {assetId: "", component: newPaperProposal},
+          props: { component: newPaperProposal },
         },
         {
           path: "participantProposal",
           component: Modal,
-          props: {assetId: "", component: newParticipantProposal},
+          props: { component: newParticipantProposal },
         },
         {
           path: "upgradeProposal",
           component: Modal,
-          props: {assetId: "", component: newUpgradeProposal},
+          props: { component: newUpgradeProposal },
+          meta: { locked: true}
         },
         {
           path: "tokenProposal",
           component: Modal,
-          props: {assetId: "", component: newTokenAction},
+          props: { component: newTokenAction },
         },
         {
           path: "vouch",
           component: Modal,
-          props: {assetId: "", component: Vouch},
+          props: { component: Vouch },
         },
         {
           path: "verify",
           component: Modal,
-          props: {assetId: "", component: VerifyParticipant},
+          props: { component: VerifyParticipant },
         },
         {
           path: "threadProposal",
           component: Modal,
-          props: {assetId: "", component: newThreadProposal},
+          props: { component: newThreadProposal },
         },
         {
           path: "proposal/:proposalId",
           component: Modal,
-          props: {assetId: "", component: SingleProposal},
+          props: { component: SingleProposal },
           beforeEnter: async (to, from) => {
             const prop = await store.getters.proposalsPerAsset;
             if (!prop) {
@@ -226,6 +229,11 @@ router.beforeEach(async (to, from) => {
    const isGuest = store.getters.guestCookie;
    const cookie = getCookie(USER_COOKIE_KEY)
   // require auth
+  if( to.meta.locked ) {
+    const toast = createToaster({});
+    toast.error("The route you are trying to access is currently locked", { position: "top"});
+    return false
+  }
   if( to.meta.requiresAuth ) {
     console.log("META_AUTH_ TRUE");
     // not connected
@@ -274,6 +282,8 @@ router.beforeEach(async (to, from) => {
     // - navigating to whitelist and set vars
     console.log("into whitelist");
   }
+ 
+  
   // from.whitelist
   if( from.path === "whitelist" ) {
     // - navigate path and reset vars

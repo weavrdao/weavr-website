@@ -1,3 +1,10 @@
+const WEAVR = process.env.VUE_APP_WEAVR_ADDRESS;
+const FRBC = process.env.VUE_APP_TOKEN_ADDRESS;
+const THREAD_DEPLOYER = process.env.VUE_APP_THREAD_DEPLOYER_ADDRESS;
+const BOND = process.env.VUE_APP_BOND_ADDRESS;
+const BEACON = process.env.VUE_APP_BEACON_ADDRESS;
+const FRABRIC_CODE = process.env.VUE_APP_FRABRIC_CODE_ADDRESS;
+const TOKEN_ADDRESS = process.env.VUE_APP_TOKEN_ADDRESS;
 
 export const _NETWORKS = {
   arbitrum: { 
@@ -19,7 +26,7 @@ export const _NETWORKS = {
     id: 421613, 
     graph: "https://api.thegraph.com/subgraphs/name/abstrucked/arbitrum-goerli",
     contracts: {
-      FRBC:"0x81723083222A35091Cbca6400a1c104cc28934a4",
+      TOKEN_ADDRESS:"0x81723083222A35091Cbca6400a1c104cc28934a4",
       BEACON:"0x5A2D7Bdd03F3d5Ead6eaA8B11995713d373Ce2bb",
       WEAVR:"0x1c537448C8E3a631821Fe543e6DD5d16F74eafCe",
       THREAD_DEPLOYER:"0xa12EE7B34a973222cf952e4813928abCEA01CDA2",
