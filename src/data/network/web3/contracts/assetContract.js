@@ -151,7 +151,7 @@ class AssetContract {
       data,
       infoHash,
       {
-        gasLimit: 3000000
+        gasLimit: 7000000
       }
     );
     const status = (await tx.wait()).status;
@@ -206,7 +206,9 @@ class AssetContract {
     signature
   ) {
     console.log({pType, approving, kycHash, signature})
-    const tx = await this.mutableContract.approve(pType, approving, kycHash, signature);
+    const tx = await this.mutableContract.approve(pType, approving, kycHash, signature, {
+      gasLimit: 7000000,
+    });
     let status = (await tx.wait()).status;
     return status;
   }

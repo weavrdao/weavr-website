@@ -33,7 +33,7 @@ import { USER_COOKIE_KEY } from "../whitelist/constants";
 import Login from "@/components/sections/Login.vue"
 import { GUEST } from "../services/constants";
 import { createToaster } from "@meforma/vue-toaster";
-import options from "dotenv/lib/env-options";
+
 
 
 
