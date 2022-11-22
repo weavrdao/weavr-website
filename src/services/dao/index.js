@@ -359,6 +359,25 @@ class DAO {
 
     return status;
   }
+
+  /**
+   * 
+   * @param {*} pType 
+   * @param {*} approving 
+   * @param {*} kycHash 
+   * @param {*} signature 
+   */
+   async approve(
+    pType,
+    approving,
+    kycHash,
+    signature
+  ) {
+    const assetContract = new AssetContract(this.ethereumClient, CONTRACTS.WEAVR);
+    console.log("DAO____",{pType, approving, kycHash, signature})
+    const status = await assetContract.approve(pType, approving, kycHash, signature);
+    return status;
+  }
   /**
    * Vote on a proposal
    * @param {Asset} asset Asset that the DAO controls
