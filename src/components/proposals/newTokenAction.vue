@@ -123,7 +123,7 @@ export default {
       });
     },
     onCancel() {
-      this.$router.push("/".concat(CONTRACTS.DAO));
+      this.$router.back();
     }
   }
 }
