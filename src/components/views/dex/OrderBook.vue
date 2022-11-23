@@ -43,7 +43,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../styles/frabric-custom.scss";
+@import "../../../styles/weavr-custom.scss";
 
 h3 {
   color: white;

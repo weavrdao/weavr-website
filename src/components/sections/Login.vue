@@ -52,12 +52,12 @@ export default {
       await this.login({passwd: this.passwd}).then( (LOGGED) => {
         console.log(this.isGuest)
         if(LOGGED){
-          this.$router.push("/".concat(DAO))
+          this.$router.back()
         }
       })
     },
     routeToHome() {
-      this.$router.push("/".concat(DAO));
+      this.$router.back();
     },
   },
   mounted() {
@@ -67,7 +67,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/frabric-custom.scss";
+@import "@/styles/weavr-custom.scss";
 
 .wallet-box :hover {
   background-color: $mediumDarkGray;

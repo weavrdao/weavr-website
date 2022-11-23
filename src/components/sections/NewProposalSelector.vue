@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/frabric-custom.scss";
+@import "../../styles/weavr-custom.scss";
 
 .proposal-selector {
   border: 1px solid #575757;

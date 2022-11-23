@@ -178,7 +178,7 @@ class AssetContract {
   async queueProposal(proposalId) {
     
     console.log("ASSETCONTRACT: ", proposalId);
-    let tx = await this.mutableContract.queueProposal(proposalId);
+    let tx = await this.mutableContract.queueProposal(proposalId, { gasLimit: 7000000});
 
     console.log(tx);
     return tx;

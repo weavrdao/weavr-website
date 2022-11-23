@@ -146,7 +146,7 @@
 </template>
 
 <style scoped lang="scss">
-@import "../../styles/frabric-custom.scss";
+@import "../../styles/weavr-custom.scss";
 .content.is-vcentered {
   display: flex;
   flex-wrap: wrap;

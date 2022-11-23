@@ -101,7 +101,7 @@ export default {
       })
     },
     onCancel() {
-      this.$router.push("/".concat(DAO));
+      this.$router.back();
     }
   },
   mounted() {

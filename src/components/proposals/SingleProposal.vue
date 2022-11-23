@@ -75,7 +75,8 @@
     <div class="description-container p-3">
       <vue-markdown class="content markdown-body" :options="{html: true}"  :source="proposal.description" />
     </div>
-    <label class="label">DAO Resolution</label>
+    <div class="box has-background-darkGray">
+      <label class="label">DAO Resolution</label>
     <div  :class="['p-3'].concat(proposal.daoResolution ? ['has-text-warning'] : ['has-text-success'])">
     <div> 
       {{ 
@@ -85,23 +86,28 @@
         }}
       </div>
     </div>
-    <label class="label">Consensus</label>
-    <div class="votes-container">
-      <div class="is-flex is-justify-content-space-between">
-        <span class="has-text-mint has-text-weight-semibold">{{ this.votes.yes.percentage + ' %' }}</span>
-        <span class="has-text-red has-text-weight-semibold">{{ this.votes.no.percentage + ' %' }}</span>
+    </div>
+    <div class="box has-background-darkGray">
+      <label class="label">Consensus</label>
+      <div class="votes-container">
+        <div class="is-flex is-justify-content-space-between">
+          <span class="has-text-mint has-text-weight-semibold">{{ this.votes.yes.percentage + ' %' }}</span>
+          <span class="has-text-red has-text-weight-semibold">{{ this.votes.no.percentage + ' %' }}</span>
+        </div>
+        <div class="votes-bar my-1">
+          <div class="green-bar" :style="{
+            width: this.votes.yes.percentage + '%',
+            // Prevent double borders for unanimous votes
+            borderRight: (this.votes.yes.percentage >= 99 || this.votes.no.percentage >= 99) ? 'none' : 'none',
+          }"></div>
+        </div>
+        <div class="is-flex is-justify-content-space-between">
+          <span class="has-text-mint has-text-weight-medium">{{ this.votes.yes.count + ' votes in favour' }}</span>
+          <span class="has-text-red has-text-weight-medium">{{ this.votes.no.count + ' votes against' }}</span>
+        </div>
       </div>
-      <div class="votes-bar my-1">
-        <div class="green-bar" :style="{
-          width: this.votes.yes.percentage + '%',
-          // Prevent double borders for unanimous votes
-          borderRight: (this.votes.yes.percentage >= 99 || this.votes.no.percentage >= 99) ? 'none' : '2px solid white',
-        }"></div>
-      </div>
-      <div class="is-flex is-justify-content-space-between">
-        <span class="has-text-mint has-text-weight-medium">{{ this.votes.yes.count + ' votes in favour' }}</span>
-        <span class="has-text-red has-text-weight-medium">{{ this.votes.no.count + ' votes against' }}</span>
-      </div>
+    </div>
+    <div class="box has-background-darkGray">
       <label class="label">Voting</label>
       <div v-if="ended">
         <div class="is-flex is-justify-content-space-between is-align-items-center mt-5">
@@ -257,7 +263,7 @@
         withdraw: "withdraw",
       }), // Voting action
       routeToHome() {
-        this.$router.push("/".concat(DAO));
+        this.$router.back();
       },
       setTimeRemainingCountdown() {
         clearInterval(this.countdownRef);
@@ -323,7 +329,7 @@
   </script>
   
   <style lang="scss" scoped>
-  @import "../../styles/frabric-custom.scss";
+  @import "../../styles/weavr-custom.scss";
   @import "../../styles/markdown.scss";
   
   .container {
@@ -405,7 +411,7 @@
     height: 25px;
     background: $red;
     overflow: hidden;
-    border: 2px solid white;
+    border: none;
   }
   
   .green-bar {

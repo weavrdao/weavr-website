@@ -100,7 +100,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../styles/frabric-custom.scss";
+@import "../../../styles/weavr-custom.scss";
 
 .navbar {
   background-color: transparent !important;

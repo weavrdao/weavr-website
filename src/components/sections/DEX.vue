@@ -62,7 +62,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/frabric-custom.scss";
+@import "../../styles/weavr-custom.scss";
 @import "../../styles/_variables.sass";
 
 @media(max-width: 767px) {

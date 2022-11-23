@@ -45,7 +45,7 @@ export default {
      tokenInfo: "fetchTokenInfo"
     }), // Voting action
     routeToHome() {
-      this.$router.push("/".concat(DAO));
+      this.$router.back();
     },
   },
   mounted() {
@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/frabric-custom.scss";
+@import "../../styles/weavr-custom.scss";
 .container {
   min-width: 80% !important;
 }

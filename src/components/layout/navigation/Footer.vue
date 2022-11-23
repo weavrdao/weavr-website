@@ -73,7 +73,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../styles/frabric-custom.scss";
+@import "../../../styles/weavr-custom.scss";
 
 hr {
     height: 1px;

@@ -59,7 +59,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../styles/_variables.sass";
-@import "../../styles/frabric-custom.scss";
+@import "../../styles/weavr-custom.scss";
 
 @keyframes fadeIn {
   0% { opacity: 0; }

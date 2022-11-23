@@ -204,7 +204,7 @@ export default {
       this.documents = files;
     },
     onCancel() {
-      this.$router.push("/".concat(DAO));
+      this.$router.back();
     }
   }
 }
@@ -212,7 +212,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../styles/_variables.sass";
-@import "../../styles/frabric-custom.scss";
+@import "../../styles/weavr-custom.scss";
 
 .files-container {
   border-left: 4px solid $mediumBlue;

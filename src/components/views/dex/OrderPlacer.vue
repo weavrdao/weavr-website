@@ -116,7 +116,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../styles/frabric-custom.scss";
+@import "../../../styles/weavr-custom.scss";
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

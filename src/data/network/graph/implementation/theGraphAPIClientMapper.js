@@ -8,8 +8,6 @@ import {
   mapParticipantProposals,
   mapTokenActionProposals,
   mapThreadProposals,
-  mapVouchers,
-  mapWeavrWhitelist
 } from "./proposals";
 
 class TheGraphAPIMapper extends GraphQLAPIMapper {
