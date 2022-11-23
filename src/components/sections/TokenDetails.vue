@@ -45,11 +45,11 @@ export default {
      tokenInfo: "fetchTokenInfo"
     }), // Voting action
     routeToHome() {
-      this.$router.push("/".concat(DAO));
+      this.$router.back();
     },
   },
   mounted() {
-    this.info = this.tokenInfo(CONTRACTS.FRBC)
+    this.info = this.tokenInfo(CONTRACTS.TOKEN_ADDRESS)
   },
   created() {
 
@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/frabric-custom.scss";
+@import "../../styles/weavr-custom.scss";
 .container {
   min-width: 80% !important;
 }

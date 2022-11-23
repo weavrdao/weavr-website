@@ -1,4 +1,4 @@
-// const tokenAddress = process.env.FRBC;
+// const tokenAddress = process.env.TOKEN_ADDRESS;
 // const tokenSymbol = 'TUT';
 // const tokenDecimals = 18;
 // const tokenImage = 'http://placekitten.com/200/300';

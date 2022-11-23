@@ -3,7 +3,7 @@
     <div class="modal is-active">
       <div class="modal-background" @click="goBack()"></div>
       <div class="modal-content has-background-darkGray animate__animated animate__fadeInDown animate__faster">
-        <component :is="component" v-bind="$attrs" @proposed="goBack()" @submited="() => { isSubmited=true }" />
+        <component :is="component" v-bind="$attrs" @proposed="goBack()" @submited="() => { isSubmited=true }"/>
       </div>
     </div>
   </Portal>
@@ -15,7 +15,7 @@ import { DAO } from "../../../services/constants";
 import { mapActions } from 'vuex';
 export default {
   name: "Modal",
-  props: ["component"],
+  props: ["component", "assetId"],
   data(){
     return {
       isSubmited: false,
@@ -26,7 +26,7 @@ export default {
       refresh: ""
     }),
     goBack() {
-      this.$router.push("/".concat(DAO))
+      this.$router.back();
     }
   },
   computed: {
@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../styles/frabric-custom.scss";
+@import "../../../styles/weavr-custom.scss";
 
 .modal-content {
   border-radius: $card-radius;

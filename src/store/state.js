@@ -65,8 +65,8 @@ const getters = {
   isLoading(state) {
     return state.interface.isLoading;
   },
-  isGuest(state) {
-    return state.user.isGuest;
+  guestCookie(state) {
+    return state.user.isGuest
   },
   userWalletAddress(state) {
     return state.user.wallet.address;
@@ -166,14 +166,15 @@ const actions = {
       params.passwd===process.env.VUE_APP_DAILY_PASSWORD
     ){
       setCookie(USER_COOKIE_KEY, GUEST, 1)
-      
+      context.state.isGuest = getCookie(USER_COOKIE_KEY) === GUEST ? true : false
+      return true
     }
-     
+    return false
   },
 
   async fetchTokenInfo(context, params) {
     // const toast = params.$toast || createToaster({});
-    const tokenAddress = params.tokenAddress || CONTRACTS.FRBC;
+    const tokenAddress = params.tokenAddress || CONTRACTS.TOKEN_ADDRESS;
     const supply = await token.getTotalSupply(tokenAddress);
     console.log(ethers.utils.formatEther(supply));
     return {
@@ -185,9 +186,9 @@ const actions = {
     console.log("SYNC");
     let {$toast} = params !== undefined ? params : {};
     let walletState = await wallet.getState(params.wallet);
-    const symbol = await token.getTokenSymbol(CONTRACTS.FRBC);
+    const symbol = await token.getTokenSymbol(CONTRACTS.TOKEN_ADDRESS);
     const balance = await token.getTokenBalance(
-      CONTRACTS.FRBC,
+      CONTRACTS.TOKEN_ADDRESS,
       walletState.address
     );
     
@@ -203,7 +204,7 @@ const actions = {
     context.commit("setWhitelisted", isWhitelisted);
     isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address, 100)
     const balancePromise = await token.getTokenBalance(
-      CONTRACTS.FRBC,
+      CONTRACTS.TOKEN_ADDRESS,
       walletState.address
     );
     
@@ -231,6 +232,7 @@ const actions = {
 
   async logout(context) {
     const state = wallet.disconnect();
+    setCookie(USER_COOKIE_KEY, "NULL", 1)
     context.commit("setWallet", state)
   },
 

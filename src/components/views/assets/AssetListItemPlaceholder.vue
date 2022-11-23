@@ -11,7 +11,7 @@
   </section>
 </template>
 
-<script>
+<script lang="js">
 import Button from "../common/Button.vue";
 
 export default {

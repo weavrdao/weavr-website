@@ -38,12 +38,7 @@ import {ethers} from "ethers";
 export default {
 
   name: "newPaperProposal",
-  props: {
-    assetId: {
-      type: String,
-      required: true,
-    },
-  },
+  
   emits: ['submited', "proposed"],
   data(){
     return {
@@ -55,6 +50,9 @@ export default {
     }
   },
   computed: {
+    assetId() {
+      return this.$route.params.assetId
+    }
   },
   methods: {
     ...mapActions({
@@ -89,7 +87,7 @@ export default {
       this.$emit("proposed");
     },
     onCancel() {
-      this.$router.push("/".concat(DAO));
+      this.$router.back();
     }
   },
   mounted() {

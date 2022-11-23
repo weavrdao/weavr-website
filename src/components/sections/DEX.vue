@@ -17,6 +17,7 @@
 import { mapActions, mapGetters } from "vuex";
 import OrderPlacer from "../views/dex/OrderPlacer.vue";
 import OrderBook from "../views/dex/OrderBook.vue";
+import { CONTRACTS } from '../../services/constants';
 
 export default {
   name: "DEX",
@@ -27,7 +28,7 @@ export default {
   data() {
     return {
       orderBookMode: "buy",
-      assetId: this.$route.query.assetId || process.env.VUE_APP_FRABRIC_ADDRESS,
+      assetId: this.$route.query.assetId || CONTRACTS.WEAVR,
     }
   },
   computed: {
@@ -61,7 +62,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/frabric-custom.scss";
+@import "../../styles/weavr-custom.scss";
 @import "../../styles/_variables.sass";
 
 @media(max-width: 767px) {

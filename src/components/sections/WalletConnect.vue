@@ -88,14 +88,14 @@ export default {
         });
     },
     routeToHome() {
-        this.$router.push("/".concat(DAO));
+        this.$router.back();
     },
   }    
 }
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/frabric-custom.scss";
+@import "@/styles/weavr-custom.scss";
 
 
 .disabled {

@@ -58,7 +58,7 @@ export default {
       await this.vouch({participant: participant})
     },
     onCancel() {
-      this.$router.push("/".concat(DAO));
+      this.$router.back();
     }
   },
   mounted() {

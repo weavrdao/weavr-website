@@ -43,12 +43,6 @@ import RefreshButton from "../sections/RefreshButton.vue";
 
 export default {
   name: "Governance",
-  props: {
-    assetId: {
-      type: String,
-      required: true,
-    },
-  },
   components: {
     StackNavigationBar,
     ProposalList,
@@ -68,8 +62,8 @@ export default {
       return this.asset.owners.get(this.walletAddress) ?? 0;
     },
 
-    asset() {
-      return this.assetMap.get(this.assetId);
+    assetId() {
+      return this.$route.params['assetId']
     },
 
     proposals() {
@@ -174,6 +168,7 @@ export default {
   },
 
   mounted() {
+    console.log("GOV_CHECK__ASSET_ID___",this.$route.params['assetId']);
     this.refresh({ assetId: this.assetId, $toast: this.$toast });
     // this.syncWallet();
   },
