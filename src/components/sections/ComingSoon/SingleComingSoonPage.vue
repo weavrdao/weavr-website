@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="dark-card call-to-action-container is-flex is-align-items-center mb-5">
-      <span>🧵</span>
+      <span> </span>
       <div class="has-text-white">
         <h3>Want to own a part of this property?</h3>
         <h4>Make a pledge, and become a part of history.</h4>
@@ -82,7 +82,7 @@ export default {
 </script>
 <style scoped lang="scss">
 @import "../../../styles/_variables.sass";
-@import "../../../styles/frabric-custom.scss";
+@import "../../../styles/weavr-custom.scss";
 @import "../../../styles/markdown.scss";
 
 .carousel__prev,

@@ -138,7 +138,7 @@ export default {
     },
 
     openProposal() {
-      this.$router.push(`/${DAO}/proposal/${this.proposal.id}`);
+      this.$router.push(this.$route.path+`/proposal/${this.proposal.id}`);
     },
   },
 
@@ -154,7 +154,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../../../styles/frabric-custom.scss";
+@import "../../../styles/weavr-custom.scss";
 @import "../../../styles/_variables.sass";
 @import "../../../styles/markdown.scss";
 

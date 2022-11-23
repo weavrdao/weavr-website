@@ -13,7 +13,7 @@
         <div class="is-flex is-justify-content-space-evenly">
             <div class="form">
               <div class="label field is-size-4">Enter Guest Password</div>
-              <input class="input field" type="password" v-model="passwd"/>
+              <input ref="password" class="input field" type="password" v-model="passwd"/>
               <div class="button is-primary" @click="onClick">Login</div>
             </div>
         </div>
@@ -29,13 +29,16 @@ export default {
   name: "Login",
   computed: {
     ...mapGetters({
-      isGuest: "isGuest",
+      guestCookie: "guestCookie",
     }),
+    isGuest() {
+      return this.guestCookie
+    },
     hover: false,
   },
   data() {
     return {
-     passwd: ""
+      passwd: ""
     }
   },
   methods: {
@@ -43,29 +46,28 @@ export default {
       login: "connectGuest",
       
     }),
-    onClick() {
+    async onClick() {
       this.$toast.show("Checking for password ");
       console.log(this.isGuest)
-      this.login({passwd: this.passwd})
-      // this.sync({ wallet: wllt, $toast: this.$toast})
-      //   .then(() => {
-      //     this.routeToHome();
-      //   });
-      console.log(this.isGuest)
-      if(this.isGuest){
-        this.$router.push("/".concat(DAO))
-      }
-      
+      await this.login({passwd: this.passwd}).then( (LOGGED) => {
+        console.log(this.isGuest)
+        if(LOGGED){
+          this.$router.back()
+        }
+      })
     },
     routeToHome() {
-      this.$router.push("/".concat(DAO));
+      this.$router.back();
     },
+  },
+  mounted() {
+    this.$refs.password.focus()
   }    
 }
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/frabric-custom.scss";
+@import "@/styles/weavr-custom.scss";
 
 .wallet-box :hover {
   background-color: $mediumDarkGray;

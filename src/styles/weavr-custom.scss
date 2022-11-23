@@ -34,7 +34,7 @@ $white: #FFFFFF;
 $black: #13111A;
 $magenta: #D841DE;
 $mint: #00EDC4;
-$red: #FF3200;
+$red: #e2004f;
 $cyan: #00BDFF;
 $lightNavy: #2F2C38;
 $boxGray: #16171A;
@@ -114,6 +114,17 @@ input {
     width: 350px;
     height: 350px;
   }
+}
+
+.content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+  color: $lightBlue !important;
+  font-weight: 600;
+  line-height: 1.125;
+}
+
+.content a, .markdown-body a {
+  color: $primary !important;
+  font-weight: 600;
 }
 // Adding new color variables to the color map.
 @import "../../node_modules/bulma/sass/utilities/derived-variables";

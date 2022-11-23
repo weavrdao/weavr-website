@@ -37,7 +37,7 @@
               is-fullwidth
               has-text-white
               is-size-4 "
-               @click="navigateToApp('marketplace/coming-soon')">
+               @click="() => {this.$router.push('/marketplace')}">
               Marketplace
             </a>
           </div>
@@ -146,7 +146,7 @@
 </template>
 
 <style scoped lang="scss">
-@import "../../styles/frabric-custom.scss";
+@import "../../styles/weavr-custom.scss";
 .content.is-vcentered {
   display: flex;
   flex-wrap: wrap;
@@ -245,30 +245,10 @@ export default {
       
     }
   },
-
   methods: {
     goBack() {
       this.$router.back();
     },
-    navigateToApp(path) {
-      var route;
-      if (location.href.includes("localhost")) {
-        route = "http://localhost:9090/#/";+path
-      } else {
-        route = "https://app.weavr.org/#/"+path;
-      }
-      location.href = route;
-    },
-    navigateToStatic(path) {
-      var route;
-      if (location.href.includes("localhost")) {
-        route = "http://localhost:8080/#/"+path;
-      }
-        else {
-        route = "https://weavr.org/#/"+path;
-      }
-      this.$router.push()
-    }
   }
 };
 </script>

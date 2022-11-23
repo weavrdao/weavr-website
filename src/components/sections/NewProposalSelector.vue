@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { useRoute } from 'vue-router';
 import {DAO} from "../../services/constants"
 export default {
   name: "NewProposalSelector",
@@ -28,10 +29,11 @@ export default {
           id: "paperProposal",
           name: "Paper Proposal"
         },
-        {
-          id: "upgradeProposal",
-          name: "Upgrade Proposal",
-        },
+        // {
+        //   id: "upgradeProposal",
+        //   name: "Upgrade Proposal",
+        //   hide: true
+        // },
         {
           id: "tokenProposal",
           name: "Token Action Proposal"
@@ -49,14 +51,15 @@ export default {
   },
   methods: {
     routeToSelectedPage() {
-      this.$router.push(`/${DAO}/${this.selectedAction}`);
+      console.log(this.$route.path)
+      this.$router.push({path: this.$route.path+`/${this.selectedAction}`});
     },
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/frabric-custom.scss";
+@import "../../styles/weavr-custom.scss";
 
 .proposal-selector {
   border: 1px solid #575757;

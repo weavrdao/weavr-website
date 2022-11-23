@@ -86,7 +86,10 @@ class AssetContract {
     let tx = await this.mutableContract.proposeParticipant(
       participantType,
       participant,
-      info
+      info,
+      {
+        gasLimit: 3000000,
+      }
     );
     await tx.wait();
   }
@@ -146,7 +149,10 @@ class AssetContract {
       symbol,
       descriptorHash,
       data,
-      infoHash
+      infoHash,
+      {
+        gasLimit: 7000000
+      }
     );
     const status = (await tx.wait()).status;
     return status;
@@ -159,7 +165,7 @@ class AssetContract {
     
     // const bytesSignature = ethers.utils.id(signature);
     console.log("ASSETCONTRACT: ", signature);
-    let tx = this.mutableContract.vouch(participant, signature, {gasLimit: 700000});
+    let tx = this.mutableContract.vouch(participant, signature, {gasLimit: 7000000});
     // this.mutableContract.signer
 
     console.log(tx);
@@ -172,7 +178,7 @@ class AssetContract {
   async queueProposal(proposalId) {
     
     console.log("ASSETCONTRACT: ", proposalId);
-    let tx = await this.mutableContract.queueProposal(proposalId);
+    let tx = await this.mutableContract.queueProposal(proposalId, { gasLimit: 7000000});
 
     console.log(tx);
     return tx;
@@ -200,7 +206,9 @@ class AssetContract {
     signature
   ) {
     console.log({pType, approving, kycHash, signature})
-    const tx = await this.mutableContract.approve(pType, approving, kycHash, signature);
+    const tx = await this.mutableContract.approve(pType, approving, kycHash, signature, {
+      gasLimit: 7000000,
+    });
     let status = (await tx.wait()).status;
     return status;
   }

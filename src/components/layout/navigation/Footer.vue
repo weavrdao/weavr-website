@@ -26,10 +26,10 @@
                     <a href="https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics">FAQ</a>
                 </li>
                 <li>
-                  <a href="https://weavr.org/#/privacy">Privacy Policy</a>
+                  <a @click="() => { this.$router.push('/privacy') }">Privacy Policy</a>
                 </li>
                 <li>
-                  <a href="https://weavr.org/#/toc">Terms and Conditions</a>
+                  <a @click="() => { this.$router.push('/toc') }">Terms and Conditions</a>
                 </li>
             </ul>
         </div>
@@ -40,12 +40,11 @@
                     <a href="https://forum.weavr.org/">Forum</a>
                 </li>
                 <li>
-                    <a href="https://app.weavr.org/#/weavr">Vote</a>
+                    <a @click="() => { this.$router.push('/weavr') }">Vote</a>
                 </li>
                 <li>
                     <a href="https://resolutions.weavr.org">Resolutions</a>
                 </li>
-
                 <li>
                     <a href="https://discord.gg/ehEfjrcapk">Discord</a>
                 </li>
@@ -59,9 +58,9 @@
             <h3 class="my-0">Weavr</h3>
         </div>
         <div class="is-flex is-flex-grow-0"> 
-            <a href="https://twitter.com/WeavrDAO"> <unicon width="40" height="40" name="twitter" fill="white"></unicon></a>
-            <a href="https://github.com/weavrdao"> <unicon width="40" height="40" name="github" fill="white"></unicon></a>
-            <a href="https://discord.gg/ehEfjrcapk"> <unicon width="40" height="40" name="discord" fill="white"></unicon></a>
+            <a href="https://twitter.com/WeavrDAO"> <unicon width="30" height="30" name="twitter" fill="white"></unicon></a>
+            <a href="https://github.com/weavrdao"> <unicon width="30" height="30" name="github" fill="white"></unicon></a>
+            <a href="https://discord.gg/ehEfjrcapk"> <unicon width="30" height="30" name="discord" fill="white"></unicon></a>
         </div>
     </div>
 </footer>
@@ -74,7 +73,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../styles/frabric-custom.scss";
+@import "../../../styles/weavr-custom.scss";
 
 hr {
     height: 1px;

@@ -35,6 +35,7 @@
     <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
   </div>
   <!-- End Form -->
+  {{assetId}}
 </div>
 
 </template>
@@ -44,27 +45,23 @@ import { mapGetters, mapActions } from "vuex";
 
 import { CommonProposalType } from "@/models/common.js"
 import VueMarkdown from "vue-markdown-render";
-import AppVue from '../../App.vue';
 import { createApp } from '@vue/runtime-dom';
+import { CONTRACTS } from '../../services/constants';
+import { useRoute, useRouter } from 'vue-router';
 
 
 const mk = createApp({extends: VueMarkdown})
 
 export default {
-
   name: "newPaperProposal",
   components: {
     // VueMarkdown
   },
-  props: {
-    assetId: {
-      type: String,
-      required: true,
-    }
-  },
   emits: ['submited', "proposed"],
   computed: {
-    
+    assetId() {
+      return this.$route.params.assetId
+    }
   },
   data(){
     return {
@@ -80,18 +77,15 @@ export default {
   methods: {
     ...mapActions({
       refresh: "refreshProposalsDataForAsset",
-      syncWallet: "syncWallet",
       createPaperProposal: "createPaperProposal",
     }),
-    updateMarkdown() {
-    
-    },
     async publish() {
       this.$emit("submited")
       console.dir(this.trigger);
       if (this.title.length < 1 || this.description.length < 1) {
         return;
       }
+      console.log("___ADDRESS___");
       const assetAddr = this.assetId;
       console.log("ADD:" + assetAddr)
       const title = this.title;
@@ -102,12 +96,11 @@ export default {
       this.$emit("proposed");
     },
     onCancel() {
-      this.$router.push("/");
+      this.$router.back();
     }
   },
   mounted() {
     this.refresh({ assetId: this.assetId, $toast: this.$toast });
-    this.syncWallet();
   },
 }
 </script>

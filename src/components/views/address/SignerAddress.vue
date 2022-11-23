@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <div v-if="whitelisted && isConnected && hasKyc" class="button has-background-cyan has-text-white mr-1" @click="onVouch"><span class="mr-1"></span>Vouch</div>
-    <div v-if="whitelisted && isConnected && !hasKyc" class="button is-success mr-5" @click="onKyc"><span class="mr-1"></span>Get Verified</div>
-    <div v-if="whitelisted && isConnected && hasKyc" class="button has-background-mint" @click="kycInfo">
-          <span class="">
-            <unicon name="user-check" :width="25" :height="25" fill="white" alt="address verified"/>
-          </span>
-        </div>
+  <div class="block">
+    <div v-if="whitelisted && isConnected && !hasKyc" class="is-flex button is-clickable is-success mr-5" @click="onKyc"><span class="mr-1"></span>Get Verified</div>
+    <div v-if="whitelisted && isConnected && hasKyc" class="button has-background-cyan has-text-white is-size-7 mr-1" @click="onVouch">Vouch</div>
+    <div v-if="whitelisted && isConnected && hasKyc" class="button is-size-7 has-background-mint " @click="kycInfo">
+        <unicon name="user-check" :width="15" :height="15" fill="white" alt="address verified"/>
+    </div>
     <div @click="tokenDetails" style="cursor: pointer;" class="ml-4 tag is-large is-flex is-address-container" v-if="address !=null">
       <div>
         <span >{{ balance }}</span>
@@ -38,24 +36,29 @@
         <div class="dropdown-menu" id="dropdown-menu3" role="menu">
           <div class="dropdown-content ">
             <a  class="dropdown-item is-disabled has-text-mediumGray">
-              <!-- <span class="mr-1"><unicon name="eye-slash" fill="mediumGray" width="15" height="15"></unicon></span> -->
               Token Overview
             </a>
-            
-            <hr class="dropdown-divider">
             <a @click="onLogout" class="dropdown-item">
               Logout
             </a>
+            <hr class="dropdown-divider">
+            
           </div>
         </div>
       </div>
     </div>
+    
     <div
       v-else
-      class="tag is-primary has-radius-xs is-large is-clickable connect"
+      class="has-radius-xs is-large is-clickable connect"
       @click="onClick"
+      :aria-disabled="true"
     >
-      <div class="has-text-white">Connect Wallet</div>
+      
+      <div 
+        :class="[isGuest? 'is-warning has-text-darkGray': 'is-primary has-text-white', ' button']">
+        {{ isGuest ? "GUEST" : "Connect"}}
+      </div>
     </div>
     <div id="toeknModal"></div>
   </div>
@@ -76,10 +79,14 @@
         address: "userWalletAddress",
         balance: "userTokenBalance",
         symbol: "assetTokenSymbol",
-        vouches: "vouchesPerSigner"
+        vouches: "vouchesPerSigner",
+        guestCookie: "guestCookie"
       }),
       isConnected() {
         return ethers.utils.isAddress(this.address)
+      },
+      isGuest() {
+        return this.guestCookie
       }
     },
     methods: {
@@ -101,10 +108,10 @@
         }
       },
       onVouch() {
-        this.$router.push("/".concat(DAO).concat("/vouch"))
+        this.$router.push(`/${this.$route.params.assetId}/vouch`)
       },
       onKyc() {
-        this.$router.push("/".concat(DAO).concat("/kyc"))
+        this.$router.push(`/${this.$route.params.assetId}/kyc`)
       },
       kycInfo() {
        this.$toast.success("You are a verified member with full voting abilities", { position: "top", duration: false})
@@ -135,15 +142,14 @@
     async mounted() {
       this.participantsList({type: "GENESIS"})
       console.log("Calling kyc...")
-      
-    }
+    },
     
   };
   
   </script>
   
   <style lang="scss" scoped>
-  @import "../../../styles/frabric-custom.scss";
+  @import "../../../styles/weavr-custom.scss";
   
     .is-address-container {
       display: inline-flex !important;
@@ -162,7 +168,9 @@
     // .has-text-medium-blue {
     //   color: $mediumBlue;
     // }
-  
+    .dropdown-menu {
+
+    }
     .is-dropdown-icon {
   display: inline-flex !important;
       background: $darkGray !important;
