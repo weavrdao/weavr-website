@@ -61,13 +61,14 @@ const router = new createRouter({
     {
       path: "/resolutions",
       beforeEnter(){
-        location.href = "https://resolutions.weavr.org"
+        window.open("https://resolutions.weavr.org", "_blanc")
       }
     },
     {
       path: "/faq",
       beforeEnter(){
-        location.href = "https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics"
+        window.open("https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics", "_blanc")
+        
       }
     },
     {
