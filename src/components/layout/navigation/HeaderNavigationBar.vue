@@ -75,7 +75,7 @@ export default {
           { name: "Governance", route: `/${CONTRACTS.WEAVR}`},
           { name: "Marketplace", route: "/marketplace"},
           { name: "Resolutions", route: "/resolutions", icon: "arrow-up-right"},
-          { name: "FAQ", path: "faq", icon: "arrow-up-right" }
+          { name: "FAQ", route: "/faq", icon: "arrow-up-right" }
         ],
       },
     }
