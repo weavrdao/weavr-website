@@ -36,7 +36,7 @@ function state() {
   return {
     user: {
       wallet: WalletState,
-      isGuest: getCookie(USER_COOKIE_KEY) === GUEST ? true : null,
+      isGuest: () => { return getCookie(USER_COOKIE_KEY) === GUEST},
       log: true,
       vouches: [],
     },
@@ -202,7 +202,7 @@ const actions = {
     );
 
     context.commit("setWhitelisted", isWhitelisted);
-    isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address, 100)
+    isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address+"_"+params.wallet, 100)
     const balancePromise = await token.getTokenBalance(
       CONTRACTS.TOKEN_ADDRESS,
       walletState.address

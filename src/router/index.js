@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import {createRouter, createWebHashHistory, createWebHistory, useRoute} from "vue-router";
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue";
@@ -222,13 +223,19 @@ router.beforeEach(async (to, from) => {
    * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
    * ON not
    */
-   console.log("HAS_REDIRECTED___", hasRedirectedAfterWhitelisting);
+  console.log("HAS_REDIRECTED___", hasRedirectedAfterWhitelisting);
 
-   const address = store.getters.userWalletAddress;
-   const isConnected = ethers.utils.isAddress(address);
-   const isWhitelisted = store.getters.isWhitelisted;
-   const isGuest = store.getters.guestCookie;
-   const cookie = getCookie(USER_COOKIE_KEY)
+  const address = store.getters.userWalletAddress;
+  const isConnected = ethers.utils.isAddress(address);
+  const isWhitelisted = store.getters.isWhitelisted;
+  const isGuest = store.getters.guestCookie;
+  const decoded_cookie = getCookie(USER_COOKIE_KEY)
+  let cookie = {}
+  if(decoded_cookie) {
+    console.log("COOKIE IS SET___, ", decoded_cookie);
+    cookie.wallet = decoded_cookie.split("_")[0]
+    cookie.provider = decoded_cookie.split("_")[1]
+  }
   // require auth
   if( to.meta.locked ) {
     const toast = createToaster({});
@@ -240,15 +247,15 @@ router.beforeEach(async (to, from) => {
     // not connected
     if( !isConnected ) {
       // cookie
-      if( ethers.utils.isAddress(cookie) ) {
-        if( cookie === GUEST ) {
+      if( ethers.utils.isAddress(cookie.wallet) ) {
+        if( cookie.wallet === GUEST ) {
           console.log("IS GUEST");
           return true
         }
         // - autoconnect and navigate
         console.log("autoconnect and navigate");
         const toast = createToaster({})
-        await store.dispatch("syncWallet", { wallet: "metamask", $toast: toast})
+        await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast})
         await store.dispatch("checkWhitelistStatus", {assetId: CONTRACTS.WEAVR}).then( () => {
           if( !isWhitelisted ) {
             // not whitelisted
@@ -264,7 +271,7 @@ router.beforeEach(async (to, from) => {
         
       }
       // !cookie
-      else if( !ethers.utils.isAddress(cookie)  ) { 
+      else if( !ethers.utils.isAddress(cookie.wallet)  ) { 
         // - go to walletconnect
         console.log("go to whitelist")
         return { path: "/whitelist"}
@@ -283,14 +290,14 @@ router.beforeEach(async (to, from) => {
     // - navigating to whitelist and set vars
     console.log("into whitelist");
   }
- 
-  
+
+
   // from.whitelist
   if( from.path === "whitelist" ) {
     // - navigate path and reset vars
   }
   // no auth
-    // - navigate to path
+  // - navigate to path
   console.log("no auth required");
   return true  
 })
