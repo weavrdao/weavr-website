@@ -71,21 +71,23 @@
     </div>
     <!-- End Token Action Proposal -->
   
-    <label class="label">Description</label>
-    <div class="description-container p-3">
+    <div class="box has-background-darkGray">
+      <label class="label">Description</label>
+    <div class="description-container p-0">
       <vue-markdown class="content markdown-body" :options="{html: true}"  :source="proposal.description" />
+    </div>
     </div>
     <div class="box has-background-darkGray">
       <label class="label">DAO Resolution</label>
-    <div  :class="['p-3'].concat(proposal.daoResolution ? ['has-text-warning'] : ['has-text-success'])">
-    <div> 
-      {{ 
-        proposal.daoResolution==true 
-          ? "This proposal will influence the DAO" 
-          : "This proposal will not influence the DAO" 
-        }}
+      <div  :class="['p-0'].concat(proposal.daoResolution ? ['has-text-warning'] : ['has-text-success'])">
+      <div> 
+        {{ 
+          proposal.daoResolution==true 
+            ? "This proposal will influence the DAO" 
+            : "This proposal will not influence the DAO" 
+          }}
+        </div>
       </div>
-    </div>
     </div>
     <div class="box has-background-darkGray">
       <label class="label">Consensus</label>
@@ -398,7 +400,7 @@
   }
   
   .description-container {
-    background: transparent;
+    background: transparent !important;
     padding: 25px;
     border-radius: $tiny-radius;
     

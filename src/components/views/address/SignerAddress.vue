@@ -1,9 +1,11 @@
 <template>
-  <div class="block">
-    <div v-if="whitelisted && isConnected && !hasKyc" class="is-flex button is-clickable is-success mr-5" @click="onKyc"><span class="mr-1"></span>Get Verified</div>
-    <div v-if="whitelisted && isConnected && hasKyc" class="button has-background-cyan has-text-white is-size-7 mr-1" @click="onVouch">Vouch</div>
-    <div v-if="whitelisted && isConnected && hasKyc" class="button is-size-7 has-background-mint " @click="kycInfo">
-        <unicon name="user-check" :width="15" :height="15" fill="white" alt="address verified"/>
+  <div class="">
+    <div class="member-actions">
+      <div v-if="whitelisted && isConnected && !hasKyc" class="button is-clickable is-success is-size-7" @click="onKyc"><span class="mr-1"></span>Get Verified</div>
+      <div v-if="whitelisted && isConnected && hasKyc" class="button has-background-cyan has-text-white is-size-7 mr-1" @click="onVouch">Vouch</div>
+      <div v-if="whitelisted && isConnected && hasKyc" class="button is-size-7 has-background-mint " @click="kycInfo">
+          <unicon name="user-check" :width="15" :height="15" fill="white" alt="address verified"/>
+      </div>
     </div>
     <div @click="tokenDetails" style="cursor: pointer;" class="ml-4 tag is-large is-flex is-address-container" v-if="address !=null">
       <div>
@@ -150,7 +152,9 @@
   
   <style lang="scss" scoped>
   @import "../../../styles/weavr-custom.scss";
-  
+  .member-actions {
+    display: inline-flex;
+  }
     .is-address-container {
       display: inline-flex !important;
       background: $darkGray !important;
