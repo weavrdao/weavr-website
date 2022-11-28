@@ -36,7 +36,7 @@ function state() {
   return {
     user: {
       wallet: WalletState,
-      isGuest: () => { return getCookie(USER_COOKIE_KEY) === GUEST},
+      isGuest: getCookie(USER_COOKIE_KEY) === GUEST,
       log: true,
       vouches: [],
     },

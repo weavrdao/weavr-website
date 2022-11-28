@@ -244,6 +244,15 @@ router.beforeEach(async (to, from) => {
   }
   if( to.meta.requiresAuth ) {
     console.log("META_AUTH_ TRUE");
+    console.log(
+      {
+        isWhitelisted,
+        address,
+        isConnected,
+        decoded_cookie,
+        cookie
+      }
+    );
     // not connected
     if( !isConnected ) {
       // cookie
