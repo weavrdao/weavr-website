@@ -38,4 +38,9 @@ npm run lint
 
 ## Customize configuration
 
+## Proposal Blacklist
+Weavr blocks proposals from certain users and addresses. 
+Mechanically this is done by editing the `blacklist` file in `src/blacklist.json`.
+If you need to add an address to that list, please open a ticket.
+
 See [Configuration Reference](https://cli.vuejs.org/config/).
