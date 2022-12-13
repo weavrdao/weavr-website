@@ -66,9 +66,15 @@ const router = new createRouter({
     },
     {
       path: "/faq",
-      beforeEnter(){
+      beforeEnter() {
         window.open("https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics", "_blanc")
-        
+
+      }
+    },
+    {
+      path: "/forums",
+      beforeEnter() {
+        window.open("https://forum.weavr.org/", "_blanc")
       }
     },
     {
