@@ -18,6 +18,7 @@ import {
   addressMatchesCookie,
 } from "../whitelist";
 import { USER_COOKIE_KEY } from "../whitelist/constants";
+import blacklist from "@/blacklist.json";
 
 
 /**
@@ -135,8 +136,15 @@ const getters = {
     return state.user.wallet.vouches;
   },
 
+
+
   assetProposals(state) {
-    return state.platform.proposals;
+    return state.platform.proposals.filter((proposal) => {
+      const isBlacklisted = blacklist.addresses.some((address) => {
+        return address.toLowerCase() === proposal.creator.toLowerCase();
+      });
+      return !isBlacklisted;
+    });
   },
 
   proposalsById(state) {
@@ -541,13 +549,13 @@ const actions = {
     
     const signatures = await wallet.getSignature(domain, types, data);
     Promise.all([signatures])
-    .then(() => {
+      .then(() => {
       // console.log(signature[0]);
-      const expectedSignerAddress = context.state.user.wallet.address;
-      const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
-      console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
-      console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
-    });
+        const expectedSignerAddress = context.state.user.wallet.address;
+        const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
+        console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
+        console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
+      });
     const signature = signatures[0]
     console.log(signature);
     const status = await dao.vouch(participant, signature);
@@ -583,7 +591,7 @@ const actions = {
         { type: "address", name: "participant" },
         { type: "bytes32", name: "kyc" },
         { type: "uint256", name: "nonce" }
-    ]
+      ]
     };
     const data = { 
       participantType: pType,
@@ -596,13 +604,13 @@ const actions = {
     
     const signatures = await wallet.getSignature(domain, types, data);
     Promise.all([signatures])
-    .then(() => {
+      .then(() => {
       // // console.log(signature[0]);
       // const expectedSignerAddress = context.state.user.wallet.address;
       // const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
       // console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
       // console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
-    });
+      });
     const signature = signatures[0]
     console.log(signature);
     const status = await dao.approve(data.participantType, data.participant, data.kyc, signature);
