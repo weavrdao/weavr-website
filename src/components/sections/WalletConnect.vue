@@ -61,11 +61,11 @@ export default {
           icon: require("@/assets/icons/coinbase-wallet.png"),
           disabled: false
         },
-        //  ledger: {
-        //   name: "ledger",
-        //   icon: require("@/assets/icons/ledger-wallet.png"),
-        //   disabled: true
-        // },
+         ledger: {
+          name: "ledger",
+          icon: require("@/assets/icons/ledger-wallet.png"),
+          disabled: false
+        },
         // walletConnect: {
         //   name: "walletConnect",
         //   icon: require("@/assets/icons/coinbase-wallet.png"),

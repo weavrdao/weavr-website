@@ -4,8 +4,11 @@ const { ethers } = require("ethers");
 
 export class LedgerConnector {
   
-  constructor(ledgerApp) {
-    this.provider = ledgerApp;
+  constructor(provider, app, path) {
+    this.provider = provider;
+    this.app = app;
+    this.path = path;
+
   }
   
     
@@ -16,7 +19,7 @@ export class LedgerConnector {
       //   const address = await this.provider.getAddress("44'/60'/"+i+"'/0/0").then(o => o.address)
       //   console.log(address)
       // }
-      return await this.provider.getAddress("44'/60'/"+"1"+"'/0/0").then(o => o.address)
+      return await this.app.getAddress(this.path).then(o => o.address)
     } catch (error) {}
   };
 
@@ -44,16 +47,10 @@ export class LedgerConnector {
   };
 
   getEthBalance = async () => {
-    this.provider
-      .request({
-        method: "eth_getBalance",
-        params: [this.account || (await this.getAddress()), "latest"],
-      })
-      .then((response) => {
-        const accounts = response;
-        console.log(`User's bal is ${accounts}`);
-        return response;
-      });
+    const address = await this.getAddress();
+    const block = this.provider.get
+    const balance = this.provider.prepareRequest("eth_getBalance", [address, "latest"])
+    console.log(balance);
   };
 }
 

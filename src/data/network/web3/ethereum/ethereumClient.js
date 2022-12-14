@@ -107,34 +107,14 @@ class EthereumClient {
       }
     }
     if(wallet == "ledger") {
-      // try {
-      //   const connectKit = await loadConnectKit();
-      //   const net = NETWORK.id
-      //   const checkSupportResult = connectKit.checkSupport({
-      //     chainId: net,
-      //     providerType: SupportedProviders.Ethereum,
-      //     rpc: {
-      //       1: "https://cloudflare-eth.com/", // Mainnet
-      //       net: "https://arb1.arbitrum.io/rpc",
-      //       137: "https://polygon-rpc.com/", // Polygon
-      //     }
-      //   });
-      //   console.log('checkSupportResult is', checkSupportResult);
-      //   const provider = await connectKit.getProvider();
-        
-      //   const library = new ethers.providers.Web3Provider(provider);
-      //   this.walletProvider = library
-      //   const accounts = await library.listAccounts();
-      //   const network = await library.getNetwork();
-    
-      //   setProvider(provider);
-      //   setLibrary(library);
-    
-      //   if (accounts) setAccount(accounts[0]);
-      //   setChainId(network.chainId);
-      // } catch (error) {
-      //   setError(error);
-      // }
+      const path = "44'/60'/1'/0/0"
+      const {app, provider } = await getLedgerWalletProvider();
+      const { address } = await app.getAddress(path, false);    
+      console.log(address)
+      this.walletProvider = provider
+      this.walletSigner = this.walletProvider.getSigner(address)
+      this._connector = new LedgerConnector(this.walletProvider, app, path)
+      
     }
     if(wallet == "walletConnect") {
       // Create connector

@@ -1,8 +1,9 @@
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import Eth from "@ledgerhq/hw-app-eth";
 import TransportWebHID from "@ledgerhq/hw-transport-webhid";
+import Eth from "@ledgerhq/hw-app-eth";
 import {NETWORK} from "../../../../services/constants"
+import { ethers } from "ethers";
 const APP_NAME = "WeavrDAO";
 const APP_LOGO_URL = "@/assets/logo/new-logo.png";
 const DEFAULT_ETH_JSONRPC_URL =
@@ -16,10 +17,15 @@ export const DEFAULT_CHAIN_ID = NETWORK.id;
 
 // Ledger Provider
 export const getLedgerWalletProvider = async () => {
+  const provider = new ethers.providers.JsonRpcProvider(DEFAULT_ARB_GOERLI_JSONRPC_URL)
+  console.log(provider)
   const transport = await TransportWebHID.create();
   console.log(transport)
   const eth = new Eth(transport)
-  return eth  
+  return {
+    app: eth,
+    provider: provider
+  }
 }
 // Coinbase Wallet Provider
 export const getCoinbaseWalletProvider = () => {
