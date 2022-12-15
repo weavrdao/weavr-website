@@ -2,6 +2,7 @@
 <div class="container p-5">
   <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Paper Proposal</div>
   <!-- PAPER PROPOSAL FORM -->
+  <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
   <div class="field">
     <label class="label">Title</label>
     <div class="control">
@@ -13,13 +14,10 @@
     <label class="label">Description</label>
     <div class="control">
       <textarea class="textarea" v-if="!preview" v-model="description" placeholder="Enter description here"></textarea>
-      <div class="markdown handler" v-if="preview">
-
-        <vue-markdown class="title" :source="title"></vue-markdown>
-
-      <vue-markdown class="content markdown-body" :options="{html: true}"  :source="description"></vue-markdown>
+      <div v-if="preview">
+        <Proposal :proposal="proposal" />
         </div>
-      <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
+
       
     </div>
   </div>
@@ -35,7 +33,6 @@
     <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
   </div>
   <!-- End Form -->
-  {{assetId}}
 </div>
 
 </template>
@@ -43,15 +40,14 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 
-import { CommonProposalType } from "@/models/common.js"
-import VueMarkdown from "vue-markdown-render";
-
+import {CommonProposalType, ProposalTypes} from "@/models/common.js"
+import Proposal from "@/components/proposals/Proposal.vue"
 
 
 export default {
   name: "newPaperProposal",
   components: {
-    VueMarkdown
+    Proposal
   },
   emits: ['submited', "proposed"],
   computed: {
@@ -64,10 +60,10 @@ export default {
       title: "",
       description: "",
       daoResolution: false,
-      proposalType: CommonProposalType.Paper,
+      proposalType: ProposalTypes.Paper,
       preview: false,
-      markdownSource: null
-
+      markdownSource: null,
+      proposal: null
     }
   },
   methods: {
@@ -93,6 +89,15 @@ export default {
     },
     togglePreview(){
       console.log("preview toggled");
+      this.proposal = {
+        title: this.title,
+        description: this.description,
+        daoResolution: this.daoResolution,
+        type: this.proposalType,
+        creator: "0x00000",
+        startTimeStamp: 0,
+        endTimeStamp: 0
+      }
       this.preview = !this.preview
     },
 
