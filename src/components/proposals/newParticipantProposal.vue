@@ -40,7 +40,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import {ParticipantType} from "@/models/common.js";
+import {ParticipantType, ProposalTypes} from "@/models/common.js";
 import { DAO } from "../../services/constants"
 import {ethers} from "ethers";
 import Proposal from "@/components/proposals/Proposal.vue"
@@ -58,8 +58,10 @@ export default {
       title: "",
       description: "",
       pTypeList: ParticipantType,
+      proposalType: ProposalTypes.Participant,
       selectedType: "Individual",
       forumLink: "",
+      proposal: null,
       preview: false,
     }
   },
@@ -79,7 +81,10 @@ export default {
       this.proposal = {
         title: this.title,
         description: this.description,
-        type: this.selectedType,
+        type: this.proposalType,
+        creator: '0x00000',
+        startTimeStamp: 0,
+        endTimeStamp: 0,
         address: this.address,
         forumLink: this.forumLink
 
