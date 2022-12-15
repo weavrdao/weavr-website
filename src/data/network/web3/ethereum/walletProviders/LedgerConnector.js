@@ -1,5 +1,5 @@
 const { ethers } = require("ethers");
-
+import ledgerService from "@ledgerhq/hw-app-eth/lib/services/ledger"
 
 
 export class LedgerConnector {
@@ -52,6 +52,28 @@ export class LedgerConnector {
     const balance = this.provider.prepareRequest("eth_getBalance", [address, "latest"])
     console.log(balance);
   };
+
+  signTransaction = async (transaction) => {
+    let unsignedTx = ethers.utils.serializeTransaction(transaction).substring(2);
+    // const resolution = await ledgerService.resolveTransaction(ethers.utils.hexlify(transaction));
+    //Sign with the Ledger Nano (Sign what you see)
+    const signature = await this.app.signTransaction(this.path, unsignedTx, null);
+
+    //Parse the signature
+    signature.r = "0x"+signature.r;
+    signature.s = "0x"+signature.s;
+    signature.v = parseInt(signature.v);
+    signature.from = await this.getAddress();
+
+    //Serialize the same transaction as before, but adding the signature on it
+    let signedTx = ethers.utils.serializeTransaction(transaction, signature);
+    return signedTx;
+  };
+
+  sendTransaction = async (transaction) => {
+    const tx = await this.app.sendTransaction(transaction)
+    return tx
+  }
 }
 
 export default LedgerConnector;

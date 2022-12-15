@@ -1,5 +1,6 @@
 /* global BigInt */
 import { ethers } from "ethers";
+import { NETWORK } from "../../../../services/constants";
 import EthereumClient from "../ethereum/ethereumClient";
 
 
@@ -65,6 +66,11 @@ class AssetContract {
       contractAbi
     );
     this.mutableContract = ethereumClient.getMutableContract(this.contract);
+    this.iface = new ethers.utils.Interface(contractAbi)
+    this.client = {
+      signTransaction: ethereumClient.signTransaction,
+      sendTransaction: ethereumClient.sendTransaction
+    }
   }
 
   /**
@@ -73,7 +79,19 @@ class AssetContract {
    */
   async proposePaper(supermajority, info) {
     console.log(`SENT DIRECTLY TO CONTRACT: ${info}`);
-    let tx = await this.mutableContract.proposePaper(supermajority, info);
+    const txData = this.iface.encodeFunctionData("proposePaper", [supermajority, info])
+    console.log(this.contract);
+    let unsignedTx = {
+      to: this.contract.address,
+      gasLimit: ethers.utils.hexlify(1000000),
+      chainId: NETWORK.id,
+      data: txData,
+    
+    }
+    console.log(unsignedTx)
+    let signedTx = await this.client.signTransaction(unsignedTx)
+    console.log(signedTx)
+    const tx = await this.client.sendTransaction(signedTx)
     await tx.wait();
   }
 

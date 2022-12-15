@@ -119,7 +119,7 @@ class DAO {
   }
 
   /**
-   * Create a Paper Proposal
+   * Create a Thread Proposal
    * @param {String} assetId Asset's contract address
    * @param {String} name Chosen name for the thread
    * @param {String} descriptor of the thread
@@ -206,6 +206,7 @@ class DAO {
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
    */
   async createPaperProposal(asset, title, description, forumLink, daoResolution) {
+    console.log(asset)
     const assetContract = new AssetContract(this.ethereumClient, asset);
 
     const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({

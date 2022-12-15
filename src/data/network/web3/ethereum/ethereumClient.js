@@ -198,6 +198,21 @@ class EthereumClient {
   getMutableContract(contract) {
     return contract.connect(this.walletSigner);
   }
+
+
+  signTransaction = async (tx) => {
+    const address = await this.getWalletAddress()
+    tx.gasPrice = await this.walletProvider.getGasPrice();
+    tx.nonce = await this.walletProvider.getTransactionCount(address, "latest")
+    const signed_tx = await this._connector.signTransaction(tx)
+    return signed_tx
+  }
+
+  sendTransaction = async (signedTx) => {
+    const tx = await this.walletProvider.sendTransaction(signedTx)
+    return tx
+  }
+
 }
 
 export default EthereumClient;
