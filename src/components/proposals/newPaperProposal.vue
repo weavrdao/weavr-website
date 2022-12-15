@@ -3,25 +3,27 @@
   <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Paper Proposal</div>
   <!-- PAPER PROPOSAL FORM -->
   <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
-  <div class="field">
+  <div class="field"  v-if="!preview">
     <label class="label">Title</label>
     <div class="control">
       <input class="input" v-model="title" type="text" placeholder="Enter title here">
     </div>
   </div>
   
-  <div class="field">
+  <div class="field"  v-if="!preview">
     <label class="label">Description</label>
     <div class="control">
-      <textarea class="textarea" v-if="!preview" v-model="description" placeholder="Enter description here"></textarea>
-      <div v-if="preview">
-        <Proposal :proposal="proposal" />
-        </div>
-
-      
+      <textarea class="textarea" v-model="description" placeholder="Enter description here"></textarea>
     </div>
   </div>
-  <div class="field">
+  <div class="field"  v-if="!preview">
+    <label class="label">Forum link</label>
+    <input v-model="forumLink" type="text" class="input"/>
+  </div>
+  <div v-if="preview">
+    <Proposal :proposal="proposal" />
+  </div>
+  <div class="field"  v-if="!preview">
     <label class="label">DAO resolution</label>
     <div class="control">
       <input type="checkbox" class="checkbox" v-model="daoResolution"/><span class="ml-1 has-text-mediumGray is-italic"> - check this if the proposal will make changes to the DAO</span>
@@ -63,7 +65,8 @@ export default {
       proposalType: ProposalTypes.Paper,
       preview: false,
       markdownSource: null,
-      proposal: null
+      proposal: null,
+      forumLink: ""
     }
   },
   methods: {
@@ -96,7 +99,8 @@ export default {
         type: this.proposalType,
         creator: "0x00000",
         startTimeStamp: 0,
-        endTimeStamp: 0
+        endTimeStamp: 0,
+        forumLink: this.forumLink
       }
       this.preview = !this.preview
     },

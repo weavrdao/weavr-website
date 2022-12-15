@@ -2,7 +2,8 @@
   <div class="container p-5">
     <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Participant Proposal</div>
     <!-- PAPER PROPOSAL FORM -->
-    <div class="field">
+    <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
+    <div class="field" v-if="!preview">
       <label class="label">Participant Type</label>
       <select
         class="select is-small has-background-darkGray has-text-white px-3"
@@ -16,22 +17,19 @@
         </option>
       </select>
     </div>
-    <div class="field" v-if="selectedType!='Null'">
+    <div class="field" v-if="!preview" >
       <label class="label">Address</label>
       <div class="control">
         <input class="input" v-model="address" type="text" placeholder="Text input">
       </div>
     </div>
-    <div class="markdown handler" v-if="preview">
-
-      <vue-markdown class="title" :source="title"></vue-markdown>
-        <label class="label">Participant Address</label>
-        <Address :value="address" />
-        <label class="label">Participant Type</label>
-        <p><strong>{{selectedType}}</strong></p>
-      <vue-markdown class="content markdown-body" :options="{html: true}"  :source="description"></vue-markdown>
+    <div class="field" v-if="!preview">
+      <label class="label">Forum link</label>
+      <input v-model="forumLink" type="text" class="input"/>
     </div>
-    <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
+    <div v-if="preview">
+      <Proposal :proposal="proposal" />
+    </div>
     <div class="is-flex is-justify-content-space-between mt-5">
       <button @click="publish" class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
       <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
@@ -45,15 +43,13 @@ import { mapGetters, mapActions } from "vuex";
 import {ParticipantType} from "@/models/common.js";
 import { DAO } from "../../services/constants"
 import {ethers} from "ethers";
-import Address from "../views/address/Address.vue";
-import VueMarkdown from "vue-markdown-render";
+import Proposal from "@/components/proposals/Proposal.vue"
 
 export default {
 
   name: "newPaperProposal",
   components: {
-    Address,
-    VueMarkdown
+    Proposal
   },
   emits: ['submited', "proposed"],
   data(){
@@ -63,6 +59,7 @@ export default {
       description: "",
       pTypeList: ParticipantType,
       selectedType: "Individual",
+      forumLink: "",
       preview: false,
     }
   },
@@ -79,6 +76,14 @@ export default {
     }),
     togglePreview() {
       this.title = `Proposing ${this.address} for level ${this.pTypeList[this.selectedType]}`
+      this.proposal = {
+        title: this.title,
+        description: this.description,
+        type: this.selectedType,
+        address: this.address,
+        forumLink: this.forumLink
+
+      }
       this.preview = !this.preview
     },
     async publish() {
