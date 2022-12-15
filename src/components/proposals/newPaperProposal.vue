@@ -2,7 +2,6 @@
 <div class="container p-5">
   <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Paper Proposal</div>
   <!-- PAPER PROPOSAL FORM -->
-  <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
   <div class="field"  v-if="!preview">
     <label class="label">Title</label>
     <div class="control">
@@ -20,18 +19,18 @@
     <label class="label">Forum link</label>
     <input v-model="forumLink" type="text" class="input"/>
   </div>
-  <div v-if="preview">
-    <Proposal :proposal="proposal" />
-  </div>
   <div class="field"  v-if="!preview">
     <label class="label">DAO resolution</label>
     <div class="control">
       <input type="checkbox" class="checkbox" v-model="daoResolution"/><span class="ml-1 has-text-mediumGray is-italic"> - check this if the proposal will make changes to the DAO</span>
     </div>
   </div>
-  
+  <div v-if="preview">
+    <Proposal :proposal="proposal" />
+  </div>
   <div class="is-flex is-justify-content-space-between mt-5">
     <button @click="publish"  class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
+    <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
     <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
   </div>
   <!-- End Form -->

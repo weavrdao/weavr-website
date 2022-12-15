@@ -2,8 +2,8 @@
   <div class="container p-5">
     <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Participant Proposal</div>
     <!-- PAPER PROPOSAL FORM -->
-    <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
-    <div class="field" v-if="!preview">
+    <div v-if="!preview">
+    <div class="field">
       <label class="label">Participant Type</label>
       <select
         class="select is-small has-background-darkGray has-text-white px-3"
@@ -17,21 +17,23 @@
         </option>
       </select>
     </div>
-    <div class="field" v-if="!preview" >
+    <div class="field" >
       <label class="label">Address</label>
       <div class="control">
         <input class="input" v-model="address" type="text" placeholder="Text input">
       </div>
     </div>
-    <div class="field" v-if="!preview">
+    <div class="field">
       <label class="label">Forum link</label>
       <input v-model="forumLink" type="text" class="input"/>
+    </div>
     </div>
     <div v-if="preview">
       <Proposal :proposal="proposal" />
     </div>
     <div class="is-flex is-justify-content-space-between mt-5">
       <button @click="publish" class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
+      <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
       <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
     </div>
     <!-- End Form -->
