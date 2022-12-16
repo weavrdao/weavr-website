@@ -2,6 +2,16 @@
   <div class="container p-5">
     <div class="tag has-background-mediumBlue has-text-white  mb-5 is-medium">New Token Action Proposal</div>
     <!-- Token Action Form -->
+    <div class="field">
+      <label class="label">Minting Proposal?</label>
+      <select class="select has-background-darkGray has-text-white px-3" v-model="mintType">
+        <option
+            v-for="(_, name) in mintTypes"
+            :key="name">
+          {{name}}
+        </option>
+      </select>
+    </div>
     <div v-if="price === 0" class="field">
       <label class="label">Target Address</label>
       <div class="control">
@@ -10,15 +20,12 @@
       <span class="has-text-mediumBlue ml-3" v-if="isTargetingSelf">This contract</span>
       <span class="has-text-mediumBlue ml-3" v-if="isTargetingUser">You</span>
     </div>
-    <div class="field">
-      <label class="label">Minting Proposal?</label>
-        <select class="select has-background-darkGray has-text-white px-3" v-model="mintType">
-          <option 
-            v-for="(_, name) in mintTypes"
-            :key="name">
-            {{name}}
-          </option>
-        </select>
+    <div v-if="mintType === 'No'" class="field">
+      <label class="label"> Token Address</label>
+      <div class="control">
+        <input class="input" v-model="tokenAddress" type="text" placeholder="Token address">
+        <span class="has-text-mediumBlue ml-3">Token to Transfer</span>
+      </div>
     </div>
   
     <div class="field">
@@ -26,7 +33,8 @@
       <div class="control">
         <input class="input" v-model="price" type="number">
       </div>
-      <p class="has-text-mediumBlue" v-if="price !== 0">Token actions with a price will target the DAO contract</p>
+      <p class="has-text-mediumBlue" v-if="price !== 0">Token actions with a price will target the DAO contract
+      and launch on the DEX. Experimental.</p>
     </div>
   
     <div class="field">
@@ -75,7 +83,8 @@ export default {
       title: "",
       price: 0,
       description: "",
-      targetAddress: CONTRACTS.WEAVR,
+      targetAddress: "",
+      tokenAddress: "",
       forumLink: "",
       mintType: "No",
       mintTypes: MintType,
@@ -108,6 +117,15 @@ export default {
           position: "bottom",
         });
         return;
+      }
+
+      if (this.mintType === "No" && !ethers.utils.isAddress(this.tokenAddress)) {
+        this.$toast.warning("Invalid token address", {
+          position: "bottom",
+        });
+        return;
+      } else if (this.mintType === "yes") {
+        this.tokenAddress = CONTRACTS.TOKEN_ADDRESS;
       }
   
       await this.createTokenActionProposal({

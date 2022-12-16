@@ -369,6 +369,7 @@ const actions = {
     const {
       assetId,
       mint,
+      token,
       target,
       price,
       amount,
@@ -382,13 +383,12 @@ const actions = {
       position: "top",
     });
 
-    const tokenAddress = await dao.getTokenAddress(CONTRACTS.WEAVR);
 
     const atomicAmount = ethers.utils.parseEther(String(amount));
 
     const status = await dao.createTokenActionProposal(
       assetId,
-      tokenAddress,
+      token,
       target,
       mint,
       price,
