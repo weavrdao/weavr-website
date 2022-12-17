@@ -5,7 +5,10 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build:static": "vue-cli-service build",
+    "build": "vue-cli-service build",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
     "lint": "vue-cli-service lint",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
@@ -36,6 +39,7 @@
     "sass-loader": "^10.1.1",
     "stylus": "^0.56.0",
     "stylus-loader": "^3.0.2",
+    "vitepress": "^1.0.0-alpha.33",
     "vue": "^3.2.13",
     "vue-markdown-render": "^2.0.0",
     "vue-router": "^4.0.10",
@@ -43,8 +47,8 @@
     "vue-template-compiler": "^2.6.11",
     "vue-toaster": "^2.0.0",
     "vue-unicons": "^3.3.1",
-    "vue3-slider": "^1.8.0",
     "vue3-carousel": "^0.2.4",
+    "vue3-slider": "^1.8.0",
     "vuex": "^4.0.2",
     "vuex-router-sync": "^5.0.0"
   },

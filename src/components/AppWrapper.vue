@@ -8,7 +8,7 @@
 
 <script>
 import Background from "./Background.vue";
-import AppBody from "./AppBody";
+import AppBody from "./AppBody.vue";
 
 export default {
   name: "AppWrapper",
