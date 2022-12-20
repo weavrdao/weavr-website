@@ -1,4 +1,6 @@
-// const tokenAddress = process.env.TOKEN_ADDRESS;
+// import { CONTRACTS } from "../services/constants";
+// import 
+// const tokenAddress = CONTRACTS.TOKEN_ADDRESS
 // const tokenSymbol = 'TUT';
 // const tokenDecimals = 18;
 // const tokenImage = 'http://placekitten.com/200/300';
