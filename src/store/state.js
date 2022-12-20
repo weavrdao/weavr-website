@@ -287,7 +287,7 @@ const actions = {
 
   async createParticipantProposal(context, props) {
     const toast = params.$toast || createToaster({});
-    const { assetId, participantType, participant, description, forumLink } = props;
+    const { assetId, participantType, participant, title, description, forumLink } = props;
 
     toast.show("Confirming transaction...", {
       duration: 15000,
@@ -297,6 +297,7 @@ const actions = {
       assetId,
       participantType,
       participant,
+      title,
       description,
       forumLink
     );
