@@ -162,173 +162,173 @@
       </div>
     </div>
   </div>  
-  </template>
+</template>
   
-  <script>
-  import { mapGetters, mapActions } from "vuex";
-  import slider from "vue3-slider"
-  import {
-    getProposalTypeStyling,
-    padWithZeroes,
-    dateStringForTimestamp,
-    getVotes,
-    hasEnded,
-    getResult,
-  } from "../../data/helpers";
-  import { PASSED } from "../../models/common";
-  import Address from "../views/address/Address.vue";
-  import { DAO } from "../../services/constants"
-  import VueMarkdown from "vue-markdown-render";
-  import { ethers } from "ethers";
-  
-  export default {
-    // (bill) TODO: Make this reload data if loaded directly
-    //              with a check to prevent extraneous calls.
-    name: "SingleProposal",
-    components: {
-      Address,
-      slider,
-      VueMarkdown
+<script>
+import { mapGetters, mapActions } from "vuex";
+import slider from "vue3-slider"
+import {
+  getProposalTypeStyling,
+  padWithZeroes,
+  dateStringForTimestamp,
+  getVotes,
+  hasEnded,
+  getResult,
+} from "../../data/helpers";
+import { PASSED } from "../../models/common";
+import Address from "../views/address/Address.vue";
+import { DAO } from "../../services/constants"
+import VueMarkdown from "vue-markdown-render";
+import { ethers } from "ethers";
+
+export default {
+  // (bill) TODO: Make this reload data if loaded directly
+  //              with a check to prevent extraneous calls.
+  name: "SingleProposal",
+  components: {
+    Address,
+    slider,
+    VueMarkdown
+  },
+  data () {
+    return {
+      proposalId: Number(this.$route.params.proposalId),
+      voteAmount: 0,
+      timeRemainingString: "",
+      PASSED,
+    }
+  },
+  props: {
+    assetId: {
+      type: String,
+      required: true,
+    }
+  },
+  computed: {
+    ...mapGetters({
+      proposals: "assetProposals",
+      address: "userWalletAddress",
+      balance: "userTokenBalance",
+    }),
+    proposal() {
+      return this.proposals
+        .find(p => p.id === this.proposalId);
     },
-    data () {
-      return {
-        proposalId: Number(this.$route.params.proposalId),
-        voteAmount: 0,
-        timeRemainingString: "",
-        PASSED,
-      }
+    typeStylingData() {
+      return getProposalTypeStyling(this.proposal.type);
     },
-    props: {
-      assetId: {
-        type: String,
-        required: true,
-      }
+    votes() {
+      return getVotes(this.proposal);
     },
-    computed: {
-      ...mapGetters({
-        proposals: "assetProposals",
-        address: "userWalletAddress",
-        balance: "userTokenBalance",
-      }),
-      proposal() {
-        return this.proposals
-          .find(p => p.id === this.proposalId);
-      },
-      typeStylingData() {
-        return getProposalTypeStyling(this.proposal.type);
-      },
-      votes() {
-        return getVotes(this.proposal);
-      },
-      ended() {
-        return hasEnded(this.proposal);
-      },
-      passed() {
-        return getResult(this.proposal);
-      },
-      cancelled() {
-        return this.proposal.state === "Cancelled"
-      },
-      startDate() {
-        const startDate = new Date(this.proposal.startTimestamp * 1000);
-        return `${padWithZeroes(startDate.getDate())}/${padWithZeroes(startDate.getMonth() + 1)}`;
-      },
-      startDateString() {
-        return dateStringForTimestamp(this.proposal.startTimestamp);
-      },
-      endDateString() {
-        return dateStringForTimestamp(this.proposal.endTimestamp);
-      },
-      userVote() {
-        if (!this.address) return null;
-        // Select user vote by matching voter address to user address
-        const vote = this.proposal.votes.find(vote => vote.voter.toLowerCase() === this.address.toLowerCase());
-  
-        if(vote) {
-          return {
-            ...vote,
-            count: Number(vote.count).toFixed(1),
-          }
-        } else {
-          return null;
+    ended() {
+      return hasEnded(this.proposal);
+    },
+    passed() {
+      return getResult(this.proposal);
+    },
+    cancelled() {
+      return this.proposal.state === "Cancelled"
+    },
+    startDate() {
+      const startDate = new Date(this.proposal.startTimestamp * 1000);
+      return `${padWithZeroes(startDate.getDate())}/${padWithZeroes(startDate.getMonth() + 1)}`;
+    },
+    startDateString() {
+      return dateStringForTimestamp(this.proposal.startTimestamp);
+    },
+    endDateString() {
+      return dateStringForTimestamp(this.proposal.endTimestamp);
+    },
+    userVote() {
+      if (!this.address) return null;
+      // Select user vote by matching voter address to user address
+      const vote = this.proposal.votes.find(vote => vote.voter.toLowerCase() === this.address.toLowerCase());
+
+      if(vote) {
+        return {
+          ...vote,
+          count: Number(vote.count).toFixed(1),
         }
-  
-      },
-      userIsCreator() {
-        return this.address.toLowerCase() === this.proposal.creator.toLowerCase();
+      } else {
+        return null;
       }
+
     },
-    methods: {
-      ...mapActions({
-        vote: "vote",
-        refresh: "refreshProposalsDataForAsset",
-        withdraw: "withdraw",
-      }), // Voting action
-      routeToHome() {
-        this.$router.back();
-      },
-      setTimeRemainingCountdown() {
-        clearInterval(this.countdownRef);
-  
-        this.countdownRef = setInterval(
-          function () {
-            let now = new Date().getTime() / 1000;
-  
-            let t = this.proposal.endTimestamp - now;
-  
-            if (t >= 0) {
-              let days = Math.floor(t / (60 * 60 * 24));
-              let hours = Math.floor((t % (60 * 60 * 24)) / (60 * 60));
-              let mins = Math.floor((t % (60 * 60)) / 60);
-              let secs = Math.floor(t % 60);
-  
-              this.timeRemainingString = `${days}d, ${hours}h, ${mins}m, ${secs}s`;
-            } else {
-              this.timeRemainingString = "Voting period has ended";
-            }
-          }.bind(this),
-          1000
-        );
-      },
-      submitYesVote() {
-        this.vote({
-          assetAddress: this.assetId,
-          proposalId: this.$route.params.proposalId,
-          votes: +this.voteAmount,
-          $toast: this.$toast
-        })
-      },
-      submitNoVote() {
-        this.vote({
-          assetAddress: this.assetId,
-          proposalId: this.$route.params.proposalId,
-          votes: -this.voteAmount,
-          $toast: this.$toast
-        })
-      },
-      formatEther(amount) {
-        return ethers.utils.formatEther(amount);
-      },
-      withdrawProposal() {
-        this.withdraw({
-          assetAddress: this.assetId,
-          proposalId: this.$route.params.proposalId,
-          $toast: this.$toast,
-        });
-      }
+    userIsCreator() {
+      return this.address.toLowerCase() === this.proposal.creator.toLowerCase();
+    }
+  },
+  methods: {
+    ...mapActions({
+      vote: "vote",
+      refresh: "refreshProposalsDataForAsset",
+      withdraw: "withdraw",
+    }), // Voting action
+    routeToHome() {
+      this.$router.back();
     },
-    mounted() {
-      this.setTimeRemainingCountdown();
-      this.refresh({ assetId: this.assetId, $toast: this.$toast });
-      console.log(this.proposal)
+    setTimeRemainingCountdown() {
+      clearInterval(this.countdownRef);
+
+      this.countdownRef = setInterval(
+        function () {
+          let now = new Date().getTime() / 1000;
+
+          let t = this.proposal.endTimestamp - now;
+
+          if (t >= 0) {
+            let days = Math.floor(t / (60 * 60 * 24));
+            let hours = Math.floor((t % (60 * 60 * 24)) / (60 * 60));
+            let mins = Math.floor((t % (60 * 60)) / 60);
+            let secs = Math.floor(t % 60);
+
+            this.timeRemainingString = `${days}d, ${hours}h, ${mins}m, ${secs}s`;
+          } else {
+            this.timeRemainingString = "Voting period has ended";
+          }
+        }.bind(this),
+        1000
+      );
     },
-    created() {
-      if(this.balance) {
-        this.voteAmount = +this.balance;
-      }
+    submitYesVote() {
+      this.vote({
+        assetAddress: this.assetId,
+        proposalId: this.$route.params.proposalId,
+        votes: +this.voteAmount,
+        $toast: this.$toast
+      })
     },
-  }
-  </script>
+    submitNoVote() {
+      this.vote({
+        assetAddress: this.assetId,
+        proposalId: this.$route.params.proposalId,
+        votes: -this.voteAmount,
+        $toast: this.$toast
+      })
+    },
+    formatEther(amount) {
+      return ethers.utils.formatEther(amount);
+    },
+    withdrawProposal() {
+      this.withdraw({
+        assetAddress: this.assetId,
+        proposalId: this.$route.params.proposalId,
+        $toast: this.$toast,
+      });
+    }
+  },
+  mounted() {
+    this.setTimeRemainingCountdown();
+    this.refresh({ assetId: this.assetId, $toast: this.$toast });
+    console.log(this.proposal)
+  },
+  created() {
+    if(this.balance) {
+      this.voteAmount = +this.balance;
+    }
+  },
+}
+</script>
   
   <style lang="scss" scoped>
   @import "../../styles/weavr-custom.scss";

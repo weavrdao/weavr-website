@@ -2,7 +2,7 @@
  * Asset model.
  * @property {string} id ID of the asset
  * @property {string} dataURI Location of the off-chain data of the asset
- * @property {string} contract Address of the asset contract
+ * @property {string} contractAddress Address of the asset contract
  * @property {string} symbol ERC-20 Symbol of the asset
  * @property {number} numOfShares Total supply of the asset shares
  * @property {Map<string, number>} owners The amount of shares held by all the owners
@@ -19,13 +19,16 @@
  * @property {number} bathroomCount Number of bathrooms in the property  
  * @property {number} yearBuilt The year property was built
  */
-class Thread {
+class Asset {
   constructor(
     id,
-    variant,
-    governor,
-    erc20,
-    descriptor,
+    dataURI,
+    contractAddress,
+    symbol,
+    numOfShares,
+    owners,
+    marketOrders,
+    proposals,
     address = null,
     area = null,
     coverPictureURI = null,
@@ -38,10 +41,13 @@ class Thread {
     yearBuilt = null
   ) {
     this.id = id
-    this.variant = variant
-    this.governor = governor
-    this.erc20 = erc20
-    this.descriptor = descriptor
+    this.dataURI = dataURI
+    this.contractAddress = contractAddress
+    this.symbol = symbol
+    this.numOfShares = numOfShares
+    this.owners = owners
+    this.marketOrders = marketOrders
+    this.proposals = proposals
     this.address = address
     this.area = area
     this.coverPictureURI = coverPictureURI
@@ -54,5 +60,5 @@ class Thread {
     this.yearBuilt = yearBuilt
   }
 }
-  
-export default Thread
+
+export default Asset

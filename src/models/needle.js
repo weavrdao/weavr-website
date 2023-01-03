@@ -19,40 +19,64 @@
  * @property {number} bathroomCount Number of bathrooms in the property  
  * @property {number} yearBuilt The year property was built
  */
-class Thread {
+//  crowdfunds {
+//   id
+//   state
+//   amountDeposited
+//   target
+//   thread {
+//     id
+//   }
+//   deposits {
+//     id
+//     depositor
+//     amount
+//   }
+//   withdrawals {
+//     id
+//     depositor
+//     amount
+//   }
+//   distributions {
+//     id
+//     distribution {
+//       token
+//       amount
+//       claims {
+//         id
+//         person
+//         amount
+//       }
+//     }
+//   }
+class Needle {
   constructor(
     id,
-    variant,
-    governor,
-    erc20,
-    descriptor,
-    address = null,
-    area = null,
-    coverPictureURI = null,
-    currentRent = null,
-    description = null,
-    grossYieldPct = null,
-    marketValue = null,
-    bedroomCount = null,
-    bathroomCount = null,
-    yearBuilt = null
+    state,
+    amountDeposited,
+    target,
+    thread,
+    deposits,
+    withdrawals,
+    distributions
   ) {
     this.id = id
-    this.variant = variant
-    this.governor = governor
-    this.erc20 = erc20
-    this.descriptor = descriptor
-    this.address = address
-    this.area = area
-    this.coverPictureURI = coverPictureURI
-    this.currentRent = currentRent
-    this.description = description
-    this.grossYieldPct = grossYieldPct
-    this.marketValue = marketValue
-    this.bedroomCount = bedroomCount
-    this.bathroomCount = bathroomCount
-    this.yearBuilt = yearBuilt
+    this.state = state
+    this.amountDeposited = amountDeposited
+    this.target = target
+    this.thread = thread
+    this.deposits = deposits
+    this.withdrawals = withdrawals || null
+    this.distribution = distributions || null
+    // this.coverPictureURI = coverPictureURI
+    // this.currentRent = currentRent
+    // this.description = description
+    // this.grossYieldPct = grossYieldPct
+    // this.marketValue = marketValue
+    // this.bedroomCount = bedroomCount
+    // this.bathroomCount = bathroomCount
+    // this.yearBuilt = yearBuilt
   }
 }
-  
-export default Thread
+
+export default Needle

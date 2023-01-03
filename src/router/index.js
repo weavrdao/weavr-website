@@ -104,6 +104,9 @@ const router = new createRouter({
           path: "needles",
           name: "needle-market",
           component: NeedlesMarketplace,
+          beforeEnter: async (to, from ) => {
+            await store.dispatch("refreshNeedles")
+          }
         },
         {
           path: "needle/:needleId",

@@ -19,6 +19,8 @@ import {
 } from "../whitelist";
 import { USER_COOKIE_KEY } from "../whitelist/constants";
 import blacklist from "@/blacklist.json";
+import { hexToDecimals } from "../data/helpers/numbers";
+import { crowfundStates } from "./helpers";
 
 
 /**
@@ -27,9 +29,12 @@ import blacklist from "@/blacklist.json";
  */
 
 const wallet = ServiceProvider.wallet();
+const market = ServiceProvider.market();
 const dao = ServiceProvider.dao();
-const token = ServiceProvider.token();
+const dex = ServiceProvider.dex();
 const whitelist = ServiceProvider.whitelist();
+const crowdfund = ServiceProvider.crowdfund();
+const token = ServiceProvider.token();
 
 function state() {
   // const walletCookie = getCookie(WALLET_STATE_COOKIE_KEY);
@@ -48,6 +53,11 @@ function state() {
     interface: {
       alert: null,
       isLoading: false,
+    },
+    exchange: {
+      orders: null,
+      tokenAddress: null,
+      crowdfundState: null,
     },
     ...whitelistState(),
   };
@@ -125,12 +135,6 @@ const getters = {
     return state.platform.assets;
   },
 
-  ownedAssets(state) {
-    return state.platform.assets.filter((asset) => {
-      return asset.owners.get(state.user.wallet.address);
-    });
-  },
-
   vouchesPerSigner(state) {
     let signer = state.user.wallet.address;
     return state.user.wallet.vouches;
@@ -164,10 +168,68 @@ const getters = {
     return state.interface.alert;
   },
 
+  userTradeTokenBalance(state) {
+    return state.exchange.tradeTokenBalance;
+  },
+
+  userTradeTokenAllowance(state) {
+    return state.exchange.tradeTokenAllowance;
+  },
+
+  userCrowdfundTokenAllowance(state) {
+    return state.exchange.crowdfundTokenBalance;
+  },
+
+  crowdfundState(state) {
+    return state.exchange.crowdfundState;
+  },
+
+  allThreads(state) {
+    return state.platform.threads;
+  },
+  allNeedles(state) {
+    return state.platform.needles;
+  },
+  threadById(state) {
+    var assetMap = new Map();
+    state.platform.threads?.forEach((asset) => {
+      assetMap.set(asset.id, asset);
+    });
+    return assetMap;
+  },
+  needleById() {
+    var assetMap = new Map();
+    state.platform.needle?.forEach((asset) => {
+      assetMap.set(asset.id, asset);
+    });
+    return assetMap;
+  },
+
+  assetMarketOrders(state) {
+    return state.exchange.orders;
+  },
+
+  ownedAssets(state) {
+    return (
+      state.platform.assets?.filter((asset) => {
+        return asset.owners.get(state.user.wallet.address);
+      }) || null
+    );
+  },
+
   ...whitelistGetters,
 };
 
 const actions = {
+  async refreshThreads(context) {
+    let assets = await market.getThreads();
+    context.commit("setThreads", assets);
+  },
+  async refreshNeedles(context) {
+    const needles = await market.getNeedles();
+    console.log(needles);
+    context.commit("setNeedles", needles);
+  },
   connectGuest(context, params) {
     console.log(params.passwd===process.env.VUE_APP_DAILY_PASSWORD ? "yess":"noooo")
     if(
@@ -489,7 +551,7 @@ const actions = {
     console.log(status);
   },
 
-  async withdraw(context, props) {
+  async withdrawProposal(context, props) {
     const toast = params.$toast || createToaster({});
 
     const { assetAddress, proposalId } = props;
@@ -634,6 +696,111 @@ const actions = {
     const type = params.type || 2;
     // await dao.getParticipantsByType(type)
   },
+
+  async fetchOrders(context, params) {
+    let orders = await dex.getFrabricOrders(params.assetId.toLowerCase());
+    context.commit("setOrders", orders);
+  },
+
+  // Ignore, rewrite
+  async fetchDexOrders(context, params) {
+    const FRABRIC_ID = "0";
+    let orders = await dex.getAssetOrders(
+      FRABRIC_ID,
+      params.assetId.toString()
+    );
+    const tokenAddress = await dao.getTokenAddress();
+    context.commit("setTokenAddress", tokenAddress);
+    context.commit("setOrders", orders);
+  },
+
+  async createBuyOrder(_, params) {
+    const { assetId, price, amount } = params;
+
+    await dex.createBuyOrder(assetId, price, amount);
+  },
+
+  async createSellOrder(_, params) {
+    const { assetId, price, amount } = params;
+
+    await dex.createSellOrder(assetId, price, amount);
+  },
+
+  async redeem(context, params) {
+    const { crowdfundAddress } = params;
+    const userAddress = context.getters.userWalletAddress;
+    console.log(userAddress);
+    await crowdfund.redeem(crowdfundAddress, userAddress);
+  },
+
+  async deposit(context, params) {
+    const { crowdfundAddress, amount } = params;
+    console.log(amount);
+    const parsedAmount = ethers.utils.parseUnits(String(amount), 6);
+    console.log(parsedAmount);
+
+    const status = await crowdfund.deposit(crowdfundAddress, parsedAmount);
+    return status;
+  },
+
+  async withdraw(context, params) {
+    const { crowdfundAddress, amount } = params;
+    console.log(amount);
+    const parsedAmount = ethers.utils.parseUnits(String(amount), 6);
+    console.log(parsedAmount);
+
+    const status = await crowdfund.withdraw(crowdfundAddress, parsedAmount);
+    return status;
+  },
+ 
+  async approveTradeToken(context, params) {
+    const { assetId } = params;
+    await crowdfund.approveTradeToken(assetId);
+    context.dispatch("fetchNeedleTokenData", { assetId: params.assetId })
+  },
+
+  async fetchNeedleTokenData(context, params) {
+    const { assetId } = params;
+    const walletState = await wallet.getState();
+
+    const address = context.userWalletAddress || walletState.address;
+
+    if(!address) {
+      console.error("No wallet connected, cannot get trade token allowance");
+      return;
+    }
+
+    const allowance = await crowdfund.getAllowance(assetId, address);
+    const state = await crowdfund.getState(assetId);
+    const tradeTokenBalance = await crowdfund.getBalance(assetId, address);
+    const crowdfundTokenBalance = await crowdfund.getCrowdfundBalance(assetId, address);
+
+    context.commit(
+      "setCrowdfundState",
+      crowfundStates[String(state)] || null,
+    )
+
+    if(allowance) {
+      context.commit(
+        "setTradeTokenAllowance",
+        hexToDecimals(allowance, 6),
+      );
+    }
+
+    if(tradeTokenBalance) {
+      context.commit(
+        "setTradeTokenBalance",
+        hexToDecimals(tradeTokenBalance, 6),
+      );
+    }
+
+    if(crowdfundTokenBalance) {
+      context.commit(
+        "setCrowdfundTokenBalance",
+        hexToDecimals(crowdfundTokenBalance, 6)
+      );
+    }
+  },
   ...whitelistActions(whitelist),
 };
 
@@ -653,6 +820,17 @@ const mutations = {
   setProposalsForAsset(state, { proposals, assetId }) {
     state.platform.proposals = proposals; // state.platform.proposals.set(assetId, proposals);
   },
+
+  setThreads(state, assets) {
+    state.platform.threads = assets;
+  },
+  setNeedles(state, needles) {
+    state.platform.needles = needles;
+  },
+  setOrders(state, orders) {
+    state.exchange.orders = orders;
+  },
+
 
   setAlert(state, alert) {
     state.interface.alert = alert;
