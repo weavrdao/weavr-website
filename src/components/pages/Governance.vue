@@ -169,7 +169,9 @@ export default {
 
   mounted() {
     console.log("GOV_CHECK__ASSET_ID___",this.$route.params['assetId']);
-    this.refresh({ assetId: this.assetId, $toast: this.$toast });
+    console.log("PROPOSALS: ", this.assetProposalMap);
+    console.log(this.pastProposals)
+    // this.refresh({ assetId: this.assetId, $toast: this.$toast });
     // this.syncWallet();
   },
 };

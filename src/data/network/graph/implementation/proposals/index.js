@@ -205,6 +205,7 @@ export function mapTokenActionProposals(rawTokenActionProposals) {
   return tokenActionProposals;
 }
 export function mapThreadProposals(rawThreadProposals) {
+  console.log("THREAD-PROPOSAL-RAW______", rawThreadProposals);
   let threadProposals = [];
   try {
     threadProposals = rawThreadProposals.map(({
@@ -231,7 +232,7 @@ export function mapThreadProposals(rawThreadProposals) {
         null, // thread
         null, // frabric
         creator,
-        ProposalTypes.TokenAction,
+        ProposalTypes.Thread,
         state,
         mappedVotes,
         supermajority,
@@ -248,5 +249,6 @@ export function mapThreadProposals(rawThreadProposals) {
     console.log("Issue parsing thread proposals");
     console.error(e);
   }
+  console.log("THREAD-PROPOSAL______", threadProposals)
   return threadProposals;
 }

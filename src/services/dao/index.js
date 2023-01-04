@@ -192,7 +192,10 @@ class DAO {
       symbol,
       descriptorHash,
       data,
-      infoHash
+      infoHash,
+      {
+        gasLimit: 300000
+      }
     );
     return status;
   }

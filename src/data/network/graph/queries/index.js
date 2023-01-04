@@ -18,6 +18,8 @@ export const THREAD_PROPOSAL_QUERY = gql`
         }
         supermajority
         info
+        startTimestamp
+        endTimestamp
       }
     }
   }
@@ -311,6 +313,8 @@ query ALL_PROPOSALS($id: String!) {
         }
         supermajority
         info
+        startTimestamp
+        endTimestamp
       }
     }
   }

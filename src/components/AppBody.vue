@@ -1,6 +1,9 @@
 <template>
   <div>
     <HeaderNavigationBar />
+    <div v-if="loading" class="is-flex is-justify-content-center" >
+      <Loading :message="`Sewing the data`" />
+    </div>
     <RouterView class="main container p-5" />
     <Footer />
   </div>
@@ -10,16 +13,19 @@
 import { mapGetters } from "vuex";
 import HeaderNavigationBar from "./layout/navigation/HeaderNavigationBar.vue";
 import Footer from "./layout/navigation/Footer.vue";
+import Loading from "@/components/views/loading/Loading.vue";
 
 export default {
   name: "AppBody",
   components: {
     HeaderNavigationBar,
     Footer,
+    Loading,
   },
   computed: {
     ...mapGetters({
       alert: "activeAlert",
+      loading: "isLoading"
     }),
   },
 };

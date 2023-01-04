@@ -128,8 +128,14 @@ const router = new createRouter({
     {
       path: `/:assetId`,
       component: Governance,
-      
       meta: { requiresAuth: true },
+      beforeEnter: async (to, from) => {
+        if(!store.getters.proposalsPerAsset) {
+          store.dispatch("setLoading", true)
+          await store.dispatch("refreshProposalsDataForAsset", {assetId: CONTRACTS.WEAVR, $toast: createToaster({})})
+          store.dispatch("setLoading", false)
+        }
+      },
       children: [
         {
           path: `${CONTRACTS.WEAVR}`,

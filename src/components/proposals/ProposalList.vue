@@ -81,6 +81,9 @@ export default {
       }
     }
   },
+  mounted() {
+    console.log(this.proposals)
+  }
 }
 </script>
 

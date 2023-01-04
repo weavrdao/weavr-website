@@ -27,14 +27,29 @@ export const _NETWORKS = {
       TRADE_TOKEN: "0xaa72fbFa8120Bb295A126C34348bb3d018c70efD"
     }
   },
+  goerli: { 
+    name: "Goerli", 
+    id: 5, 
+    graph: "https://api.thegraph.com/subgraphs/name/0xnshuman/frabric-goerli",
+    contracts: {
+      TOKEN_ADDRESS:"0x9018f685FdceE5d8A4Db8420C456c7CfBE42352E",
+      BEACON:"0x54e59bB020b4607f752F51F8Ce3C734A6E8650fC",
+      WEAVR:"0xC3F52C10ca3f76e53496aFED490a0D672Fd3D5e9",
+      THREAD_DEPLOYER:"0x0545608D01fdEF4b0E9564E00e525DAa9438E4Bc",
+      BOND:"0xa875Fa4a7BbCA6e63f7DFc9df9839a752283d439",
+      FRABRIC_CODE:"0x3bdA099e802152d9FD0EAd7716fF4c78FC841Cf0",
+      TRADE_TOKEN: "0xd35cceead182dcee0f148ebac9447da2c4d449c4"
+    }
+  },
+
   ethereum: { name: "Ethereum", id: 1 },
   rinkeby: { name: "Rinkeby", id: 4 },
-  goerli: { name: "Goerli", id: 5 },
   polygon: { name: "Polygon", id: 137 },
   optimism: { name: "Optimism", id: 10 },
   avalanche: { name: "Avalanche", id: 43114 },
 };
 export const DAO = "weavr";
 export const GUEST = "0x0000000000000000000000000000000000000000";
-export const NETWORK = _NETWORKS.arbitrum;
+export const NETWORK = _NETWORKS.arbitrum_goerli;
 export const CONTRACTS = NETWORK.contracts;
+

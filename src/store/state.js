@@ -221,6 +221,9 @@ const getters = {
 };
 
 const actions = {
+  async setLoading(context, loadingState) {
+    context.commit("setLoadingState", loadingState)
+  },
   async refreshThreads(context) {
     let assets = await market.getThreads();
     context.commit("setThreads", assets);
