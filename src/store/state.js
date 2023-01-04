@@ -52,7 +52,11 @@ function state() {
     },
     interface: {
       alert: null,
-      isLoading: false,
+      loading: {
+        isLoading: false,
+        message: ""
+      }
+      
     },
     exchange: {
       orders: null,
@@ -73,8 +77,9 @@ function state() {
  */
 
 const getters = {
-  isLoading(state) {
-    return state.interface.isLoading;
+  loadingState(state) {
+    console.log(state.interface.loading)
+    return state.interface.loading;
   },
   guestCookie(state) {
     return state.user.isGuest
@@ -847,8 +852,11 @@ const mutations = {
     state.user.wallet.tokenSymbol = symbol;
   },
 
-  setLoadingState(state, isLoading) {
-    state.interface.isLoading = isLoading;
+  setLoadingState(state, loadingState) {
+    console.log("setting loading to: ", loadingState)
+    state.interface.loading = loadingState;
+    console.log("setting loading to: ", state.interface.loading)
+
   },
 
   setWalletConnetected(state) {

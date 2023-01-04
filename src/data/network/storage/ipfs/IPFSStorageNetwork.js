@@ -84,7 +84,10 @@ class IPFSStorageNetwork extends StorageNetwork {
           });
       });
     });
-    return await Promise.allSettled(requests);
+    return await Promise.allSettled(requests).then( (d) => {
+      console.log("DATA_____________", d);
+      return d;
+    });
   }
 
   async uploadAndGetPathAsBytes(file) {

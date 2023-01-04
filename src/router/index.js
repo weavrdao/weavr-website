@@ -131,9 +131,9 @@ const router = new createRouter({
       meta: { requiresAuth: true },
       beforeEnter: async (to, from) => {
         if(!store.getters.proposalsPerAsset) {
-          store.dispatch("setLoading", true)
+          store.dispatch("setLoading", {isLoading:true, message: "Loading Proposals"})
           await store.dispatch("refreshProposalsDataForAsset", {assetId: CONTRACTS.WEAVR, $toast: createToaster({})})
-          store.dispatch("setLoading", false)
+          store.dispatch("setLoading", {isLoading:false})
         }
       },
       children: [

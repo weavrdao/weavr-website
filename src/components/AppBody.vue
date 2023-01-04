@@ -1,10 +1,11 @@
 <template>
   <div>
     <HeaderNavigationBar />
-    <div v-if="loading" class="is-flex is-justify-content-center" >
-      <Loading :message="`Sewing the data`" />
+    <div v-if="loadingState.isLoading" class=" main is-flex is-justify-content-center" style="min-height='80vh;'">
+      <Loading :message="loadingState.message || 'loading'" />
     </div>
-    <RouterView class="main container p-5" />
+
+    <RouterView  v-else class="main container p-5" />
     <Footer />
   </div>
 </template>
@@ -25,7 +26,7 @@ export default {
   computed: {
     ...mapGetters({
       alert: "activeAlert",
-      loading: "isLoading"
+      loadingState: "loadingState"
     }),
   },
 };
@@ -33,7 +34,7 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  min-height: calc(100vh - 600px);
+  min-height: calc(100vh - 600px) !important;
   margin: 0 auto;
 }
 </style>
