@@ -9,6 +9,7 @@ import Asset from "../../models/asset"
 import { GraphQLAPIClient, ALL_ASSETS_QUERY, ALL_THREADS_QUERY, ALL_NEEDLES_QUERY } from "../../data/network/graph/graphQLAPIClient"
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
 import { getIpfsHashFromBytes32 } from "../../data/network/storage/ipfs/common";
+import { NETWORK } from "../constants"
 
 /**
  * Market Provider service
@@ -52,7 +53,7 @@ class Market {
       .query(
         ALL_THREADS_QUERY, 
         {
-          weavrId: process.env.VUE_APP_WEAVR_ADDRESS
+          weavrId: NETWORK.contracts.WEAVR
         }, 
         (mapper, response) => { return mapper.mapThreads(response.data) }
       )
@@ -124,7 +125,7 @@ class Market {
       .query(
         ALL_THREADS_QUERY, 
         {
-          weavrId: process.env.VUE_APP_WEAVR_ADDRESS
+          weavrId: NETWORK.contracts.WEAVR
         }, 
         (mapper, response) => { 
           console.log(response.data.threads)
@@ -192,7 +193,7 @@ class Market {
       .query(
         ALL_NEEDLES_QUERY, 
         {
-          weavrId: process.env.VUE_APP_WEAVR_ADDRESS
+          weavrId: NETWORK.contracts.WEAVR
         }, 
         (mapper, response) => { 
           const mappedNeedles =  mapper.mapRawNeedles(response.data.crowdfunds) 
