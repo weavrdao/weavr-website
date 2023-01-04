@@ -6,9 +6,9 @@
     <div v-if="loading" class="is-flex is-justify-content-center" >
       <Loading :message="`Loading needles`" />
     </div>
-    <!-- <div class="is-flex is-justify-content-center is-align-items-center mt-5 pt-5" v-else-if="this.needles.length === 0">
-      No needles have been created yet
-    </div> -->
+    <div class="is-flex is-justify-content-center is-align-items-center mt-5 pt-5" v-else-if="this.needles.length === 0">
+      <h2 class="title">No needles have been created yet</h2>
+    </div>
     <div v-else class="needles-container mt-5">
       <div v-for="needle in this.needles" :key="needle.id">
         <NeedleMarketListItem :needle="needle" />
@@ -39,7 +39,6 @@ export default {
   methods: {
     ...mapActions({
       getNeedles: "refreshNeedles",
-      syncWallet: "syncWallet",
     }),
     filterNeedles(needles) {
       return needles.filter((needle) => !!needle.imageHashes)
@@ -50,9 +49,9 @@ export default {
     this.getNeedles();
     // this.syncWallet({ $toast: this.$toast });
   },
-  watch: {
-    $route: "refresh",
-  },
+  // watch: {
+  //   $route: "refresh",
+  // },
 };
 </script>
 

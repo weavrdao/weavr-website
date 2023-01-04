@@ -39,7 +39,7 @@ class DAO {
   async getProposalsForAsset(assetId) {
     // Get indexed on-chain data
     const toast = createToaster({});
-    toast.info("Fetching off-chain data...");
+    // toast.info("Fetching off-chain data...");
     let proposals = await this.graphQLAPIClient.query(
       ALL_PROPOSALS,
       { id: assetId },

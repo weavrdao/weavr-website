@@ -9,6 +9,8 @@ import Governance from "@/components/pages/Governance.vue";
 import Marketplace from "@/components/pages/Marketplace"
 import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.vue";
 import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
+import ThreadsMarketplace from "@/components/sections/Threads/ThreadMarketplace.vue";
+import SingleThread from "@/components/sections/Threads/SingleThread.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue";
 import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue";
@@ -22,11 +24,11 @@ import VerifyParticipant from "@/components/proposals/VerifyParticipant";
 import tokenDetails from "@/components/sections/TokenDetails.vue";
 import walletConnect from "@/components/sections/WalletConnect.vue";
 import {WhitelistPage} from "@/whitelist";
-import {CONTRACTS, DAO} from "@/services/constants";
+import { CONTRACTS } from "@/services/constants";
 import store from "@/store";
 import ComingSoon from "@/components/sections/ComingSoon/ComingSoon.vue";
 import SingleComingSoonPage from "@/components/sections/ComingSoon/SingleComingSoonPage.vue";
-import {ethers} from "ethers";
+import { ethers } from "ethers";
 import SumSub from "@/components/SumSub.vue";
 import { getCookie } from "../whitelist";
 import { USER_COOKIE_KEY } from "../whitelist/constants";
@@ -104,14 +106,53 @@ const router = new createRouter({
           path: "needles",
           name: "needle-market",
           component: NeedlesMarketplace,
+          meta: {requiresAuth: true}, 
           beforeEnter: async (to, from ) => {
+            
+            store.dispatch("setLoadingState", {isLoading: true, message: "Loading Needles"})
+            
             await store.dispatch("refreshNeedles")
+            
+            store.dispatch("setLoadingState", {isLoading: false, message: ""})
+            
+            return true
           }
         },
         {
-          path: "needle/:needleId",
+          path: "needles/:needleId",
           name: "needle",
           component: SingleNeedle,
+          beforeEnter: async (to, from ) => {
+            
+            store.dispatch("setLoadingState", {isLoading: true, message: `Loading data for \n ${"Needle"}`})
+            
+            await store.dispatch("refreshNeedles")
+            
+            store.dispatch("setLoadingState", {isLoading: false, message: ""})
+            
+            return true
+          }
+        },
+        {
+          path: "threads",
+          name: "thread-market",
+          component: ThreadsMarketplace,
+          meta: {requiresAuth: true}, 
+          beforeEnter: async (to, from ) => {
+            
+            store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
+            
+            await store.dispatch("refreshThreads")
+            
+            store.dispatch("setLoadingState", {isLoading: false, message: ""})
+            
+            return true
+          }
+        },
+        {
+          path: "thread/:threadId",
+          name: "thread",
+          component: SingleThread,
         },
         {
           path: "coming-soon",
@@ -137,7 +178,7 @@ const router = new createRouter({
           await store.dispatch("refreshProposalsDataForAsset", {
             assetId: CONTRACTS.WEAVR,
           });
-          store.dispatch("setLoadingState", {isLoading: false, message: "Loading Proposals"})
+          store.dispatch("setLoadingState", {isLoading: false, message: ""})
         }
         // clear toast
         return true;

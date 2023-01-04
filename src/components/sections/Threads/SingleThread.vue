@@ -141,7 +141,7 @@ import Address from "@/components/views/address/Address.vue";
 import HeroImage from "@/components/utils/HeroImage.vue";
 
 export default {
-  name: "ThreadDetails",
+  name: "SingleThreadD",
   props: {
     assetId: {
       type: String,

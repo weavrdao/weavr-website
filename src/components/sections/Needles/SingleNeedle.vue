@@ -88,7 +88,7 @@
     </div>
     <div class="dark-card">
       <p class="has-text-white mb-3">Property Description</p>
-      <vue-markdown class="content markdown-body" :options="{html: true}"  :source="needle.descriptor" />
+      <vue-markdown class="content markdown-body" :options="{html: true}"  :source="needle.descriptor || '' " />
     </div>
     <div class="dark-card mt-5">
       <p class="has-text-white mb-3">Property Documents</p>

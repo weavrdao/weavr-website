@@ -50,6 +50,6 @@ export const _NETWORKS = {
 };
 export const DAO = "weavr";
 export const GUEST = "0x0000000000000000000000000000000000000000";
-export const NETWORK = _NETWORKS.arbitrum_goerli;
+export const NETWORK = _NETWORKS.goerli;
 export const CONTRACTS = NETWORK.contracts;
 

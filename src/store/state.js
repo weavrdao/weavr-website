@@ -1,11 +1,10 @@
 /* eslint-disable max-lines-per-function */
 // import router from "../router/index";
 import { ethers } from "ethers";
-import { createToaster } from "@meforma/vue-toaster";
-import { params } from "stylus/lib/utils";
+
 import ServiceProvider from "../services/provider";
 import WalletState from "../models/walletState";
-import { CONTRACTS, DAO, GUEST, NETWORK } from "../services/constants";
+import { CONTRACTS, GUEST } from "../services/constants";
 import {
   whitelistState,
   whitelistGetters,
@@ -13,14 +12,8 @@ import {
   whitelistMutations,
   getCookie,
   setCookie,
-  WHITELIST_COOKIE_KEY,
-  WALLET_STATE_COOKIE_KEY,
-  addressMatchesCookie,
 } from "../whitelist";
 import { USER_COOKIE_KEY } from "../whitelist/constants";
-import blacklist from "@/blacklist.json";
-import { hexToDecimals } from "../data/helpers/numbers";
-import { crowfundStates } from "./helpers";
 
 
 /**
@@ -29,11 +22,7 @@ import { crowfundStates } from "./helpers";
  */
 
 const wallet = ServiceProvider.wallet();
-const market = ServiceProvider.market();
-const dao = ServiceProvider.dao();
-const dex = ServiceProvider.dex();
 const whitelist = ServiceProvider.whitelist();
-const crowdfund = ServiceProvider.crowdfund();
 const token = ServiceProvider.token();
 
 function state() {
@@ -46,24 +35,14 @@ function state() {
       log: true,
       vouches: [],
     },
-    platform: {
-      assets: [],
-      proposals: [], // new Map()
-    },
+    
     interface: {
       alert: null,
       loading: {
         isLoading: false,
         message: ""
-      }
-      
+      }      
     },
-    exchange: {
-      orders: null,
-      tokenAddress: null,
-      crowdfundState: null,
-    },
-    ...whitelistState(),
   };
 }
 
@@ -89,7 +68,6 @@ const getters = {
   },
 
   connectedNetwork() {
-
     return wallet.getChainId()
   },
   
@@ -109,119 +87,15 @@ const getters = {
     return state.user.wallet.ethBalance;
   },
 
-  allAssets(state) {
-    return state.platform.assets;
-  },
-
-  assetsById(state) {
-    var assetMap = new Map();
-    state.platform.assets.forEach((asset) => {
-      assetMap.set(asset.id, asset);
-    });
-    return assetMap;
-  },
-
-  proposalsPerAsset(state) {
-    if (state.platform.proposals.length < 1) {
-      dao.getProposalsForAsset();
-    }
-  },
-
-  assetsAddressById(state) {
-    var assetMap = new Map();
-    state.platform.assets.forEach((asset) => {
-      assetMap.set(asset.id, asset.contract);
-    });
-
-    return assetMap;
-  },
-
-  marketplaceActiveAssets(state) {
-    return state.platform.assets;
-  },
-
   vouchesPerSigner(state) {
-    let signer = state.user.wallet.address;
     return state.user.wallet.vouches;
   },
-
-
-
-  assetProposals(state) {
-    return state.platform.proposals.filter((proposal) => {
-      const isBlacklisted = blacklist.addresses.some((address) => {
-        return address.toLowerCase() === proposal.creator.toLowerCase();
-      });
-      return !isBlacklisted;
-    });
-  },
-
-  proposalsById(state) {
-    const proposalsMap = new Map();
-    Array.from(state.platform.proposals.values())
-      .flatMap((p) => {
-        return p;
-      })
-      .forEach((p) => {
-        proposalsMap.set(p.id, p);
-      });
-
-    return proposalsMap;
-  },
-
+  
   activeAlert(state) {
     return state.interface.alert;
   },
 
-  userTradeTokenBalance(state) {
-    return state.exchange.tradeTokenBalance;
-  },
-
-  userTradeTokenAllowance(state) {
-    return state.exchange.tradeTokenAllowance;
-  },
-
-  userCrowdfundTokenAllowance(state) {
-    return state.exchange.crowdfundTokenBalance;
-  },
-
-  crowdfundState(state) {
-    return state.exchange.crowdfundState;
-  },
-
-  allThreads(state) {
-    return state.platform.threads;
-  },
-  allNeedles(state) {
-    return state.platform.needles;
-  },
-  threadById(state) {
-    var assetMap = new Map();
-    state.platform.threads?.forEach((asset) => {
-      assetMap.set(asset.id, asset);
-    });
-    return assetMap;
-  },
-  needleById() {
-    var assetMap = new Map();
-    state.platform.needle?.forEach((asset) => {
-      assetMap.set(asset.id, asset);
-    });
-    return assetMap;
-  },
-
-  assetMarketOrders(state) {
-    return state.exchange.orders;
-  },
-
-  ownedAssets(state) {
-    return (
-      state.platform.assets?.filter((asset) => {
-        return asset.owners.get(state.user.wallet.address);
-      }) || null
-    );
-  },
-
+  
   ...whitelistGetters,
 };
 
@@ -229,27 +103,7 @@ const actions = {
   async setLoadingState(context, loadingState) {
     context.commit("setLoadingState", loadingState)
   },
-  async refreshThreads(context) {
-    let assets = await market.getThreads();
-    context.commit("setThreads", assets);
-  },
-  async refreshNeedles(context) {
-    const needles = await market.getNeedles();
-    console.log(needles);
-    context.commit("setNeedles", needles);
-  },
-  connectGuest(context, params) {
-    console.log(params.passwd===process.env.VUE_APP_DAILY_PASSWORD ? "yess":"noooo")
-    if(
-      params.passwd===process.env.VUE_APP_DAILY_PASSWORD
-    ){
-      setCookie(USER_COOKIE_KEY, GUEST, 1)
-      context.state.isGuest = getCookie(USER_COOKIE_KEY) === GUEST ? true : false
-      return true
-    }
-    return false
-  },
-
+    
   async fetchTokenInfo(context, params) {
     // const toast = params.$toast || createToaster({});
     const tokenAddress = params.tokenAddress || CONTRACTS.TOKEN_ADDRESS;
@@ -261,7 +115,6 @@ const actions = {
   },
  
   async syncWallet(context, params) {
-    console.log("SYNC");
     let {$toast} = params !== undefined ? params : {};
     let walletState = await wallet.getState(params.wallet);
     const symbol = await token.getTokenSymbol(CONTRACTS.TOKEN_ADDRESS);
@@ -314,501 +167,7 @@ const actions = {
     context.commit("setWallet", state)
   },
 
-  async refreshProposalsDataForAsset(context, params) {
-    // NOTE (bill) Quick fix to allow loading from child paths, better solutions available
-    if (context.getters.assetProposals.length > 1 && !params.forceRefresh)
-      return false;
-    const toast = params.$toast || createToaster({});
-    toast.info("Loading Data....");
-    let assetId = params.assetId.toLowerCase();
-    let assetProposals = await dao.getProposalsForAsset(assetId);
-
-    context.commit("setProposalsForAsset", {
-      assetId: assetId.toLowerCase(),
-      proposals: assetProposals,
-    });
-    toast.clear();
-  },
-
-  async createPaperProposal(context, props) {
-    const { assetAddr, daoResolution, title, description, forumLink } = props;
-    const toast = params.$toast || createToaster({});
-
-    toast.clear();
-    toast.show("Confirming transaction...", {
-      duration: 15000,
-      position: "top",
-    });
-
-    const status = await dao
-      .createPaperProposal(assetAddr, title, description, forumLink, daoResolution)
-      .then(() => {
-        props.$toast.clear();
-      });
-    Promise.resolve([status]).then((status) => {
-      if (status) {
-        toast.success("Transaction confirmed!");
-      } else {
-        toast.error("Transaction failed. See details in MetaMask.");
-        console.log("Transaction failed. See details in MetaMask.");
-      }
-    });
-  },
-
-  async createParticipantProposal(context, props) {
-    const toast = params.$toast || createToaster({});
-    const { assetId, participantType, participant, description, forumLink } = props;
-
-    toast.show("Confirming transaction...", {
-      duration: 15000,
-      position: "top",
-    });
-    const status = await dao.createParticipantProposal(
-      assetId,
-      participantType,
-      participant,
-      description,
-      forumLink
-    );
-    toast.clear();
-    if (status) {
-      toast.success("Transaction confirmed!");
-      context.dispatch("refreshProposalsDataForAsset", {
-        assetId: params.assetId,
-      });
-      // router.push("/" + DAO + "/" + params.assetId);
-    } else {
-      toast.error("Transaction failed. See details in MetaMask.");
-      console.log("Transaction failed. See details in MetaMask.");
-    }
-  },
-
-  async createUpgradeProposal(context, props) {
-    const toast = params.$toast || createToaster({});
-    const {
-      assetAddress,
-      beaconAddress,
-      instanceAddress,
-      version,
-      codeAddress,
-      title,
-      description,
-      forumLink,
-      signer,
-      governor,
-    } = props;
-
-    toast.show("Confirming transaction...", {
-      duration: 15000,
-      position: "top",
-    });
-    const status = await dao.createUpgradeProposal(
-      assetAddress,
-      beaconAddress,
-      instanceAddress,
-      codeAddress,
-      title,
-      description,
-      forumLink,
-      version,
-      signer,
-      governor
-    );
-
-    toast.clear();
-    if (status) {
-      toast.success("Transaction confirmed...", {
-        duration: 2000,
-        position: "top",
-      });
-      context.dispatch("refreshProposalsDataForAsset", {
-        assetId: params.assetId,
-      });
-      // router.push("/" + DAO + "/" + params.assetId);
-    } else {
-      toast.error("Transaction failed. See details in MetaMask.");
-      console.log("Transaction failed. See details in MetaMask.");
-    }
-  },
-
-  async createTokenActionProposal(context, props) {
-    const toast = params.$toast || createToaster({});
-
-    console.log("Calling!");
-
-    const {
-      assetId,
-      mint,
-      target,
-      price,
-      amount,
-      title,
-      description,
-      forumLink,
-    } = props;
-
-    toast.show("Confirming transaction...", {
-      duration: 15000,
-      position: "top",
-    });
-
-    const tokenAddress = await dao.getTokenAddress(CONTRACTS.WEAVR);
-
-    const atomicAmount = ethers.utils.parseEther(String(amount));
-
-    const status = await dao.createTokenActionProposal(
-      assetId,
-      tokenAddress,
-      target,
-      mint,
-      price,
-      atomicAmount,
-      title,
-      description,
-      forumLink,
-    );
-    // router.push(DAO);
-    toast.clear();
-    if (status) {
-      toast.success("Transaction confirmed...", {
-        duration: 2000,
-        position: "top",
-      });
-    } else {
-      toast.error("Transaction failed. See details in MetaMask.");
-      console.log("Transaction failed. See details in MetaMask.");
-    }
-    return status;
-  },
-
-  async createThreadProposal(context, props) {
-    const toast = params.$toast || createToaster({});
-
-    const {
-      assetId,
-      name,
-      descriptor,
-      title,
-      description,
-      forumLink,
-      symbol,
-      tradeToken,
-      target,
-      images,
-      documents,
-    } = props;
-
-    toast.info("Uploading files to IPFS (this may take some time)", {
-      duration: 10000,
-      position: "bottom",
-    });
-
-    const status = await dao.createThreadProposal(
-      assetId,
-      name,
-      descriptor,
-      title,
-      description,
-      forumLink,
-      symbol,
-      tradeToken,
-      target,
-      images,
-      documents,
-    );
-    if (status) {
-      toast.success("Transaction confirmed...", {
-        duration: 2000,
-        position: "top",
-      });
-      context.dispatch("refreshProposalsDataForAsset", {
-        assetId: params.assetId,
-      });
-      // router.push(`/${DAO}/${params.assetId}`);
-    } else {
-      toast.error("Transaction failed. See details in MetaMask.");
-      console.log("Transaction failed. See details in MetaMask.");
-    }
-    console.log(status);
-    return status;
-  },
-
-  async vote(context, props) {
-    const toast = params.$toast || createToaster({});
-
-    const { assetAddress, proposalId, votes } = props;
-
-    const status = await dao.vote(
-      assetAddress || CONTRACTS.WEAVR,
-      proposalId,
-      votes
-    );
-    if (status) {
-      toast.success("Transaction confirmed...", {
-        duration: 2000,
-        position: "top",
-      });
-      context.dispatch("refreshProposalsDataForAsset", {
-        assetId: params.assetId,
-      });
-      // router.push("/" + DAO + "/" + params.assetId);
-    } else {
-      toast.error("Transaction failed. See details in MetaMask.");
-      console.log("Transaction failed. See details in MetaMask.");
-    }
-    console.log(status);
-  },
-
-  async withdrawProposal(context, props) {
-    const toast = params.$toast || createToaster({});
-
-    const { assetAddress, proposalId } = props;
-    
-    const status = await dao.withdraw(
-      assetAddress || CONTRACTS.WEAVR,
-      proposalId,
-    );
-
-    if (status) {
-      toast.success("Transaction confirmed...", {
-        duration: 2000,
-        position: "top",
-      });
-    } else {
-      toast.error("Transaction failed. See details in MetaMask.");
-      console.log("Transaction failed. See details in MetaMask.");
-    }
-    console.log(status);
-  },
-
-  async queueProposal(context, props) {
-    const toast = params.$toast || createToaster({});
-    const id = ethers.BigNumber.from(props.proposalId)
-    
-    const status = await dao.queue(id);
-    console.log(status)
-
-  },
-
-  async completeProposal(context, props) {
-    const toast = params.$toast || createToaster({});
-    const id = ethers.BigNumber.from(props.proposalId)
-    const DATA = params.data || "0x000000"
-    const status = await dao.complete(id, DATA);
-    console.log(status)
-  },
-
-  async vouchParticipant(context, props) {
-    const toast = params.$toast || createToaster({});
-    const { customDomain, participant } = props;
-    
-    const domain = customDomain || {
-      name: "Weavr Protocol",
-      version: "1",
-      chainId: NETWORK.id,
-      verifyingContract: CONTRACTS.WEAVR
-    };
-    const types = {
-      Vouch: [{ type: "address", name: "participant" }],
-    };
-    const data = { 
-      participant: participant 
-    };
-    
-    toast.info("Waiting for signature..", { position: "top" });
-    
-    const signatures = await wallet.getSignature(domain, types, data);
-    Promise.all([signatures])
-      .then(() => {
-      // console.log(signature[0]);
-        const expectedSignerAddress = context.state.user.wallet.address;
-        const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
-        console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
-        console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
-      });
-    const signature = signatures[0]
-    console.log(signature);
-    const status = await dao.vouch(participant, signature);
-    
-    if (status) {
-      toast.success("Transaction confirmed...", {
-        duration: 2000,
-        position: "top",
-      });
-      context.dispatch("refreshProposalsDataForAsset", {
-        assetId: params.assetId,
-      });
-      // router.push("/" + DAO + "/" + params.assetId);
-    } else {
-      toast.error("Transaction failed. See details in MetaMask.");
-      console.log("Transaction failed. See details in MetaMask.");
-    }
-  },
-
-  async verifyParticipant(context, props) {
-    const toast = params.$toast || createToaster({});
-    const { customDomain, participant, pType, kycHash, nonce } = props;
-    console.log({ customDomain, participant, pType, kycHash, nonce })
-    const domain = customDomain || {
-      name: "Weavr Protocol",
-      version: "1",
-      chainId: NETWORK.id,
-      verifyingContract: CONTRACTS.WEAVR
-    };
-    const types = {
-      KYCVerification: [
-        { type: "uint8",   name: "participantType" },
-        { type: "address", name: "participant" },
-        { type: "bytes32", name: "kyc" },
-        { type: "uint256", name: "nonce" }
-      ]
-    };
-    const data = { 
-      participantType: pType,
-      participant: participant,
-      kyc: ethers.utils.id(kycHash),
-      nonce: ethers.BigNumber.from(nonce) 
-    };
-    
-    toast.info("Waiting for signature..", { position: "top" });
-    
-    const signatures = await wallet.getSignature(domain, types, data);
-    Promise.all([signatures])
-      .then(() => {
-      // // console.log(signature[0]);
-      // const expectedSignerAddress = context.state.user.wallet.address;
-      // const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
-      // console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
-      // console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
-      });
-    const signature = signatures[0]
-    console.log(signature);
-    const status = await dao.approve(data.participantType, data.participant, data.kyc, signature);
-    
-    if (status) {
-      toast.success("Transaction confirmed...", {
-        duration: 2000,
-        position: "top",
-      });
-      context.dispatch("refreshProposalsDataForAsset", {
-        assetId: params.assetId,
-      });
-      // router.push("/" + DAO + "/" + params.assetId);
-    } else {
-      toast.error("Transaction failed. See details in MetaMask.");
-      console.log("Transaction failed. See details in MetaMask.");
-    }
-  },
-
-  async participantsByType(context, params) {
-    const type = params.type || 2;
-    // await dao.getParticipantsByType(type)
-  },
-
-  async fetchOrders(context, params) {
-    let orders = await dex.getFrabricOrders(params.assetId.toLowerCase());
-    context.commit("setOrders", orders);
-  },
-
-  // Ignore, rewrite
-  async fetchDexOrders(context, params) {
-    const FRABRIC_ID = "0";
-    let orders = await dex.getAssetOrders(
-      FRABRIC_ID,
-      params.assetId.toString()
-    );
-    const tokenAddress = await dao.getTokenAddress();
-    context.commit("setTokenAddress", tokenAddress);
-    context.commit("setOrders", orders);
-  },
-
-  async createBuyOrder(_, params) {
-    const { assetId, price, amount } = params;
-
-    await dex.createBuyOrder(assetId, price, amount);
-  },
-
-  async createSellOrder(_, params) {
-    const { assetId, price, amount } = params;
-
-    await dex.createSellOrder(assetId, price, amount);
-  },
-
-  async redeem(context, params) {
-    const { crowdfundAddress } = params;
-    const userAddress = context.getters.userWalletAddress;
-    console.log(userAddress);
-    await crowdfund.redeem(crowdfundAddress, userAddress);
-  },
-
-  async deposit(context, params) {
-    const { crowdfundAddress, amount } = params;
-    console.log(amount);
-    const parsedAmount = ethers.utils.parseUnits(String(amount), 6);
-    console.log(parsedAmount);
-
-    const status = await crowdfund.deposit(crowdfundAddress, parsedAmount);
-    return status;
-  },
-
-  async withdraw(context, params) {
-    const { crowdfundAddress, amount } = params;
-    console.log(amount);
-    const parsedAmount = ethers.utils.parseUnits(String(amount), 6);
-    console.log(parsedAmount);
-
-    const status = await crowdfund.withdraw(crowdfundAddress, parsedAmount);
-    return status;
-  },
- 
-  async approveTradeToken(context, params) {
-    const { assetId } = params;
-    await crowdfund.approveTradeToken(assetId);
-    context.dispatch("fetchNeedleTokenData", { assetId: params.assetId })
-  },
-
-  async fetchNeedleTokenData(context, params) {
-    const { assetId } = params;
-    const walletState = await wallet.getState();
-
-    const address = context.userWalletAddress || walletState.address;
-
-    if(!address) {
-      console.error("No wallet connected, cannot get trade token allowance");
-      return;
-    }
-
-    const allowance = await crowdfund.getAllowance(assetId, address);
-    const state = await crowdfund.getState(assetId);
-    const tradeTokenBalance = await crowdfund.getBalance(assetId, address);
-    const crowdfundTokenBalance = await crowdfund.getCrowdfundBalance(assetId, address);
-
-    context.commit(
-      "setCrowdfundState",
-      crowfundStates[String(state)] || null,
-    )
-
-    if(allowance) {
-      context.commit(
-        "setTradeTokenAllowance",
-        hexToDecimals(allowance, 6),
-      );
-    }
-
-    if(tradeTokenBalance) {
-      context.commit(
-        "setTradeTokenBalance",
-        hexToDecimals(tradeTokenBalance, 6),
-      );
-    }
-
-    if(crowdfundTokenBalance) {
-      context.commit(
-        "setCrowdfundTokenBalance",
-        hexToDecimals(crowdfundTokenBalance, 6)
-      );
-    }
-  },
+  
   ...whitelistActions(whitelist),
 };
 
@@ -820,25 +179,6 @@ const mutations = {
   setEthBalance(state, ethBalance) {
     state.user.wallet.ethBalance = ethBalance;
   },
-
-  setAssets(state, assets) {
-    state.platform.assets = assets;
-  },
-
-  setProposalsForAsset(state, { proposals, assetId }) {
-    state.platform.proposals = proposals; // state.platform.proposals.set(assetId, proposals);
-  },
-
-  setThreads(state, assets) {
-    state.platform.threads = assets;
-  },
-  setNeedles(state, needles) {
-    state.platform.needles = needles;
-  },
-  setOrders(state, orders) {
-    state.exchange.orders = orders;
-  },
-
 
   setAlert(state, alert) {
     state.interface.alert = alert;

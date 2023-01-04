@@ -68,7 +68,7 @@ export default {
       }
     },
     routeToNeedlePage() {
-      this.$router.push(`/needle/${this.needle.id}`);
+      this.$router.push(`needles/${this.needle.id}`);
     }
   },
 };
