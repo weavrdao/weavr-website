@@ -12,8 +12,11 @@
         <h2 id="proposal-title" class="is-size-5 has-text-white mb-4">
           {{ proposal.title }}
         </h2>
-        <div class="description-container p-3">
+        <div class="description-container p-3" v-if="this.proposals==null">
           <vue-markdown  class="content markdown-body" :options="{html: true }"  :source="proposal.description" />
+        </div>
+        <div v-else v-for="proposal in this.proposals" v-bind:key="proposal.id">
+          <ProposalListItem proposal="proposal" asset-id="assetId"/>
         </div>
       </div>
       <dl class="mt-5 mb-0 pb-0">
@@ -69,6 +72,10 @@ export default {
     proposal: {
       type: Object,
       required: true,
+    },
+    proposals: {
+      type: Array,
+      required: false
     },
     embedded: {
       type: Boolean,
@@ -140,6 +147,9 @@ export default {
     openProposal() {
       this.$router.push(this.$route.path+`/proposal/${this.proposal.id}`);
     },
+    openBatchProposal() {
+      this.$router.push(this.$route.path+`/batchProposal/${this.proposal.id}`)
+    }
   },
 
   created() {
