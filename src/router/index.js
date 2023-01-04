@@ -98,7 +98,7 @@ const router = new createRouter({
         {
           path: "",
           component: ComingSoon,
-          meta: { requiresAuth: false}
+          
         },
         {
           path: "needles",
@@ -117,6 +117,7 @@ const router = new createRouter({
           path: "coming-soon",
           name: "comingSoon",
           component: ComingSoon,
+          meta: { requiresAuth: false}
         },
         {
           path: "coming-soon/:comingSoonId",
@@ -130,11 +131,16 @@ const router = new createRouter({
       component: Governance,
       meta: { requiresAuth: true },
       beforeEnter: async (to, from) => {
-        if(!store.getters.proposalsPerAsset) {
-          store.dispatch("setLoading", {isLoading:true, message: "Loading Proposals"})
-          await store.dispatch("refreshProposalsDataForAsset", {assetId: CONTRACTS.WEAVR, $toast: createToaster({})})
-          store.dispatch("setLoading", {isLoading:false})
+        const prop = await store.getters.proposalsPerAsset;
+        if (!prop) {
+          store.dispatch("setLoadingState", {isLoading: true, message: "Loading Proposals"})
+          await store.dispatch("refreshProposalsDataForAsset", {
+            assetId: CONTRACTS.WEAVR,
+          });
+          store.dispatch("setLoadingState", {isLoading: false, message: "Loading Proposals"})
         }
+        // clear toast
+        return true;
       },
       children: [
         {
@@ -251,6 +257,9 @@ router.beforeEach(async (to, from) => {
     toast.error("The route you are trying to access is currently locked", { position: "top"});
     return false
   }
+  if( !to.meta.requiresAuth ) {
+    return true
+  }
   if( to.meta.requiresAuth ) {
     console.log("META_AUTH_ TRUE");
     console.log(
@@ -283,7 +292,7 @@ router.beforeEach(async (to, from) => {
           else if ( isWhitelisted ) {
             // whitelisted
             console.log("whitelisted");
-            return true
+            return { path: to.fullPath}
           }
         })
         
@@ -297,9 +306,8 @@ router.beforeEach(async (to, from) => {
     }
     // connected
     if ( isConnected ) {
-      console.log("navigate to route");
+      console.log("navigate to route:\n", to.fullPath);
         // -navigate to route
-
       return true
     }
   }
@@ -311,8 +319,10 @@ router.beforeEach(async (to, from) => {
 
 
   // from.whitelist
-  if( from.path === "whitelist" ) {
+  if( to.fullPath === "/"+CONTRACTS.WEAVR ) {
     // - navigate path and reset vars
+    console.log("Navigate to WEAVR____GOV______________\n\n\n");
+    return {path: to.fullPath}
   }
   // no auth
   // - navigate to path

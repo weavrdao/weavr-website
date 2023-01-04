@@ -226,7 +226,7 @@ const getters = {
 };
 
 const actions = {
-  async setLoading(context, loadingState) {
+  async setLoadingState(context, loadingState) {
     context.commit("setLoadingState", loadingState)
   },
   async refreshThreads(context) {

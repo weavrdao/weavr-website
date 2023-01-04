@@ -40,6 +40,7 @@ import StackNavigationBar from "../layout/navigation/StackNavigationBar.vue";
 import ProposalList from "../proposals/ProposalList.vue";
 import NewProposalSelector from "../sections/NewProposalSelector.vue";
 import RefreshButton from "../sections/RefreshButton.vue";
+import store from "@/store";
 
 export default {
   name: "Governance",
@@ -132,7 +133,7 @@ export default {
       syncWallet: "syncWallet",
       swap: "swapToAsset",
     }),
-
+    
     goBack() {
       this.$router.back();
     },
