@@ -3,7 +3,12 @@
     <span class="proposal-type" :class="this.typeStylingData.class">
       {{ this.typeStylingData.text }}
     </span>
-    <div @click="routeToProposal" class="is-flex is-flex-direction-column is-justify-content-space-between mb-2 mt-2 pt-4 pb-0 px-4">
+    <div v-if="batchView===true">
+      <h2 id="proposal-title" class="is-size-5 has-text-white mb-4">
+        {{ proposal.title }}
+      </h2>
+    </div>
+    <div v-else @click="routeToProposal" class="is-flex is-flex-direction-column is-justify-content-space-between mb-2 mt-2 pt-4 pb-0 px-4">
       <div>
         <h2 class="is-size-5 has-text-mediumBlue">
           {{ this.startDate }}
@@ -16,7 +21,7 @@
           <vue-markdown  class="content markdown-body" :options="{html: true }"  :source="proposal.description" />
         </div>
         <div v-else v-for="proposal in this.proposals" v-bind:key="proposal.id">
-          <ProposalListItem proposal="proposal" asset-id="assetId"/>
+          <ProposalListItem proposal="proposal" asset-id="assetId" batch-view="true"/>
         </div>
       </div>
       <dl class="mt-5 mb-0 pb-0">
@@ -72,6 +77,10 @@ export default {
     proposal: {
       type: Object,
       required: true,
+    },
+    batchView: {
+      type: Boolean,
+      required: false,
     },
     proposals: {
       type: Array,

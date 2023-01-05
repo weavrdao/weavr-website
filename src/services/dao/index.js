@@ -62,11 +62,13 @@ class DAO {
           proposals[i].daoResolution =
             offChainData[i].value.daoResolution || false;
           proposals[i].forumLink = offChainData[i].value.forumLink || "https://forum.weavr.org";
+          proposals[i].batchId = offChainData[i].value.batch_id || "";
         } else {
           proposals[i].title = "Untitled";
           proposals[i].description = "No description";
           proposals[i].daoResolution = false;
           proposals[i].forumLink = offChainData[i].forumLink || "https://forum.weavr.org";
+          proposals[i].batchId = "";
         }
       }
       toast.clear();
@@ -203,9 +205,11 @@ class DAO {
    * @param {string} title Proposal title
    * @param {string} description Proposal body
    * @param {string} forumLink Link to forum discussion
+   * @param daoResolution
+   * @param batch_id
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
    */
-  async createPaperProposal(asset, title, description, forumLink, daoResolution) {
+  async createPaperProposal(asset, title, description, forumLink, daoResolution, batch_id) {
     const assetContract = new AssetContract(this.ethereumClient, asset);
 
     const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
@@ -213,6 +217,7 @@ class DAO {
       description,
       forumLink,
       daoResolution,
+      batch_id
     });
     if (!infoHash) return;
 
