@@ -39,7 +39,26 @@
           :key="item.name"
           v-on:click="transitTo(item.route)"
         >
-          {{ item.name }}
+          <div class="">{{ item.name }}</div>
+          <!-- <div v-else class="">
+            <div class="dropdown is-hoverable is-right">
+              <div class="dropdown-trigger">
+                {{item.name}}
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+                <div class="dropdown-content">
+                  <a 
+                    class="dropdown-item"
+                    v-for="child in item.childs" 
+                    :key="child.name"
+                    v-on:click="transitTo(child.route)"
+                    >
+                    {{child.name}}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div> -->
           <span v-if="item.icon">
             <unicon width="15" height="15" :name="item.icon" fill="gray"></unicon>
           </span>
@@ -61,7 +80,7 @@
 import SignerAddress from '../../views/address/SignerAddress.vue'
 import { useRoute } from "vue-router"
 import { mapGetters, mapActions } from "vuex"
-import { CONTRACTS, DAO } from '../../../services/constants'
+import { CONTRACTS } from '../../../services/constants'
 export default {
   name: "HeaderHavigationBar",
   components: {
@@ -72,8 +91,21 @@ export default {
       navigation: {
         isOpen: false,
         items: [
-          { name: "Governance", route: `/${CONTRACTS.WEAVR}`},
-          { name: "Marketplace", route: "/marketplace"},
+          { name: "Governance", route: `/dao/${CONTRACTS.WEAVR}`},
+          { 
+            name: "Marketplace", 
+            route: "/marketplace", 
+            childs: [
+              { 
+                name: "Needles", 
+                route: { path: "marketplace", params: { market: "needle"}}
+              },
+              { 
+                name: "Threads", 
+                route: { path: "/marketplace/threads"}
+              }
+            ]
+          },
           { name: "Resolutions", route: "/resolutions", icon: "arrow-up-right"},
           { name: "FAQ", route: "/faq", icon: "arrow-up-right" }
         ],
@@ -90,11 +122,15 @@ export default {
     },
     transitTo(path) {
       this.$router.push(path)      
-      this.menuToggle()
+      console.log(this.$route.name);
+      this.navigation.isOpen ? this.menuToggle() : null;
     },
     menuToggle() {
       this.navigation.isOpen = !this.navigation.isOpen
     },
+    print(child) {
+      console.log(child)
+    }
   },
 }
 </script>
@@ -128,5 +164,9 @@ export default {
 
 .active-link {
   background: linear-gradient(to top,  rgba(255,255,255,0) 20%,$mediumBlue 100%);
+}
+
+.dropdown-content {
+  padding: 4px;
 }
 </style>

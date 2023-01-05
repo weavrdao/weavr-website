@@ -1,12 +1,12 @@
 <template>
   <div>
     <HeaderNavigationBar />
-  <div v-if="loadingState.isLoading" class="modal is-active">
-    <div class="modal-background"></div>
-    <div class="modal-content">
-        <Loading :message="loadingState.message || 'loading'" />
+    <div v-if="loadingState.isLoading" class="modal is-active">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+          <Loading :message="loadingState.message || 'loading'" />
+      </div>
     </div>
-  </div>
     <RouterView  class="main container p-5" />
     <Footer />
   </div>

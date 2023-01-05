@@ -98,11 +98,6 @@ const router = new createRouter({
       component: Marketplace,
       children: [
         {
-          path: "",
-          component: ComingSoon,
-          
-        },
-        {
           path: "needles",
           name: "needle-market",
           component: NeedlesMarketplace,
@@ -150,9 +145,19 @@ const router = new createRouter({
           }
         },
         {
-          path: "thread/:threadId",
+          path: "threads/:threadId",
           name: "thread",
           component: SingleThread,
+          beforeEnter: async (to, from ) => {
+            
+            store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
+            
+            await store.dispatch("refreshThreads")
+            
+            store.dispatch("setLoadingState", {isLoading: false, message: ""})
+            
+            return true
+          }
         },
         {
           path: "coming-soon",
@@ -168,7 +173,7 @@ const router = new createRouter({
       ]
     },  
     {
-      path: `/:assetId`,
+      path: `/dao/:assetId`,
       component: Governance,
       meta: { requiresAuth: true },
       beforeEnter: async (to, from) => {
@@ -186,7 +191,7 @@ const router = new createRouter({
       children: [
         {
           path: `${CONTRACTS.WEAVR}`,
-          alias: "weavr",
+          name: "weavr",
         },
         {
           path: "kyc",
@@ -298,9 +303,10 @@ router.beforeEach(async (to, from) => {
     toast.error("The route you are trying to access is currently locked", { position: "top"});
     return false
   }
-  if( !to.meta.requiresAuth ) {
-    return true
-  }
+  // if( !to.meta.requiresAuth ) {
+  //   console.log("NO AUTH AT THE TOP");
+  //   return true
+  // }
   if( to.meta.requiresAuth ) {
     console.log("META_AUTH_ TRUE");
     console.log(
@@ -360,7 +366,7 @@ router.beforeEach(async (to, from) => {
 
 
   // from.whitelist
-  if( to.fullPath === "/"+CONTRACTS.WEAVR ) {
+  if( to.fullPath === "/dao/"+CONTRACTS.WEAVR ) {
     // - navigate path and reset vars
     console.log("Navigate to WEAVR____GOV______________\n\n\n");
     return {path: to.fullPath}

@@ -207,6 +207,48 @@ const actions = {
       return;
     }
 
+    // const allowance = await crowdfund.getAllowance(assetId, address);
+    // const state = await crowdfund.getState(assetId);
+    // const tradeTokenBalance = await crowdfund.getBalance(assetId, address);
+    // const crowdfundTokenBalance = await crowdfund.getCrowdfundBalance(assetId, address);
+
+    // context.commit(
+    //   "setCrowdfundState",
+    //   crowfundStates[String(state)] || null,
+    // )
+
+    // if(allowance) {
+    //   context.commit(
+    //     "setTradeTokenAllowance",
+    //     hexToDecimals(allowance, 6),
+    //   );
+    // }
+
+    // if(tradeTokenBalance) {
+    //   context.commit(
+    //     "setTradeTokenBalance",
+    //     hexToDecimals(tradeTokenBalance, 6),
+    //   );
+    // }
+
+    // if(crowdfundTokenBalance) {
+    //   context.commit(
+    //     "setCrowdfundTokenBalance",
+    //     hexToDecimals(crowdfundTokenBalance, 6)
+    //   );
+    // }
+  },
+  async fetchThreadTokenData(context, params) {
+    const { assetId } = params;
+    const walletState = await wallet.getState();
+
+    const address = context.userWalletAddress || walletState.address;
+
+    if(!address) {
+      console.error("No wallet connected, cannot get trade token allowance");
+      return;
+    }
+
     const allowance = await crowdfund.getAllowance(assetId, address);
     const state = await crowdfund.getState(assetId);
     const tradeTokenBalance = await crowdfund.getBalance(assetId, address);

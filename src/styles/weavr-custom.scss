@@ -77,7 +77,26 @@ $tiny-radius: 5px;
 $small-radius: 10px;
 
 
+/*************************
+  DROPDOWN
+*************************/ 
+$dropdown-menu-min-width: 8rem;
+$dropdown-content-background-color: $darkGray;
+$dropdown-content-offset: 15px;
+$dropdown-content-padding-bottom: 0.5rem;
+$dropdown-content-padding-top: 0.5rem;
+$dropdown-content-radius: $small-radius;
+// $dropdown-content-shadow: 0 0.5em 1em -0.125em rgba($primary-invert, 0.05), 0 0px 0 1px rgba($primary-invert, 0.01);
+$dropdown-content-z: 20;
+$dropdown-item-color: $lightBlue;
+$dropdown-item-hover-color: hsl(0, 0%, 100%);
+$dropdown-item-hover-background-color: $primary;
+$dropdown-item-active-color: #fff;
+$dropdown-item-active-background-color: hsl(229, 53%,  53%);
+$dropdown-divider-background-color: hsl(229, 53%,  53%);
+
 $modal-content-width: min(100%, 1000px);
+
 html {
   font-family: $family-primary;
 }

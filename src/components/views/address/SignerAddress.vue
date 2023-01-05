@@ -64,128 +64,126 @@
     </div>
     <div id="toeknModal"></div>
   </div>
-  </template>
+</template>
   
-  <script>
-  import { mapGetters, mapActions } from "vuex";
-  import { DAO, CONTRACTS } from "../../../services/constants"
-  import { Modal } from "../modal/Modal.vue"
-  import { ethers } from 'ethers';
-  import { createToaster } from "@meforma/vue-toaster";
-  export default {
-    name: "SignerAddress",
-    computed: {
-      ...mapGetters({
-        whitelisted: "isWhitelisted",
-        hasKyc: "hasKyc",
-        address: "userWalletAddress",
-        balance: "userTokenBalance",
-        symbol: "assetTokenSymbol",
-        vouches: "vouchesPerSigner",
-        guestCookie: "guestCookie"
-      }),
-      isConnected() {
-        return ethers.utils.isAddress(this.address)
-      },
-      isGuest() {
-        return this.guestCookie
+<script>
+import { mapGetters, mapActions } from "vuex";
+import { DAO, CONTRACTS } from "../../../services/constants"
+import { Modal } from "../modal/Modal.vue"
+import { ethers } from 'ethers';
+import { createToaster } from "@meforma/vue-toaster";
+export default {
+  name: "SignerAddress",
+  computed: {
+    ...mapGetters({
+      whitelisted: "isWhitelisted",
+      hasKyc: "hasKyc",
+      address: "userWalletAddress",
+      balance: "userTokenBalance",
+      symbol: "assetTokenSymbol",
+      vouches: "vouchesPerSigner",
+      guestCookie: "guestCookie"
+    }),
+    isConnected() {
+      return ethers.utils.isAddress(this.address)
+    },
+    isGuest() {
+      return this.guestCookie
+    }
+  },
+  methods: {
+    ...mapActions({
+      sync: "syncWallet",
+      tokenInfo: "tokenInfo",
+      checkKyc: "checkKyc",
+      logout: "logout",
+      participantsList: "participantsByType"
+    }),
+    toggleDropdown() {
+      
+    },
+    onClick() {
+      if(ethers.utils.isAddress(this.address)){
+        this.sync({$toast: this.$toast})
+      }else {
+        this.$router.push("/walletConnect")
       }
     },
-    methods: {
-      ...mapActions({
-        sync: "syncWallet",
-        tokenInfo: "tokenInfo",
-        checkKyc: "checkKyc",
-        logout: "logout",
-        participantsList: "participantsByType"
-      }),
-      toggleDropdown() {
-        
-      },
-      onClick() {
-        if(ethers.utils.isAddress(this.address)){
-          this.sync({$toast: this.$toast})
-        }else {
-          this.$router.push("/walletConnect")
-        }
-      },
-      onVouch() {
-        this.$router.push(`/${this.$route.params.assetId}/vouch`)
-      },
-      onKyc() {
-        this.$router.push(`/${this.$route.params.assetId}/kyc`)
-      },
-      kycInfo() {
-       this.$toast.success("You are a verified member with full voting abilities", { position: "top", duration: false})
-      },
-      onLogout() {
-        this.logout()
-        this.$router.go('/')
-      },
-      async tokenDetails() {
-       
-        // const info = await this.tokenInfo({assetId: this.assetId})
-        // // Promise.all([info]).then( (res) => {
-        // //   console.log(res)
-        // // })
-        // console.log("INFO: ", info)
-        // this.$router.push(
-        // {
-        //   path: "/".concat(DAO).concat("/tokenInfo"), 
-        //   props: {
-        //     info: { totalSypply: "100000"}
-        //   }
-        // });
-  
-       
-      // this.$router.push({name: "/"+DAO+"/tokenInfo", params: {assetId: this.assetId}})
-      }
+    onVouch() {
+      this.$router.push(`/${this.$route.params.assetId}/vouch`)
     },
-    async mounted() {
-      this.participantsList({type: "GENESIS"})
-      console.log("Calling kyc...")
+    onKyc() {
+      this.$router.push(`/${this.$route.params.assetId}/kyc`)
     },
-    
-  };
-  
-  </script>
-  
-  <style lang="scss" scoped>
-  @import "../../../styles/weavr-custom.scss";
-  .member-actions {
-    display: inline-flex;
-  }
-    .is-address-container {
-      display: inline-flex !important;
-      background: $darkGray !important;
-      padding-right: 0px !important;
-      gap: 10px;
-      color: white;
-      font-size: 1rem !important;
-      height: 2.5em !important;
-    }
-  
-    .address {
-      font-size: 1rem;
-    }
-  
-    // .has-text-medium-blue {
-    //   color: $mediumBlue;
-    // }
-    .dropdown-menu {
+    kycInfo() {
+      this.$toast.success("You are a verified member with full voting abilities", { position: "top", duration: false})
+    },
+    onLogout() {
+      this.logout()
+      this.$router.go('/')
+    },
+    async tokenDetails() {
+      
+      // const info = await this.tokenInfo({assetId: this.assetId})
+      // // Promise.all([info]).then( (res) => {
+      // //   console.log(res)
+      // // })
+      // console.log("INFO: ", info)
+      // this.$router.push(
+      // {
+      //   path: "/".concat(DAO).concat("/tokenInfo"), 
+      //   props: {
+      //     info: { totalSypply: "100000"}
+      //   }
+      // });
 
+      
+    // this.$router.push({name: "/"+DAO+"/tokenInfo", params: {assetId: this.assetId}})
     }
-    .is-dropdown-icon {
-  display: inline-flex !important;
-      background: $darkGray !important;
-      padding-right: 0px !important;
-    }
+  },
+  async mounted() {
+    this.participantsList({type: "GENESIS"})
+    console.log("Calling kyc...")
+  },
   
-    .connect {
-      transition: all 150ms;
-      &:hover {
-        filter: contrast(120%);
-      }
+};
+</script>
+
+<style lang="scss" scoped>
+@import "../../../styles/weavr-custom.scss";
+.member-actions {
+  display: inline-flex;
+}
+  .is-address-container {
+    display: inline-flex !important;
+    background: $darkGray !important;
+    padding-right: 0px !important;
+    gap: 10px;
+    color: white;
+    font-size: 1rem !important;
+    height: 2.5em !important;
+  }
+
+  .address {
+    font-size: 1rem;
+  }
+
+  // .has-text-medium-blue {
+  //   color: $mediumBlue;
+  // }
+  .dropdown-menu {
+
+  }
+  .is-dropdown-icon {
+display: inline-flex !important;
+    background: $darkGray !important;
+    padding-right: 0px !important;
+  }
+
+  .connect {
+    transition: all 150ms;
+    &:hover {
+      filter: contrast(120%);
     }
-  </style>
-  
+  }
+</style>

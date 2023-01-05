@@ -253,9 +253,10 @@ export default {
     };
   },
   mounted() {
-    this.refresh();
-    console.log(this.assetMap)
-    this.syncWallet({ $toast: this.$toast });
+    console.log(this.thread);
+    this.fetchThreadTokenData({
+      assetId: this.threadId,
+    })
   },
 };
 </script>
