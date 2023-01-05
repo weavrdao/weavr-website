@@ -19,6 +19,7 @@ import {
 } from "../whitelist";
 import { USER_COOKIE_KEY } from "../whitelist/constants";
 import blacklist from "@/blacklist.json";
+import {handleBatchProposals} from "@/data/helpers/proposals"
 import {proposals} from "@/data/mock/mockDataProvider";
 
 
@@ -253,39 +254,12 @@ const actions = {
     toast.info("Loading Data....");
     let assetId = params.assetId.toLowerCase();
     let assetProposals = await dao.getProposalsForAsset(assetId);
-    let handledProposals = await this.handleBatchProposals(context, assetProposals);
+    let handledProposals = handleBatchProposals(context, assetProposals);
     context.commit("setProposalsForAsset", {
       assetId: assetId.toLowerCase(),
       proposals: handledProposals,
     });
     toast.clear();
-  },
-
-  async handleBatchProposals(context, proposals) {
-    let normalProposals = [];
-    let batchProposals = [];
-    for (let i =0; i < proposals.length; i++) {
-      if(proposals[i].batchId !== ""){
-        let found = false;
-        for(let j=0; j<batchProposals.length; j++) {
-          if(proposals[i].batchId === batchProposals[j].batchId){
-            batchProposals[j] += proposals[i];
-            found = true;
-          }
-        }
-        if(found===false){
-          let batchProposal = {
-            "title": proposals[i].title,
-            "description": proposals[i].description,
-            "batchId": proposals[i].batchId
-          }
-          batchProposals += batchProposal
-        }
-      } else {
-        normalProposals += proposals[i];
-      }
-    }
-    return normalProposals + batchProposals
   },
 
   async createPaperProposal(context, props) {
