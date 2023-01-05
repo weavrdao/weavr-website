@@ -253,7 +253,7 @@ const actions = {
     toast.info("Loading Data....");
     let assetId = params.assetId.toLowerCase();
     let assetProposals = await dao.getProposalsForAsset(assetId);
-    let handledProposals = await this.handleBatchProposals(context, proposals);
+    let handledProposals = await this.handleBatchProposals(context, assetProposals);
     context.commit("setProposalsForAsset", {
       assetId: assetId.toLowerCase(),
       proposals: handledProposals,
