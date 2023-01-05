@@ -217,7 +217,7 @@ const router = new createRouter({
           path: "upgradeProposal",
           component: Modal,
           props: { component: newUpgradeProposal },
-          meta: { locked: true}
+          meta: { locked: false}
         },
         {
           path: "tokenProposal",

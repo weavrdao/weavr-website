@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="navbar">
+    <nav class="navbar p-6">
       
       <router-link to="/marketplace/needles" >Needles</router-link>
       
@@ -32,6 +32,7 @@ a {
   border-bottom: 4px transparent solid !important;
   padding: 1rem;
   color: $lightGray;
+  margin-right: 0.8rem;
   &:hover {
     color: $white;
     border-color:$white !important;

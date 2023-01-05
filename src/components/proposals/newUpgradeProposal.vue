@@ -52,8 +52,8 @@ import { ethers } from "ethers";
 import { ProposalTypes } from "@/models/common"
 import { CONTRACTS, DAO } from "../../services/constants" 
 const GOERLI_TEST = {
-  governor: "0xDba4eF785E003F7efc80Ba3900e260FA893804BC",
-  signer: "0x4C3D84E96EB3c7dEB30e136f5150f0D4b58C7bdB"
+  governor: "0xA28C6A770dC1E6DCd94Ea93B7464E3B3DF77689D",
+  signer: "0xd7623F78545a3D1138Ae435c7D224F7bC32Ae038"
 }
 
 export default {
@@ -95,7 +95,7 @@ export default {
         return;
       }
       console.log(this.signerAddress);
-      let assetAddress = this.assetId
+      let assetAddress = this.$route.params.assetId;
       console.log("#ASSET_ID: ", this.assetId);
       await this.createUpgradeProposal({
         assetAddress,
@@ -115,8 +115,7 @@ export default {
     }
   },
   mounted() {
-    this.refresh({ assetId: this.assetId});
-    this.syncWallet();
+    
   },
 }
 </script>

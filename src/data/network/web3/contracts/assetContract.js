@@ -104,9 +104,6 @@ class AssetContract {
       code,
       data,
       info,
-      {
-        gasLimit: 3000000,
-      }
     );
     await tx.wait();
   }
