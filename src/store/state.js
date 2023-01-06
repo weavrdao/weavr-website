@@ -76,7 +76,7 @@ const getters = {
 
     return wallet.getChainId()
   },
-  
+
   isConnected(state) {
     return ethers.utils.isAddress(state.user.wallet.address)
   },
@@ -161,10 +161,10 @@ const getters = {
 
 const actions = {
   connectGuest(context, params) {
-    console.log(params.passwd===process.env.VUE_APP_DAILY_PASSWORD ? "yess":"noooo")
-    if(
-      params.passwd===process.env.VUE_APP_DAILY_PASSWORD
-    ){
+    console.log(params.passwd === process.env.VUE_APP_DAILY_PASSWORD ? "yess" : "noooo")
+    if (
+      params.passwd === process.env.VUE_APP_DAILY_PASSWORD
+    ) {
       setCookie(USER_COOKIE_KEY, GUEST, 1)
       context.state.isGuest = getCookie(USER_COOKIE_KEY) === GUEST ? true : false
       return true
@@ -172,26 +172,50 @@ const actions = {
     return false
   },
 
+  async fetchTokenInfoForAddress(context, params) {
+    return {
+      ...(await this.fetchTokenInfo(context, params)),
+      bal: await token.getTokenBalance(params.tokenAddress, params.userAddress)
+    }
+  },
+
   async fetchTokenInfo(context, params) {
     // const toast = params.$toast || createToaster({});
     const tokenAddress = params.tokenAddress || CONTRACTS.TOKEN_ADDRESS;
     const supply = await token.getTotalSupply(tokenAddress);
-    console.log(ethers.utils.formatEther(supply));
+    const symbol = await token.getTokenSymbol(tokenAddress);
     return {
       totalSupply: ethers.utils.formatEther(supply),
+      symbol
     };
   },
- 
+
+  async getVotingPower(context, params) {
+    const userTokenInfo = this.fetchTokenInfoForAddress(context, params);
+    const supplyWasZero = userTokenInfo.supply === 0;
+    if (supplyWasZero) return {
+      votingPower: 0,
+      supplyWasZero
+    };
+
+    let votingPower = userTokenInfo.bal / userTokenInfo.supply;
+    if (votingPower >= 0.1) votingPower = userTokenInfo.bal * 0.1;
+    return {
+      votingPower,
+      supplyWasZero
+    }
+  },
+
   async syncWallet(context, params) {
     console.log("SYNC");
-    let {$toast} = params !== undefined ? params : {};
+    let { $toast } = params !== undefined ? params : {};
     let walletState = await wallet.getState(params.wallet);
     const symbol = await token.getTokenSymbol(CONTRACTS.TOKEN_ADDRESS);
     const balance = await token.getTokenBalance(
       CONTRACTS.TOKEN_ADDRESS,
       walletState.address
     );
-    
+
     Promise.all([walletState, symbol, balance]).then((val) => {
       console.log(val);
     });
@@ -207,7 +231,7 @@ const actions = {
       CONTRACTS.TOKEN_ADDRESS,
       walletState.address
     );
-    
+
     const hasKyc = await whitelist.hasKyc(
       CONTRACTS.WEAVR,
       walletState.address
@@ -485,7 +509,7 @@ const actions = {
     const toast = params.$toast || createToaster({});
 
     const { assetAddress, proposalId } = props;
-    
+
     const status = await dao.withdraw(
       assetAddress || CONTRACTS.WEAVR,
       proposalId,
@@ -506,7 +530,7 @@ const actions = {
   async queueProposal(context, props) {
     const toast = params.$toast || createToaster({});
     const id = ethers.BigNumber.from(props.proposalId)
-    
+
     const status = await dao.queue(id);
     console.log(status)
 
@@ -523,7 +547,7 @@ const actions = {
   async vouchParticipant(context, props) {
     const toast = params.$toast || createToaster({});
     const { customDomain, participant } = props;
-    
+
     const domain = customDomain || {
       name: "Weavr Protocol",
       version: "1",
@@ -533,25 +557,25 @@ const actions = {
     const types = {
       Vouch: [{ type: "address", name: "participant" }],
     };
-    const data = { 
-      participant: participant 
+    const data = {
+      participant: participant
     };
-    
+
     toast.info("Waiting for signature..", { position: "top" });
-    
+
     const signatures = await wallet.getSignature(domain, types, data);
     Promise.all([signatures])
-    .then(() => {
-      // console.log(signature[0]);
-      const expectedSignerAddress = context.state.user.wallet.address;
-      const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
-      console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
-      console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
-    });
+      .then(() => {
+        // console.log(signature[0]);
+        const expectedSignerAddress = context.state.user.wallet.address;
+        const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
+        console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
+        console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
+      });
     const signature = signatures[0]
     console.log(signature);
     const status = await dao.vouch(participant, signature);
-    
+
     if (status) {
       toast.success("Transaction confirmed...", {
         duration: 2000,
@@ -579,34 +603,34 @@ const actions = {
     };
     const types = {
       KYCVerification: [
-        { type: "uint8",   name: "participantType" },
+        { type: "uint8", name: "participantType" },
         { type: "address", name: "participant" },
         { type: "bytes32", name: "kyc" },
         { type: "uint256", name: "nonce" }
-    ]
+      ]
     };
-    const data = { 
+    const data = {
       participantType: pType,
       participant: participant,
       kyc: ethers.utils.id(kycHash),
-      nonce: ethers.BigNumber.from(nonce) 
+      nonce: ethers.BigNumber.from(nonce)
     };
-    
+
     toast.info("Waiting for signature..", { position: "top" });
-    
+
     const signatures = await wallet.getSignature(domain, types, data);
     Promise.all([signatures])
-    .then(() => {
-      // // console.log(signature[0]);
-      // const expectedSignerAddress = context.state.user.wallet.address;
-      // const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
-      // console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
-      // console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
-    });
+      .then(() => {
+        // // console.log(signature[0]);
+        // const expectedSignerAddress = context.state.user.wallet.address;
+        // const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
+        // console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
+        // console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
+      });
     const signature = signatures[0]
     console.log(signature);
     const status = await dao.approve(data.participantType, data.participant, data.kyc, signature);
-    
+
     if (status) {
       toast.success("Transaction confirmed...", {
         duration: 2000,

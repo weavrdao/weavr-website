@@ -1,11 +1,12 @@
-import {createRouter, createWebHashHistory, createWebHistory, useRoute} from "vue-router";
+import { createRouter, createWebHashHistory, createWebHistory, useRoute } from "vue-router";
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue";
 import Homepage from "@/components/pages/Homepage.vue"
 import PrivacyPage from "@/components/pages/PrivacyPage.vue"
 import TermsPage from "@/components/pages/TermsPage.vue"
 import Governance from "@/components/pages/Governance.vue";
-import Marketplace from "@/components/pages/Marketplace"
+import Marketplace from "@/components/pages/Marketplace";
+import Dashboard from "@/components/pages/Dashboard";
 import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.vue";
 import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
@@ -20,12 +21,12 @@ import Complete from "@/components/proposals/Complete"
 import VerifyParticipant from "@/components/proposals/VerifyParticipant";
 import tokenDetails from "@/components/sections/TokenDetails.vue";
 import walletConnect from "@/components/sections/WalletConnect.vue";
-import {WhitelistPage} from "@/whitelist";
-import {CONTRACTS, DAO} from "@/services/constants";
+import { WhitelistPage } from "@/whitelist";
+import { CONTRACTS, DAO } from "@/services/constants";
 import store from "@/store";
 import ComingSoon from "@/components/sections/ComingSoon/ComingSoon.vue";
 import SingleComingSoonPage from "@/components/sections/ComingSoon/SingleComingSoonPage.vue";
-import {ethers} from "ethers";
+import { ethers } from "ethers";
 import SumSub from "@/components/SumSub.vue";
 import { getCookie } from "../whitelist";
 import { USER_COOKIE_KEY } from "../whitelist/constants";
@@ -33,9 +34,6 @@ import { USER_COOKIE_KEY } from "../whitelist/constants";
 import Login from "@/components/sections/Login.vue"
 import { GUEST } from "../services/constants";
 import { createToaster } from "@meforma/vue-toaster";
-
-
-
 
 const router = new createRouter({
   history: createWebHashHistory(),
@@ -51,7 +49,7 @@ const router = new createRouter({
     {
       path: "/toc",
       component: Modal,
-      props: { component: TermsPage}
+      props: { component: TermsPage }
     },
     {
       path: "/privacy",
@@ -60,15 +58,15 @@ const router = new createRouter({
     },
     {
       path: "/resolutions",
-      beforeEnter(){
-        window.open("https://resolutions.weavr.org", "_blanc")
+      beforeEnter() {
+        window.open("https://resolutions.weavr.org", "_blank")
       }
     },
     {
       path: "/faq",
-      beforeEnter(){
-        window.open("https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics", "_blanc")
-        
+      beforeEnter() {
+        window.open("https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics", "_blank")
+
       }
     },
     {
@@ -80,24 +78,29 @@ const router = new createRouter({
       path: "/walletConnect",
       name: "wallet-connect",
       component: Modal,
-      props: {component: walletConnect},
+      props: { component: walletConnect },
     },
     {
       path: "/login",
       name: "login",
       component: Modal,
-      props: {component: Login}
+      props: { component: Login }
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard,
+      meta: { requiresAuth: true }
     },
     {
       path: "/marketplace",
       name: "marketplace",
-      alisa: "marketplace",
       component: Marketplace,
       children: [
         {
           path: "",
           component: ComingSoon,
-          meta: { requiresAuth: false}
+          meta: { requiresAuth: false }
         },
         {
           path: "needles",
@@ -120,11 +123,11 @@ const router = new createRouter({
           component: SingleComingSoonPage,
         },
       ]
-    },  
+    },
     {
       path: `/:assetId`,
       component: Governance,
-      
+
       meta: { requiresAuth: true },
       children: [
         {
@@ -155,7 +158,7 @@ const router = new createRouter({
           path: "upgradeProposal",
           component: Modal,
           props: { component: newUpgradeProposal },
-          meta: { locked: true}
+          meta: { locked: true }
         },
         {
           path: "tokenProposal",
@@ -195,16 +198,16 @@ const router = new createRouter({
         {
           path: "proposal/:proposalId/queue",
           component: Modal,
-          props: {assetId: "", component: Queue}
+          props: { assetId: "", component: Queue }
         },
         {
           path: "proposal/:proposalId/complete",
           component: Modal,
-          props: {assetId: "", component: Complete}
+          props: { assetId: "", component: Complete }
         }
       ]
     },
-    {path: "/:pathMatch(.*)*", name: "not-found", component: PageNotFound},
+    { path: "/:pathMatch(.*)*", name: "not-found", component: PageNotFound },
   ],
 });
 
@@ -222,77 +225,76 @@ router.beforeEach(async (to, from) => {
    * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
    * ON not
    */
-   console.log("HAS_REDIRECTED___", hasRedirectedAfterWhitelisting);
+  console.log("HAS_REDIRECTED___", hasRedirectedAfterWhitelisting);
 
-   const address = store.getters.userWalletAddress;
-   const isConnected = ethers.utils.isAddress(address);
-   const isWhitelisted = store.getters.isWhitelisted;
-   const isGuest = store.getters.guestCookie;
-   const cookie = getCookie(USER_COOKIE_KEY)
+  const address = store.getters.userWalletAddress;
+  const isConnected = ethers.utils.isAddress(address);
+  const isWhitelisted = store.getters.isWhitelisted;
+  const isGuest = store.getters.guestCookie;
+  const cookie = getCookie(USER_COOKIE_KEY)
   // require auth
-  if( to.meta.locked ) {
+  if (to.meta.locked) {
     const toast = createToaster({});
-    toast.error("The route you are trying to access is currently locked", { position: "top"});
+    toast.error("The route you are trying to access is currently locked", { position: "top" });
     return false
   }
-  if( to.meta.requiresAuth ) {
+  if (to.meta.requiresAuth) {
     console.log("META_AUTH_ TRUE");
     // not connected
-    if( !isConnected ) {
+    if (!isConnected) {
       // cookie
-      if( ethers.utils.isAddress(cookie) ) {
-        if( cookie === GUEST ) {
-          console.log("IS GUEST");
+      if (ethers.utils.isAddress(cookie)) {
+        if (cookie === GUEST) {
           return true
         }
         // - autoconnect and navigate
         console.log("autoconnect and navigate");
         const toast = createToaster({})
-        await store.dispatch("syncWallet", { wallet: "metamask", $toast: toast})
-        await store.dispatch("checkWhitelistStatus", {assetId: CONTRACTS.WEAVR}).then( () => {
-          if( !isWhitelisted ) {
+        await store.dispatch("syncWallet", { wallet: "metamask", $toast: toast })
+        await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
+          if (!isWhitelisted) {
             // not whitelisted
             console.log("not whitelisted");
             return { path: "/whitelist" }
           }
-          else if ( isWhitelisted ) {
+          else if (isWhitelisted) {
             // whitelisted
             console.log("whitelisted");
             return true
           }
         })
-        
+
       }
       // !cookie
-      else if( !ethers.utils.isAddress(cookie)  ) { 
+      else if (!ethers.utils.isAddress(cookie)) {
         // - go to walletconnect
         console.log("go to whitelist")
-        return { path: "/whitelist"}
+        return { path: "/whitelist" }
       }
     }
     // connected
-    if ( isConnected ) {
+    if (isConnected) {
       console.log("navigate to route");
-        // -navigate to route
+      // -navigate to route
 
       return true
     }
   }
   // to.whitelist
-  if( to.path === "whitelist" ) {
+  if (to.path === "whitelist") {
     // - navigating to whitelist and set vars
     console.log("into whitelist");
   }
- 
-  
+
+
   // from.whitelist
-  if( from.path === "whitelist" ) {
+  if (from.path === "whitelist") {
     // - navigate path and reset vars
   }
   // no auth
-    // - navigate to path
+  // - navigate to path
   console.log("no auth required");
-  return true  
+  return true
 })
 
 export default router;
