@@ -69,7 +69,6 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { DAO, CONTRACTS } from "../../../services/constants"
-import { Modal } from "../modal/Modal.vue"
 import { ethers } from 'ethers';
 import { createToaster } from "@meforma/vue-toaster";
 export default {
