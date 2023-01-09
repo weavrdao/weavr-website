@@ -1,17 +1,9 @@
 <template>
   <div>
     <nav class="navbar p-6">
-      
-      <router-link to="/marketplace/needles" >Needles</router-link>
-      
-      
-      <router-link to="/marketplace/threads" >Threads</router-link>  
-        
       <router-link to="/marketplace/coming-soon" >Coming Soon</router-link>
-        
-      
-
-      
+      <router-link to="/marketplace/needles" >Needles</router-link>
+      <router-link to="/marketplace/threads" >Threads</router-link>   
     </nav>
     <div class="box p-5">
       <router-view ></router-view>

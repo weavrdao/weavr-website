@@ -98,6 +98,10 @@ const router = new createRouter({
       component: Marketplace,
       children: [
         {
+          path: "",
+          redirect: {name: "comingSoon"}
+        },
+        {
           path: "needles",
           name: "needle-market",
           component: NeedlesMarketplace,

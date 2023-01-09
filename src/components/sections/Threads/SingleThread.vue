@@ -1,262 +1,373 @@
 <template>
-  <div v-if="asset" class="container p-5 is-dark">
-    <HeroImage src="https://via.placeholder.com/1000" />
-
-    <div class="columns">
-      <div class="column is-two-thirds">
-        <StackNavigationBar @onBack="goBack" :size="3">
-          <h2>Go Back</h2>
-        </StackNavigationBar>
-        <div>
-            <div class="p-2">
-              
-              <span class="p-1 has-radius-md has-background-lightBlue">${{asset.erc20.symbol}}</span>
-              <span class="ml-2"><h1 class="title has-text-white">{{asset.erc20.name}}</h1></span>
-            </div>
-            <div class="subtitle mt-2 mb-2 is-6">
-              {{ holders }} holders
-            </div>
+  <div class="container">
+      <div :style="getCoverStyle()" class="cover-image mb-5">
+        <div class="information-container">
+          <div class="tag-container mb-2">
+            <span class="tag has-background-mediumBlue has-text-white">Residential</span>
           </div>
-        <div class="my-1 p-1">
-          <div class="help"><strong>Token</strong></div>
-          <Address class="mb-3" :value="asset.id" />
+          <h3 class="has-text-white property-title mb-4">{{ thread.name }}</h3>
+          <Address :value="this.thread.id" />
         </div>
-
-        <div class="my-1 p-1">
-          <div class="help"><strong>Documents</strong></div>
-          <ul>
-            <li><a href="#">Contract Etherscan page</a></li>
-            <li><a href="#">IPFS Document</a></li>
-          </ul>
-        </div>
-        <div class="my-1 p-1">
-          <div class="help"><strong>Tags</strong></div>
-          <div class="mb-3">
-            <span class="tag m-1 is-success">badge2</span>
-            <span class="tag m-1 is-warning">badge3</span>
-            <span class="tag m-1 is-info">badge1</span>
-            <span class="tag m-1 is-danger">badge4</span>
-            <span class="tag m-1 is-success">badge2</span>
-            <span class="tag m-1 is-warning">badge3</span>
+          <div class="weavr-icon-container">
+            <img src="../../../assets/logo/new-logo.svg" alt="">
+          </div>
+      </div>``
+      <div>
+      <div class="columns">
+        <div class="column is-two-thirds">
+          <div class="dark-card image-container">
+            <p class="has-text-white mb-3">Images</p>
+            <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
+              <Slide v-for="imageHash in thread.imagesHashes" v-bind:key="imageHash">
+                <div class="slide-image-container">
+                  <img v-bind:src="getIpfsUrl(imageHash)" alt="">
+                </div>
+              </Slide>
+              <template #addons>
+                <Navigation />
+                <Pagination />
+              </template>
+            </Carousel>
           </div>
         </div>
-
-        <div class="my-1 p-1">
-          <div class="help"><strong>Description</strong></div>
-          <div>{{ asset.description }}</div>
+        <!-- <div class="column is-one-third">
+        </div> -->
+      </div>
+      <div class="dark-card">
+        <p class="has-text-white mb-3">Property Description</p>
+        <vue-markdown class="content markdown-body" :options="{html: true}"  :source="thread.descriptor || '' " />
+      </div>
+      <div class="dark-card mt-5">
+        <p class="has-text-white mb-3">Property Documents</p>
+        <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in thread.documentHashes" v-bind:key="document">
+          <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
         </div>
       </div>
-      <div class="column is-one-third my-5 mx-1">
-        <div class="panel m-2 p-4 is-flex is-flex-direction-column">
-          <h2 class="is-size-5 has-text-weight-bold mb-4">Holders Distribution</h2>
-          <img class="image" src="https://via.placeholder.com/500x300" />
-          <div class="table-container mt-2 mb-0">
-            <table class="table" style="width: 100%">
-              <tbody>
-                <tr>
-                  <th>Current rent</th>
-                  <td class="has-text-right">
-                    ${{ numberFormat.format(asset.currentRent) }}
-                  </td>
-                </tr>
-                <tr>
-                  <th>Market value</th>
-                  <td class="has-text-right">
-                    ${{ numberFormat.format(asset.marketValue) }}
-                  </td>
-                </tr>
-                <tr>
-                  <th>Living space</th>
-                  <td class="has-text-right">
-                    {{ numberFormat.format(asset.area) }} sqft
-                  </td>
-                </tr>
-                <tr>
-                  <th>Rooms</th>
-                  <td class="has-text-right">
-                    {{ asset.bedroomCount }} bed, {{ asset.bathroomCount }} bath
-                  </td>
-                </tr>
-                <tr>
-                  <th>Year built</th>
-                  <td class="has-text-right">{{ asset.yearBuilt }}</td>
-                </tr>
-                <tr>
-                  <th>Capitalization rate</th>
-                  <td class="has-text-right">{{ asset.grossYieldPct }}</td>
-                </tr>
-                <tr>
-                  <th>Total supply</th>
-                  <td class="has-text-right">
-                    {{ numberFormat.format(asset.numOfShares) }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="panel m-2 p-4 is-flex is-flex-direction-column">
-          <h2 class="is-size-5 has-text-weight-bold mb-4">Tokenholders</h2>
-          <ul>
-            <li
-              v-for="tokenholder in asset.erc20.balances"
-              :key="tokenholder.holder"
-            >
-              <div class="pt-1 pb-1 content is-vcentered">
-                <Address :value="tokenholder.holder.id"></Address>
-                <!-- <span class="m-1">
-                  <strong>{{ tokenholder[1] }}</strong>
-                  shares
-                </span> -->
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="button mt-2 mb-2 p-4 has-text-centered" style="width: 100%">
-      <a href="#"> <strong>Join the discussion</strong></a>
     </div>
   </div>
-</template>
-
-<style scoped>
-.content.is-vcentered {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: center; /* used this for multiple child */
-}
-</style>
-
-<script>
-import { toFixedNumber } from "@/utils/common";
-import { mapGetters, mapActions } from "vuex";
-import StackNavigationBar from "@/components/layout/navigation/StackNavigationBar.vue";
-import Button from "@/components/views/common/Button.vue";
-import Accordion from "@/components/utils/Accordion.vue";
-// import Loader from "../utils/Loader.vue";
-import Address from "@/components/views/address/Address.vue";
-import HeroImage from "@/components/utils/HeroImage.vue";
-
-export default {
-  name: "SingleThreadD",
-  props: {
-    assetId: {
-      type: String,
-      required: true,
+  </template>
+  <script>
+  import { mapActions, mapGetters } from "vuex";
+  import "vue3-carousel/dist/carousel.css"
+  import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+  import { ethers } from "ethers";
+  import Address from "../../views/address/Address.vue";
+  import VueMarkdown from "vue-markdown-render";
+  
+  export default {
+    name: "SingleThread",
+    components: {
+      Carousel,
+      Slide,
+      Pagination,
+      Navigation,
+      Address,
+      VueMarkdown,
     },
-  },
-  components: {
-    StackNavigationBar,
-    // Accordion,
-    // Loader,
-    Address,
-    // Button,
-    HeroImage,
-  },
-  computed: {
-    ...mapGetters({
-      assetMap: "threadById",
-      ethBalance: "userEthBalance",
-      walletAddress: "userWalletAddress",
-      assetPrices: "bestAssetPrices",
-    }),
-
-    shareBalance() {
-      return this.asset.owners.get(this.walletAddress) ?? 0;
-    },
-    holders() {
-      return this.asset.erc20.balances.length
-    },
-
-    asset() {
-      return this.assetMap.get(this.assetId);
-    },
-
-    proposals() {
-      return this.assetProposalMap.get(this.assetId);
-    },
-
-    timestamp() {
-      return Math.floor(Date.now() / 1000);
-    },
-
-    openProposalCount() {
-      return this.asset.proposals.filter((p) => {
-        return p.endTimestamp > this.timestamp;
-      }).length;
-    },
-
-    orderToString() {
-      return toFixedNumber(this.orderToValue);
-    },
-
-    orderFromString() {
-      return toFixedNumber(this.orderFromValue);
-    },
-
-    askPrice() {
-      var askETH = this.assetPrices.get(this.asset.id).ask;
-      if (askETH) {
-        askETH = askETH.toString() / Math.pow(10, 18);
-      } else {
-        askETH = 0.0;
-      }
-      return askETH;
-    },
-    askPriceString() {
-      return toFixedNumber(this.askPrice);
-    },
-  },
-  methods: {
-    ...mapActions({
-      refresh: "refreshThreads",
-      syncWallet: "syncWallet",
-      swap: "swapToAsset",
-    }),
-
-    goBack() {
-      this.$router.back();
-    },
-
-    isNumber(evt) {
-      evt = evt ? evt : window.event;
-      var charCode = evt.which ? evt.which : evt.keyCode;
-      if (
-        charCode > 31 &&
-        (charCode < 48 || charCode > 57) &&
-        charCode !== 46
-      ) {
-        evt.preventDefault();
-      } else {
-        return true;
+    data() {
+      return {
+        threadId: this.$route.params.threadId.toLowerCase(),
+        purchaseAmount: 0,
+        withdrawAmount: 0,
       }
     },
-    convertToETH(shares) {
-      console.log(this.askPrice);
-      return shares * this.askPrice;
-    },
-    convertToShares(eth) {
-      return eth / this.askPrice;
-    },
-   
-  },
-  data() {
-    return {
-      numberFormat: new Intl.NumberFormat("en-US", {
-        maximumSignificantDigits: 3,
+    computed: {
+      ...mapGetters({
+        threads: "allThreads",
+        allowance: "userTradeTokenAllowance",
+        tradeTokenBalance: "userTradeTokenBalance",
+        crowdfundTokenBalance: "userCrowdfundTokenAllowance",
+        crowdfundState: "crowdfundState",
       }),
-      orderFromValue: "",
-      orderToValue: "",
-    };
-  },
-  mounted() {
-    console.log(this.thread);
-    this.fetchThreadTokenData({
-      assetId: this.threadId,
-    })
-  },
-};
-</script>
+      thread() {
+        return this.threads
+          .find(n => n.id === this.threadId);
+      },
+    },
+    methods: {
+      ...mapActions({
+
+        fetchThreadTokenData: "fetchThreadTokenData",
+      }),
+      getIpfsUrl(path) {
+        return path
+          ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${path}`
+          : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
+      },
+      getCoverStyle() {
+        const url = this.thread.imagesHashes
+          ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${this.thread.imagesHashes[0]}`
+          : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
+      
+        return { "background-image": `linear-gradient(to left, rgba(22, 23, 30, 0), rgba(22, 23, 30, 1)), url(${url})`}
+      },
+      getProgressBarStyle() {
+        return {
+          width: `${100
+            * Number(
+              ethers.utils.formatUnits(this.thread.amountDeposited)
+            ) / Number(
+            ethers.utils.formatUnits(this.thread.target)
+          )}%`
+        }
+      },
+      purchase() {
+        console.log(this.purchaseAmount);
+        this.deposit({
+          crowdfundAddress: this.$route.params.threadId,
+          amount: this.purchaseAmount,
+        })
+      },
+      withdrawFunds() {
+        this.withdraw({
+          crowdfundAddress: this.$route.params.threadId,
+          amount: this.withdrawAmount,
+        })
+      },
+      approve() {
+        this.approveTradeToken({
+          assetId: this.threadId,
+        })
+      },
+      getFormattedThreadBalance() {
+        return ethers.utils.parseEthers(this.crowdfundTokenBalance);
+      },
+      redeemThreadTokens() {
+        this.redeem({
+          crowdfundAddress: this.$route.params.threadId
+        });
+      }
+    },
+    mounted() {
+      console.log(this.thread);
+      this.fetchThreadTokenData({
+        assetId: this.threadId,
+      })
+    }
+  }
+  </script>
+  <style scoped lang="scss">
+  @import "../../../styles/_variables.sass";
+  @import "../../../styles/weavr-custom.scss";
+  @import "../../../styles/markdown.scss";
+  
+  .carousel__prev,
+  .carousel__next {
+    // border: 5px solid white;
+    // background-color: red;
+  }
+  
+  .property-title {
+    font-size: 2rem !important;
+  }
+  
+  .tag {
+    padding: 5px 20px !important;
+  }
+  
+  .information-container {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+  }
+  
+  .dark-card {
+    border-radius: 8px;
+    border: 1px solid $darkGray;
+    padding: 20px 30px;
+    background: $boxGray;
+  }
+  
+  .cover-image {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      border-radius: 12px;
+      border: 1px solid $darkGray;
+  
+      @media screen and (max-width: 500px) {
+        height: 250px;
+      }
+  }
+  
+  .weavr-icon-container {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 45px;
+      width: 45px;
+      background: white;
+      border-radius: 1000px;
+      border: 2px solid $mediumBlue;
+      margin: 0 auto;
+  
+      img {
+        height: 28px;
+        width: 28px;
+      }
+    }
+  
+  .carousel-container {
+      width: 66%;
+      background: $darkGray;
+      padding: 10px;
+      border-radius: 12px;
+  }
+  
+  //vue-carousel overrides
+  
+  .carousel__icon {
+    fill: white !important;
+  }
+  
+  .carousel__slide--sliding {
+    transition: 1s;
+    animation-timing-function: ease;
+  }
+  
+  .carousel__pagination-button::after {
+    background-color: white;
+  }
+  
+  .carousel {
+    color: white !important;
+  }
+  
+  .container {
+      h3 {
+          font-size: 2.2rem;
+          font-weight: 600;
+      }
+  }
+  
+  .image-container {
+    height: 100%;
+  }
+  
+  .slide-image-container {
+      height: 400px;
+  
+      img {
+          object-fit: cover;
+          height: 100%;
+          border-radius: 12px;
+      }
+  }
+  
+  .progress-bar-container {
+    margin: 24px 0;
+    .progress-bar {
+      width: 100%;
+      background: $lightGray;
+      height: 18px;
+      border-radius: 12px;
+      overflow: hidden;
+  
+      .progress {
+        background: $mediumBlue;
+        height: 19px;
+        border-radius: 0px;
+        margin: 10px 0;
+      }
+    }
+  }
+  
+  .target-text {
+    font-size: 1rem !important;
+    color: $mediumGray;
+    margin: 5px 0;
+  
+    strong {
+      color: $mediumBlue;
+    }
+  }
+  
+  .button {
+    margin-top: 20px;
+    width: 100% !important;
+  }
+  
+  input {
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+  
+  input[type=number] {
+      -moz-appearance:textfield;
+  }
+  
+  .redeem-container {
+    gap: 2rem;
+  }
+  
+  .celebration {
+    font-size: 3rem;
+  }
+  
+  @keyframes move {
+    0%  { left: 0; opacity: 0.05; }
+    5% {opacity: 0.1}
+    48% {opacity: 0.4}
+    80% {opacity: 0.01}
+    100% { left: 100%}
+  }
+  
+  .shiny-button {
+    max-width: 8rem;
+    overflow: hidden;
+  
+    &:hover {
+      strong {
+        transition: all 150ms;
+        text-shadow: #000 0px 0px 2px,   #000 0px 0px 2px,   #000 0px 0px 2px,
+          #000 0px 0px 2px,   #000 0px 0px 2px,   #000 0px 0px 2px;
+      }
+    }
+  
+    i {
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      left: 0;
+      background: linear-gradient(to right,  rgba(255,255,255,0) 0%,rgba(255,255,255,0.03) 1%,rgba(255,255,255,0.6) 30%,rgba(255,255,255,0.95) 50%,rgba(255,255,255,0.85) 70%,rgba(255,255,255,0.95) 71%,rgba(255,255,255,0) 100%);
+      width: 15%;
+      height: 100%;
+      transform: skew(-10deg,0deg);
+      animation: move 2s;
+      animation-iteration-count: infinite;
+      animation-delay: 2s;
+    }
+  }
+  
+  .ipfs-document-link {
+    display: inline-block;
+    max-width: 45ch;
+    margin: 15px 0;
+    padding: 10px 20px;
+    background: rgba(255,255,255, 0.03);
+    transition: all 150ms linear;
+    border-radius: 8px;
+    border-left: 8px solid $mediumBlue;
+    color: $mediumBlue;
+    overflow: hidden;
+    &:hover {
+      background-color: $mediumDarkGray;
+      transform: translateY(-3px);
+      border-left: 8px solid $mint;
+      color: $mint;
+    }
+  }
+  </style>
