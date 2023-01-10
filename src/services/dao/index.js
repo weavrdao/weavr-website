@@ -457,6 +457,15 @@ class DAO {
     return status;
   }
 
+  async quorum(assetAddress) {
+    const assetContract = new AssetContract(
+      this.ethereumClient,
+      assetAddress
+    );
+    const quorum = await assetContract.requiredParticipation();
+    return quorum;
+  }
+
   async getTokenAddress(frabricAddress) {
     const assetContract = new AssetContract(
       this.ethereumClient,

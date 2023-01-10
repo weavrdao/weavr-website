@@ -89,8 +89,15 @@
         </div>
       </div>
     </div>
+    <!-- <div 
+      :class="['tag', hasReachedQuorum ? 'is-success' : 'is-warning']"
+    >
+      {{ hasReachedQuorum ? "Quorum reached" : "Quorum not reached" }}
+      <span>{{}}</span>
+    </div> -->
     <div class="box has-background-darkGray">
       <label class="label">Consensus</label>
+      
       <div class="votes-container">
         <div class="is-flex is-justify-content-space-between">
           <span class="has-text-mint has-text-weight-semibold">{{ this.votes.yes.percentage + ' %' }}</span>
@@ -209,7 +216,16 @@ export default {
       proposals: "assetProposals",
       address: "userWalletAddress",
       balance: "userTokenBalance",
+      quorum: "quorum"
     }),
+    
+    participation() {
+      return (Number(this.votes.yes.count)+Number(this.votes.no.count))
+    },
+    hasReachedQuorum() {
+      console.log(this.quorum, this.participation);
+      return this.quorum < this.participation
+    },
     proposal() {
       return this.proposals
         .find(p => p.id === this.proposalId);
@@ -256,13 +272,14 @@ export default {
     },
     userIsCreator() {
       return this.address.toLowerCase() === this.proposal.creator.toLowerCase();
-    }
+    },
   },
   methods: {
     ...mapActions({
       vote: "vote",
       refresh: "refreshProposalsDataForAsset",
       withdraw: "withdraw",
+      getQuorum: "quorum"
     }), // Voting action
     routeToHome() {
       this.$router.back();
@@ -319,6 +336,7 @@ export default {
   },
   mounted() {
     this.setTimeRemainingCountdown();
+    this.getQuorum({assetId: this.$route.params.assetId})
     this.refresh({ assetId: this.assetId, $toast: this.$toast });
     console.log(this.proposal)
   },

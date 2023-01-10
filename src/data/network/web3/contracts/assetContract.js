@@ -49,6 +49,8 @@ const contractAbi = [
   // Propose a new thread
   "function proposeThread(uint8 variant, string name, string symbol, bytes32 descriptor, bytes data, bytes32 info) returns (uint256 id)",
 
+  "function requiredParticipation() view returns (uint112)",
+
   // Event that is triggered every time an order is filled on the market
   "event Filled(address indexed sender, address indexed recipient, uint256 indexed price, uint256 amount)",
 ];
@@ -287,6 +289,12 @@ class AssetContract {
     );
 
     return (await tx.wait()).status;
+  }
+
+  async requiredParticipation() {
+    const quorum = await this.mutableContract.requiredParticipation();
+    console.log(quorum);
+    return quorum;
   }
 
   async erc20() {

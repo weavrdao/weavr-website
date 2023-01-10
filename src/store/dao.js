@@ -20,6 +20,7 @@ function state() {
   return {    
     platform: {
       assets: [],
+      quorum: 0,
       proposals: [], // new Map()
     },
   };
@@ -31,7 +32,9 @@ const getters = {
   allAssets(state) {
     return state.platform.assets;
   },
-
+  quorum(state) {
+    return state.platform.quorum;
+  },
   assetsById(state) {
     var assetMap = new Map();
     state.platform.assets.forEach((asset) => {
@@ -474,7 +477,12 @@ const actions = {
     // await dao.getParticipantsByType(type)
   },
 
-  
+  async quorum(context, params) {
+    console.log("PARAMS: ",params.assetId)
+    const assetId = params.assetId;
+    const quorum =await dao.quorum(assetId);
+    context.commit("setQuorum", ethers.utils.formatUnits(quorum, "ether"))
+  }
 };
 
 const mutations = {
@@ -494,7 +502,9 @@ const mutations = {
     state.platform.needles = needles;
   },
   
-
+  setQuorum(state, quorum) {
+    state.platform.quorum = quorum;
+  }
   
 };
 
