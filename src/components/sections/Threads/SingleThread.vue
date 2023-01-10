@@ -1,38 +1,43 @@
 <template>
   <div class="container">
-      <div :style="getCoverStyle()" class="cover-image mb-5">
-        <div class="information-container">
-          <div class="tag-container mb-2">
-            <span class="tag has-background-mediumBlue has-text-white">Residential</span>
-          </div>
-          <h3 class="has-text-white property-title mb-4">{{ thread.name }}</h3>
-          <Address :value="this.thread.id" />
+    <div class="tabs">
+      <ul>
+        <li class="is-active"><a>Overview</a></li>
+        <li><a>Dex</a></li>
+      </ul>
+      <router-view></router-view>
+    </div>
+    <!-- <div :style="getCoverStyle()" class="cover-image mb-5">
+      <div class="information-container">
+        <div class="tag-container mb-2">
+          <span class="tag has-background-mediumBlue has-text-white">Residential</span>
         </div>
-          <div class="weavr-icon-container">
-            <img src="../../../assets/logo/new-logo.svg" alt="">
-          </div>
-      </div>``
-      <div>
-      <div class="columns">
-        <div class="column is-two-thirds">
-          <div class="dark-card image-container">
-            <p class="has-text-white mb-3">Images</p>
-            <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
-              <Slide v-for="imageHash in thread.imagesHashes" v-bind:key="imageHash">
-                <div class="slide-image-container">
-                  <img v-bind:src="getIpfsUrl(imageHash)" alt="">
-                </div>
-              </Slide>
-              <template #addons>
-                <Navigation />
-                <Pagination />
-              </template>
-            </Carousel>
-          </div>
-        </div>
-        <!-- <div class="column is-one-third">
-        </div> -->
+        <h3 class="has-text-white property-title mb-4">{{ thread.name }}</h3>
+        <Address :value="this.thread.id" />
       </div>
+        <div class="weavr-icon-container">
+          <img src="../../../assets/logo/new-logo.svg" alt="">
+        </div>
+    </div>
+    <div>
+    <div class="columns">
+      <div class="column is-two-thirds">
+        <div class="dark-card image-container">
+          <p class="has-text-white mb-3">Images</p>
+          <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
+            <Slide v-for="imageHash in thread.imagesHashes" v-bind:key="imageHash">
+              <div class="slide-image-container">
+                <img v-bind:src="getIpfsUrl(imageHash)" alt="">
+              </div>
+            </Slide>
+            <template #addons>
+              <Navigation />
+              <Pagination />
+            </template>
+          </Carousel>
+        </div>
+      </div>
+    </div>
       <div class="dark-card">
         <p class="has-text-white mb-3">Property Description</p>
         <vue-markdown class="content markdown-body" :options="{html: true}"  :source="thread.descriptor || '' " />
@@ -44,108 +49,71 @@
         </div>
       </div>
     </div>
+    <thread-overview :thread="thread"/> -->
   </div>
-  </template>
-  <script>
-  import { mapActions, mapGetters } from "vuex";
-  import "vue3-carousel/dist/carousel.css"
-  import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-  import { ethers } from "ethers";
-  import Address from "../../views/address/Address.vue";
-  import VueMarkdown from "vue-markdown-render";
-  
-  export default {
-    name: "SingleThread",
-    components: {
-      Carousel,
-      Slide,
-      Pagination,
-      Navigation,
-      Address,
-      VueMarkdown,
-    },
-    data() {
-      return {
-        threadId: this.$route.params.threadId.toLowerCase(),
-        purchaseAmount: 0,
-        withdrawAmount: 0,
-      }
-    },
-    computed: {
-      ...mapGetters({
-        threads: "allThreads",
-        allowance: "userTradeTokenAllowance",
-        tradeTokenBalance: "userTradeTokenBalance",
-        crowdfundTokenBalance: "userCrowdfundTokenAllowance",
-        crowdfundState: "crowdfundState",
-      }),
-      thread() {
-        return this.threads
-          .find(n => n.id === this.threadId);
-      },
-    },
-    methods: {
-      ...mapActions({
-
-        fetchThreadTokenData: "fetchThreadTokenData",
-      }),
-      getIpfsUrl(path) {
-        return path
-          ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${path}`
-          : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
-      },
-      getCoverStyle() {
-        const url = this.thread.imagesHashes
-          ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${this.thread.imagesHashes[0]}`
-          : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
-      
-        return { "background-image": `linear-gradient(to left, rgba(22, 23, 30, 0), rgba(22, 23, 30, 1)), url(${url})`}
-      },
-      getProgressBarStyle() {
-        return {
-          width: `${100
-            * Number(
-              ethers.utils.formatUnits(this.thread.amountDeposited)
-            ) / Number(
-            ethers.utils.formatUnits(this.thread.target)
-          )}%`
-        }
-      },
-      purchase() {
-        console.log(this.purchaseAmount);
-        this.deposit({
-          crowdfundAddress: this.$route.params.threadId,
-          amount: this.purchaseAmount,
-        })
-      },
-      withdrawFunds() {
-        this.withdraw({
-          crowdfundAddress: this.$route.params.threadId,
-          amount: this.withdrawAmount,
-        })
-      },
-      approve() {
-        this.approveTradeToken({
-          assetId: this.threadId,
-        })
-      },
-      getFormattedThreadBalance() {
-        return ethers.utils.parseEthers(this.crowdfundTokenBalance);
-      },
-      redeemThreadTokens() {
-        this.redeem({
-          crowdfundAddress: this.$route.params.threadId
-        });
-      }
-    },
-    mounted() {
-      console.log(this.thread);
-      this.fetchThreadTokenData({
-        assetId: this.threadId,
-      })
+</template>
+<script>
+import { mapActions, mapGetters } from "vuex";
+import "vue3-carousel/dist/carousel.css"
+import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+import { ethers } from "ethers";
+import Address from "../../views/address/Address.vue";
+import VueMarkdown from "vue-markdown-render";
+import ThreadOverview from "../../views/market/ThreadOverview.vue"
+export default {
+  name: "SingleThread",
+  components: {
+    // Carousel,
+    // Slide,
+    // Pagination,
+    // Navigation,
+    // Address,
+    // VueMarkdown,
+    // ThreadOverview
+  },
+  data() {
+    return {
+      threadId: this.$route.params.threadId.toLowerCase(),
+      purchaseAmount: 0,
+      withdrawAmount: 0,
     }
+  },
+  computed: {
+    ...mapGetters({
+      threads: "allThreads",
+
+    }),
+    thread() {
+      return this.threads
+        .find(n => n.id === this.threadId);
+    },
+  },
+  methods: {
+    ...mapActions({
+      fetchThreadTokenData: "fetchThreadTokenData",
+    }),
+    getIpfsUrl(path) {
+      return path
+        ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${path}`
+        : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
+    },
+    getCoverStyle() {
+      const url = this.thread.imagesHashes
+        ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${this.thread.imagesHashes[0]}`
+        : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
+    
+      return { "background-image": `linear-gradient(to left, rgba(22, 23, 30, 0), rgba(22, 23, 30, 1)), url(${url})`}
+    },
+    
+  },
+  mounted() {
+    console.log(this.thread);
+    // this.fetchThreadTokenData({
+    //   assetId: this.threadId,
+    // })
   }
-  </script>
+}
+</script>
   <style scoped lang="scss">
   @import "../../../styles/_variables.sass";
   @import "../../../styles/weavr-custom.scss";

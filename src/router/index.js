@@ -11,6 +11,7 @@ import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.
 import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
 import ThreadsMarketplace from "@/components/sections/Threads/ThreadMarketplace.vue";
 import SingleThread from "@/components/sections/Threads/SingleThread.vue";
+import ThreadOverview from "@/components/views/market/ThreadOverview.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue";
 import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue";
@@ -161,7 +162,13 @@ const router = new createRouter({
             store.dispatch("setLoadingState", {isLoading: false, message: ""})
             
             return true
-          }
+          },
+          children: [
+            {
+              path: "overview",
+              component: ThreadOverview
+            }
+          ]
         },
         {
           path: "coming-soon",
