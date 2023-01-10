@@ -80,9 +80,5 @@ module.exports = {
         }
       }
     })
-
-    config.resolve.alias
-      .set("@ledgerhq/devices", "@ledgerhq/devices/lib-es")
-      .end()
   },
 };
