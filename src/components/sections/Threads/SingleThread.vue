@@ -142,7 +142,7 @@ export default {
     
   },
   mounted() {
-    console.log(this.thread);
+    console.log("THREAD", this.thread);
     // this.fetchThreadTokenData({
     //   assetId: this.threadId,
     // })

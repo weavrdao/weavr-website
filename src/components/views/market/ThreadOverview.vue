@@ -22,12 +22,21 @@ export default {
 
     }),
     thread() {
+      console.log("THREADS_OVERVIEW: ", this.threads);
       return this.threads
         .find(n => n.id === this.threadId);
     },
   },
+  methods: {
+    ...mapActions({
+      fetchThreads: "refreshThreads",
+    })
+  },
   mounted() {
     console.log(this.threads)
+    // this.fetchThreadTokenData({
+    //   assetId: this.threadId,
+    // })
   }
 
 }

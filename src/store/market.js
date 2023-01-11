@@ -124,6 +124,7 @@ const actions = {
  
   async refreshThreads(context) {
     let assets = await market.getThreads();
+    console.log("REFRESH__THREADS__STATE: ", assets);
     context.commit("setThreads", assets);
   },
   

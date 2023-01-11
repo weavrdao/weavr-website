@@ -121,7 +121,7 @@ class Market {
   ) {
     // Get indexed on-chain data
 
-    const assets = await this.graphQLAPIClient
+    const threads = await this.graphQLAPIClient
       .query(
         ALL_THREADS_QUERY, 
         {
@@ -136,18 +136,48 @@ class Market {
       )
 
     console.log("Mapped assets:")
-    console.log(assets)
+    console.log(threads)
 
     // TODO: CONSIDER DISCONTINUED/DEACTIVATED ASSETS
 
     // Fetch and append off-chain data
+    try {
+      
+      const descriptors = threads.map(( thread ) => {
+        console.log(thread.descriptor);
+        return getIpfsHashFromBytes32(thread.descriptor)
+      })
+      console.log(descriptors);
+      const offChainData = await this.storageNetwork.getFiles(
+        descriptors
+      );
+      
+      console.log("OFFCHAIN", offChainData);
+      for(let i=0; i < threads.length; i++) {
+        if(offChainData[i].value) {
+          threads[i].descriptor = offChainData[i].value.descriptor;
+          threads[i].name = offChainData[i].value.name;
+          threads[i].imagesHashes = offChainData[i].value.imagesHashes;
+          threads[i].documentHashes = offChainData[i].value.documentHashes;
+        } else {
+          threads[i].descriptor = offChainData[i].descriptor;
+          threads[i].name = offChainData[i].name;
+          threads[i].imagesHashes = offChainData[i].imagesHashes;
+          threads[i].documentHashes = offChainData[i].documentHashes;
+        }
+      }
+    } catch(e) {
+      // no-op
+      console.log(e);
+    }
 
+    console.log(threads)
     // const assetDataURIArray = assets
     //   .map(asset => asset.descriptor)
     // let assetOffchainDataArray = (
-    //     await this.storageNetwork
-    //       .getFiles(assetDataURIArray.map(uri => CommonUtils.pathFromURL(uri)))
-    //   )
+    //   await this.storageNetwork
+    //     .getFiles(assetDataURIArray.map(uri => CommonUtils.pathFromURL(uri)))
+    // )
     //   .map(obj => obj.world.property)
 
     // console.log("Off-chain data:")
@@ -184,8 +214,8 @@ class Market {
 
     //   assets[i] = completeAsset
     // }
-
-    return assets
+    console.log("FINAL THREADS: ", threads);
+    return threads
   }
 
   async getNeedles() {

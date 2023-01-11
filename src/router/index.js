@@ -143,7 +143,7 @@ const router = new createRouter({
             store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
             
             await store.dispatch("refreshThreads")
-            
+            console.log("BEFORE ENTER: THREADS => ", store.context.getters.allThreads)
             store.dispatch("setLoadingState", {isLoading: false, message: ""})
             
             return true
