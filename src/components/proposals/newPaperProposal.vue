@@ -8,7 +8,11 @@
       <input class="input" v-model="title" type="text" placeholder="Enter title here">
     </div>
   </div>
-  
+  <div class="field" v-if="!preview">
+    <label class="label">Is this part of a Batch?</label>
+    <input v-model="batchId" type="text" class="input"/>
+  </div>
+
   <div class="field"  v-if="!preview">
     <label class="label">Description</label>
     <div class="control">
@@ -65,7 +69,8 @@ export default {
       preview: false,
       markdownSource: null,
       proposal: null,
-      forumLink: ""
+      forumLink: "",
+      batchId: "",
     }
   },
   methods: {
@@ -86,7 +91,8 @@ export default {
       const description = this.description;
       const proposalType = this.proposalType
       const daoResolution = this.daoResolution
-      const proposal = await this.createPaperProposal({assetAddr, proposalType, title, description, daoResolution,  $toast: this.$toast} );
+      const batchId = this.batchId
+      const proposal = await this.createPaperProposal({assetAddr, proposalType, title, description, daoResolution, batchId,  $toast: this.$toast} );
       this.$emit("proposed");
     },
     togglePreview(){
@@ -99,7 +105,8 @@ export default {
         creator: "0x00000",
         startTimeStamp: 0,
         endTimeStamp: 0,
-        forumLink: this.forumLink
+        forumLink: this.forumLink,
+        batchId: this.batchId
       }
       this.preview = !this.preview
     },

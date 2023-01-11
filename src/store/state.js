@@ -19,6 +19,8 @@ import {
 } from "../whitelist";
 import { USER_COOKIE_KEY } from "../whitelist/constants";
 import blacklist from "@/blacklist.json";
+import {handleBatchProposals} from "@/data/helpers/proposals"
+import {proposals} from "@/data/mock/mockDataProvider";
 
 
 /**
@@ -252,10 +254,10 @@ const actions = {
     toast.info("Loading Data....");
     let assetId = params.assetId.toLowerCase();
     let assetProposals = await dao.getProposalsForAsset(assetId);
-
+    let handledProposals = handleBatchProposals(context, assetProposals);
     context.commit("setProposalsForAsset", {
       assetId: assetId.toLowerCase(),
-      proposals: assetProposals,
+      proposals: handledProposals,
     });
     toast.clear();
   },

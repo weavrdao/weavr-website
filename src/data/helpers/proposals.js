@@ -58,6 +58,33 @@ export function dateStringForTimestamp(timestamp) {
   )}:${padWithZeroes(minutes)} ${suffix}`;
 }
 
+export function handleBatchProposals(proposals) {
+  let normalProposals = [];
+  let batchProposals = [];
+  for (let i =0; i < proposals.length; i++) {
+    if(proposals[i].batchId !== ""){
+      let found = false;
+      for(let j=0; j<batchProposals.length; j++) {
+        if(proposals[i].batchId === batchProposals[j].batchId){
+          batchProposals[j] += proposals[i];
+          found = true;
+        }
+      }
+      if(found===false){
+        let batchProposal = {
+          "title": proposals[i].title,
+          "description": proposals[i].description,
+          "batchId": proposals[i].batchId
+        }
+        batchProposals += batchProposal
+      }
+    } else {
+      normalProposals += proposals[i];
+    }
+  }
+  return normalProposals + batchProposals
+}
+
 export function getVotes(proposal) {
   const yesVoteShares = proposal.votes.reduce((total, vote) => {
     return vote.voteDirection === VoteType.Yes ? total + Number(vote.count) : total;
