@@ -5,19 +5,29 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 
 
 export default {
   name: "ThreadOverview",
   components: [ ],
-  props: {
-    thread: {
-      type: Object,
-      required: true
+  data() {
+    return {
+      threadId: this.$route.params.threadId.toLowerCase()
     }
   },
-  mounted() {
+  computed: {
+    ...mapGetters({
+      threads: "allThreads",
 
+    }),
+    thread() {
+      return this.threads
+        .find(n => n.id === this.threadId);
+    },
+  },
+  mounted() {
+    console.log(this.threads)
   }
 
 }

@@ -1,12 +1,26 @@
 <template>
   <div class="container">
-    <div class="tabs">
-      <ul>
-        <li class="is-active"><a>Overview</a></li>
-        <li><a>Dex</a></li>
-      </ul>
-      <router-view></router-view>
+    <div :style="getCoverStyle()" class="cover-image mb-5">
+      <div class="information-container">
+        <div class="tag-container mb-2">
+          <span class="tag has-background-mediumBlue has-text-white">Residential</span>
+        </div>
+        <h3 class="has-text-white property-title mb-4">{{ thread.name }}</h3>
+        <Address :value="this.thread.id" />
+      </div>
+        <div class="weavr-icon-container">
+          <img src="../../../assets/logo/new-logo.svg" alt="">
+        </div>
     </div>
+    <div class="tabs is-boxed">
+      <ul>
+        <li :class="[ isTabActive('overview') ? 'is-active' : '' ]">
+          <a v-on:click="navigateTo('overview')">Overview</a></li>
+          <li :class="[ isTabActive('governance') ? 'is-active' : '' ]">
+          <a :disabled="true" aria-disabled="true" v-on:click="navigateTo('governance')">Governance</a></li>
+      </ul>
+    </div>
+    <router-view></router-view>
     <!-- <div :style="getCoverStyle()" class="cover-image mb-5">
       <div class="information-container">
         <div class="tag-container mb-2">
@@ -71,6 +85,18 @@ export default {
     // VueMarkdown,
     // ThreadOverview
   },
+  beforeEnter: async (to, from) => {
+    // const prop = await store.getters.proposalsPerAsset;
+    // if (!prop) {
+      this.setLoadingState({isLoading: true, message: "Loading Proposals"})
+      await this.refreshProposals({
+        assetId: this.$route.params['threadId'],
+      });
+      this.setLoadingState({isLoading: false, message: ""})
+    // }
+    // clear toast
+    return true;
+  },
   data() {
     return {
       threadId: this.$route.params.threadId.toLowerCase(),
@@ -87,11 +113,20 @@ export default {
       return this.threads
         .find(n => n.id === this.threadId);
     },
+    
   },
   methods: {
     ...mapActions({
       fetchThreadTokenData: "fetchThreadTokenData",
+      refreshProposals: "refreshProposalsDataForAsset",
+      setLoadingState: "setLoadingState"
     }),
+    navigateTo(routeName) {
+      this.$router.push({name: routeName})
+    },
+    isTabActive(tabName) {
+      return this.$route.fullPath.includes(tabName)
+    },
     getIpfsUrl(path) {
       return path
         ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${path}`
@@ -118,7 +153,11 @@ export default {
   @import "../../../styles/_variables.sass";
   @import "../../../styles/weavr-custom.scss";
   @import "../../../styles/markdown.scss";
-  
+
+
+  .tabs ul {
+    border-bottom-color: $primary !important;
+  }
   .carousel__prev,
   .carousel__next {
     // border: 5px solid white;

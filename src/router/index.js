@@ -165,8 +165,18 @@ const router = new createRouter({
           },
           children: [
             {
+              path: "",
+              redirect: { name: "overview"}
+            },
+            {
               path: "overview",
+              name: "overview",
               component: ThreadOverview
+            },
+            {
+              path: "governance",
+              name: "governance",
+              component: Governance,
             }
           ]
         },
