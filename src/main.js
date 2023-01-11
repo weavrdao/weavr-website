@@ -1,7 +1,6 @@
 import {createApp, h} from "vue"
 import App from "./App.vue"
 import router from "./router/index.js";
-import routerAirdrop from "./router/airdrop.js";
 import store from "./store"
 import "./styles/weavr-custom.scss";
 // import "bulma/css/bulma.css"
@@ -35,11 +34,7 @@ const app = createApp({
 store.$toast = app.$toast;
 
 app.config.productionTip = true
-if (process.env.APP === "main") {
-  app.use(router)
-} else {
-  app.use(routerAirdrop)
-}
+app.use(router)
 app.use(store)
 app.use(Toaster)
 app.use(Unicon)
