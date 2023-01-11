@@ -45,13 +45,8 @@ export default {
     }
   },
   mounted() {
-    console.log("mounted");
-    this.getThreads();
-    // this.syncWallet({ $toast: this.$toast });
+    // this.getThreads();
   },
-  // watch: {
-  //   $route: "refresh",
-  // },
 };
 </script>
 
