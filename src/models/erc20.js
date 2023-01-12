@@ -1,6 +1,7 @@
 
 class Erc20 {
   constructor(
+    address,
     name,
     symbol,
     decimals,
@@ -8,6 +9,7 @@ class Erc20 {
     tradeToken,
     balances
   ) {
+    this.address = address
     this.name = name
     this.symbol = symbol
     this.decimals = decimals

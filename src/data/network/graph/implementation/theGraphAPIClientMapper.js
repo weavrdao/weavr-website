@@ -55,6 +55,7 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
     return rawThreads
       .map(rawThread => {
         const erc20 = new Erc20(
+          rawThread.erc20.id,
           rawThread.erc20.name,
           rawThread.erc20.symbol,
           rawThread.erc20.decimals,

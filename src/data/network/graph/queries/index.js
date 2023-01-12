@@ -73,6 +73,7 @@ query Threads($weavrId: String!) {
     variant
     governor
     erc20 {
+      id
       name
       symbol
       decimals

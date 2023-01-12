@@ -215,7 +215,21 @@ $colors: map-merge($colors, $addColors);
   }
 }
 
+.border-lightGray {
+  border: 1px solid #575757;
+  border-radius: 10px;
+
+  h3 {
+    color: white;
+    font-size: 2rem;
+  }
+}
+
 .brand {
  font-family: "Poppins", sans !important;
 }
 @import "./markdown.scss";
+
+:export {
+  primaryColor: $primary
+}
