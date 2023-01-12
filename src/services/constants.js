@@ -56,8 +56,12 @@ export const _NETWORKS = {
   optimism: { name: "Optimism", id: 10 },
   avalanche: { name: "Avalanche", id: 43114 },
 };
+
 export const DAO = "weavr";
 export const GUEST = "0x0000000000000000000000000000000000000000";
-export const NETWORK = _NETWORKS.goerli;
+
+const chain = process.env.VUE_APP_SELECTED_CHAIN
+export const NETWORK = _NETWORKS[chain];
+
 export const CONTRACTS = NETWORK.contracts;
 

@@ -152,8 +152,8 @@ class Market {
         descriptors
       );
       
-      console.log("OFFCHAIN", offChainData);
       for(let i=0; i < threads.length; i++) {
+        console.log(offChainData[i].value.descriptor)
         if(offChainData[i].value) {
           threads[i].descriptor = offChainData[i].value.descriptor;
           threads[i].name = offChainData[i].value.name;
@@ -171,7 +171,6 @@ class Market {
       console.log(e);
     }
 
-    console.log(threads)
     // const assetDataURIArray = assets
     //   .map(asset => asset.descriptor)
     // let assetOffchainDataArray = (

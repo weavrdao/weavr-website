@@ -54,19 +54,7 @@ export default {
         ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${this.thread.imagesHashes[0]}`
         : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
     },
-    // getDisplayTarget() {
-    //   return Number(ethers.utils.formatUnits(this.thread.target, 6)).toLocaleString("en-US")
-    // },
-    // getProgressBarStyle() {
-    //   return {
-    //     width: `${100
-    //       * Number(
-    //         ethers.utils.formatUnits(this.thread.amountDeposited)
-    //       ) / Number(
-    //       ethers.utils.formatUnits(this.thread.target)
-    //     )}%`
-    //   }
-    // },
+    
     routeToThreadPage() {
       this.$router.push(`threads/${this.thread.id}`);
     }

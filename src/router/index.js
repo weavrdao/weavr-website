@@ -153,14 +153,15 @@ const router = new createRouter({
           path: "threads/:threadId",
           name: "thread",
           component: SingleThread,
+          meta: { requiresAuth: true},
           beforeEnter: async (to, from ) => {
-            
-            store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
-            
-            await store.dispatch("refreshThreads")
-            
-            store.dispatch("setLoadingState", {isLoading: false, message: ""})
-            
+            if(!store.getters.threads){
+              store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
+              
+              await store.dispatch("refreshThreads")
+              
+              store.dispatch("setLoadingState", {isLoading: false, message: ""})
+            }
             return true
           },
           children: [

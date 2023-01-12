@@ -21,6 +21,8 @@
       </ul>
     </div>
     <router-view></router-view>
+   <!-- <vue-markdown  class="markdown-body" :options="{html: true}" :source="thread.descriptor"/> -->
+
     <!-- <div :style="getCoverStyle()" class="cover-image mb-5">
       <div class="information-container">
         <div class="tag-container mb-2">

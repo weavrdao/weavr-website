@@ -25,5 +25,6 @@ app.use(router)
 app.use(store)
 app.use(Toaster)
 app.use(Unicon)
+
 app.mount("#app")
 
