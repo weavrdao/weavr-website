@@ -1,6 +1,7 @@
 <template>
   <div>
   <div class="container p-5">
+    <!-- todo: styling -->
     <p class="title is-3">Airdrop {{airdropAddress}}</p>
     <p class="getClaimableAmount">Current Claimable Amount</p>
     <p  class="has-text-mediumBlue is-size-4">{{amount}} WEAV</p>
