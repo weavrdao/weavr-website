@@ -37,7 +37,7 @@ export default {
       const airdrop = ServiceProvider.airdrop();
       const token = ServiceProvider.token();
       this.amount = ethers.utils.formatEther((await airdrop.viewClaimedAmount(this.walletAddress)));
-      this.airdropBalance = ethers.utils.formatEther((await token.balanceOf(this.airdropAddress)));
+      this.airdropBalance = ethers.utils.formatEther((await token.getTokenBalance(CONTRACTS.TOKEN_ADDRESS, this.airdropAddress)));
     },
     async claim() {
       const airdrop = ServiceProvider.airdrop();
