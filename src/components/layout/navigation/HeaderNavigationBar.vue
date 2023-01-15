@@ -2,58 +2,46 @@
   <nav class="navbar  p-5" role="navigation" aria-label="main navigation">
     <div class="container ">
       <div class="navbar-brand">
-      <a class="navbar-item" @click="transitTo('/')">
-        <div class="title brand has-text-white is-flex is-align-items-center" >
-          <div class="image p-2"><img class="mx-2" src="../../../assets/logo/new-logo.svg" alt=""></div>
-          Weavr</div>
-      </a>
-      <a
-        role="button"
-        ref="menuButton"
-        :class="[
+        <a class="navbar-item" @click="transitTo('/')">
+          <div class="title brand has-text-white is-flex is-align-items-center">
+            <div class="image p-2"><img class="mx-2" src="../../../assets/logo/new-logo.svg" alt=""></div>
+            Weavr
+          </div>
+        </a>
+        <a role="button" ref="menuButton" :class="[
           navigation.isOpen ? 'is-active' : '',
           'navbar-burger',
           'has-border-bottom',
-        ]"
-        @click="menuToggle()"
-        aria-label="menu"
-        aria-expanded="false"
-        data-target="frabric-navbar"
-      >
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
+        ]" @click="menuToggle()" aria-label="menu" aria-expanded="false" data-target="frabric-navbar">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
 
-    <div :class="[navigation.isOpen ? 'is-active' : '', 'navbar-menu']">
-      <div class="navbar-start">
-        <a
-          :class="[
+      <div :class="[navigation.isOpen ? 'is-active' : '', 'navbar-menu']">
+        <div class="navbar-start">
+          <a :class="[
             isItemCurrent(item) ? 'active-link' : '',
             'navbar-item navlink',
             '',
             'p-3 mt-2 is-primary'
-          ]"
-          v-for="item in navigation.items"
-          :key="item.name"
-          v-on:click="transitTo(item.route)"
-        >
-          {{ item.name }}
-          <span v-if="item.icon">
-            <unicon width="15" height="15" :name="item.icon" fill="gray"></unicon>
-          </span>
-        </a>
-      </div>
+          ]" v-for="item in navigation.items" :key="item.name" v-on:click="transitTo(item.route)">
+            {{ item.name }}
+            <span v-if="item.icon">
+              <unicon width="15" height="15" :name="item.icon" fill="gray"></unicon>
+            </span>
+          </a>
+        </div>
 
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <SignerAddress />
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <SignerAddress />
+          </div>
         </div>
       </div>
     </div>
-    </div>
-    
+
   </nav>
 </template>
 
@@ -72,11 +60,11 @@ export default {
       navigation: {
         isOpen: false,
         items: [
-          { name: "Governance", route: `/${CONTRACTS.WEAVR}`},
-          { name: "Marketplace", route: "/marketplace"},
-          { name: "Resolutions", route: "/resolutions", icon: "arrow-up-right"},
+          { name: "Governance", route: `/${CONTRACTS.WEAVR}` },
+          { name: "Dashboard", route: "/dashboard" },
+          { name: "Resolutions", route: "/resolutions", icon: "arrow-up-right" },
           { name: "FAQ", route: "/faq", icon: "arrow-up-right" },
-          { name: "Forums", route: "/forums", icon: "arrow-up-right" }
+          { name: "Forums", route: "/forums", icon: "arrow-up-right" },
         ],
       },
     }
@@ -90,7 +78,7 @@ export default {
       return useRoute().fullPath.includes(item.route)
     },
     transitTo(path) {
-      this.$router.push(path)      
+      this.$router.push(path)
       this.menuToggle()
     },
     menuToggle() {
@@ -128,6 +116,6 @@ export default {
 }
 
 .active-link {
-  background: linear-gradient(to top,  rgba(255,255,255,0) 20%,$mediumBlue 100%);
+  background: linear-gradient(to top, rgba(255, 255, 255, 0) 20%, $mediumBlue 100%);
 }
 </style>

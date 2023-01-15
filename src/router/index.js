@@ -5,7 +5,8 @@ import Homepage from "@/components/pages/Homepage.vue"
 import PrivacyPage from "@/components/pages/PrivacyPage.vue"
 import TermsPage from "@/components/pages/TermsPage.vue"
 import Governance from "@/components/pages/Governance.vue";
-import Marketplace from "@/components/pages/Marketplace"
+import Marketplace from "@/components/pages/Marketplace";
+import Dashboard from "@/components/pages/Dashboard";
 import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.vue";
 import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
@@ -35,9 +36,6 @@ import { GUEST } from "../services/constants";
 import { createToaster } from "@meforma/vue-toaster";
 import AirdropClaimModal from "@/components/views/modals/AirdropClaimModal.vue"
 
-
-
-
 const router = new createRouter({
   history: createWebHashHistory(),
   routes: [
@@ -62,14 +60,13 @@ const router = new createRouter({
     {
       path: "/resolutions",
       beforeEnter() {
-        window.open("https://resolutions.weavr.org", "_blanc")
+        window.open("https://resolutions.weavr.org", "_blank")
       }
     },
     {
       path: "/faq",
       beforeEnter() {
-        window.open("https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics", "_blanc")
-
+        window.open("https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics", "_blank")
       }
     },
     {
@@ -77,6 +74,18 @@ const router = new createRouter({
       beforeEnter() {
         window.open("https://forum.weavr.org/", "_blanc")
       }
+    },
+    {
+      path: "/airdrop/:airdropAddress",
+      name: "airdrop",
+      component: Airdrop,
+      meta: { requiresAuth: true },
+      children: [
+        {
+          path: `${CONTRACTS.AIRDROP}`,
+          name: "firstAirdrop",
+        }
+      ]
     },
     {
       path: "/whitelist",
@@ -96,9 +105,14 @@ const router = new createRouter({
       props: { component: Login }
     },
     {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard,
+      meta: { requiresAuth: true }
+    },
+    {
       path: "/marketplace",
       name: "marketplace",
-      alisa: "marketplace",
       component: Marketplace,
       children: [
         {
@@ -127,23 +141,6 @@ const router = new createRouter({
           component: SingleComingSoonPage,
         },
       ]
-    },
-    {
-      path: "/airdrop/:airdropAddress",
-      name: "airdrop",
-      component: Airdrop,
-      meta: { requiresAuth: true },
-      children: [
-        {
-          path: `${CONTRACTS.AIRDROP}`,
-          name: "firstAirdrop",
-        }
-      ]
-    },
-    {
-      path: "/airdrop/:airdropAddress/claim",
-      component: Modal,
-      props: { component: AirdropClaimModal },
     },
     {
       path: `/:assetId`,
