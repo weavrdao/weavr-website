@@ -2,6 +2,7 @@
   <div class="container p-5">
     <div class="tag has-background-mediumBlue has-text-white  mb-5 is-medium">New Token Action Proposal</div>
     <!-- Token Action Form -->
+    <div v-if="!preview">
     <div v-if="price === 0" class="field">
       <label class="label">Target Address</label>
       <div class="control">
@@ -53,7 +54,12 @@
       <label class="label">Forum link</label>
       <input v-model="forumLink" type="text" class="input" />
     </div>
+    </div>
+    <div v-if="preview">
+      <Proposal :proposal="proposal" />
+    </div>
     <div class="is-flex is-justify-content-space-between mt-5">
+      <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
       <button @click="publish" class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
       <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
     </div>
@@ -64,11 +70,18 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { MintType } from "@/models/common.js";
+import {ParticipantType, ProposalTypes} from "@/models/common.js";
+
 import {ethers} from "ethers";
 import { CONTRACTS } from "../../services/constants";
+import Proposal from "@/components/proposals/Proposal.vue"
+
 
 export default {
   name: "newTokenAction",
+  components: {
+    Proposal
+  },
   data(){
     return {
       amount: 0,
@@ -79,6 +92,9 @@ export default {
       forumLink: "",
       mintType: "No",
       mintTypes: MintType,
+      preview: false,
+      proposal: null,
+      proposalType: ProposalTypes.TokenAction,
     }
   },
   computed: {
@@ -124,7 +140,24 @@ export default {
     },
     onCancel() {
       this.$router.back();
-    }
+    },
+    togglePreview() {
+      this.proposal = {
+        title: this.title,
+        description: this.description,
+        type: this.proposalType,
+        creator: '0x00000',
+        startTimeStamp: 0,
+        endTimeStamp: 0,
+        forumLink: this.forumLink,
+        mint: this.mintTypes[this.mintType],
+        target: this.price === 0 ? this.targetAddress : this.assetId,
+        price: this.price,
+        amount: this.amount,
+        assetId: this.assetId
+      }
+      this.preview = !this.preview
+    },
   }
 }
 </script>

@@ -30,7 +30,7 @@ import { ethers } from "ethers";
 import SumSub from "@/components/SumSub.vue";
 import { getCookie } from "../whitelist";
 import { USER_COOKIE_KEY } from "../whitelist/constants";
-
+import Airdrop from "@/components/pages/Airdrop.vue";
 import Login from "@/components/sections/Login.vue"
 import { GUEST } from "../services/constants";
 import { createToaster } from "@meforma/vue-toaster";
@@ -66,8 +66,29 @@ const router = new createRouter({
       path: "/faq",
       beforeEnter() {
         window.open("https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics", "_blank")
-
       }
+    },
+    {
+      path: "/forums",
+      beforeEnter() {
+        window.open("https://forum.weavr.org/", "_blanc")
+      }
+    },
+    {
+      path: "/airdrop",
+      redirect: `/airdrop/${CONTRACTS.AIRDROP}`
+    },
+    {
+      path: "/airdrop/:airdropAddress",
+      name: "airdrop",
+      component: Airdrop,
+      meta: { requiresAuth: true },
+      children: [
+        {
+          path: `${CONTRACTS.AIRDROP}`,
+          name: "firstAirdrop",
+        }
+      ]
     },
     {
       path: "/whitelist",

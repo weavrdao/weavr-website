@@ -2,40 +2,38 @@
 <div class="container p-5">
   <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Paper Proposal</div>
   <!-- PAPER PROPOSAL FORM -->
-  <div class="field">
+  <div class="field"  v-if="!preview">
     <label class="label">Title</label>
     <div class="control">
       <input class="input" v-model="title" type="text" placeholder="Enter title here">
     </div>
   </div>
   
-  <div class="field">
+  <div class="field"  v-if="!preview">
     <label class="label">Description</label>
     <div class="control">
-      <textarea class="textarea" v-model="description" @change="updateMarkdown" placeholder="Enter description here"></textarea>
-      
-      
-        <div class="button" @click="!preview">Preview</div>
-      
-      
+      <textarea class="textarea" v-model="description" placeholder="Enter description here"></textarea>
     </div>
-    <!-- <div class="control markdown">
-      <vue-markdown ref="markdownSource" v-show="preview" class="textarea" :source="description" placeholder="Enter description here"></vue-markdown>
-    </div> -->
   </div>
-  <div class="field">
+  <div class="field"  v-if="!preview">
+    <label class="label">Forum link</label>
+    <input v-model="forumLink" type="text" class="input"/>
+  </div>
+  <div class="field"  v-if="!preview">
     <label class="label">DAO resolution</label>
     <div class="control">
       <input type="checkbox" class="checkbox" v-model="daoResolution"/><span class="ml-1 has-text-mediumGray is-italic"> - check this if the proposal will make changes to the DAO</span>
     </div>
   </div>
-  
+  <div v-if="preview">
+    <Proposal :proposal="proposal" />
+  </div>
   <div class="is-flex is-justify-content-space-between mt-5">
     <button @click="publish"  class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
+    <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
     <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
   </div>
   <!-- End Form -->
-  {{assetId}}
 </div>
 
 </template>
@@ -43,19 +41,14 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 
-import { CommonProposalType } from "@/models/common.js"
-import VueMarkdown from "vue-markdown-render";
-import { createApp } from '@vue/runtime-dom';
-import { CONTRACTS } from '../../services/constants';
-import { useRoute, useRouter } from 'vue-router';
+import {CommonProposalType, ProposalTypes} from "@/models/common.js"
+import Proposal from "@/components/proposals/Proposal.vue"
 
-
-const mk = createApp({extends: VueMarkdown})
 
 export default {
   name: "newPaperProposal",
   components: {
-    // VueMarkdown
+    Proposal
   },
   emits: ['submited', "proposed"],
   computed: {
@@ -68,10 +61,11 @@ export default {
       title: "",
       description: "",
       daoResolution: false,
-      proposalType: CommonProposalType.Paper,
+      proposalType: ProposalTypes.Paper,
       preview: false,
-      markdownSource: null
-
+      markdownSource: null,
+      proposal: null,
+      forumLink: ""
     }
   },
   methods: {
@@ -95,6 +89,21 @@ export default {
       const proposal = await this.createPaperProposal({assetAddr, proposalType, title, description, daoResolution,  $toast: this.$toast} );
       this.$emit("proposed");
     },
+    togglePreview(){
+      console.log("preview toggled");
+      this.proposal = {
+        title: this.title,
+        description: this.description,
+        daoResolution: this.daoResolution,
+        type: this.proposalType,
+        creator: "0x00000",
+        startTimeStamp: 0,
+        endTimeStamp: 0,
+        forumLink: this.forumLink
+      }
+      this.preview = !this.preview
+    },
+
     onCancel() {
       this.$router.back();
     }

@@ -18,6 +18,7 @@ import {
   addressMatchesCookie,
 } from "../whitelist";
 import { USER_COOKIE_KEY } from "../whitelist/constants";
+import blacklist from "@/blacklist.json";
 
 
 /**
@@ -135,8 +136,15 @@ const getters = {
     return state.user.wallet.vouches;
   },
 
+
+
   assetProposals(state) {
-    return state.platform.proposals;
+    return state.platform.proposals.filter((proposal) => {
+      const isBlacklisted = blacklist.addresses.some((address) => {
+        return address.toLowerCase() === proposal.creator.toLowerCase();
+      });
+      return !isBlacklisted;
+    });
   },
 
   proposalsById(state) {
@@ -303,7 +311,7 @@ const actions = {
 
   async createParticipantProposal(context, props) {
     const toast = params.$toast || createToaster({});
-    const { assetId, participantType, participant, description, forumLink } = props;
+    const { assetId, participantType, participant, title, description, forumLink } = props;
 
     toast.show("Confirming transaction...", {
       duration: 15000,
@@ -313,6 +321,7 @@ const actions = {
       assetId,
       participantType,
       participant,
+      title,
       description,
       forumLink
     );
