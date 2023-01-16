@@ -110,10 +110,10 @@ export default {
       }
     },
     onVouch() {
-      this.$router.push(`/${this.$route.params.assetId}/vouch`)
+      this.$router.push(`${this.$route.params.assetId}/vouch`)
     },
     onKyc() {
-      this.$router.push(`/${this.$route.params.assetId}/kyc`)
+      this.$router.push(`${this.$route.params.assetId}/kyc`)
     },
     kycInfo() {
       this.$toast.success("You are a verified member with full voting abilities", { position: "top", duration: false})

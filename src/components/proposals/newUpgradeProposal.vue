@@ -57,7 +57,6 @@ const GOERLI_TEST = {
 }
 
 export default {
-
   name: "newUpgradeProposal",
   props: {
     assetId: {

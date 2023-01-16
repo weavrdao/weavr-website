@@ -3,6 +3,19 @@
     <div class="cover-image-container">
       <h3>Threads</h3>
     </div>
+   <div class="columns p-6">
+      <div class="column is-one-third">
+        <div class="field">
+          <p class="control has-icons-left has-icons-right">
+            <input class="input is-rounded" type="text" placeholder="Search Thread">
+            <span class="icon is-small is-left">
+              <unicon width="15" height="15" name="search" fill="white"></unicon>
+            </span>
+          </p>
+        </div>
+      </div>
+   </div>
+
     <div v-if="loading" class="is-flex is-justify-content-center" >
       <Loading :message="`Loading threads`" />
     </div>
@@ -21,16 +34,22 @@
 import { mapGetters, mapActions } from "vuex";
 import ThreadMarketListItem from "./ThreadMarketListItem.vue"
 import Loading from "../../views/loading/Loading.vue";
-
+import styles from "@/styles/weavr-custom.scss"
 export default {
   name: "ThreadMarketplace",
   components: {
     ThreadMarketListItem,
     Loading,
   },
+  data() {
+    return { 
+      searchStr: "",
+      threads: []
+     }
+  },
   computed: {
     ...mapGetters({
-      threads: "allThreads",
+      threadsMap: "allThreads",
     }),
     loading() {
       return this.threads === null;
@@ -42,10 +61,26 @@ export default {
     }),
     filterThreads(threads) {
       return threads.filter((thread) => !!thread.imageHashes)
+    },
+    threadSearch() {
+      if(this.searchStr == "") {
+        this.threads = this.threadsMap
+      } else {
+        this.threads.forEach( (asset) => {
+        for(let prop in asset) {
+          if(asset[prop].includes(this.searchStr)) {
+            return new Map().set(asset.id, asset)
+          }
+        }
+      })
+      }
+
+      
     }
   },
   mounted() {
     // this.getThreads();
+    this.threads = this.threadsMap
   },
 };
 </script>

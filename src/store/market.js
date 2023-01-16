@@ -97,8 +97,7 @@ const getters = {
     });
     return assetMap;
   },
-  
-  needleById() {
+  needleById(state) {
     var assetMap = new Map();
     state.platform.needle?.forEach((asset) => {
       assetMap.set(asset.id, asset);
