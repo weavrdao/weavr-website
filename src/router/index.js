@@ -88,6 +88,13 @@ const router = new createRouter({
       ]
     },
     {
+      path: "/airdrop/:airdropAddress/claim",
+      component: Modal,
+      props: {
+        component: AirdropClaimModal
+      }
+    },
+    {
       path: "/whitelist",
       name: "whitelist",
       component: WhitelistPage,
