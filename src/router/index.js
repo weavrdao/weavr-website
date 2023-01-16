@@ -10,6 +10,7 @@ import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.
 import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue";
+import newParticipantRemovalProposal from "@/components/proposals/newParticipantRemoval.vue";
 import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue";
 import newTokenAction from "@/components/proposals/newTokenAction.vue";
 import newThreadProposal from "@/components/proposals/newThreadProposal.vue";
@@ -27,14 +28,12 @@ import ComingSoon from "@/components/sections/ComingSoon/ComingSoon.vue";
 import SingleComingSoonPage from "@/components/sections/ComingSoon/SingleComingSoonPage.vue";
 import {ethers} from "ethers";
 import SumSub from "@/components/SumSub.vue";
-import { getCookie } from "../whitelist";
-import { USER_COOKIE_KEY } from "../whitelist/constants";
+import {getCookie} from "../whitelist";
+import {USER_COOKIE_KEY} from "../whitelist/constants";
 
 import Login from "@/components/sections/Login.vue"
-import { GUEST } from "../services/constants";
-import { createToaster } from "@meforma/vue-toaster";
-
-
+import {GUEST} from "../services/constants";
+import {createToaster} from "@meforma/vue-toaster";
 
 
 const router = new createRouter({
@@ -51,16 +50,16 @@ const router = new createRouter({
     {
       path: "/toc",
       component: Modal,
-      props: { component: TermsPage}
+      props: {component: TermsPage}
     },
     {
       path: "/privacy",
       component: Modal,
-      props: { component: PrivacyPage }
+      props: {component: PrivacyPage}
     },
     {
       path: "/resolutions",
-      beforeEnter(){
+      beforeEnter() {
         window.open("https://resolutions.weavr.org", "_blanc")
       }
     },
@@ -103,7 +102,7 @@ const router = new createRouter({
         {
           path: "",
           component: ComingSoon,
-          meta: { requiresAuth: false}
+          meta: {requiresAuth: false}
         },
         {
           path: "needles",
@@ -126,12 +125,12 @@ const router = new createRouter({
           component: SingleComingSoonPage,
         },
       ]
-    },  
+    },
     {
-      path: `/:assetId`,
+      path: "/:assetId",
       component: Governance,
-      
-      meta: { requiresAuth: true },
+
+      meta: {requiresAuth: true},
       children: [
         {
           path: `${CONTRACTS.WEAVR}`,
@@ -140,53 +139,58 @@ const router = new createRouter({
         {
           path: "kyc",
           component: Modal,
-          props: { component: SumSub }
+          props: {component: SumSub}
         },
         {
           path: "tokenInfo",
           component: Modal,
-          props: { component: tokenDetails },
+          props: {component: tokenDetails},
         },
         {
           path: "paperProposal",
           component: Modal,
-          props: { component: newPaperProposal },
+          props: {component: newPaperProposal},
         },
         {
           path: "participantProposal",
           component: Modal,
-          props: { component: newParticipantProposal },
+          props: {component: newParticipantProposal},
+        },
+        {
+          path: "participantRemovalProposal",
+          component: Modal,
+          props: {component: newParticipantRemovalProposal},
         },
         {
           path: "upgradeProposal",
           component: Modal,
-          props: { component: newUpgradeProposal },
-          meta: { locked: true}
+          props: {component: newUpgradeProposal},
+          meta: {locked: true}
         },
         {
           path: "tokenProposal",
           component: Modal,
-          props: { component: newTokenAction },
+          props: {component: newTokenAction},
         },
         {
           path: "vouch",
           component: Modal,
-          props: { component: Vouch },
+          props: {component: Vouch},
         },
         {
           path: "verify",
           component: Modal,
-          props: { component: VerifyParticipant },
+          props: {component: VerifyParticipant},
         },
         {
           path: "threadProposal",
           component: Modal,
-          props: { component: newThreadProposal },
+          props: {component: newThreadProposal},
         },
         {
           path: "proposal/:proposalId",
           component: Modal,
-          props: { component: SingleProposal },
+          props: {component: SingleProposal},
           beforeEnter: async (to, from) => {
             const prop = await store.getters.proposalsPerAsset;
             if (!prop) {
@@ -220,85 +224,84 @@ let hasRedirectedAfterWhitelisting = false;
 
 router.beforeEach(async (to, from) => {
   /**
-   * NOTES
-   * Should authorize navigation if:
-   * ( isConnected + isWhitelisted || isConnected + isGuest )
-   * 
-   * ON not connected and COOKIE should AUTOCONNECT
-   * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
-   * ON not
-   */
-   console.log("HAS_REDIRECTED___", hasRedirectedAfterWhitelisting);
+     * NOTES
+     * Should authorize navigation if:
+     * ( isConnected + isWhitelisted || isConnected + isGuest )
+     *
+     * ON not connected and COOKIE should AUTOCONNECT
+     * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
+     * ON not
+     */
+  console.log("HAS_REDIRECTED___", hasRedirectedAfterWhitelisting);
 
-   const address = store.getters.userWalletAddress;
-   const isConnected = ethers.utils.isAddress(address);
-   const isWhitelisted = store.getters.isWhitelisted;
-   const isGuest = store.getters.guestCookie;
-   const cookie = getCookie(USER_COOKIE_KEY)
+  const address = store.getters.userWalletAddress;
+  const isConnected = ethers.utils.isAddress(address);
+  const isWhitelisted = store.getters.isWhitelisted;
+  const isGuest = store.getters.guestCookie;
+  const cookie = getCookie(USER_COOKIE_KEY)
   // require auth
-  if( to.meta.locked ) {
+  if (to.meta.locked) {
     const toast = createToaster({});
-    toast.error("The route you are trying to access is currently locked", { position: "top"});
+    toast.error("The route you are trying to access is currently locked", {position: "top"});
     return false
   }
-  if( to.meta.requiresAuth ) {
+  if (to.meta.requiresAuth) {
     console.log("META_AUTH_ TRUE");
     // not connected
-    if( !isConnected ) {
+    if (!isConnected) {
       // cookie
-      if( ethers.utils.isAddress(cookie) ) {
-        if( cookie === GUEST ) {
+      if (ethers.utils.isAddress(cookie)) {
+        if (cookie === GUEST) {
           console.log("IS GUEST");
           return true
         }
         // - autoconnect and navigate
         console.log("autoconnect and navigate");
         const toast = createToaster({})
-        await store.dispatch("syncWallet", { wallet: "metamask", $toast: toast})
-        await store.dispatch("checkWhitelistStatus", {assetId: CONTRACTS.WEAVR}).then( () => {
-          if( !isWhitelisted ) {
+        await store.dispatch("syncWallet", {wallet: "metamask", $toast: toast})
+        await store.dispatch("checkWhitelistStatus", {assetId: CONTRACTS.WEAVR}).then(() => {
+          if (!isWhitelisted) {
             // not whitelisted
             console.log("not whitelisted");
-            return { path: "/whitelist" }
-          }
-          else if ( isWhitelisted ) {
+            return {path: "/whitelist"}
+          } else if (isWhitelisted) {
             // whitelisted
             console.log("whitelisted");
             return true
           }
         })
-        
+
       }
       // !cookie
-      else if( !ethers.utils.isAddress(cookie)  ) { 
+      else if (!ethers.utils.isAddress(cookie)) {
         // - go to walletconnect
         console.log("go to whitelist")
-        return { path: "/whitelist"}
+        return {path: "/whitelist"}
       }
     }
     // connected
-    if ( isConnected ) {
+    if (isConnected) {
       console.log("navigate to route");
-        // -navigate to route
+      // -navigate to route
 
       return true
     }
   }
   // to.whitelist
-  if( to.path === "whitelist" ) {
+  if (to.path === "whitelist") {
     // - navigating to whitelist and set vars
     console.log("into whitelist");
   }
- 
-  
+
+
   // from.whitelist
-  if( from.path === "whitelist" ) {
+  if (from.path === "whitelist") {
     // - navigate path and reset vars
   }
   // no auth
-    // - navigate to path
+  // - navigate to path
   console.log("no auth required");
-  return true  
+  return true
 })
 
 export default router;

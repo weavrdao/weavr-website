@@ -2,16 +2,17 @@
   <div class="proposal-list column py-3 px-5">
     <h3 class="title is-size-3 my-4">{{ proposalStatus }}</h3>
     <div v-if="this.proposals.length !== 0">
-      <div class="is-flex is-justify-content-center mb-4 overflow-hidden filter-button-container" :class="filterMenuIsOpen && 'container-open'">
-          <div
+      <div class="is-flex is-justify-content-center mb-4 overflow-hidden filter-button-container"
+           :class="filterMenuIsOpen && 'container-open'">
+        <div
             v-for="{key, class: styles, text, selected} in filterButtons"
             @click="toggleFilter(key)"
             class="button filter-button"
             :class="[styles, !selected && 'unselected']"
             :key="key">
-            {{ text }}
-          </div>
-      </div> 
+          {{ text }}
+        </div>
+      </div>
       <div v-for="proposal in this.filteredProposals" v-bind:key="proposal.id">
         <ProposalListItem :proposal="proposal" :assetId="assetId"/>
       </div>
@@ -25,8 +26,8 @@
 
 <script>
 import ProposalListItem from "../views/voting/ProposalListItem.vue";
-import { ProposalTypes } from "../../models/common";
-import { getProposalTypeStyling } from "@/data/helpers";
+import {ProposalTypes} from "../../models/common";
+import {getProposalTypeStyling} from "@/data/helpers";
 
 export default {
   name: "ProposalList",
@@ -59,16 +60,18 @@ export default {
   },
   computed: {
     filteredProposals() {
+      console.log(this.proposals);
       return this.proposals
         .filter(proposal => this.proposalTypesFilter[proposal.type])
-        .filter(proposal => proposal.state !== 'Cancelled')
+        .filter(proposal => proposal.state !== "Cancelled")
         .sort((p1, p2) => p1.endTimestamp < p2.endTimestamp);
     },
     filterButtons() {
       return Object.values(ProposalTypes).map(proposal => ({
         key: proposal,
         selected: this.proposalTypesFilter[proposal],
-        ...getProposalTypeStyling(proposal)}
+        ...getProposalTypeStyling(proposal)
+      }
       ));
     },
   },
@@ -108,7 +111,7 @@ export default {
   transition: 150ms all ease-in-out;
   display: inline-flex;
   align-items: center;
-  background: rgba(255,255,255, 0);
+  background: rgba(255, 255, 255, 0);
   padding: 8px 5px;
   height: 25px;
   margin-bottom: 10px;
@@ -133,9 +136,9 @@ export default {
     height: 25px;
     font-stretch: expanded;
   }
-  
+
   &:hover {
-    background: rgba(255,255,255, 0.45);
+    background: rgba(255, 255, 255, 0.45);
   }
 }
 

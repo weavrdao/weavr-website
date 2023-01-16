@@ -123,6 +123,26 @@ query ALL_PROPOSALS($id: String!) {
       participantType
       proposer
     }
+    participantRemovalProposals(orderBy: id, orderDirection: desc) {
+        baseProposal {
+            id
+            info
+            startTimestamp
+            endTimestamp
+            state
+            supermajority
+            votes {
+                id
+                voteDirection
+                voter
+                count
+            }
+        }
+        participant
+        removalFee
+        signatures
+        proposer
+    }
     tokenActionProposals(orderBy: id, orderDirection: desc) {
       amount
       id
