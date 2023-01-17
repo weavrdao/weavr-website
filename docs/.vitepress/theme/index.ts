@@ -4,5 +4,7 @@ import DefaultTheme from 'vitepress/theme'
 
 export default {
     ...DefaultTheme,
-    Layout: Layout
+    enhanceApp({app}) {
+        app.component('Layout', Layout)
+    }
 }

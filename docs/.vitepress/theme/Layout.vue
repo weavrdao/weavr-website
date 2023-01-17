@@ -23,7 +23,7 @@ function getAuthor(frontData) {
   }
 }
 
-watch(() => frontmatter.value, (frontData) => {
+watch(() => frontmatter, (frontData) => {
   author.value = getAuthor(frontData)
 })
 
