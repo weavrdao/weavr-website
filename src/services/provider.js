@@ -2,6 +2,7 @@ import Wallet from "./wallet"
 import Market from "./market"
 import DAO from "./dao"
 import Token from "./token";
+import Airdrop from "./airdrop";
 import { Whitelist } from "../whitelist";
 import IPFSStorageNetwork from "../data/network/storage/ipfs/IPFSStorageNetwork"
 import EthereumClient from "../data/network/web3/ethereum/ethereumClient"
@@ -56,6 +57,14 @@ class ServiceProvider {
     return new Whitelist(
       ethereumClient,
       graphQLAPIClient
+    )
+  }
+
+  static airdrop() {
+    return new Airdrop(
+      ethereumClient,
+      graphQLAPIClient,
+      storageNetwork
     )
   }
 }
