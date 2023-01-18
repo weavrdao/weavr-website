@@ -6,7 +6,7 @@ import {UpgradeProposal} from "../../../../../models/proposals/upgradeProposal";
 import {ParticipantProposal} from "../../../../../models/proposals/participantProposal";
 import {TokenActionProposal} from "../../../../../models/proposals/tokenActionProposal";
 import {ThreadProposal} from "../../../../../models/proposals/threadProposal"
-import ParticipantRemovalProposal from "@/models/proposals/participantRemovalProposal";
+import {ParticipantRemovalProposal} from "../../../../../models/proposals/participantRemovalProposal";
 
 // Map raw vote array to array of vue-mc models 
 export function mapVotes(rawVotes) {
@@ -116,12 +116,10 @@ export function mapParticipantRemovalProposals(rawParticipantRemovalProposals) {
   let participantRemovalProposals = [];
   try {
     participantRemovalProposals = rawParticipantRemovalProposals.map(({
-      id,
       participant,
       removalFee,
-      signatures,
-      proposer,
       baseProposal: {
+        id,
         creator,
         endTimestamp,
         info,
@@ -145,14 +143,12 @@ export function mapParticipantRemovalProposals(rawParticipantRemovalProposals) {
         startTimestamp,
         endTimestamp,
         ifpsPath,
-        participant,
         removalFee,
-        signatures,
-        proposer,
+        participant,
       )
     })
   } catch (e) {
-    console.log("Issue parsing participant proposals");
+    console.log("Issue parsing participant removal proposals");
     console.error(e);
   }
   return participantRemovalProposals;

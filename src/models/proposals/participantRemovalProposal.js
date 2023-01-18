@@ -2,13 +2,13 @@
  * Participant Removal Proposal model.
  */
 
-export class ParticipantProposal {
-  constructor(id, thread, frabric, creator, type, state, votes, supermajority, startTimestamp, endTimestamp, info, removalFee, participant, signatures, proposer) {
-    this.type = type;
+export class ParticipantRemovalProposal {
+  constructor(id, thread, frabric, creator, type, state, votes, supermajority, startTimestamp, endTimestamp, info, removalFee, participant) {
     this.id = id;
     this.thread = thread;
     this.frabric = frabric;
     this.creator = creator;
+    this.type = type;
     this.state = state;
     this.votes = votes;
     this.supermajority = supermajority;
@@ -16,8 +16,6 @@ export class ParticipantProposal {
     this.endTimestamp = endTimestamp;
     this.info = info;
     this.removalFee = removalFee;
-    this.signatures = signatures;
     this.participant = participant;
-    this.proposer = proposer;
   }
 }

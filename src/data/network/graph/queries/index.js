@@ -125,6 +125,7 @@ query ALL_PROPOSALS($id: String!) {
     }
     participantRemovalProposals(orderBy: id, orderDirection: desc) {
         baseProposal {
+            creator
             id
             info
             startTimestamp
@@ -140,8 +141,6 @@ query ALL_PROPOSALS($id: String!) {
         }
         participant
         removalFee
-        signatures
-        proposer
     }
     tokenActionProposals(orderBy: id, orderDirection: desc) {
       amount
