@@ -36,8 +36,8 @@ export default {
       filterMenuIsOpen: false,
       // Create object with shape { [proposalType]: true }
       proposalTypesFilter: Object.fromEntries(
-        Object.values(ProposalTypes)
-          .map(v => [v, true])
+          Object.values(ProposalTypes)
+              .map(v => [v, true])
       ),
     }
   },
@@ -60,18 +60,17 @@ export default {
   },
   computed: {
     filteredProposals() {
-      console.log(this.proposals);
       return this.proposals
-        .filter(proposal => this.proposalTypesFilter[proposal.type])
-        .filter(proposal => proposal.state !== "Cancelled")
-        .sort((p1, p2) => p1.endTimestamp < p2.endTimestamp);
+          .filter(proposal => this.proposalTypesFilter[proposal.type])
+          .filter(proposal => proposal.state !== "Cancelled")
+          .sort((p1, p2) => p1.endTimestamp < p2.endTimestamp);
     },
     filterButtons() {
       return Object.values(ProposalTypes).map(proposal => ({
-        key: proposal,
-        selected: this.proposalTypesFilter[proposal],
-        ...getProposalTypeStyling(proposal)
-      }
+            key: proposal,
+            selected: this.proposalTypesFilter[proposal],
+            ...getProposalTypeStyling(proposal)
+          }
       ));
     },
   },
