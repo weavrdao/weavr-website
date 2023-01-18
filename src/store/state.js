@@ -5,7 +5,7 @@ import { createToaster } from "@meforma/vue-toaster";
 import { params } from "stylus/lib/utils";
 import ServiceProvider from "../services/provider";
 import WalletState from "../models/walletState";
-import { CONTRACTS, DAO, GUEST, NETWORK } from "../services/constants";
+import {CONTRACTS, DAO, GUEST, NETWORK} from "../services/constants";
 import {
   whitelistState,
   whitelistGetters,
@@ -77,7 +77,7 @@ const getters = {
 
     return wallet.getChainId()
   },
-
+  
   isConnected(state) {
     return ethers.utils.isAddress(state.user.wallet.address)
   },
@@ -169,10 +169,10 @@ const getters = {
 
 const actions = {
   connectGuest(context, params) {
-    console.log(params.passwd === process.env.VUE_APP_DAILY_PASSWORD ? "yess" : "noooo")
-    if (
-      params.passwd === process.env.VUE_APP_DAILY_PASSWORD
-    ) {
+    console.log(params.passwd===process.env.VUE_APP_DAILY_PASSWORD ? "yess":"noooo")
+    if(
+      params.passwd===process.env.VUE_APP_DAILY_PASSWORD
+    ){
       setCookie(USER_COOKIE_KEY, GUEST, 1)
       context.state.isGuest = getCookie(USER_COOKIE_KEY) === GUEST ? true : false
       return true
@@ -309,6 +309,34 @@ const actions = {
     });
   },
 
+  async createParticipantRemovalProposal(context, props) {
+    const toast = params.$toast || createToaster({});
+    const {assetId, participant, removalFee, signatures, title, description, forumLink} = props;
+    toast.show("Confirming transaction...", {
+      duration: 15000,
+      position: "top",
+    });
+    const status = await dao.createParticipantRemovalProposal(
+      assetId,
+      participant,
+      removalFee,
+      signatures,
+      title,
+      description,
+      forumLink
+    );
+    toast.clear();
+    if (status) {
+      toast.success("Transaction confirmed!");
+      context.dispatch("refreshProposalsDataForAsset", {
+        assetId: params.assetId,
+      });
+      // router.push("/" + DAO + "/" + params.assetId);
+    } else {
+      toast.error("Transaction failed. See details in MetaMask.");
+      console.log("Transaction failed. See details in MetaMask.");
+    }
+  },
   async createParticipantProposal(context, props) {
     const toast = params.$toast || createToaster({});
     const { assetId, participantType, participant, title, description, forumLink } = props;
@@ -556,7 +584,7 @@ const actions = {
   async vouchParticipant(context, props) {
     const toast = params.$toast || createToaster({});
     const { customDomain, participant } = props;
-
+    
     const domain = customDomain || {
       name: "Weavr Protocol",
       version: "1",
@@ -612,7 +640,7 @@ const actions = {
     };
     const types = {
       KYCVerification: [
-        { type: "uint8", name: "participantType" },
+        { type: "uint8",   name: "participantType" },
         { type: "address", name: "participant" },
         { type: "bytes32", name: "kyc" },
         { type: "uint256", name: "nonce" }

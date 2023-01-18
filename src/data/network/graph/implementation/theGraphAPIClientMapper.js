@@ -7,7 +7,7 @@ import {
   mapUpgradeProposals,
   mapParticipantProposals,
   mapTokenActionProposals,
-  mapThreadProposals,
+  mapThreadProposals, mapParticipantRemovalProposals,
 } from "./proposals";
 
 class TheGraphAPIMapper extends GraphQLAPIMapper {
@@ -21,21 +21,21 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
     console.log(rawVouchers);
     if (!rawVouchers || !rawVouchers.length < 1) return [];
 
-    return  rawVouchers.length
+    return rawVouchers.length
   }
 
   mapWeavrWhitelist(rawWeavrWhitelistRecords) {
     console.log(rawWeavrWhitelistRecords.frabric.participants)
-    const participants = rawWeavrWhitelistRecords.frabric.participants.map( record => {
-      console.log("1\n",record.address);
+    const participants = rawWeavrWhitelistRecords.frabric.participants.map(record => {
+      console.log("1\n", record.address);
       return record.address
     })
-    const whitelisted = rawWeavrWhitelistRecords.frabric.token.whitelist.map( record => {
-      console.log("2\n",record.person)
+    const whitelisted = rawWeavrWhitelistRecords.frabric.token.whitelist.map(record => {
+      console.log("2\n", record.person)
       return record.person
     })
-    
-    return [... new Set(participants.concat( whitelisted))]
+
+    return [...new Set(participants.concat(whitelisted))]
   }
 
   mapTokenInfo(rawWeavrTokenInfo) {
@@ -52,6 +52,7 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
       ...mapPaperProposals(rawProposals.paperProposals),
       ...mapUpgradeProposals(rawProposals.upgradeProposals),
       ...mapParticipantProposals(rawProposals.participantProposals),
+      ...mapParticipantRemovalProposals(rawProposals.participantRemovalProposals),
       ...mapTokenActionProposals(rawProposals.tokenActionProposals),
       ...mapThreadProposals(rawProposals.threadProposals),
     ];

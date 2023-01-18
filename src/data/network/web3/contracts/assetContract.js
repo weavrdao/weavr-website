@@ -1,5 +1,5 @@
 /* global BigInt */
-import { ethers } from "ethers";
+import {ethers} from "ethers";
 import EthereumClient from "../ethereum/ethereumClient";
 
 
@@ -12,6 +12,9 @@ const contractAbi = [
 
   // Create a participant proposal
   "function proposeParticipant(uint8 participantType, address _participant, bytes32 info) returns (uint256 id)",
+
+  // Create a participant removal proposal
+  "function proposeParticipantRemoval(address participant, uint8 removalFee, bytes[] calldata signatures, bytes32 info) returns (uint256 id)",
 
   // Create an upgrade proposal
   "function proposeUpgrade(address beacon, address instance, uint256 version, address code, bytes data, bytes32 info) returns (uint256 id)",
@@ -33,7 +36,7 @@ const contractAbi = [
 
   // Withdraw proposal
   "function withdrawProposal(uint256 id)",
-  
+
   // Queue proposal
   "function queueProposal(uint256 id)",
 
@@ -68,9 +71,9 @@ class AssetContract {
   }
 
   /**
-   * Create a standard proposal
-   * @param {bytes32} info Proposal info
-   */
+     * Create a standard proposal
+     * @param {bytes32} info Proposal info
+     */
   async proposePaper(supermajority, info) {
     console.log(`SENT DIRECTLY TO CONTRACT: ${info}`);
     let tx = await this.mutableContract.proposePaper(supermajority, info);
@@ -78,11 +81,11 @@ class AssetContract {
   }
 
   /**
-   * Create a participant proposal
-   * @param {bytes32} info Proposal info
-   */
+     * Create a participant proposal
+     * @param {bytes32} info Proposal info
+     */
   async proposeParticipant(participantType, participant, info) {
-    console.log({ participantType, participant, info });
+    console.log({participantType, participant, info});
     let tx = await this.mutableContract.proposeParticipant(
       participantType,
       participant,
@@ -92,6 +95,27 @@ class AssetContract {
       }
     );
     await tx.wait();
+  }
+
+  async proposeParticipantRemoval(participant, removalFee, signatures, info) {
+    console.log("Creating participant removal proposal...");
+    console.log({
+      participant,
+      removalFee,
+      signatures,
+      info,
+    });
+    const tx = await this.mutableContract.proposeParticipantRemoval(
+      participant,
+      removalFee,
+      signatures,
+      info,
+      {
+        gasLimit: 3000000
+      }
+    );
+    const status = (await tx.wait()).status;
+    return status;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -159,10 +183,10 @@ class AssetContract {
   }
 
   /**
-   * Vouch a participant
-   */
+     * Vouch a participant
+     */
   async vouch(participant, signature) {
-    
+
     // const bytesSignature = ethers.utils.id(signature);
     console.log("ASSETCONTRACT: ", signature);
     let tx = this.mutableContract.vouch(participant, signature, {gasLimit: 7000000});
@@ -173,22 +197,22 @@ class AssetContract {
   }
 
   /**
-   * Queue a proposal
-   */
+     * Queue a proposal
+     */
   async queueProposal(proposalId) {
-    
+
     console.log("ASSETCONTRACT: ", proposalId);
-    let tx = await this.mutableContract.queueProposal(proposalId, { gasLimit: 7000000});
+    let tx = await this.mutableContract.queueProposal(proposalId, {gasLimit: 7000000});
 
     console.log(tx);
     return tx;
   }
 
   /**
-   * Complete a proposal
-   */
+     * Complete a proposal
+     */
   async completeProposal(proposalId, data) {
-    
+
     console.log("ASSETCONTRACT: ", proposalId);
     let tx = await this.mutableContract.completeProposal(proposalId, data);
 
@@ -197,8 +221,8 @@ class AssetContract {
   }
 
   /**
-   * Approve a KYC vendor verified participant
-   */
+     * Approve a KYC vendor verified participant
+     */
   async approve(
     pType,
     approving,
@@ -215,8 +239,8 @@ class AssetContract {
 
 
   /**
-   * Check if participant can make a proposal
-   */
+     * Check if participant can make a proposal
+     */
   async canPropose(proposer) {
     let tx = await this.mutableContract.canPropose(proposer, {
       gasLimit: 5000000,
@@ -226,10 +250,10 @@ class AssetContract {
   }
 
   /**
-   * Make a buy order
-   * @param {number} amount Amount of shares to buy
-   * @param {BigInt} price Price to buy at
-   */
+     * Make a buy order
+     * @param {number} amount Amount of shares to buy
+     * @param {BigInt} price Price to buy at
+     */
   async buy(amount, price) {
     console.log("Amount " + amount);
     console.log("Price " + price);
@@ -243,10 +267,10 @@ class AssetContract {
   }
 
   /**
-   * Vote on a proposal
-   * @param {string} proposalId ID of the proposal
-   * @param {string} votes Number of votes to cast (sign handles for or against)
-   */
+     * Vote on a proposal
+     * @param {string} proposalId ID of the proposal
+     * @param {string} votes Number of votes to cast (sign handles for or against)
+     */
   async vote(proposalId, votes) {
     console.dir({
       votesRaw: votes,
@@ -267,12 +291,12 @@ class AssetContract {
   }
 
   /**
-   * Propose a thread dissolution
-   * @param {string} info Proposal info
-   * @param {address} purchaser Dissolution proposer
-   * @param {address} token Currency provided for payment
-   * @param {uint256} purchaseAmount Amount proposed for the purchase
-   */
+     * Propose a thread dissolution
+     * @param {string} info Proposal info
+     * @param {address} purchaser Dissolution proposer
+     * @param {address} token Currency provided for payment
+     * @param {uint256} purchaseAmount Amount proposed for the purchase
+     */
   async proposeDissolution(info, purchaser, token, purchaseAmount) {
     console.log(
       "Dissolution proposal for " + token,
