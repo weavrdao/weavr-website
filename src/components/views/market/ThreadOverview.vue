@@ -2,20 +2,21 @@
    <div class="">
     <div class="columns">
       <div class="column is-two-thirds">
-        <div class="box">
-          <!-- <div class="title">{{thread.name}}</div> -->
-          <div class="has-text-primary">(holders)</div>
-          <div class="my-3 " style="border-top: 1px white solid;">
-            <div class="label">
+        <div class="box py-6">
+          <div class="title has-text-white is-size-2">{{thread.name}}</div>
+          <div class="has-text-primary is-size-4">(holders)</div>
+          <div class="mt-6 py-6" style="border-top: 1px gray  solid;">
+            <div class="label is-size-3">
               Token Address
               </div>
-            <div class="has-text-primary is-size-5">{{thread.id}}</div>
+            <div class="has-text-primary is-size-4">{{thread.id}}</div>
               <div class="label">Documents</div>
             <div class="label">Tags</div>
           </div>
 
         </div>
-        <div class=" image-container">
+        <div class="card">
+          <div class=" image-container">
           <!-- <p class="has-text-white mb-3">Images</p> -->
           <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
             <Slide v-for="imageHash in thread.imagesHashes" v-bind:key="imageHash">
@@ -28,6 +29,12 @@
               <Pagination />
             </template>
           </Carousel>
+        </div>
+        </div>
+        <div class="card     mt-5">
+          <p class="has-text-white mb-3">Property Description</p>
+          <vue-markdown class="content markdown-body"  :watches="['source']"  :source="thread.descriptor"/>
+          <!-- <div class="box">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, mollitia labore dolor quasi ipsa temporibus neque fugiat inventore illo praesentium eius, nulla vel consequatur cum ad! Autem iste fugiat ratione.</div> -->
         </div>
       </div>
       <div class="column is-on-third">
@@ -43,10 +50,7 @@
         </div>
       </div>
     </div>
-    <div class="dark-card">
-      <p class="has-text-white mb-3">Property Description</p>
-      <vue-markdown class="content markdown-body"  :watches="['source']"  :source="thread.descriptor"/>
-    </div>
+    
     <div class="dark-card mt-5">
       <p class="has-text-white mb-3">Documents</p>
       <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in thread.documentHashes" v-bind:key="document">
