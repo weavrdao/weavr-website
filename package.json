@@ -30,6 +30,7 @@
     "graphql": "^15.5.1",
     "graphql-tag": "^2.12.5",
     "hooper-vue3": "^0.4.5",
+    "ipfs-cluster-api": "^0.0.9",
     "ipfs-http-client": "^52.0.2",
     "lodash": "^4.17.21",
     "sass": "~1.32",

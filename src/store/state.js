@@ -19,7 +19,7 @@ import {
 } from "../whitelist";
 import {USER_COOKIE_KEY} from "../whitelist/constants";
 import blacklist from "@/blacklist.json";
-
+import ipfsCluster from "ipfs-cluster-api"
 
 /**
  * TODO - Abstrucked -
