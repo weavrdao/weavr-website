@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, createWebHistory, useRoute } from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory, useRoute} from "vue-router";
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue";
 import Homepage from "@/components/pages/Homepage.vue"
@@ -11,6 +11,7 @@ import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.
 import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue";
+import newParticipantRemovalProposal from "@/components/proposals/newParticipantRemoval.vue";
 import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue";
 import newTokenAction from "@/components/proposals/newTokenAction.vue";
 import newThreadProposal from "@/components/proposals/newThreadProposal.vue";
@@ -120,6 +121,7 @@ const router = new createRouter({
     {
       path: "/marketplace",
       name: "marketplace",
+      alisa: "marketplace",
       component: Marketplace,
       children: [
         {
@@ -178,6 +180,11 @@ const router = new createRouter({
           path: "participantProposal",
           component: Modal,
           props: { component: newParticipantProposal },
+        },
+        {
+          path: "participantRemovalProposal",
+          component: Modal,
+          props: {component: newParticipantRemovalProposal},
         },
         {
           path: "upgradeProposal",
@@ -295,7 +302,7 @@ router.beforeEach(async (to, from) => {
       else if (!ethers.utils.isAddress(cookie)) {
         // - go to walletconnect
         console.log("go to whitelist")
-        return { path: "/whitelist" }
+        return {path: "/whitelist" }
       }
     }
     // connected
