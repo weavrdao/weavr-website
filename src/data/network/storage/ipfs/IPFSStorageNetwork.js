@@ -1,8 +1,9 @@
 /* eslint-disable class-methods-use-this */
 const network = require("../../../../utils/network");
-const { create } = require("ipfs-http-client");
+const {create} = require("ipfs-http-client");
 import StorageNetwork from "../storageNetwork";
-import { getBytes32FromIpfsHash, getIpfsAuthHeader } from "./common";
+import ipfsCluster from "ipfs-cluster-api"
+import {getBytes32FromIpfsHash, getInfuraAuthHeader, getCollabAuthHeader} from "./common";
 import "dotenv/config";
 
 const baseInfuraURL = "https://ipfs.infura.io:5001/api/v0";
@@ -10,25 +11,33 @@ const baseInfuraURL = "https://ipfs.infura.io:5001/api/v0";
 class IPFSStorageNetwork extends StorageNetwork {
   constructor() {
     super();
-    this.ipfsAPIClient = create({
+    this.ipfsInfuraAPIClient = create({
       host: "ipfs.infura.io",
       port: 5001,
       protocol: "https",
       headers: {
-        authorization: getIpfsAuthHeader(),
+        authorization: getInfuraAuthHeader(),
       },
+    });
+    this.ipfsCollabAPIClient = ipfsCluster({
+      host: "collab.weavr.org",
+      port: 9094,
+      protocol: "https",
+      // headers: {
+      //   authorization: getCollabAuthHeader(),
+      // }
     });
   }
 
   async addFile(file) {
     let jsonString = JSON.stringify(file, null, 2);
     console.log("JSON: ", jsonString);
-    const test = await this.ipfsAPIClient.add(jsonString, { pin: true });
+    const test = await this.ipfsInfuraAPIClient.add(jsonString, {pin: true});
     return test;
   }
 
   async addImage(imageFile) {
-    const image = await this.ipfsAPIClient.add(imageFile, { pin: true });
+    const image = await this.ipfsInfuraAPIClient.add(imageFile, {pin: true});
     return image;
   }
 
@@ -41,7 +50,7 @@ class IPFSStorageNetwork extends StorageNetwork {
       };
 
       let headers = {
-        Authorization: getIpfsAuthHeader(),
+        Authorization: getInfuraAuthHeader(),
       };
 
       let data = {};
@@ -62,7 +71,7 @@ class IPFSStorageNetwork extends StorageNetwork {
     const requestURL = `${baseInfuraURL}/cat`;
 
     let headers = {
-      Authorization: getIpfsAuthHeader(),
+      Authorization: getInfuraAuthHeader(),
     };
 
     const data = {};
@@ -90,6 +99,7 @@ class IPFSStorageNetwork extends StorageNetwork {
   async uploadAndGetPathAsBytes(file) {
     try {
       const cid = await this.addFile(file);
+      const _ = await this.ipfsCollabAPIClient.pin.add(cid.path);
       return getBytes32FromIpfsHash(cid.path);
     } catch (e) {
       console.log(e);

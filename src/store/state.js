@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 // import router from "../router/index";
-import { ethers } from "ethers";
-import { createToaster } from "@meforma/vue-toaster";
-import { params } from "stylus/lib/utils";
+import {ethers} from "ethers";
+import {createToaster} from "@meforma/vue-toaster";
+import {params} from "stylus/lib/utils";
 import ServiceProvider from "../services/provider";
 import WalletState from "../models/walletState";
-import { CONTRACTS, DAO, GUEST, NETWORK } from "../services/constants";
+import {CONTRACTS, DAO, GUEST, NETWORK} from "../services/constants";
 import {
   whitelistState,
   whitelistGetters,
@@ -17,9 +17,9 @@ import {
   WALLET_STATE_COOKIE_KEY,
   addressMatchesCookie,
 } from "../whitelist";
-import { USER_COOKIE_KEY } from "../whitelist/constants";
+import {USER_COOKIE_KEY} from "../whitelist/constants";
 import blacklist from "@/blacklist.json";
-
+import ipfsCluster from "ipfs-cluster-api"
 
 /**
  * TODO - Abstrucked -
@@ -137,7 +137,6 @@ const getters = {
   },
 
 
-
   assetProposals(state) {
     return state.platform.proposals.filter((proposal) => {
       const isBlacklisted = blacklist.addresses.some((address) => {
@@ -216,7 +215,7 @@ const actions = {
 
   async syncWallet(context, params) {
     console.log("SYNC");
-    let { $toast } = params !== undefined ? params : {};
+    let {$toast} = params !== undefined ? params : {};
     let walletState = await wallet.getState(params.wallet);
     const symbol = await token.getTokenSymbol(CONTRACTS.TOKEN_ADDRESS);
     const balance = await token.getTokenBalance(
@@ -285,7 +284,7 @@ const actions = {
   },
 
   async createPaperProposal(context, props) {
-    const { assetAddr, daoResolution, title, description, forumLink } = props;
+    const {assetAddr, daoResolution, title, description, forumLink} = props;
     const toast = params.$toast || createToaster({});
 
     toast.clear();
@@ -311,7 +310,7 @@ const actions = {
 
   async createParticipantProposal(context, props) {
     const toast = params.$toast || createToaster({});
-    const { assetId, participantType, participant, title, description, forumLink } = props;
+    const {assetId, participantType, participant, title, description, forumLink} = props;
 
     toast.show("Confirming transaction...", {
       duration: 15000,
@@ -491,7 +490,7 @@ const actions = {
   async vote(context, props) {
     const toast = params.$toast || createToaster({});
 
-    const { assetAddress, proposalId, votes } = props;
+    const {assetAddress, proposalId, votes} = props;
 
     const status = await dao.vote(
       assetAddress || CONTRACTS.WEAVR,
@@ -517,7 +516,7 @@ const actions = {
   async withdraw(context, props) {
     const toast = params.$toast || createToaster({});
 
-    const { assetAddress, proposalId } = props;
+    const {assetAddress, proposalId} = props;
 
     const status = await dao.withdraw(
       assetAddress || CONTRACTS.WEAVR,
@@ -555,7 +554,7 @@ const actions = {
 
   async vouchParticipant(context, props) {
     const toast = params.$toast || createToaster({});
-    const { customDomain, participant } = props;
+    const {customDomain, participant} = props;
 
     const domain = customDomain || {
       name: "Weavr Protocol",
@@ -564,13 +563,13 @@ const actions = {
       verifyingContract: CONTRACTS.WEAVR
     };
     const types = {
-      Vouch: [{ type: "address", name: "participant" }],
+      Vouch: [{type: "address", name: "participant"}],
     };
     const data = {
       participant: participant
     };
 
-    toast.info("Waiting for signature..", { position: "top" });
+    toast.info("Waiting for signature..", {position: "top"});
 
     const signatures = await wallet.getSignature(domain, types, data);
     Promise.all([signatures])
@@ -602,8 +601,8 @@ const actions = {
 
   async verifyParticipant(context, props) {
     const toast = params.$toast || createToaster({});
-    const { customDomain, participant, pType, kycHash, nonce } = props;
-    console.log({ customDomain, participant, pType, kycHash, nonce })
+    const {customDomain, participant, pType, kycHash, nonce} = props;
+    console.log({customDomain, participant, pType, kycHash, nonce})
     const domain = customDomain || {
       name: "Weavr Protocol",
       version: "1",
@@ -612,10 +611,10 @@ const actions = {
     };
     const types = {
       KYCVerification: [
-        { type: "uint8", name: "participantType" },
-        { type: "address", name: "participant" },
-        { type: "bytes32", name: "kyc" },
-        { type: "uint256", name: "nonce" }
+        {type: "uint8", name: "participantType"},
+        {type: "address", name: "participant"},
+        {type: "bytes32", name: "kyc"},
+        {type: "uint256", name: "nonce"}
       ]
     };
     const data = {
@@ -625,7 +624,7 @@ const actions = {
       nonce: ethers.BigNumber.from(nonce)
     };
 
-    toast.info("Waiting for signature..", { position: "top" });
+    toast.info("Waiting for signature..", {position: "top"});
 
     const signatures = await wallet.getSignature(domain, types, data);
     Promise.all([signatures])
@@ -675,7 +674,7 @@ const mutations = {
     state.platform.assets = assets;
   },
 
-  setProposalsForAsset(state, { proposals, assetId }) {
+  setProposalsForAsset(state, {proposals, assetId}) {
     state.platform.proposals = proposals; // state.platform.proposals.set(assetId, proposals);
   },
 
