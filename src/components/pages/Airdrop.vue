@@ -33,7 +33,7 @@
               <div class="is-flex is-justify-content-center my-4">
                 <button
                     :class="`has-background-${getBackgroundColor()} button has-text-white has-text-weight-bold is-size-4`"
-                    style="min-width: 20ch;" @click="onClaim">Claim
+                    style="min-width: 20ch;" @click="onClaim()">Claim
                 </button>
               </div>
             </div>
@@ -84,14 +84,14 @@ export default {
     },
     getBackgroundColor() {
       return parseFloat(this.airdropBalance) === 0 ? "mediumGray" : "mediumBlue";
+    },
+    onClaim() {
+      if (parseFloat(this.airdropBalance) == 0) return;
+      this.$router.push("/airdrop/" + this.airdropAddress + "/claim");
     }
   },
   mounted() {
     this.refresh();
   },
-  onClaim() {
-    if (parseFloat(this.airdropBalance) == 0) return;
-    this.$router.push("/airdrop/" + this.airdropAddress + "/claim");
-  }
 }
 </script>
