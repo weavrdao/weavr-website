@@ -1,17 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import * as CommonUtils from "../../utils/common";
-import StorageNetwork from "../../data/network/storage/storageNetwork";
+
 import {Proposal} from "../../models/proposal";
 import {VoteType} from "../../models/vote";
 import {
   GraphQLAPIClient, ALL_ASSETS_QUERY, PARTICIPANTS_BY_TYPE, ALL_PROPOSALS, VOUCHES_PER_PARTICIPANT,
 } from "../../data/network/graph/graphQLAPIClient";
-import EthereumClient from "../../data/network/web3/ethereum/ethereumClient";
 import {CONTRACTS} from "../constants";
 import AssetContract from "../../data/network/web3/contracts/assetContract";
 import {ethers} from "ethers";
 import {createToaster} from "@meforma/vue-toaster";
-import {getIpfsHashFromBytes32} from "../../data/network/storage/ipfs/common";
 
 // TODO: Should there be a single service instance per proposal?
 
@@ -29,11 +26,13 @@ class DAO {
   }
 
   /**
-     * Get proposals that from this asset"s DAO.
-     * @param {string} proposalId
-     */
+   * Get proposals that from this asset"s DAO.
+   * @param {string} assetId Asset's contract address
+   * @param {Storage} localStorage Local storage
+   * @returns {Proposal[]} Array of proposals
+   */
   // eslint-disable-next-line max-lines-per-function
-  async getProposalsForAsset(assetId) {
+  async getProposalsForAsset(assetId, localStorage) {
     // Get indexed on-chain data
     const toast = createToaster({});
     toast.info("Fetching off-chain data...");
@@ -43,8 +42,7 @@ class DAO {
 
     // Fetch and append off-chain data
     try {
-      const offChainData = await this.storageNetwork.getFiles(proposals.map((p) => p.info));
-      console.log(offChainData)
+      const offChainData = await this.storageNetwork.getFiles(proposals.map((p) => p.info), localStorage);
       for (let i = 0; i < proposals.length; i++) {
         if (offChainData[i].value) {
           proposals[i].title = offChainData[i].value.title || "Untitled";
@@ -60,11 +58,12 @@ class DAO {
       }
       toast.clear();
     } catch (e) {
-      // No-op
+      console.log(e);
     }
 
     try {
-      const descriptorData = await this.storageNetwork.getFiles(proposals.map((proposal) => proposal.descriptor));
+      console.log("getting descriptors")
+      const descriptorData = await this.storageNetwork.getFiles(proposals.map((proposal) => proposal.descriptor), localStorage);
       for (let i = 0; i < proposals.length; i++) {
         if (descriptorData[i] && descriptorData[i].value) {
           proposals[i].descriptor = descriptorData[i].value.descriptor || "Could not load descriptor";
@@ -73,9 +72,8 @@ class DAO {
         }
       }
     } catch (e) {
-      // No-op
+      console.log(e)
     }
-    console.log(proposals.filter(proposal => proposal.id === 64));
     return proposals;
   }
 
@@ -103,19 +101,19 @@ class DAO {
   }
 
   /**
-     * Create a Paper Proposal
-     * @param {String} assetId Asset's contract address
-     * @param {String} name Chosen name for the thread
-     * @param {String} descriptor of the thread
-     * @param {String} title Proposal title
-     * @param {String} description Proposal body
-     * @param {String} forumLink Link to forum discussion
-     * @param {String} tradeToken addess of the token used for the crowdfund
-     * @param {Number} target amount to be raised through the crowdfund
-     * @param {String} images of the property
-     * @param {String} documents of the property
-     * @returns {Boolean} Transaction status (true — mined; false - reverted)
-     */
+   * Create a Paper Proposal
+   * @param {String} assetId Asset's contract address
+   * @param {String} name Chosen name for the thread
+   * @param {String} descriptor of the thread
+   * @param {String} title Proposal title
+   * @param {String} description Proposal body
+   * @param {String} forumLink Link to forum discussion
+   * @param {String} tradeToken addess of the token used for the crowdfund
+   * @param {Number} target amount to be raised through the crowdfund
+   * @param {String} images of the property
+   * @param {String} documents of the property
+   * @returns {Boolean} Transaction status (true — mined; false - reverted)
+   */
   async createThreadProposal(assetId, name, descriptor, title, description, forumLink, symbol, tradeToken, target, images, documents,) {
     const assetContract = new AssetContract(this.ethereumClient, assetId);
 
@@ -152,13 +150,13 @@ class DAO {
   }
 
   /**
-     * Create a Paper Proposal
-     * @param {String} asset Asset's contract address
-     * @param {string} title Proposal title
-     * @param {string} description Proposal body
-     * @param {string} forumLink Link to forum discussion
-     * @returns {Boolean} Transaction status (true — mined; false - reverted)
-     */
+   * Create a Paper Proposal
+   * @param {String} asset Asset's contract address
+   * @param {string} title Proposal title
+   * @param {string} description Proposal body
+   * @param {string} forumLink Link to forum discussion
+   * @returns {Boolean} Transaction status (true — mined; false - reverted)
+   */
   async createPaperProposal(asset, title, description, forumLink, daoResolution) {
     const assetContract = new AssetContract(this.ethereumClient, asset);
 
@@ -172,15 +170,15 @@ class DAO {
   }
 
   /**
-     * Create a Participant Proposal
-     * @param assetId
-     * @param {number} participantType Proposal title
-     * @param {string} participant Address of the participant
-     * @param {string} title Title of the proposal (may be autogenerated)
-     * @param {string} description Proposal body
-     * @param {string} forumLink Link to forum discussion
-     * @returns {Boolean} Transaction status (true — mined; false - reverted)
-     */
+   * Create a Participant Proposal
+   * @param assetId
+   * @param {number} participantType Proposal title
+   * @param {string} participant Address of the participant
+   * @param {string} title Title of the proposal (may be autogenerated)
+   * @param {string} description Proposal body
+   * @param {string} forumLink Link to forum discussion
+   * @returns {Boolean} Transaction status (true — mined; false - reverted)
+   */
   async createParticipantProposal(assetId, participantType, participant, title, description, forumLink) {
 
     const assetContract = new AssetContract(this.ethereumClient, assetId);
@@ -211,16 +209,16 @@ class DAO {
   }
 
   /**
-     * Create an upgrade proposal
-     * @param {String} assetAddress Asset's contract address
-     * @param {String} beaconAddress Address of beacon handling upgrade
-     * @param {Number} version Version number (simple increment)
-     * @param {String} codeAddress Address of new contract
-     * @param {String} upgradeData Data to be passed to newly upgraded contract
-     * @param {String} title Proposal title
-     * @param {String} description Proposal description
-     * @returns {String} version Transaction status (true — mined; false - reverted)
-     */
+   * Create an upgrade proposal
+   * @param {String} assetAddress Asset's contract address
+   * @param {String} beaconAddress Address of beacon handling upgrade
+   * @param {Number} version Version number (simple increment)
+   * @param {String} codeAddress Address of new contract
+   * @param {String} upgradeData Data to be passed to newly upgraded contract
+   * @param {String} title Proposal title
+   * @param {String} description Proposal description
+   * @returns {String} version Transaction status (true — mined; false - reverted)
+   */
   // eslint-disable-next-line max-lines-per-function
   async createUpgradeProposal(assetAddress, beaconAddress, instanceAddress, codeAddress, title, description, forumLink, version, signer, governor) {
     if (!assetAddress || !beaconAddress || !instanceAddress || !codeAddress || !version || !signer || !governor) {
@@ -305,12 +303,12 @@ class DAO {
 
 
   /**
-     *
-     * @param {*} pType
-     * @param {*} approving
-     * @param {*} kycHash
-     * @param {*} signature
-     */
+   *
+   * @param {*} pType
+   * @param {*} approving
+   * @param {*} kycHash
+   * @param {*} signature
+   */
   async approve(pType, approving, kycHash, signature) {
     const assetContract = new AssetContract(this.ethereumClient, CONTRACTS.WEAVR);
     console.log("DAO____", {pType, approving, kycHash, signature})
@@ -319,12 +317,12 @@ class DAO {
   }
 
   /**
-     * Vote on a proposal
-     * @param {Asset} asset Asset that the DAO controls
-     * @param {Proposal} proposal Proposal to vote on
-     * @param {VoteType} voteType Type of the vote
-     * @returns {Boolean} Transaction status (true — mined; false - reverted)
-     */
+   * Vote on a proposal
+   * @param {Asset} asset Asset that the DAO controls
+   * @param {Proposal} proposal Proposal to vote on
+   * @param {VoteType} voteType Type of the vote
+   * @returns {Boolean} Transaction status (true — mined; false - reverted)
+   */
   async vote(assetAddress, proposalId, votes) {
     const assetContract = new AssetContract(this.ethereumClient, assetAddress);
     const status = await assetContract.vote(proposalId, votes);

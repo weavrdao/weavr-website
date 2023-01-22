@@ -20,9 +20,3 @@ export const getInfuraAuthHeader = () => {
   if (!process.env.VUE_APP_PROJECT_SECRET) throw new Error("PROJECT_SECRET not set in environment variables");
   return "Basic " + Buffer.from(process.env.VUE_APP_PROJECT_ID + ":" + process.env.VUE_APP_PROJECT_SECRET).toString("base64");
 };
-
-export const getCollabAuthHeader = () => {
-  if (!process.env.VUE_APP_COLLAB_USERNAME) throw new Error("VUE_APP_COLLAB_USERNAME not set in environment variables");
-  if (!process.env.VUE_APP_COLLAB_PASSWORD) throw new Error("VUE_APP_COLLAB_PASSWORD not set in environment variables");
-  return "Basic " + Buffer.from(process.env.VUE_APP_COLLAB_USERNAME + ":" + process.env.VUE_APP_COLLAB_PASSWORD).toString("base64");
-}
