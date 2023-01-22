@@ -48,6 +48,7 @@ function state() {
       orders: null,
       tokenAddress: null,
       crowdfundState: null,
+      tradeTokenAllowance: null
     },
   };
 }
@@ -207,36 +208,37 @@ const actions = {
       return;
     }
 
-    // const allowance = await crowdfund.getAllowance(assetId, address);
-    // const state = await crowdfund.getState(assetId);
-    // const tradeTokenBalance = await crowdfund.getBalance(assetId, address);
-    // const crowdfundTokenBalance = await crowdfund.getCrowdfundBalance(assetId, address);
+    const allowance = await crowdfund.getAllowance(assetId, address);
+    console.log("ALLOWANCE: ", allowance);
+    const state = await crowdfund.getState(assetId);
+    const tradeTokenBalance = await crowdfund.getBalance(assetId, address);
+    const crowdfundTokenBalance = await crowdfund.getCrowdfundBalance(assetId, address);
 
-    // context.commit(
-    //   "setCrowdfundState",
-    //   crowfundStates[String(state)] || null,
-    // )
+    context.commit(
+      "setCrowdfundState",
+      crowfundStates[String(state)] || null,
+    )
 
-    // if(allowance) {
-    //   context.commit(
-    //     "setTradeTokenAllowance",
-    //     hexToDecimals(allowance, 6),
-    //   );
-    // }
+    if(allowance) {
+      context.commit(
+        "setTradeTokenAllowance",
+        hexToDecimals(allowance, 6),
+      );
+    }
 
-    // if(tradeTokenBalance) {
-    //   context.commit(
-    //     "setTradeTokenBalance",
-    //     hexToDecimals(tradeTokenBalance, 6),
-    //   );
-    // }
+    if(tradeTokenBalance) {
+      context.commit(
+        "setTradeTokenBalance",
+        hexToDecimals(tradeTokenBalance, 6),
+      );
+    }
 
-    // if(crowdfundTokenBalance) {
-    //   context.commit(
-    //     "setCrowdfundTokenBalance",
-    //     hexToDecimals(crowdfundTokenBalance, 6)
-    //   );
-    // }
+    if(crowdfundTokenBalance) {
+      context.commit(
+        "setCrowdfundTokenBalance",
+        hexToDecimals(crowdfundTokenBalance, 6)
+      );
+    }
   },
   async fetchThreadTokenData(context, params) {
     const { assetId } = params;

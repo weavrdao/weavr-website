@@ -139,6 +139,7 @@ export default {
       crowdfundTokenBalance: "userCrowdfundTokenAllowance",
       crowdfundState: "crowdfundState",
     }),
+    
     needle() {
       return this.needles
         .find(n => n.id === this.needleId);

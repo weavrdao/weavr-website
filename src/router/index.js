@@ -122,6 +122,8 @@ const router = new createRouter({
           path: "needles/:needleId",
           name: "needle",
           component: SingleNeedle,
+          meta: {requiresAuth: true}, 
+
           beforeEnter: async (to, from ) => {
             
             store.dispatch("setLoadingState", {isLoading: true, message: `Loading data for \n ${"Needle"}`})
