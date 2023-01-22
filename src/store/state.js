@@ -273,7 +273,7 @@ const actions = {
     const toast = params.$toast || createToaster({});
     toast.info("Loading Data....");
     let assetId = params.assetId.toLowerCase();
-    let assetProposals = await dao.getProposalsForAsset(assetId);
+    let assetProposals = await dao.getProposalsForAsset(assetId, localStorage);
 
     context.commit("setProposalsForAsset", {
       assetId: assetId.toLowerCase(),
