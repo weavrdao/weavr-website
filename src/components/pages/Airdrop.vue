@@ -7,8 +7,12 @@
       <div class="columns">
         <div class="column is-half py-4 is-size-5 has-text-white">
           <p>
-            Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for
-            previewing layouts and visual mockups.
+            You've put in incredible work to get us here, and we want to reward you with being the first recipients of
+            WEAV.
+            Brought to you by <a href="https://www.weavr.org/#/0x43240c0f5dedb375afd28206e02110e8fed8cFc0/proposal/21">
+            Proposal #21</a>.
+            Please ensure that the claim amount to the right is correct.
+            It should be 0.1% of the total supply of WEAV that you will recieve at public TGE.
           </p>
         </div>
 
