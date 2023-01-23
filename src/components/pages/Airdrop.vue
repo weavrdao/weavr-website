@@ -8,14 +8,14 @@
         <div class="column is-half py-4 is-size-5 has-text-white">
           <p>
             You've put in incredible work to get us here, and we want to reward you with being the first recipients of
-            WEAV.
-
+            <a href="https://explorer.arbitrum.io/token/0x90BE6F8f30931322e60b913ecE49d1724D996054/token-transfers ">WEAV</a>
+          </p>
+          <p>
             Brought to you by <a href="https://www.weavr.org/#/0x43240c0f5dedb375afd28206e02110e8fed8cFc0/proposal/21">
-            Proposal #21</a>.
-
-            Please ensure that the claim amount to the right is correct.
-
-            It should be 0.1% of the total supply of WEAV that you will recieve at public TGE.
+            Proposal #21</a>
+          </p>
+          <p>
+            Welcome to the future of DAOs.
           </p>
         </div>
 

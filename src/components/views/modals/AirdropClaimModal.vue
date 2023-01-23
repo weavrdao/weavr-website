@@ -3,15 +3,19 @@
     <div class="is-flex is-flex-direction-column px-2">
       <div class="is-size-3 has-text-weight-bold mb-3">Claim Airdrop?</div>
       <div class="container has-text-white">
-        By clicking claim, you will receive your share of the WEAV airdrop.
-        This is a one time action and cannot be undone.
-
-        You are responsible for any tax or other legal obligations that may arise from this action.
-        Only members of WeavrDAO (12321 DAO LLC) are eligible for this airdrop, if you are not a member please cancel
-        the claim process and contact us on discord.
-
-        As a member of WeavrDAO, you are responsible for ensuring that you are eligible to receive the airdrop, and
-        that you are not in a jurisdiction that prohibits you from receiving it.
+        <p>
+          By clicking claim, you will receive your share of the WEAV airdrop.
+          This is a one time action and cannot be undone.
+        </p>
+        <p>
+          You are responsible for any tax or other legal obligations that may arise from this action.
+          Only members of WeavrDAO (12321 DAO LLC) are eligible for this airdrop, if you are not a member please cancel
+          the claim process and contact us on discord.
+        </p>
+        <p>
+          As a member of WeavrDAO, you are responsible for ensuring that you are eligible to receive the airdrop, and
+          that you are not in a jurisdiction that prohibits you from receiving it.
+        </p>
       </div>
       <div class="is-flex is-flex-direction-row-reverse mt-6">
         <button @click="claim"
