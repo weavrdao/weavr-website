@@ -258,6 +258,7 @@ const actions = {
 
     const {
       assetId,
+      blobVersion,
       name,
       descriptor,
       title,
@@ -277,6 +278,7 @@ const actions = {
 
     const status = await dao.createThreadProposal(
       assetId,
+      blobVersion,
       name,
       descriptor,
       title,
