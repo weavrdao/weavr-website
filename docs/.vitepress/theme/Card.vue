@@ -5,13 +5,14 @@
     </div>
     <div class="columns is-half">
       <p class="card-header">Written by {{ author.name }}</p>
-      <p class="card-bio">{{ author.bio }}</p>
+      <VueMarkdown :source="author.bio"/>
     </div>
   </div>
 
 </template>
 
 <script setup>
+import VueMarkdown from "vue-markdown-render";
 
 const props = defineProps(["author"])
 </script>

@@ -2,7 +2,7 @@
 <script setup>
 import DefaultTheme from "vitepress/theme"
 import Card from "./Card.vue"
-import {reactive, watch} from "vue"
+import {onBeforeMount, reactive, watch} from "vue"
 import {useData} from "vitepress";
 
 const {frontmatter} = useData()
@@ -23,8 +23,8 @@ function getAuthor(frontData) {
   }
 }
 
-watch(() => frontmatter, (frontData) => {
-  author.value = getAuthor(frontData)
+onBeforeMount(() => {
+  author.value = getAuthor(frontmatter.value)
 })
 
 
