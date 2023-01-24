@@ -4,20 +4,19 @@
       <figure class="image is-square">
         <img class="" :src="author.avatar" alt="..."/>
       </figure>
-      
+      {{ author.avatar }}
     </div>
     <div class="card-header ">
       <p class="card-header-title">Written by {{ author.name }}</p>
     </div>
     <div class="card-content">
-      <VueMarkdown :source="author.bio"/>
+      <div > {{author.bio}} </div>
     </div>
   </div>
 
 </template>
 
 <script setup>
-import VueMarkdown from "vue-markdown-render";
 
 const props = defineProps(["author"])
 </script>
