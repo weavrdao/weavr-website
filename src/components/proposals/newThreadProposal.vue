@@ -116,6 +116,7 @@ export default {
   name: "newThreadProposal",
   data(){
     return {
+      blobVersion: 0,
       name: "",
       descriptor: "",
       symbol: "",
@@ -142,6 +143,7 @@ export default {
       syncWallet: "syncWallet",
       createThreadProposal: "createThreadProposal",
     }),
+    // eslint-disable-next-line max-lines-per-function
     async publish() {
       if (!ethers.utils.isAddress(this.tradeToken)) {
         this.$toast.warning("Invalid trade token address", {
@@ -168,6 +170,7 @@ export default {
       }
       console.log({
         assetId: this.assetId || CONTRACTS.WEAVR,
+        blobVersion: this.blobVersion,
         name: this.name,
         descriptor: this.descriptor,
         forumLink: this.forumLink,
@@ -182,6 +185,7 @@ export default {
       });
       const payload = {
         assetId: this.assetId || CONTRACTS.WEAVR,
+        blobVersion: this.blobVersion,
         name: this.name,
         descriptor: this.descriptor,
         forumLink: this.forumLink,
@@ -205,7 +209,7 @@ export default {
     },
     onCancel() {
       this.$router.back();
-    }
+    },
   }
 }
 </script>
