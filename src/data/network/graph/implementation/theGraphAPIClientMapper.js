@@ -49,10 +49,11 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
   }
 
   mapRawThreads(rawThreads) {
+    console.log("RAW THREAD", rawThreads)
     if (!rawThreads || rawThreads.length < 1) {
       return []
     }
-    return rawThreads
+    return rawThreads.thread
       .map(rawThread => {
         const erc20 = new Erc20(
           rawThread.erc20.id,

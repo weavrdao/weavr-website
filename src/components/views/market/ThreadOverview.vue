@@ -8,10 +8,15 @@
           <div class="mt-6 py-6" style="border-top: 1px gray  solid;">
             <div class="label is-size-3">
               Token Address
-              </div>
-            <div class="has-text-primary is-size-4">{{thread.id}}</div>
-              <div class="label">Documents</div>
-            <div class="label">Tags</div>
+            </div>
+            <div 
+              class="has-text-primary is-size-7-mobile is-size-4-desktop"
+            >
+              <span style="cursor:copy;" v-on:click="copy"><unicon name="copy" fill="white"></unicon></span>
+              {{thread.id}}
+            </div>
+            <div class="label is-size-3">Documents</div>
+            <div class="label is-size-3">Tags</div>
           </div>
 
         </div>
@@ -103,7 +108,13 @@ export default {
     ...mapActions({
       fetchThreads: "refreshThreads",
     }),
-    
+    copy() {
+      navigator.clipboard.writeText(this.threadId).then(function() {
+        console.log('Async: Copying to clipboard was successful!');
+      }, function(err) {
+        console.error('Async: Could not copy text: ', err);
+      });
+    },
     getIpfsUrl(path) {
       return path
         ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${path}`

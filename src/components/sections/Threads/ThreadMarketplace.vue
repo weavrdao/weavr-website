@@ -3,7 +3,7 @@
     <div class="cover-image-container">
       <h3>Threads</h3>
     </div>
-   <div class="columns p-6">
+   <!-- <div class="columns p-6">
       <div class="column is-one-third">
         <div class="field">
           <p class="control has-icons-left has-icons-right">
@@ -14,7 +14,7 @@
           </p>
         </div>
       </div>
-   </div>
+   </div> -->
 
     <div v-if="loading" class="is-flex is-justify-content-center" >
       <Loading :message="`Loading threads`" />

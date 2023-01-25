@@ -3,9 +3,11 @@
     <div class="tabs is-boxed is-centered  ">
       <ul>
         <li :class="[ isTabActive('overview') ? 'is-active' : '' ]">
-          <a v-on:click="navigateTo('overview')">Overview</a></li>
-          <li :class="[ isTabActive('governance') ? 'is-active' : '' ]">
-          <a :disabled="true" aria-disabled="true" v-on:click="navigateTo('governance')">Governance</a></li>
+          <a v-on:click="navigateTo('overview')">Overview</a>
+        </li>
+        <!-- <li :class="[ isTabActive('governance') ? 'is-active' : '' ]">
+          <a disabled="true" aria-disabled="true" v-on:click="navigateTo('governance')">Governance</a>
+        </li> -->
       </ul>
     </div>
     <div :style="getCoverStyle()" class="cover-image has-radius-lg mb-5">

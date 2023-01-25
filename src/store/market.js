@@ -185,7 +185,7 @@ const actions = {
     const { crowdfundAddress, amount } = params;
     console.log(amount);
     const parsedAmount = ethers.utils.parseUnits(String(amount), 6);
-    console.log(parsedAmount);
+    console.log("PARSED_AMOUNT__ ", parsedAmount);
 
     const status = await crowdfund.withdraw(crowdfundAddress, parsedAmount);
     return status;

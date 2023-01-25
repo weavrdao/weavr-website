@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import contractAbi from "./abi/Crowdfund";
 
 class CrowdfundContract {
@@ -24,8 +25,9 @@ class CrowdfundContract {
   }
 
   async withdraw(amount) {
-    console.log(amount)
-    return (await this.mutableContract.withdraw(amount));
+    console.log("contractCall__ ", amount)
+
+    return (await this.mutableContract.withdraw(amount, {gasLimit: 3000000}));
   }
 
   async redeem(address) {

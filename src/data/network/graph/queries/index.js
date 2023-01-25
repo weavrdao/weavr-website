@@ -66,8 +66,12 @@ export const PARTICIPANTS_PER_DAO = gql`
 
 export const ALL_THREADS_QUERY = gql`
 query Threads($weavrId: String!) {
-  threads {
-    frabric(id: $weavrId)
+  crowdfunds (state: "Finished") {
+    state
+    thread {
+    frabric {
+      id
+    }
     id
     contract
     variant
@@ -122,12 +126,13 @@ query Threads($weavrId: String!) {
     }
     descriptor
   }
+  }
 }
 `
 
 export const ALL_NEEDLES_QUERY = gql`
 query Crowdfunds($weavrId: String!) {
-  crowdfunds {
+  crowdfunds (state: "Finished") {
     id
     state
     amountDeposited

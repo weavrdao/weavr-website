@@ -17,9 +17,7 @@
     </div>
     <p class="target">{{ getDisplayTarget() }} <strong>USDC</strong></p>
     <div class="progress-bar-container">
-      <div class="progress-bar">
-        <div v-bind:style="getProgressBarStyle()" class="progress" />
-      </div>
+      <progress class="progress is-small is-primary" max="100">{{ percentage}}</progress>
     </div>
   </section>
 </template>
@@ -46,6 +44,9 @@ export default {
     }),
     finished() {
       return this.needle.state === "Finished"
+    },
+    percentage() {
+      return (100 * this.needle.amountDeposited / this.needle.target)
     }
   },
   methods: {

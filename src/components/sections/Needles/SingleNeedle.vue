@@ -20,9 +20,7 @@
           <div class="progress-bar-container p-2">
           <p class="label mb-3">Funding progress</p>
           <p class="target-text has-text-right is-size-5">🎯 {{ target }} <strong>USDC</strong></p>
-          <div class="progress-bar">
-            <div v-bind:style="getProgressBarStyle()" class="progress" />
-          </div>
+          <progress class="progress is-primary" max="100">{{ 100*deposited/target}}</progress>
           <p class="target-text has-text-left is-size-5">💰 {{ deposited }} <strong>USDC</strong></p>
           <div v-if="crowdfundState !== null" class="is-flex is-justify-content-flex-end">
             <span class="tag has-background-mediumBlue has-text-white">{{ crowdfundState.value }}</span>
@@ -174,16 +172,6 @@ export default {
         : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
     
       return { "background-image": `linear-gradient(to left, rgba(22, 23, 30, 0), rgba(22, 23, 30, 1)), url(${url})`}
-    },
-    getProgressBarStyle() {
-      return {
-        width: `${100
-          * Number(
-            ethers.utils.formatUnits(this.needle.amountDeposited)
-          ) / Number(
-          ethers.utils.formatUnits(this.needle.target)
-        )}%`
-      }
     },
     purchase() {
       console.log(this.purchaseAmount);
