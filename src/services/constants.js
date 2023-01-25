@@ -71,7 +71,7 @@ export const DAO = "weavr";
 export const GUEST = "0x0000000000000000000000000000000000000000";
 
 const chain = process.env.VUE_APP_SELECTED_CHAIN
-export const NETWORK = _NETWORKS[chain];
+export const NETWORK = _NETWORKS['goerli'];
 
 export const CONTRACTS = NETWORK.contracts;
 

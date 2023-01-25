@@ -65,137 +65,108 @@ export const PARTICIPANTS_PER_DAO = gql`
 `;
 
 export const ALL_THREADS_QUERY = gql`
-query Threads($weavrId: String!) {
-  crowdfunds (state: "Finished") {
+query {
+  crowdfunds(where: { state: "Finished"})  {
     state
     thread {
-    frabric {
+      frabric {
+        id
+      }
       id
-    }
-    id
-    contract
-    variant
-    governor
-    erc20 {
-      id
-      name
-      symbol
-      decimals
-      supply
-      tradeToken
-      globalAcceptance
-      whitelist {
-        id
-        person
-        kycHash
-        removed
-      }
-      freezelist {
-        id
-        person
-        frozenUntil
-      }
-      orderBook {
-        id
-        price
-        type
-        totalAmount
-      }
-      executedOrders {
-        id
-        blockTimestamp
-        orderer
-        executor
-        price
-        amount
-      }
-      balances {
-        id
-        holder {
-          id
-        }
-        amount
-        transfersFrom {
-          timestamp
-          to {
-            id
-          }
-          amount
-        }
-      }
-    }
-    descriptor
-  }
-  }
-}
-`
-
-export const ALL_NEEDLES_QUERY = gql`
-query Crowdfunds($weavrId: String!) {
-  crowdfunds (state: "Finished") {
-    id
-    state
-    amountDeposited
-    target
-    thread {
-      id
-      descriptor
-      frabric(id: $weavrId) {
-        id
-      }
       contract
+      variant
       governor
-    }
-    deposits {
-      id
-      depositor
-      amount
-    }
-    withdrawals {
-      id
-      depositor
-      amount
-    }
-    distributions {
-      id
-      distribution {
-        token
-        amount
-        claims {
+      erc20 {
+        id
+        name
+        symbol
+        decimals
+        supply
+        tradeToken
+        globalAcceptance
+        whitelist {
           id
           person
-          amount
+          kycHash
+          removed
         }
-      }
-    }
-  }
-}
-`
-
-export const ALL_ASSET_PROPOSALS_QUERY = gql`
-  query Proposals($assetId: String!) {
-    desriptorChangeProposals(first: 5) {
-      id
-      thread {
-        id
-      }
-      descriptor
-      baseProposal {
-        id
-      }
-    } 
-  }
-`
-
-export const FRABRIC_DEX_ORDERS_QUERY = gql`
-  query Orders($frabricId: String!) {
-    frabrics(id: $frabricId) {
-      token {
+        freezelist {
+          id
+          person
+          frozenUntil
+        }
         orderBook {
           id
           price
           type
           totalAmount
+        }
+        executedOrders {
+          id
+          blockTimestamp
+          orderer
+          executor
+          price
+          amount
+        }
+        balances {
+          id
+          holder {
+            id
+          }
+          amount
+          transfersFrom {
+            timestamp
+            to {
+              id
+            }
+            amount
+          }
+        }
+      }
+      descriptor
+    }
+  }
+}
+`
+
+export const ALL_NEEDLES_QUERY = gql`
+query {
+  
+    crowdfunds(where: {state_not: Finished}) {
+      id
+      state
+      amountDeposited
+      target
+      thread {
+        id
+        descriptor
+        frabric {
+          id
+        }
+        contract
+        governor
+      }
+      deposits {
+        id
+        depositor
+        amount
+      }
+      withdrawals {
+        id
+        depositor
+        amount
+      }
+      distributions {
+        id
+        distribution {
+          token
+          amount
+          claims {
+            id
+            person
+            amount
+          }
         }
       }
     }

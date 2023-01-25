@@ -53,23 +53,23 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
     if (!rawThreads || rawThreads.length < 1) {
       return []
     }
-    return rawThreads.thread
+    return rawThreads
       .map(rawThread => {
         const erc20 = new Erc20(
-          rawThread.erc20.id,
-          rawThread.erc20.name,
-          rawThread.erc20.symbol,
-          rawThread.erc20.decimals,
-          rawThread.erc20.supply,
-          rawThread.erc20.tradeToken,
-          rawThread.erc20.balances
+          rawThread.thread.erc20.id,
+          rawThread.thread.erc20.name,
+          rawThread.thread.erc20.symbol,
+          rawThread.thread.erc20.decimals,
+          rawThread.thread.erc20.supply,
+          rawThread.thread.erc20.tradeToken,
+          rawThread.thread.erc20.balances
         )
         return new Thread(
-          rawThread.id,
-          rawThread.variant,
-          rawThread.governor,
+          rawThread.thread.id,
+          rawThread.thread.variant,
+          rawThread.thread.governor,
           erc20,
-          rawThread.descriptor
+          rawThread.thread.descriptor
         )
       })
   }

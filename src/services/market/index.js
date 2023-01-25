@@ -128,8 +128,8 @@ class Market {
           weavrId: NETWORK.contracts.WEAVR
         }, 
         (mapper, response) => { 
-          console.log(response.data.threads)
-          const mappedThreads =  mapper.mapRawThreads(response.data.threads) 
+          console.log(response.data.crowdfunds)
+          const mappedThreads =  mapper.mapRawThreads(response.data.crowdfunds) 
           console.log(mappedThreads)
           return mappedThreads
         }
@@ -225,6 +225,7 @@ class Market {
           weavrId: NETWORK.contracts.WEAVR
         }, 
         (mapper, response) => { 
+          console.log("RESPONSE:  ", response);
           const mappedNeedles =  mapper.mapRawNeedles(response.data.crowdfunds) 
           return mappedNeedles
         }
