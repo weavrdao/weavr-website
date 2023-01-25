@@ -133,7 +133,7 @@
         <div v-if="!!address">
           <p class="has-text-mediumBlue">Power: {{ voteAmount.toFixed(1) }} </p>
           <slider
-            class="slider"
+            class="slider is-rounded"
             v-model="voteAmount"
             color="#5A50D8"
             track-color="#FEFEFE"
