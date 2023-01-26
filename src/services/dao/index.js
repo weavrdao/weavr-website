@@ -146,7 +146,17 @@ class DAO {
     documents,
   ) {
     const assetContract = new AssetContract(this.ethereumClient, assetId);
-
+    console.log(assetId,
+      name,
+      descriptor,
+      title,
+      description,
+      forumLink,
+      symbol,
+      tradeToken,
+      target,
+      images,
+      documents);
     let imagesHashes;
     try {
       imagesHashes = await Promise.all(Array.from(images).map(

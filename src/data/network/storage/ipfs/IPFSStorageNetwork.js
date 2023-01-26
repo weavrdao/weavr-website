@@ -27,6 +27,7 @@ class IPFSStorageNetwork extends StorageNetwork {
     return test;
   }
 
+
   async addImage(imageFile) {
     const image = await this.ipfsAPIClient.add(imageFile, { pin: true });
     return image;

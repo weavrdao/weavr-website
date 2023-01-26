@@ -19,9 +19,9 @@ class CrowdfundContract {
    * @param {string} amount Amount of tokens to deposit into crowdfund
    */
   async deposit(amount) {
-    console.log(amount)
+    console.log("contractCall__ ", amount)
     console.log(this.mutableContract)
-    return (await this.mutableContract.deposit(amount));
+    return (await this.mutableContract.deposit(amount, {gasLimit: 3000000}));
   }
 
   async withdraw(amount) {

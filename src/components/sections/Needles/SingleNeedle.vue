@@ -20,7 +20,9 @@
           <div class="progress-bar-container p-2">
           <p class="label mb-3">Funding progress</p>
           <p class="target-text has-text-right is-size-5">🎯 {{ target }} <strong>USDC</strong></p>
-          <progress class="progress is-primary" max="100">{{ 100*deposited/target}}</progress>
+          <progress class="progress is-primary"  max="100">{{ percentage}}</progress>
+          <progress class="progress" value="15" max="100">15%</progress>
+          <div class="tag">{{ percentage}}</div>
           <p class="target-text has-text-left is-size-5">💰 {{ deposited }} <strong>USDC</strong></p>
           <div v-if="crowdfundState !== null" class="is-flex is-justify-content-flex-end">
             <span class="tag has-background-mediumBlue has-text-white">{{ crowdfundState.value }}</span>
@@ -151,6 +153,9 @@ export default {
     shouldShowRedeem() {
       if(!this.crowdfundState) return false;
       return this.crowdfundState.key === 3 && Number(this.crowdfundTokenBalance) > 0;
+    },
+    percentage() {
+      return 100 * 400000 / 10000000;
     }
   },
   methods: {
