@@ -2,37 +2,22 @@
 <script setup>
 import DefaultTheme from "vitepress/theme"
 import Card from "./Card.vue"
-import {onBeforeMount, reactive, watch} from "vue"
-import {useData} from "vitepress";
-
-const {frontmatter} = useData()
+import {reactive} from "vue"
 
 const {Layout} = DefaultTheme
 
-let author = reactive({});
-
-function getAuthor(frontData) {
-  if (frontData.author) {
-    return {
-      name: frontData.author,
-      bio: frontData.bio,
-      avatar: frontData.avatar
-    }
-  } else {
-    return null
-  }
-}
-
-onBeforeMount(() => {
-  author.value = getAuthor(frontmatter.value)
-})
+let author = reactive({
+  name: "...",
+  bio: "...",
+  avatar: "..."
+});
 
 
 </script>
 <template>
   <Layout>
-    <template v-if="author.value !== null" #aside-top>
-      <Card :author="author.value"/>
+    <template #aside-top>
+      <Card :author="author"/>
     </template>
   </Layout>
 </template>

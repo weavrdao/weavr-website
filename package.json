@@ -28,6 +28,7 @@
     "core-js": "^3.6.5",
     "deepmerge": "^1.5.2",
     "dotenv": "^7.0.0",
+    "ethereumjs-abi": "0.6.8",
     "ethers": "^5.7.1",
     "faker": "^5.5.3",
     "graphql": "^15.5.1",
