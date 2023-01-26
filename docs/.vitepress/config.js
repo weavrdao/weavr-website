@@ -2,7 +2,13 @@ export default {
   title: "WeavBlog",
   description: "Where to find all of your Weavr news and content",
   themeConfig: {
-    logo: "assets/logo.svg",
+    nav: [
+      {text: "Home", link: "/"},
+      {text: "Weavr", link: "https://weavr.org"},
+      {text: "Forums", link: "https://forum.weavr.org"},
+      {text: "GitHub", link: "https://github.com/weavrdao"}
+    ],
+    logo: "/logo.svg",
   },
   lastUpdated: true
 }
