@@ -17,7 +17,7 @@
     <Address :value="this.proposal.creator" />
     <p class="mt-2">
       <strong
-          :class="this.proposal.supermajority ? 'has-text-red' : 'has-text-mint'">
+          :class="this.proposal.supermajority ? 'has-text-red' : 'has-text-success'">
         {{ this.proposal.supermajority ? 'Supermajority consensus required' : 'Supermajority consensus not required' }}
       </strong>
     </p>

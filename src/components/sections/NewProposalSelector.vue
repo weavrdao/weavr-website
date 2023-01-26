@@ -1,8 +1,8 @@
 <template>
 <div class="proposal-selector  my-5 mx-0 p-5 columns">
   <div class="column is-half is-three-quaters-widescreen">
-    <label for="proposal-selector">Type of Proposal</label>
-    <select class="select is-medium has-background-darkGray has-text-white px-3 my-2"  v-model="selectedAction">
+    <label class="label" for="proposal-selector">Type of Proposal</label>
+    <select class="select is-size-5 has-background-darkGray has-text-white px-3 my-2"  v-model="selectedAction">
       <option v-for="option in actionTypes" :value="option.id" v-bind:key="option.id">
         {{ option.name }}
       </option>

@@ -3,7 +3,7 @@
     <div class="member-actions">
       <div v-if="whitelisted && isConnected && !hasKyc" class="button is-clickable is-success is-size-7" @click="onKyc"><span class="mr-1"></span>Get Verified</div>
       <div v-if="whitelisted && isConnected && hasKyc" class="button has-background-cyan has-text-white is-size-7 mr-1" @click="onVouch">Vouch</div>
-      <div v-if="whitelisted && isConnected && hasKyc" class="button is-size-7 has-background-mint " @click="kycInfo">
+      <div v-if="whitelisted && isConnected && hasKyc" class="button is-size-7 has-background-success " @click="kycInfo">
           <unicon name="user-check" :width="15" :height="15" fill="white" alt="address verified"/>
       </div>
     </div>

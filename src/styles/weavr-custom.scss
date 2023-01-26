@@ -23,7 +23,7 @@ $family-sans-serif: "Poppins Sans", sans-serif;
 
 // COLORS\
 $dimmedBlue: rgb(31, 28, 47 );
-$darkBlue: #000044;
+$darkBlue: #161528;
 $mediumBlue: #5A50D8;
 $lightBlue: #968EFF;
 $darkGray: #1D1B22;
@@ -33,9 +33,10 @@ $lightGray: #CACACA;
 $white: #FFFFFF;
 $black: #13111A;
 $magenta: #D841DE;
-$mint: #00EDC4;
-$red: #e2004f;
-$cyan: #00BDFF;
+$green: #50d85a;
+$mint: #5ed88e;
+$red: #d85a50;
+$cyan: #5aafd8;
 $lightNavy: #2F2C38;
 $boxGray: #16171A;
 $gold: #e6c300;
@@ -59,7 +60,7 @@ $text: $lightGray;
 $primary: $mediumBlue;
 $primary-invert: findColorInvert($primary);
 $danger: $lightBlue;
-
+$success: $mint;
 $transparent: rgba(0, 0, 0, 0);
 
 // Setup the new serif family
@@ -189,7 +190,7 @@ $colors: map-merge($colors, $addColors);
 .button {
   border: none;
   transition: all 150ms;
-
+  
   &:hover {
     filter: contrast(140%);
   }
@@ -374,10 +375,10 @@ $colors: map-merge($colors, $addColors);
     }
   }
   
-  .button {
-    margin-top: 20px;
-    width: 100% !important;
-  }
+  // .button {
+  //   margin-top: 20px;
+  //   width: 100% !important;
+  // }
   
   input {
     &::-webkit-outer-spin-button {

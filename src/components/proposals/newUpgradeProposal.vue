@@ -38,10 +38,22 @@
         <textarea class="textarea" v-model="description" type="text" placeholder="Description"></textarea>
       </div>
     </div>
-    <div class="is-flex is-justify-content-space-between mt-5">
-      <button @click="publish" class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
-      <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
-    </div>
+    <div class="block  mt-5">
+    <div :class="[preview ? 'is-primary ': 'is-secondary ', 'button has-text-white is-size-5 p-3']" @click=togglePreview>
+        <span class="mr-2">
+          <unicon 
+          height="18" 
+          width="18" 
+          fill="white"
+          :name="preview ? 'pen' : 'eye'"></unicon>
+
+        </span>
+      {{ preview ? "Edit" : "Preview" }}</div>
+  </div>
+  <div class="box is-flex is-justify-content-space-between mt-5">
+    <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
+    <button @click="publish"  class="button has-background-success has-text-white has-text-weight-bold">Submit Proposal</button>
+  </div>
     <!-- End Form -->
   </div>
 </template>

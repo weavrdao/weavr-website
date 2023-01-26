@@ -28,10 +28,21 @@
   <div v-if="preview">
     <Proposal :proposal="proposal" />
   </div>
-  <div class="is-flex is-justify-content-space-between mt-5">
-    <button @click="publish"  class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
-    <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
+  <div class="block">
+    <div :class="[preview ? 'is-primary ': 'is-secondary ', 'button has-text-white is-size-5 p-3']" @click=togglePreview>
+        <span class="mr-2">
+          <unicon 
+          height="18" 
+          width="18" 
+          fill="white"
+          :name="preview ? 'pen' : 'eye'"></unicon>
+
+        </span>
+      {{ preview ? "Edit" : "Preview" }}</div>
+  </div>
+  <div class="block is-flex is-justify-content-space-between mt-5">
     <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
+    <button @click="publish"  class="button has-background-success has-text-white has-text-weight-bold">Submit Proposal</button>
   </div>
   <!-- End Form -->
 </div>

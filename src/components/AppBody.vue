@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="">
     <HeaderNavigationBar />
     <div v-if="loadingState.isLoading" class="modal is-active">
       <div class="modal-background"></div>

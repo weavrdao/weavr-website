@@ -1,18 +1,33 @@
 <template>
   <div v-if="assetId" class="container p-5 is-dark">
     <StackNavigationBar @onBack="goBack" :address="assetId" />
-    <NewProposalSelector/>
-    <RefreshButton :assetId="assetId"/>
-    <div class="columns is-variable is-8">
-      <ProposalList
+    <div class="is-flex is-justify-content-end">
+      <button class="button is-primary" v-on:click="toggleSelector">{{ showSelector ? "Close dialog": "New Proposal" }}</button>
+    </div>
+    <NewProposalSelector v-if="showSelector"/>
+
+    <div class="mt-2"><RefreshButton :assetId="assetId"/></div>
+    <div class="tabs is-boxed is-centered  ">
+      <ul>
+        <li :class="[ isTabActive('overview') ? 'is-active' : '' ]">
+          <a v-on:click="navigateTo('overview')">Active Proposals</a>
+        </li>
+        <li :class="[ isTabActive('governance') ? 'is-active' : '' ]">
+          <a disabled="true" aria-disabled="true" v-on:click="navigateTo('governance')">Past Proposals</a>
+        </li>
+      </ul>
+    </div>
+
+    
+      <!-- <ProposalList
           :proposals="activeProposals"
           :assetId="assetId"
-          :proposalStatus="`Active Proposals`"/>
+          :proposalStatus="`Active Proposals`"/> -->
       <ProposalList
           :proposals="pastProposals"
           :assetId="assetId"
           :proposalStatus="`Past Proposals`"/>
-    </div>
+  
     <router-view></router-view>
   </div>
 </template>
@@ -138,11 +153,18 @@ export default {
     goBack() {
       this.$router.back();
     },
-
+    navigateTo(routeName) {
+      this.$router.push({name: routeName})
+    },
+    isTabActive(tabName) {
+      return this.$route.fullPath.includes(tabName)
+    },
     createProposal() {
       this.$router.push(`/dao/${this.assetId}/paperProposal`);
     },
-
+    toggleSelector() {
+      this.showSelector = !this.showSelector;
+    },
     isNumber(evt) {
       evt = evt ? evt : window.event;
       var charCode = evt.which ? evt.which : evt.keyCode;
@@ -166,6 +188,7 @@ export default {
       orderFromValue: "",
       orderToValue: "",
       proposalsList: this.proposals,
+      showSelector: false,
     };
   },
 

@@ -3,10 +3,9 @@
     <Proposal :proposal="proposal" />
     <div class="box has-background-darkGray">
       <label class="label">Consensus</label>
-      
       <div class="votes-container">
         <div class="is-flex is-justify-content-space-between">
-          <span class="has-text-mint has-text-weight-semibold">{{ this.votes.yes.percentage + ' %' }}</span>
+          <span class="has-text-success has-text-weight-semibold">{{ this.votes.yes.percentage + ' %' }}</span>
           <span class="has-text-red has-text-weight-semibold">{{ this.votes.no.percentage + ' %' }}</span>
         </div>
         <div class="votes-bar my-1">
@@ -17,7 +16,7 @@
           }"></div>
         </div>
         <div class="is-flex is-justify-content-space-between">
-          <span class="has-text-mint has-text-weight-medium">{{ this.votes.yes.count + ' votes in favour' }}</span>
+          <span class="has-text-success has-text-weight-medium">{{ this.votes.yes.count + ' votes in favour' }}</span>
           <span class="has-text-red has-text-weight-medium">{{ this.votes.no.count + ' votes against' }}</span>
         </div>
       </div>
@@ -39,7 +38,7 @@
         <div v-if="!!address">
           <p class="has-text-mediumBlue">Power: {{ voteAmount.toFixed(1) }} </p>
           <slider
-            class="slider is-rounded"
+            class="slider"
             v-model="voteAmount"
             color="#5A50D8"
             track-color="#FEFEFE"
@@ -59,7 +58,7 @@
             </div>
         </div>
         <div class="is-flex is-justify-content-space-between is-align-items-center mt-5" v-if="!cancelled || !ended">
-          <button @click="submitYesVote" :disabled="!address" class="button has-text-white has-background-mint has-text-weight-semibold">VOTE FOR </button>
+          <button @click="submitYesVote" :disabled="!address" class="button has-text-white has-background-success has-text-weight-semibold">VOTE FOR </button>
           <button @click="submitNoVote" :disabled="!address"  class="button has-text-white has-background-red has-text-weight-semibold">VOTE AGAINST</button>
         </div>
         <div v-if="userIsCreator && !ended" class="is-flex is-justify-content-flex-end mt-5">
@@ -96,14 +95,25 @@
   import { ethers } from "ethers";
   
   export default {
-    // (bill) TODO: Make this reload data if loaded directly
-    //              with a check to prevent extraneous calls.
     name: "SingleProposal",
     components: {
       slider,
       Proposal
     },
+    data () {
+    return {
+      proposalId: Number(this.$route.params.proposalId),
+      voteAmount: 0,
+      timeRemainingString: "",
+      PASSED,
+    }},
     computed: {
+      ...mapGetters({
+      proposals: "assetProposals",
+      address: "userWalletAddress",
+      balance: "userTokenBalance",
+      quorum: "quorum",
+    }),
     hasReachedQuorum() {
       console.log(this.quorum, this.participation);
       return this.quorum < this.participation
@@ -219,8 +229,6 @@
   mounted() {
     this.setTimeRemainingCountdown();
     this.getQuorum({assetId: this.$route.params.assetId})
-    this.refresh({ assetId: this.assetId, $toast: this.$toast });
-    console.log(this.proposal)
   },
   created() {
     if(this.balance) {
@@ -317,7 +325,7 @@
   }
   
   .green-bar {
-    background: $mint;
+    background: $success;
     height: 30px;
   }
   
