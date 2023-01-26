@@ -236,23 +236,24 @@ class Market {
       const offChainData = await this.storageNetwork.getFiles(
         needles.map(({ thread }) => getIpfsHashFromBytes32(thread.descriptor))
       );
+      console.log("offChainData", offChainData);
       for(let i=0; i < needles.length; i++) {
         if(offChainData[i].value) {
           needles[i].descriptor = offChainData[i].value.descriptor;
           needles[i].name = offChainData[i].value.name;
           needles[i].imagesHashes = offChainData[i].value.imagesHashes;
           needles[i].documentHashes = offChainData[i].value.documentHashes;
+          needles[i].metrics = offChainData[i].value.metrics;
         } else {
           needles[i].descriptor = offChainData[i].descriptor;
           needles[i].name = offChainData[i].name;
           needles[i].imagesHashes = offChainData[i].imagesHashes;
-          needles[i].documentHashes = offChainData[i].documentHashes;
+          needles[i].metrics = offChainData[i].metrics;
         }
       }
     } catch(e) {
       // no-op
     }
-
     return needles;
   }
 

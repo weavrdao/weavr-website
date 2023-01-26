@@ -46,6 +46,12 @@
           <textarea class="textarea" v-model="descriptor" type="text" placeholder="Descriptor"></textarea>
         </div>
       </div>
+      <div class="field">
+        <label class="label">Thread Metrics</label>
+        <div class="control">
+          <textarea class="textarea" v-model="metrics" type="text" placeholder="Descriptor"></textarea>
+        </div>
+      </div>
       <div class="file">
         <label class="file-label has-background-mediumBlue mt-3">
           <input
@@ -129,6 +135,7 @@ import {ethers} from "ethers";
 import { CONTRACTS, DAO } from "../../services/constants";
 import {ProposalTypes} from "@/models/common";
 import Proposal from "@/components/proposals/Proposal.vue"
+import { json } from "body-parser";
 
 export default {
 
@@ -144,6 +151,7 @@ export default {
       symbol: "",
       title: "",
       description: "",
+      metrics: "",
       tradeToken: CONTRACTS.TRADE_TOKEN,
       target: 0,
       forumLink: "",
@@ -193,21 +201,17 @@ export default {
         });
         return;
       }
-      console.log({
-        assetId: this.assetId || CONTRACTS.WEAVR,
-        blobVersion: this.blobVersion,
-        name: this.name,
-        descriptor: this.descriptor,
-        forumLink: this.forumLink,
-        description: this.description,
-        symbol: String(this.symbol).toUpperCase(),
-        title: this.title,
-        tradeToken: this.tradeToken,
-        target: this.target,
-        images: this.images,
-        documents: this.documents,
-        $toast: this.$toast
-      });
+      if(this.isJson(this.metrics)) {
+        this.metrics = JSON.stringify(JSON.parse(this.metrics))
+      }else {
+        this.$toast.warning("Metrics not in valid JSON format",
+        {
+          duration: 2000,
+          position: "bottom",
+        }
+        )
+        return
+      }
       const payload = {
         assetId: this.assetId || CONTRACTS.WEAVR,
         blobVersion: this.blobVersion,
@@ -215,6 +219,7 @@ export default {
         descriptor: this.descriptor,
         forumLink: this.forumLink,
         description: this.description,
+        metrics: this.metrics,
         symbol: String(this.symbol).toUpperCase(),
         title: this.title,
         tradeToken: this.tradeToken,
@@ -225,6 +230,14 @@ export default {
       }
       console.log(payload);
       await this.createThreadProposal(payload);
+    },
+    isJson(data) {
+      try {
+        JSON.parse(data)
+      }catch (err){
+        return false
+      }
+      return true
     },
     onChangeImages({ target: { files } }) {
       this.images = files;

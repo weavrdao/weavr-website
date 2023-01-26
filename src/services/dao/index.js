@@ -139,6 +139,7 @@ class DAO {
     descriptor,
     title,
     description,
+    metrics,
     forumLink,
     symbol,
     tradeToken,
@@ -175,7 +176,6 @@ class DAO {
     } catch(e) {
       console.log("Error uploading documents");
     }
-  
     const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
       title,
       description,
@@ -188,6 +188,7 @@ class DAO {
       name,
       imagesHashes,
       documentHashes,
+      metrics
     });
 
     const data = new ethers.utils.AbiCoder().encode(

@@ -65,6 +65,12 @@
           <vue-markdown class="content markdown-body" :options="{html: true}"  :source="needle.descriptor || '' " />
         </div>
         <div class="card mt-6">
+          <p class="label mb-3">Metrics</p>
+          <div class="colums" v-for="metric in metrics" :key="metric">
+            {{ metric }}
+          </div>
+        </div>
+        <div class="card mt-6">
           <p class="label mb-3">Property Documents</p>
           <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in needle.documentHashes" v-bind:key="document">
             <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
@@ -144,6 +150,9 @@ export default {
       return this.needles
         .find(n => n.id === this.needleId);
     },
+    metrics() {
+      return JSON.parse(this.needle.metrics)
+    },
     target() {
       return Number(ethers.utils.formatUnits(this.needle.target, 6)).toLocaleString();
     },
@@ -178,6 +187,7 @@ export default {
     
       return { "background-image": `linear-gradient(to left, rgba(22, 23, 30, 0), rgba(22, 23, 30, 1)), url(${url})`}
     },
+   
     purchase() {
       console.log(this.purchaseAmount);
       this.deposit({

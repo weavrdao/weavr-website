@@ -19,10 +19,10 @@
     </div>
 
     
-      <!-- <ProposalList
+      <ProposalList
           :proposals="activeProposals"
           :assetId="assetId"
-          :proposalStatus="`Active Proposals`"/> -->
+          :proposalStatus="`Active Proposals`"/>
       <ProposalList
           :proposals="pastProposals"
           :assetId="assetId"
