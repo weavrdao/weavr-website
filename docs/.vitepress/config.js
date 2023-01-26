@@ -1,6 +1,9 @@
 export default {
   title: "WeavBlog",
   description: "Where to find all of your Weavr news and content",
+  head: [
+    ["link", {rel: "icon", type: "image/x-con", href: "/favicon.ico"}],
+  ],
   themeConfig: {
     nav: [
       {text: "Home", link: "/"},
