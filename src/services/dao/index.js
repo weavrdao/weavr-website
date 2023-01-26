@@ -134,6 +134,7 @@ class DAO {
    */
   async createThreadProposal(
     assetId,
+    blobVersion,
     name,
     descriptor,
     title,
@@ -182,6 +183,7 @@ class DAO {
     });
 
     const descriptorHash = await this.storageNetwork.uploadAndGetPathAsBytes({
+      blobVersion,
       descriptor,
       name,
       imagesHashes,
