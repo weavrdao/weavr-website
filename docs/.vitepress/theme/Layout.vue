@@ -16,7 +16,7 @@ let author = reactive({
 </script>
 <template>
   <Layout>
-    <template #aside-top>
+    <template #aside-bottom>
       <Card :author="author"/>
     </template>
   </Layout>
