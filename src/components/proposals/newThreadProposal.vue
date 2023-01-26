@@ -135,8 +135,7 @@ import {ethers} from "ethers";
 import { CONTRACTS, DAO } from "../../services/constants";
 import {ProposalTypes} from "@/models/common";
 import Proposal from "@/components/proposals/Proposal.vue"
-import { json } from "body-parser";
-
+import { isJson } from "@/utils/common"
 export default {
 
   name: "newThreadProposal",
@@ -201,7 +200,7 @@ export default {
         });
         return;
       }
-      if(this.isJson(this.metrics)) {
+      if(isJson(this.metrics)) {
         this.metrics = JSON.stringify(JSON.parse(this.metrics))
       }else {
         this.$toast.warning("Metrics not in valid JSON format",
@@ -231,14 +230,7 @@ export default {
       console.log(payload);
       await this.createThreadProposal(payload);
     },
-    isJson(data) {
-      try {
-        JSON.parse(data)
-      }catch (err){
-        return false
-      }
-      return true
-    },
+    
     onChangeImages({ target: { files } }) {
       this.images = files;
     },

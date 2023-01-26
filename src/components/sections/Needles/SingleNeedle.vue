@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div class="container py-3">
     <div :style="getCoverStyle()" class="cover-image mb-5">
       <div class="information-container">
         <div class="tag-container mb-2">
@@ -20,91 +20,96 @@
           <div class="progress-bar-container p-2">
           <p class="label mb-3">Funding progress</p>
           <p class="target-text has-text-right is-size-5">🎯 {{ target }} <strong>USDC</strong></p>
-          <progress class="progress is-primary"  max="100">{{ percentage}}</progress>
-          <progress class="progress" value="15" max="100">15%</progress>
-          <div class="tag">{{ percentage}}</div>
+          <progress class="progress is-large is-success" :value="percentage" max="100">{{ percentage }}</progress>
           <p class="target-text has-text-left is-size-5">💰 {{ deposited }} <strong>USDC</strong></p>
           <div v-if="crowdfundState !== null" class="is-flex is-justify-content-flex-end">
-            <span class="tag has-background-mediumBlue has-text-white">{{ crowdfundState.value }}</span>
+            <span class="tag is-medium has-background-mediumBlue has-text-white">{{ crowdfundState.value }}</span>
           </div>
           <div v-else class="is-flex is-justify-content-flex-end">
             <span class="tag has-background-mediumBlue has-text-white">...</span>
           </div>
         </div>
-        <div v-if="shouldShowRedeem" class="card redeem-container is-flex is-align-items-center mb-5">
-          <span class="celebration">🥳</span>
-          <div>
-            <h4>This needle has been executed</h4>
-            <h4>Please redeem your thread tokens</h4>
-          </div>
-          <div class="is-flex-grow-1 is-flex is-justify-content-flex-end">
-            <button @click="redeemThreadTokens" class="has-text-white button shiny-button has-background-gold mt-0"><i></i><strong>Redeem</strong></button>
-          </div>
-        </div>
-        </div>
-
-
-        <div class="card">
-          <div class=" image-container">
-          <p class="label">Images</p>
-          <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
-            <Slide v-for="imageHash in needle.imagesHashes" v-bind:key="imageHash">
-              <div class="slide-image-container">
-                <img v-bind:src="getIpfsUrl(imageHash)" alt="">
+        <div class="columns p-3 mb-6">
+          <div class="column is-half">
+            <div class="card py-5">
+              <p class="label mb-3">Deposit</p>
+              <div class="is-flex is-justify-content-space-between">
+                <p class="has-text-white">Available:</p>
+                <p class="has-text-white">{{ tradeTokenBalance }} <span class="has-text-mediumBlue">USDC</span></p>
               </div>
-            </Slide>
-            <template #addons>
-              <Navigation />
-              <Pagination />
-            </template>
-          </Carousel>
-        </div>
-        </div>
-        <div class="card mt-6">
-          <p class="label mb-3">Property Description</p>
-          <vue-markdown class="content markdown-body" :options="{html: true}"  :source="needle.descriptor || '' " />
-        </div>
-        <div class="card mt-6">
-          <p class="label mb-3">Metrics</p>
-          <div class="colums" v-for="metric in metrics" :key="metric">
-            {{ metric }}
+              <input v-model="purchaseAmount" class="input my-2" type="number"/>
+              <div class="is-flex is-justify-content-space-between" v-if="crowdfundTokenBalance > 0">
+                <p class="has-text-white">Shares:</p>
+                <p class="has-text-white">{{ crowdfundTokenBalance }} <span class="has-text-mediumBlue">CROWDFUND</span></p>
+              </div>
+              <div class="mt-2">
+                <button v-if="!allowance" class="button has-background-mediumBlue has-text-white">...</button>
+                <button v-else-if="Number(allowance) === 0" @click="approve" class="button has-background-success has-text-white">Approve</button>
+                <button v-else @click="purchase" :disabled="crowdfundState.key !== 0" class="button has-background-success has-text-white">Purchase</button>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="card mt-6">
-          <p class="label mb-3">Property Documents</p>
-          <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in needle.documentHashes" v-bind:key="document">
-            <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
+          <div class="column is-half">
+            <div class="card mt-5">
+              <p class="label mb-3">Withdraw</p>
+              <div class="is-flex is-justify-content-space-between">
+                <p class="has-text-white">Available:</p>
+                <p class="has-text-white">{{ crowdfundTokenBalance }} <span class="has-text-mediumBlue">CROWDFUND</span></p>
+              </div>
+              <input v-model="withdrawAmount" class="input my-2" type="number" />
+              <div class="mt-2">
+                <button v-if="!allowance" class="button has-background-danger has-text-white">...</button>
+                <button v-else @click="withdrawFunds" :disabled="crowdfundState.key !== 0" class="button has-background-danger has-text-white">Withdraw</button>
+              </div>
+            </div>
           </div>
+          <div v-if="shouldShowRedeem" class="card redeem-container is-flex is-align-items-center mb-5">
+            <span class="celebration">🥳</span>
+            <div>
+              <h4>This needle has been executed</h4>
+              <h4>Please redeem your thread tokens</h4>
+            </div>
+            <div class="is-flex-grow-1 is-flex is-justify-content-flex-end">
+              <button @click="redeemThreadTokens" class="has-text-white button shiny-button has-background-gold mt-0"><i></i><strong>Redeem</strong></button>
+            </div>
+          </div>  
         </div>
       </div>
-      <div class="column is-one-third">
-        <div class="card py-5">
-          <p class="label mb-3">Purchase</p>
-          <div class="is-flex is-justify-content-space-between">
-            <p class="has-text-white">Available:</p>
-            <p class="has-text-white">{{ tradeTokenBalance }} <span class="has-text-mediumBlue">USDC</span></p>
-          </div>
-          <input v-model="purchaseAmount" class="input my-2" type="number" />
-          <div class="is-flex is-justify-content-space-between">
-            <p class="has-text-white">Shares:</p>
-            <p class="has-text-white">{{ crowdfundTokenBalance }} <span class="has-text-mediumBlue">CROWDFUND</span></p>
-          </div>
-          <div class="mt-2">
-            <button v-if="!allowance" class="button has-background-mediumBlue has-text-white">...</button>
-            <button v-else-if="Number(allowance) === 0" @click="approve" class="button has-background-success has-text-white">Approve</button>
-            <button v-else @click="purchase" :disabled="crowdfundState.key !== 0" class="button has-background-success has-text-white">Purchase</button>
-          </div>
+      <div class="card">
+        <div class=" image-container">
+        <p class="label">Images</p>
+        <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
+          <Slide v-for="imageHash in needle.imagesHashes" v-bind:key="imageHash">
+            <div class="slide-image-container">
+              <img v-bind:src="getIpfsUrl(imageHash)" alt="">
+            </div>
+          </Slide>
+          <template #addons>
+            <Navigation />
+            <Pagination />
+          </template>
+          </Carousel>
         </div>
-        <div class="card mt-5">
-          <p class="label mb-3">Withdraw</p>
-          <div class="is-flex is-justify-content-space-between">
-            <p class="has-text-white">Available:</p>
-            <p class="has-text-white">{{ crowdfundTokenBalance }} <span class="has-text-mediumBlue">CROWDFUND</span></p>
-          </div>
-          <input v-model="withdrawAmount" class="input my-2" type="number" />
-          <div class="mt-2">
-            <button v-if="!allowance" class="button has-background-danger has-text-white">...</button>
-            <button v-else @click="withdrawFunds" :disabled="crowdfundState.key !== 0" class="button has-background-danger has-text-white">Withdraw</button>
+      </div>
+      <div class="card mt-6">
+        <p class="label mb-3">Property Description</p>
+        <vue-markdown class="content markdown-body" :options="{html: true}"  :source="needle.descriptor || '' " />
+      </div>
+      <div class="card mt-6">
+        <p class="label mb-3">Property Documents</p>
+        <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in needle.documentHashes" v-bind:key="document">
+          <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
+        </div>
+      </div>
+      </div>
+      <div class="column is-one-third">
+        <div class="card mt-6 p-3 has-gray-border">
+          <!-- <p class="subtitle mb-3">Metrics</p> -->
+          <div class="columns" v-for="metric in metrics" :key="metric">
+            <div class="column is-half">
+              <div class="label">{{ metric.label}}:</div>
+            </div>
+            <div class="column">{{ metric.value}}</div>
           </div>
         </div>
       </div>
@@ -119,6 +124,7 @@ import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import { ethers } from "ethers";
 import Address from "../../views/address/Address.vue";
 import VueMarkdown from "vue-markdown-render";
+import { isJson } from '../../../utils/common';
 
 export default {
   name: "SingleNeedle",
@@ -151,7 +157,15 @@ export default {
         .find(n => n.id === this.needleId);
     },
     metrics() {
-      return JSON.parse(this.needle.metrics)
+      if(!isJson(this.needle.metrics)) return {}
+      const obj = JSON.parse(this.needle.metrics);
+      const keys = Object.keys(obj);
+      const values = Object.values(obj);
+      const metrics = []
+      for(let i=0; i<keys.length; i++) {
+        metrics.push({label: keys[i], value: values[i]})
+      }  
+      return metrics
     },
     target() {
       return Number(ethers.utils.formatUnits(this.needle.target, 6)).toLocaleString();
@@ -164,7 +178,7 @@ export default {
       return this.crowdfundState.key === 3 && Number(this.crowdfundTokenBalance) > 0;
     },
     percentage() {
-      return 100 * 400000 / 10000000;
+      return this.needle.amountDeposited / this.needle.target * 100;
     }
   },
   methods: {
@@ -187,7 +201,6 @@ export default {
     
       return { "background-image": `linear-gradient(to left, rgba(22, 23, 30, 0), rgba(22, 23, 30, 1)), url(${url})`}
     },
-   
     purchase() {
       console.log(this.purchaseAmount);
       this.deposit({

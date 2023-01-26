@@ -1,62 +1,46 @@
 <template>
    <div class="">
     <div class="columns">
-      <div class="column is-two-thirds">
-        <div class="box py-6">
-          <div class="title has-text-white is-size-2">{{thread.name}}</div>
-          <div class="has-text-primary is-size-4">(holders)</div>
-          <div class="mt-6 py-6" style="border-top: 1px gray  solid;">
-            <div class="label is-size-3">
-              Token Address
-            </div>
-            <div 
-              class="has-text-primary is-size-7-mobile is-size-4-desktop"
-            >
-              <span style="cursor:copy;" v-on:click="copy"><unicon name="copy" fill="white"></unicon></span>
-              {{thread.id}}
-            </div>
-            <div class="label is-size-3">Documents</div>
-            <div class="label is-size-3">Tags</div>
-          </div>
-
+      <div class="column is-two-thirds">  
+        <div class="card mb-5">
+          <div class="label">Thread Address:</div>
+          <Address :value="threadId"></Address>
         </div>
         <div class="card">
           <div class=" image-container">
-          <!-- <p class="has-text-white mb-3">Images</p> -->
-          <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
-            <Slide v-for="imageHash in thread.imagesHashes" v-bind:key="imageHash">
-              <div class="slide-image-container">
-                <img v-bind:src="getIpfsUrl(imageHash)" alt="">
-              </div>
-            </Slide>
-            <template #addons>
-              <Navigation />
-              <Pagination />
-            </template>
-          </Carousel>
+            <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
+              <Slide v-for="imageHash in thread.imagesHashes" v-bind:key="imageHash">
+                <div class="slide-image-container">
+                  <img v-bind:src="getIpfsUrl(imageHash)" alt="">
+                </div>
+              </Slide>
+              <template #addons>
+                <Navigation />
+                <Pagination />
+              </template>
+            </Carousel>
+          </div>
         </div>
-        </div>
-        <div class="card     mt-5">
-          <p class="has-text-white mb-3">Property Description</p>
+        <div class="">
+          <p class="label mb-3">Property Description</p>
           <vue-markdown class="content markdown-body"  :watches="['source']"  :source="thread.descriptor"/>
           <!-- <div class="box">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, mollitia labore dolor quasi ipsa temporibus neque fugiat inventore illo praesentium eius, nulla vel consequatur cum ad! Autem iste fugiat ratione.</div> -->
         </div>
       </div>
-      <div class="column is-on-third">
-        <div class="border-lightGray p-2">
-          <div class="is-size-4 has-text-weight-bold	">$ {{210000}}</div>
-          <ul class="py-5">
-            <li><span class="has-text-weight-bold has-text-white">Current Rent:</span> ${{"20000"}}</li>
-            <li><span class="has-text-weight-bold has-text-white">Market Value:</span> ${{"20000"}}</li>
-            <li><span class="has-text-weight-bold has-text-white">Living Space:</span> ${{"20000"}}</li>
-            <li><span class="has-text-weight-bold has-text-white">Rooms:</span> ${{"20000"}}</li>
-            <li><span class="has-text-weight-bold has-text-white">Year Built:</span> ${{"20000"}}</li>
-          </ul>
+      <div class="column is-one-third">
+        <div class="card p-3 has-gray-border">
+          <!-- <p class="subtitle mb-3">Metrics</p> -->
+          <div class="columns" v-for="metric in metrics" :key="metric">
+            <div class="column is-half">
+              <div class="label">{{ metric.label}}:</div>
+            </div>
+            <div class="column">{{ metric.value}}</div>
+          </div>
         </div>
       </div>
     </div>
     
-    <div class="dark-card mt-5">
+    <div class="card mt-5">
       <p class="has-text-white mb-3">Documents</p>
       <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in thread.documentHashes" v-bind:key="document">
         <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
@@ -71,7 +55,9 @@ import  VueMarkdown  from "vue-markdown-render"
 import { useRoute } from 'vue-router';
 import "vue3-carousel/dist/carousel.css"
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+import { isJson } from "../../../utils/common";
 import styles from "@/styles/weavr-custom.scss"
+import Address from "../address/Address.vue";
 export default {
   name: "ThreadOverview",
   components: {
@@ -79,10 +65,12 @@ export default {
     Carousel,
     Slide,
     Pagination,
-    Navigation
+    Navigation,
+    Address,
   },
     
   
+    
   data() {
     return {
       threadId: useRoute().params.threadId,
@@ -102,7 +90,18 @@ export default {
         symbol: this.thread.erc20.symbol,
         supply: this.thread.erc20.supply,
       }
-    }
+    },
+    metrics() {
+      if(!isJson(this.thread?.metrics)) return {}
+      const obj = JSON.parse(this.thread.metrics);
+      const keys = Object.keys(obj);
+      const values = Object.values(obj);
+      const metrics = []
+      for(let i=0; i<keys.length; i++) {
+        metrics.push({label: keys[i], value: values[i]})
+      }  
+      return metrics
+    },
   },
   methods: {
     ...mapActions({

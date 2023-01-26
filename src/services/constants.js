@@ -17,9 +17,7 @@ export const _NETWORKS = {
   arbitrum_goerli: { 
     name: "Arbitrum Goerli Testnet", 
     id: 421613, 
-    graph: "https://api.thegraph.com/subgraphs/name/abstrucked/weavr-arbtest-0123",
-    // "https://api.thegraph.com/subgraphs/name/abstrucked/arbitrum-goerli",
-    
+    graph: "https://api.thegraph.com/subgraphs/name/abstrucked/weavr-arbtest-0123",    
     contracts: {
       TOKEN_ADDRESS:"0x386575974C05E558D82FE6Cc965cD69503969125",
       BEACON:"0x12C1389c43Af590EF1170E222E163f88f269699A",
@@ -29,21 +27,6 @@ export const _NETWORKS = {
       BOND:"0x4f995659824E51B3461397C922E48ca0C2752007",
       FRABRIC_CODE:"0xdDdbfb95e5514086E88B1Cc69aa7AA75c13a2853",
       TRADE_TOKEN: "0xaa72fbFa8120Bb295A126C34348bb3d018c70efD"
-      // TOKEN_ADDRESS:"0x81723083222A35091Cbca6400a1c104cc28934a4",
-      // BEACON:"0x5A2D7Bdd03F3d5Ead6eaA8B11995713d373Ce2bb",
-      // WEAVR:"0x1c537448C8E3a631821Fe543e6DD5d16F74eafCe",
-      // THREAD_DEPLOYER:"0xa12EE7B34a973222cf952e4813928abCEA01CDA2",
-      // BOND:"0xA92F9C64e1216359b5Bdd1A40357beb51E079c0d",
-      // FRABRIC_CODE:"0x7338eA4B2837Fe57a7576Af6B53389e5f3332efA",
-      // TRADE_TOKEN: "0xaa72fbFa8120Bb295A126C34348bb3d018c70efD",
-
-      // TOKEN_ADDRESS:"0x2306562B0bfB8B22C85Fc9842127948aFa72d3B1",
-      // BEACON:"0x5d08a031f93d2770d24A7c83Ddb667cdf58d6206",
-      // WEAVR:"0x7dEa92bDEAC76E620342903d8a8eC9041000dFe9",
-      // THREAD_DEPLOYER:"0x7899A97E7a6518e95A7c22653477aaA97A7E7b64",
-      // BOND:"0x0965781A4C1e277Abb15dAb4058182345Fc3E726",
-      // FRABRIC_CODE:"0x3d1592DacFDEC420173b25D730CAA97c100dfd52",
-      // TRADE_TOKEN: "0xaa72fbFa8120Bb295A126C34348bb3d018c70efD"
     }
   },
   goerli: { 

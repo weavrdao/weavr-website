@@ -13,6 +13,14 @@ function bigIntMin(array) {
 
   return array.reduce((a, b) => (b < a ? b : a)) 
 }
+function isJson(data) {
+  try {
+    JSON.parse(data)
+  }catch (err){
+    return false
+  }
+  return true
+}
 
 function toFixedNumber(x) {
   if (Math.abs(x) < 1.0) {
@@ -74,5 +82,6 @@ export {
   bigIntMin,
   toFixedNumber,
   navigateToApp,
-  navigateToStatic
+  navigateToStatic,
+  isJson
 }

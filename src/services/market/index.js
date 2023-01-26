@@ -159,60 +159,19 @@ class Market {
           threads[i].name = offChainData[i].value.name;
           threads[i].imagesHashes = offChainData[i].value.imagesHashes;
           threads[i].documentHashes = offChainData[i].value.documentHashes;
+          threads[i].metrics = offChainData[i].value.metrics;
         } else {
           threads[i].descriptor = offChainData[i].descriptor;
           threads[i].name = offChainData[i].name;
           threads[i].imagesHashes = offChainData[i].imagesHashes;
           threads[i].documentHashes = offChainData[i].documentHashes;
+          threads[i].metrics = offChainData[i].value.metrics;
         }
       }
     } catch(e) {
       // no-op
       console.log(e);
     }
-
-    // const assetDataURIArray = assets
-    //   .map(asset => asset.descriptor)
-    // let assetOffchainDataArray = (
-    //   await this.storageNetwork
-    //     .getFiles(assetDataURIArray.map(uri => CommonUtils.pathFromURL(uri)))
-    // )
-    //   .map(obj => obj.world.property)
-
-    // console.log("Off-chain data:")
-    // console.log(assetOffchainDataArray)
-
-    // if (assetOffchainDataArray.length != assets.length) {
-    //   throw("Off-chain data count doesn't match the on-chain data")
-    // }
-
-    // for (var i = 0; i < assets.length; i++) {
-    //   let asset = assets[i]
-    //   let data = assetOffchainDataArray[i]
-
-    //   let completeAsset = new Asset(
-    //     asset.id,
-    //     asset.dataURI,
-    //     asset.contractAddress,
-    //     asset.symbol,
-    //     asset.numOfShares,
-    //     asset.owners,
-    //     asset.marketOrders,
-    //     asset.proposals,
-    //     data.address,
-    //     data.area,
-    //     data.coverImage,
-    //     data.currentRent,
-    //     data.description,
-    //     data.grossYieldPct,
-    //     data.marketValue,
-    //     data.rooms.bdCount,
-    //     data.rooms.baCount,
-    //     data.yearBuilt
-    //   )
-
-    //   assets[i] = completeAsset
-    // }
     console.log("FINAL THREADS: ", threads);
     return threads
   }
