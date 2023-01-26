@@ -1,6 +1,6 @@
-import { createApp, h } from "vue"
+import {createApp, h} from "vue"
 import App from "./App.vue"
-import router from "./router/index.js"
+import router from "./router/index.js";
 import store from "./store"
 import "./styles/weavr-custom.scss";
 // import "bulma/css/bulma.css"
@@ -10,12 +10,8 @@ import { uniSearch, uniArrowUpRight, uniEyeSlash, uniTimes, uniTimesSquare, uniS
 Unicon.add([uniSearch, uniArrowUpRight, uniTimes,uniEyeSlash, uniTimesSquare, uniSignout, uniFilePlusAlt, uniCamera, uniAngleDown, uniUserCheck, uniBullseye, uniTwitter, uniDiscord, uniAngleLeft, uniAngleDown, uniGithub, uniCopy])
 require("dotenv").config()
 
-
-
-
-
 const app = createApp({
-    render: () => h(App)
+  render: () => h(App)
 })
 
 store.$toast = app.$toast;

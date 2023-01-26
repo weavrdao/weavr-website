@@ -1,100 +1,6 @@
 <template>
   <div class="container p-5 relative">
-    <div @click="routeToHome" class="close-icon">
-      <!-- NOTE (bill) Just could not get this icon importing for the life of me -->
-      <!-- <unicon name="multiply" fill="white"/> -->
-      <div class="temp-close-dot"/> 
-    </div>
-    <div class="proposal-type" :class="this.typeStylingData.class">
-      {{ `${this.typeStylingData.text} Proposal` }}
-    </div>
-    <h2 class="is-size-5 has-text-mediumBlue">
-      {{ this.startDate }}
-    </h2>
-    <h3 :class="[proposal.state=='Cancelled' || proposal.state=='Failed' ? 'has-text-red' : 'has-text-success', 'p-2',]">{{proposal.state}}</h3>
-    <h1 class="title has-text-white mb-5">{{ proposal.title }}</h1>
-    <label class="label">Creator</label>
-    <Address :value="proposal.creator" />
-    <p class="mt-2">
-      <strong
-        :class="proposal.supermajority ? 'has-text-red' : 'has-text-mint'">
-        {{ proposal.supermajority ? 'Supermajority consensus required' : 'Supermajority consensus not required' }}
-      </strong>
-    </p>
-    <a :href="proposal.forumLink" target="_blank" rel="noopener" class="button has-background-mediumBlue has-text-white mt-3">Forum link</a>
-    <!-- Upgrade Proposal Information -->
-    <div v-if="proposal.code">
-      <label class="label">New Code Address</label>
-      <Address :value="proposal.code" />
-    </div>
-    <div v-if="proposal.instance">
-      <label class="label">Instance Address</label>
-      <Address :value="proposal.instance" />
-    </div>
-    <div v-if="proposal.version">
-      <label class="label">Proposed Version</label>
-      <p><strong>{{proposal.version}}</strong></p>
-    </div>
-    <!-- End Upgrade Proposal Information -->
-    
-    <!-- Participant Proposal Upgrade -->
-    <div v-if="proposal.participant">
-      <label class="label">Participant Address</label>
-      <Address :value="proposal.participant" />
-    </div>
-    <div v-if="proposal.participantType">
-      <label class="label">Participant Type</label>
-      <p><strong>{{proposal.participantType}}</strong></p>
-    </div>
-    <!-- End Participant Proposal Upgrade -->
-  
-    <!-- Token Action Proposal -->
-      <div v-if="proposal.token">
-        <label class="label">Token Address</label>
-        <Address :value="proposal.token" />
-      </div>
-      <div v-if="proposal.target">
-        <label class="label">Target Address</label>
-        <Address :value="proposal.target" />
-      </div>
-      <div v-if="proposal.mint !== undefined">
-      <label class="label">Mint?</label>
-      <p>{{proposal.mint ? 'Yes': 'No'}}</p>
-    </div>
-    <div v-if="proposal.price">
-      <label class="label">Price</label>
-      <p><strong>{{proposal.price}}</strong></p>
-    </div>
-    <div v-if="proposal.amount">
-      <label class="label">Amount</label>
-      <p><strong>{{formatEther(proposal.amount)}}</strong></p>
-    </div>
-    <!-- End Token Action Proposal -->
-  
-    <div class="box has-background-darkGray">
-      <label class="label">Description</label>
-    <div class="description-container p-0">
-      <vue-markdown class="content markdown-body" :options="{html: true}"  :source="proposal.description" />
-    </div>
-    </div>
-    <div class="box has-background-darkGray">
-      <label class="label">DAO Resolution</label>
-      <div  :class="['p-0'].concat(proposal.daoResolution ? ['has-text-warning'] : ['has-text-success'])">
-      <div> 
-        {{ 
-          proposal.daoResolution==true 
-            ? "This proposal will influence the DAO" 
-            : "This proposal will not influence the DAO" 
-          }}
-        </div>
-      </div>
-    </div>
-    <!-- <div 
-      :class="['tag', hasReachedQuorum ? 'is-success' : 'is-warning']"
-    >
-      {{ hasReachedQuorum ? "Quorum reached" : "Quorum not reached" }}
-      <span>{{}}</span>
-    </div> -->
+    <Proposal :proposal="proposal" />
     <div class="box has-background-darkGray">
       <label class="label">Consensus</label>
       
@@ -168,60 +74,36 @@
         </div>
       </div>
     </div>
-  </div>  
-</template>
+    {{assetId}}
+  </div>
+  </template>
   
-<script>
-import { mapGetters, mapActions } from "vuex";
-import slider from "vue3-slider"
-import {
-  getProposalTypeStyling,
-  padWithZeroes,
-  dateStringForTimestamp,
-  getVotes,
-  hasEnded,
-  getResult,
-} from "../../data/helpers";
-import { PASSED } from "../../models/common";
-import Address from "../views/address/Address.vue";
-import { DAO } from "../../services/constants"
-import VueMarkdown from "vue-markdown-render";
-import { ethers } from "ethers";
-
-export default {
-  // (bill) TODO: Make this reload data if loaded directly
-  //              with a check to prevent extraneous calls.
-  name: "SingleProposal",
-  components: {
-    Address,
-    slider,
-    VueMarkdown
-  },
-  data () {
-    return {
-      proposalId: Number(this.$route.params.proposalId),
-      voteAmount: 0,
-      timeRemainingString: "",
-      PASSED,
-    }
-  },
-  props: {
-    assetId: {
-      type: String,
-      required: true,
-    }
-  },
-  computed: {
-    ...mapGetters({
-      proposals: "assetProposals",
-      address: "userWalletAddress",
-      balance: "userTokenBalance",
-      quorum: "quorum"
-    }),
-    
-    participation() {
-      return (Number(this.votes.yes.count)+Number(this.votes.no.count))
+  <script>
+  import { mapGetters, mapActions } from "vuex";
+  import slider from "vue3-slider"
+  import {
+    getProposalTypeStyling,
+    padWithZeroes,
+    dateStringForTimestamp,
+    getVotes,
+    hasEnded,
+    getResult,
+  } from "../../data/helpers";
+  import { PASSED } from "../../models/common";
+  import { DAO } from "../../services/constants"
+  import {CommonProposalType, ProposalTypes} from "@/models/common.js"
+  import Proposal from "@/components/proposals/Proposal.vue"
+  import { ethers } from "ethers";
+  
+  export default {
+    // (bill) TODO: Make this reload data if loaded directly
+    //              with a check to prevent extraneous calls.
+    name: "SingleProposal",
+    components: {
+      slider,
+      Proposal
     },
+    computed: {
     hasReachedQuorum() {
       console.log(this.quorum, this.participation);
       return this.quorum < this.participation

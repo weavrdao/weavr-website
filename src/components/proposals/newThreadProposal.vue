@@ -2,6 +2,7 @@
   <div class="container p-5">
     <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Thread Proposal</div>
     <!-- PAPER PROPOSAL FORM -->
+    <div v-if="!preview">
     <div class="field">
       <label class="label">Proposal Title</label>
       <div class="control">
@@ -97,8 +98,13 @@
       <label class="label">Forum link</label>
       <input v-model="forumLink" type="text" class="input"/>
     </div>
+      </div>
+    <div v-if="preview">
+      <Proposal :proposal="proposal" />
+    </div>
     <div class="is-flex is-justify-content-space-between mt-5">
       <button @click="publish" class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
+      <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
       <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
     </div>
     <!-- End Form -->
@@ -110,10 +116,15 @@
 import { mapGetters, mapActions } from "vuex";
 import {ethers} from "ethers";
 import { CONTRACTS, DAO } from "../../services/constants";
+import {ProposalTypes} from "@/models/common";
+import Proposal from "@/components/proposals/Proposal.vue"
 
 export default {
 
   name: "newThreadProposal",
+  components: {
+    Proposal
+  },
   data(){
     return {
       blobVersion: 0,
@@ -127,6 +138,9 @@ export default {
       forumLink: "",
       images: null,
       documents: null,
+      preview: false,
+      proposal: null,
+      proposalType: ProposalTypes.Thread,
     }
   },
   computed: {
@@ -209,6 +223,26 @@ export default {
     },
     onCancel() {
       this.$router.back();
+    },
+    togglePreview() {
+      this.proposal = {
+        title: this.title,
+        description: this.description,
+        type: this.proposalType,
+        creator: '0x00000',
+        startTimeStamp: 0,
+        endTimeStamp: 0,
+        address: this.address,
+        forumLink: this.forumLink,
+        tradeToken: this.tradeToken,
+        target: this.target,
+        images: this.images,
+        documents: this.documents,
+        symbol: this.symbol,
+        assetId: this.assetId
+
+      }
+      this.preview = !this.preview
     },
   }
 }
