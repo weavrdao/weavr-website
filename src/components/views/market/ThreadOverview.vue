@@ -55,7 +55,7 @@
         <div class="card p-3 mt-5 has-radius-lg border-lightGray">
           <p class="subtitle mb-3">Holders</p>
           <div class="columns mb-0 is-gapless" v-for="holder in holders" :key="holder.holder.id">
-            <div class="column">
+            <div class="column" v-on:click="copy">
               <Address :value="holder.holder.id"></Address>
             </div>
           </div>

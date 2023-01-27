@@ -248,7 +248,7 @@ $colors: map-merge($colors, $addColors);
   display: inline-block;
   font-weight: 400;
   padding: 5px 10px;
-  border: 2px solid white;
+  border: 0px solid white;
   border-radius: $tiny-radius;
   margin-bottom: 20px;
 }
