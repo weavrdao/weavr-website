@@ -32,11 +32,6 @@ export default {
       whitelisted: "isWhitelisted",
     })
   },
-  props: {
-    assetId: {
-      type: String,
-    }
-  },
   methods: {
     ...mapActions({
       checkWhitelisted: "checkWhitelistStatus"
@@ -45,7 +40,7 @@ export default {
       this.$router.push("/walletConnect")
     },
     continueToGovernance () {
-      this.$router.push({path: "/"+CONTRACTS.WEAVR});
+      this.$router.push({path: "/dao/"+CONTRACTS.WEAVR});
     },
     openLoginModal () {
       this.$router.push("/login")
