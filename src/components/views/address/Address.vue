@@ -1,6 +1,6 @@
 <template>
   <div class="tag is-primary is-medium is-clickable has-radius-lg">
-    <a :href="`https://arbiscan.io/address/${value}`" target="_blank" rel="noopener" class="has-text-white">
+    <a :href="`${explorer}/address/${value}`" target="_blank" rel="noopener" class="has-text-white">
       <span class="is-family-monospace" v-bind:title="address">
       {{
         address.substring(0, 8) + "..." + address.substring(address.length - 4)
@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { CONTRACTS, NETWORK } from '../../../services/constants';
+
 export default {
   name: "Address",
   props: {
@@ -26,6 +28,11 @@ export default {
     return {
       address: "",
     };
+  },
+  computed: {
+    explorer() {
+      return NETWORK.explorer
+    }
   },
   created() {
     this.address = this.value;
