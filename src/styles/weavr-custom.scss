@@ -77,7 +77,11 @@ $card-radius: 0.50rem;
 $tiny-radius: 5px;
 $small-radius: 10px;
 
-$tabs-boxed-link-active-border-color: $primary;
+
+$tabs-link-color: $mediumGray;
+$tabs-toggle-link-active-background-color: $primary;
+$tabs-toggle-link-active-border-color: $primary;
+$tabs-toggle-link-border-color: $mediumGray;
 /*************************
   DROPDOWN
 *************************/ 

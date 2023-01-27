@@ -49,7 +49,7 @@
       <div class="field">
         <label class="label">Thread Metrics</label>
         <div class="control">
-          <textarea class="textarea" v-model="metrics" type="text" placeholder="Descriptor"></textarea>
+          <textarea class="textarea" v-model="metrics" type="text" placeholder="{metricName: metricValue}"></textarea>
         </div>
       </div>
       <div class="file">
