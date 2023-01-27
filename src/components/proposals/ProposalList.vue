@@ -11,8 +11,12 @@
             {{ text }}
           </div>
       </div> 
-      <div v-for="proposal in this.filteredProposals" v-bind:key="proposal.id">
+      <div class="columns is-multiline">
+        <div class="column is-one-third" v-for="proposal in this.filteredProposals" v-bind:key="proposal.id">
+          <div >
         <ProposalListItem :proposal="proposal" :assetId="assetId"/>
+      </div>
+        </div>
       </div>
     </div>
     <div v-else class="is-flex is-flex-direction-column is-justify-content-center is-align-items-center">

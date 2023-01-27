@@ -201,7 +201,7 @@ const router = new createRouter({
             {
               path: "governance",
               name: "governance",
-              component: Governance,
+              component: Governance
             }
           ]
         },

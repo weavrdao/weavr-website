@@ -32,9 +32,8 @@
           </div>
         </div>
         <div class="">
-          <p class="label mb-3">Property Description</p>
+          <p class="label mt-5 mb-5">Property Description</p>
           <vue-markdown class="content markdown-body"  :watches="['source']"  :source="thread.descriptor"/>
-          <!-- <div class="box">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, mollitia labore dolor quasi ipsa temporibus neque fugiat inventore illo praesentium eius, nulla vel consequatur cum ad! Autem iste fugiat ratione.</div> -->
         </div>
         <div class="card mt-5">
           <p class="label mb-3">Documents</p>
