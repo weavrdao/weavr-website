@@ -26,6 +26,7 @@ export default {
       refresh: ""
     }),
     goBack() {
+      console.log(this.$route.fullPath);
       this.$router.back();
     }
   },

@@ -2,9 +2,9 @@
 <div class="is-flex is-justify-content-flex-end">
     <button
       @click="refreshData"
-      class="button has-background-mediumBlue has-text-white"
+      :class="`button is-${style} has-text-white p-3`"
     >
-      <unicon name="sync" fill="white"></unicon>
+      <unicon name="sync" fill="white" :width="size" :height="size"></unicon>
     </button>
 </div>
 </template>
@@ -18,6 +18,15 @@ export default {
     assetId: {
       type: String,
       requried: true,
+    },
+    style: {
+      type: String,
+      default: "success"
+    }
+  },
+  data() {
+    return {
+      size: 24,
     }
   },
   methods: {
@@ -30,3 +39,4 @@ export default {
   }
 }
 </script>
+

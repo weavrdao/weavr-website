@@ -4,7 +4,7 @@
         <span class="proposal-type" :class="this.typeStylingData.class">
           {{ this.typeStylingData.text }}
         </span>
-        <div @click="routeToProposal" class="">
+        <div @click="routeToProposal" class="mt-6">
           <h1 :class="[proposal.state=='Cancelled' || proposal.state=='Failed' ? 'has-text-red' : 'has-text-success', 'is-title']">{{proposal.state}}</h1>
           <div>
             <h2 class="is-size-5 has-text-mediumBlue">
@@ -175,26 +175,13 @@ export default {
 .proposal-type {
   font-weight: 400;
   padding: 5px 10px;
-  border: 2px solid white;
   position: absolute;
   top: 0;
   right: 0;
-  border-radius: 0 0.5rem 0 0 !important;
-}
-.paper {
-  border-color: $success;
-  color: $success;
+  width: 100%;
+  border-radius: 0 0.5rem 0 0.5rem !important;
 }
 
-.participant {
-  border-color: whitesmoke;
-  color: whitesmoke;
-}
-
-.upgrade {
-  border-color: #D841DE;
-  color: #D841DE;
-}
 
 .outcome-box {
   color: white;
@@ -226,11 +213,11 @@ export default {
 }
 
 
-    @media (max-width: 767px) {
-        .markdown-body {
-            padding: 15px;
-        }
+@media (max-width: 767px) {
+    .markdown-body {
+        padding: 15px;
     }
+}
 
 .bottom-right-corner {
   position: absolute;

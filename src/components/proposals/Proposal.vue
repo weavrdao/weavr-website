@@ -11,7 +11,7 @@
     <h2 class="is-size-5 has-text-mediumBlue">
       {{ this.proposal.startDate }}
     </h2>
-    <h3 :class="[this.proposal.state=='Cancelled' || this.proposal.state=='Failed' ? 'has-text-red' : 'has-text-success', 'p-2',]">{{this.proposal.state}}</h3>
+    <h4 :class="[this.proposal.state=='Cancelled' || this.proposal.state=='Failed' ? 'has-text-red' : 'has-text-success']">{{this.proposal.state}}</h4>
     <h1 class="title has-text-white mb-5">{{ this.proposal.title }}</h1>
     <label class="label">Creator</label>
     <Address :value="this.proposal.creator" />
@@ -174,33 +174,6 @@ export default {
   }
 }
 
-.proposal-type {
-  display: inline-block;
-  font-weight: 400;
-  padding: 5px 10px;
-  border: 2px solid white;
-  border-radius: $tiny-radius;
-  margin-bottom: 20px;
-}
-.paper {
-  border-color: #00EDC4;
-  color: #00EDC4;
-}
-
-.participant {
-  border-color: whitesmoke;
-  color: whitesmoke;
-}
-
-.upgrade {
-  border-color: #D841DE;
-  color: #D841DE;
-}
-
-.thread {
-  border-color: yellow;
-  color: yellow;
-}
 
 .description-container {
   background: transparent !important;
