@@ -1,12 +1,22 @@
 <template>
    <div class="">
     <div class="columns">
-      <div class="column is-two-thirds">  
-        <div class="card mb-5">
-          <div class="label">Thread Address:</div>
-          <Address :value="threadId"></Address>
+      <div class="column is-two-thirds mb-5">  
+        <div class="p-3">
+          <div class="card">
+            <div class="is-flex is-justify-content-end	">
+              <div class="has-text-white tag is-primary is-medium">
+                <span class="mr-1">{{holders.length}}</span> 
+                <span>Holders</span>
+              </div>
+            </div>
+          </div>
+          <div class="card mb-5">
+            <div class="label">Thread Address:</div>
+            <Address :value="threadId"></Address>
+          </div>
         </div>
-        <div class="card">
+        <div class="card mt-5">
           <div class=" image-container">
             <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
               <Slide v-for="imageHash in thread.imagesHashes" v-bind:key="imageHash">
@@ -26,24 +36,31 @@
           <vue-markdown class="content markdown-body"  :watches="['source']"  :source="thread.descriptor"/>
           <!-- <div class="box">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, mollitia labore dolor quasi ipsa temporibus neque fugiat inventore illo praesentium eius, nulla vel consequatur cum ad! Autem iste fugiat ratione.</div> -->
         </div>
+        <div class="card mt-5">
+          <p class="label mb-3">Documents</p>
+          <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in thread.documentHashes" v-bind:key="document">
+            <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
+          </div>
+        </div>
       </div>
       <div class="column is-one-third">
-        <div class="card p-3 has-gray-border">
-          <!-- <p class="subtitle mb-3">Metrics</p> -->
-          <div class="columns" v-for="metric in metrics" :key="metric">
+        <div class="card p-3 has-radius-lg border-lightGray">
+          <p class="subtitle mb-3">Metrics</p>
+          <div class="columns mb-0" v-for="metric in metrics" :key="metric">
             <div class="column is-half">
               <div class="label">{{ metric.label}}:</div>
             </div>
             <div class="column">{{ metric.value}}</div>
           </div>
         </div>
-      </div>
-    </div>
-    
-    <div class="card mt-5">
-      <p class="has-text-white mb-3">Documents</p>
-      <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in thread.documentHashes" v-bind:key="document">
-        <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
+        <div class="card p-3 mt-5 has-radius-lg border-lightGray">
+          <p class="subtitle mb-3">Holders</p>
+          <div class="columns mb-0 is-gapless" v-for="holder in holders" :key="holder.holder.id">
+            <div class="column">
+              <Address :value="holder.holder.id"></Address>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -67,10 +84,7 @@ export default {
     Pagination,
     Navigation,
     Address,
-  },
-    
-  
-    
+  }, 
   data() {
     return {
       threadId: useRoute().params.threadId,
@@ -90,6 +104,10 @@ export default {
         symbol: this.thread.erc20.symbol,
         supply: this.thread.erc20.supply,
       }
+    },
+    holders() {
+      
+      return this.thread.erc20.balances
     },
     metrics() {
       if(!isJson(this.thread?.metrics)) return {}

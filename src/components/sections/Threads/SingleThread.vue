@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="tabs is-boxed is-centered  ">
+    <div class="tabs is-toggle is-toggle-rounded is-centered  ">
       <ul>
         <li :class="[ isTabActive('overview') ? 'is-active' : '' ]">
           <a v-on:click="navigateTo('overview')">Overview</a>
@@ -24,84 +24,14 @@
     </div>
     
     <router-view></router-view>
-   <!-- <vue-markdown  class="markdown-body" :options="{html: true}" :source="thread.descriptor"/> -->
-
-    <!-- <div :style="getCoverStyle()" class="cover-image mb-5">
-      <div class="information-container">
-        <div class="tag-container mb-2">
-          <span class="tag has-background-mediumBlue has-text-white">Residential</span>
-        </div>
-        <h3 class="has-text-white property-title mb-4">{{ thread.name }}</h3>
-        <Address :value="this.thread.id" />
-      </div>
-        <div class="weavr-icon-container">
-          <img src="../../../assets/logo/new-logo.svg" alt="">
-        </div>
-    </div>
-    <div>
-    <div class="columns">
-      <div class="column is-two-thirds">
-        <div class="dark-card image-container">
-          <p class="has-text-white mb-3">Images</p>
-          <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
-            <Slide v-for="imageHash in thread.imagesHashes" v-bind:key="imageHash">
-              <div class="slide-image-container">
-                <img v-bind:src="getIpfsUrl(imageHash)" alt="">
-              </div>
-            </Slide>
-            <template #addons>
-              <Navigation />
-              <Pagination />
-            </template>
-          </Carousel>
-        </div>
-      </div>
-    </div>
-      <div class="dark-card">
-        <p class="has-text-white mb-3">Property Description</p>
-        <vue-markdown class="content markdown-body" :options="{html: true}"  :source="thread.descriptor || '' " />
-      </div>
-      <div class="dark-card mt-5">
-        <p class="has-text-white mb-3">Property Documents</p>
-        <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in thread.documentHashes" v-bind:key="document">
-          <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
-        </div>
-      </div>
-    </div>
-    <thread-overview :thread="thread"/> -->
+   
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
 import "vue3-carousel/dist/carousel.css"
-import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-import { ethers } from "ethers";
-import Address from "../../views/address/Address.vue";
-import VueMarkdown from "vue-markdown-render";
-import ThreadOverview from "../../views/market/ThreadOverview.vue"
 export default {
   name: "SingleThread",
-  components: {
-    // Carousel,
-    // Slide,
-    // Pagination,
-    // Navigation,
-    // Address,
-    // VueMarkdown,
-    // ThreadOverview
-  },
-  beforeEnter: async (to, from) => {
-    // const prop = await store.getters.proposalsPerAsset;
-    // if (!prop) {
-    //   this.setLoadingState({isLoading: true, message: "Loading Proposals"})
-    //   await this.refreshProposals({
-    //     assetId: this.$route.params['threadId'],
-    //   });
-    //   this.setLoadingState({isLoading: false, message: ""})
-    // // }
-    // // clear toast
-    // return true;
-  },
   data() {
     return {
       threadId: this.$route.params.threadId.toLowerCase(),
@@ -118,7 +48,6 @@ export default {
       return this.threads
         .find(n => n.id === this.threadId);
     },
-    
   },
   methods: {
     ...mapActions({
