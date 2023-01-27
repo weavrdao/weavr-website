@@ -5,8 +5,6 @@
       <button class="button is-primary" v-on:click="toggleSelector">{{ showSelector ? "Close dialog": "New Proposal" }}</button>
     </div>
     <NewProposalSelector v-if="showSelector"/>
-
-    <div class="mt-2"><RefreshButton :assetId="assetId"/></div>
     <div class="tabs is-toggle is-toggle-rounded is-centered  ">
       <ul>
         <li :class="[ isActiveProposals ? 'is-active' : '' ]">
@@ -56,8 +54,6 @@ import { mapGetters, mapActions } from "vuex";
 import StackNavigationBar from "../layout/navigation/StackNavigationBar.vue";
 import ProposalList from "../proposals/ProposalList.vue";
 import NewProposalSelector from "../sections/NewProposalSelector.vue";
-import RefreshButton from "../sections/RefreshButton.vue";
-import store from "@/store";
 
 export default {
   name: "Governance",
@@ -65,7 +61,6 @@ export default {
     StackNavigationBar,
     ProposalList,
     NewProposalSelector,
-    RefreshButton,
   },
   computed: {
     ...mapGetters({

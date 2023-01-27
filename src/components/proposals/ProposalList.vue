@@ -1,5 +1,7 @@
 <template>
   <div class="py-3 px-5">
+  <div class="my-5"><RefreshButton :assetId="assetId"/></div>
+
     <div v-if="this.proposals.length !== 0">
       <div class="card m-0 p-0  filter-button-container" :class="filterMenuIsOpen && 'container-open'">
           <div
@@ -30,6 +32,7 @@
 import ProposalListItem from "../views/voting/ProposalListItem.vue";
 import { ProposalTypes } from "../../models/common";
 import { getProposalTypeStyling } from "@/data/helpers";
+import RefreshButton from "../sections/RefreshButton.vue";
 
 export default {
   name: "ProposalList",
@@ -45,6 +48,7 @@ export default {
   },
   components: {
     ProposalListItem,
+    RefreshButton
   },
   props: {
     proposalStatus: {
