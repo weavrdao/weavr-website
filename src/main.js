@@ -6,8 +6,8 @@ import "./styles/weavr-custom.scss";
 // import "bulma/css/bulma.css"
 import Toaster from "@meforma/vue-toaster";
 import Unicon from "vue-unicons"
-import { uniEye,  uniSearch, uniArrowUpRight, uniEyeSlash, uniTimes, uniTimesSquare, uniSignout, uniFilePlusAlt, uniCamera, uniBullseye, uniTwitter, uniDiscord,  uniAngleLeft, uniAngleDown, uniGithub, uniUserCheck, uniCopy, uniPen } from 'vue-unicons/dist/icons'
-Unicon.add([uniEye, uniPen, uniSearch, uniArrowUpRight, uniTimes,uniEyeSlash, uniTimesSquare, uniSignout, uniFilePlusAlt, uniCamera, uniAngleDown, uniUserCheck, uniBullseye, uniTwitter, uniDiscord, uniAngleLeft, uniAngleDown, uniGithub, uniCopy])
+import { uniSync, uniEye,  uniSearch, uniArrowUpRight, uniEyeSlash, uniTimes, uniTimesSquare, uniSignout, uniFilePlusAlt, uniCamera, uniBullseye, uniTwitter, uniDiscord,  uniAngleLeft, uniAngleDown, uniGithub, uniUserCheck, uniCopy, uniPen } from 'vue-unicons/dist/icons'
+Unicon.add([uniSync, uniEye, uniPen, uniSearch, uniArrowUpRight, uniTimes,uniEyeSlash, uniTimesSquare, uniSignout, uniFilePlusAlt, uniCamera, uniAngleDown, uniUserCheck, uniBullseye, uniTwitter, uniDiscord, uniAngleLeft, uniAngleDown, uniGithub, uniCopy])
 require("dotenv").config()
 
 const app = createApp({

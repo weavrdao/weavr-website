@@ -1,8 +1,11 @@
 <template>
 <div class="is-flex is-justify-content-flex-end">
     <button
-        @click="refreshData"
-        class="button has-background-mediumBlue has-text-white">Refresh</button>
+      @click="refreshData"
+      class="button has-background-mediumBlue has-text-white"
+    >
+      <unicon name="sync" fill="white"></unicon>
+    </button>
 </div>
 </template>
 
