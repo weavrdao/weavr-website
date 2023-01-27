@@ -3,7 +3,7 @@
     <div @click="routeToHome" class="close-icon">
       <!-- NOTE (bill) Just could not get this icon importing for the life of me -->
       <!-- <unicon name="multiply" fill="white"/> -->
-      <div class="temp-close-dot"/>
+      <unicon name="times-circle" fill="#d85a50" width="24" height="24"></unicon>
     </div>
     <div class="proposal-type" :class="this.typeStylingData.class">
       {{ `${this.typeStylingData.text} Proposal` }}
@@ -158,16 +158,10 @@ export default {
   width: 30px;
   height: 30px;
   border-radius: 1000px;
-  background: rgba(255, 255, 255, 0);
   transition: all 150ms;
   cursor: pointer;
 
-  &:hover {
-    background: rgba(255, 255, 255, 0.25);
-  }
-
   .temp-close-dot {
-    background: red;
     width: 15px;
     height: 15px;
     border-radius: 100px;

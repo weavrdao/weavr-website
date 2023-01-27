@@ -1,11 +1,17 @@
 <template>
 <div class="is-flex is-justify-content-flex-end">
-    <button
-      @click="refreshData"
-      :class="`button is-${style} has-text-white p-3`"
-    >
-      <unicon name="sync" fill="white" :width="size" :height="size"></unicon>
+    <button :class="` button is-hover-transparent is-reponsive is-${style}`">
+      <i>
+        <unicon name="sync" :fill="color" :width="size" :height="size"></unicon>
+      </i>
     </button>
+      <!-- <button
+      @click="refreshData"
+      :class="`button is-${style} has-text-white p-0`"
+    > -->
+      
+    <!-- </button> -->
+    
 </div>
 </template>
 
@@ -21,12 +27,15 @@ export default {
     },
     style: {
       type: String,
-      default: "success"
-    }
-  },
-  data() {
-    return {
-      size: 24,
+      default: "transparent"
+    },
+    color: {
+      type: String,
+      default: "gray"
+    },
+    size: {
+      type: Number,
+      default: 24
     }
   },
   methods: {
@@ -39,4 +48,3 @@ export default {
   }
 }
 </script>
-

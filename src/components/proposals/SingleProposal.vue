@@ -253,31 +253,7 @@
     margin-top: 30px;
   }
   
-  .close-icon {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 1000px;
-    background: rgba(255, 255, 255, 0);
-    transition: all 150ms;
-    cursor: pointer;
   
-    &:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-  
-    .temp-close-dot {
-      background: red;
-      width: 15px;
-      height: 15px;
-      border-radius: 100px;
-    }
-  }
   
   .proposal-type {
     display: inline-block;
