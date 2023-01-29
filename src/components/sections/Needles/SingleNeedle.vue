@@ -45,7 +45,7 @@
               <div class="mt-2">
                 <button v-if="!allowance" class="button has-background-mediumBlue has-text-white">...</button>
                 <button v-else-if="Number(allowance) === 0" @click="approve" class="button has-background-success has-text-white">Approve</button>
-                <button v-else @click="purchase" :disabled="crowdfundState.key !== 0" class="button has-background-success has-text-white">Purchase</button>
+                <button v-else @click="purchase" :disabled="crowdfundState.key !== 0" class="button has-background-success has-text-white">Deposit</button>
               </div>
             </div>
           </div>
