@@ -24,7 +24,7 @@
       <div class="field">
         <label class="label">Symbol</label>
         <div class="control">
-          <input class="input" v-model="symbol" type="text" placeholder="FBRC" maxlength="5">
+          <input class="input" v-model="symbol" type="text" placeholder="T0001" maxlength="5">
         </div>
       </div>
       <div class="field">
@@ -49,7 +49,7 @@
       <div class="field">
         <label class="label">Thread Metrics</label>
         <div class="control">
-          <textarea class="textarea" v-model="metrics" type="text" placeholder="Descriptor"></textarea>
+          <textarea class="textarea" v-model="metrics" type="text" placeholder="{metricName: metricValue}"></textarea>
         </div>
       </div>
       <div class="file">
@@ -120,12 +120,11 @@
         </span>
       {{ preview ? "Edit" : "Preview" }}</div>
   </div>
-  <div class="box is-flex is-justify-content-space-between">
+  <div class="block p-6 is-flex is-justify-content-space-between">
     <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
     <button @click="publish"  class="button has-background-success has-text-white has-text-weight-bold">Submit Proposal</button>
   </div>
     <!-- End Form -->
-    {{assetId}}
   </div>
 </template>
 

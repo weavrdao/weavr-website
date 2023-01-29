@@ -22,8 +22,10 @@
       </div>
     </div>
     <div v-else class="is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-      <img class="no-proposals-image my-5" src="../../assets/common/no-proposals.svg"/>
-      <p>No proposals right now</p>
+      <figure class="image">
+        <img class="no-proposals-image my-5" src="../../assets/common/no-proposals.svg"/>
+      </figure>
+      <div class="label is-size-4">No {{ proposalStatus }} right now</div>
     </div>
   </div>
 </template>

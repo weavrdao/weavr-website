@@ -1,13 +1,8 @@
 <template>
   <div class="">
     <div class="member-actions">
-      <div v-if="whitelisted && isConnected && !hasKyc" class="button is-clickable is-success is-size-7" @click="onKyc"><span class="mr-1"></span>Get Verified</div>
-      <div v-if="whitelisted && isConnected && hasKyc" class="button has-background-cyan has-text-white is-size-7 mr-1" @click="onVouch">Vouch</div>
-      <div v-if="whitelisted && isConnected && hasKyc" class="button is-size-7 has-background-success " @click="kycInfo">
-          <unicon name="user-check" :width="15" :height="15" fill="white" alt="address verified"/>
-      </div>
     </div>
-    <div @click="tokenDetails" style="cursor: pointer;" class="ml-4 tag is-large is-flex is-address-container" v-if="address !=null">
+    <div @click="tokenDetails" style="cursor: pointer;" class="ml-4 tag is-large is-flex is-address-container has-radius-lg" v-if="address !=null">
       <div>
         <span >{{ balance }}</span>
         <span class="has-text-mediumBlue ml-1"> {{ symbol }}</span>
@@ -22,7 +17,7 @@
           }}
         </div>
       </div>
-      <div class="dropdown is-right is-hoverable has-background-darkGray">
+      <div class="dropdown is-right is-hoverable has-background-darkGray has-radius-lg">
         <div class="dropdown-trigger">
           <button 
             class="button is-primary is-dropdown-icon" 
@@ -37,14 +32,21 @@
         </div>
         <div class="dropdown-menu" id="dropdown-menu3" role="menu">
           <div class="dropdown-content ">
-            <a  class="dropdown-item is-disabled has-text-mediumGray">
-              Token Overview
+            <a href="dropdown-item">
+              <div v-if="whitelisted && isConnected && !hasKyc" class="button is-clickable is-success is-size-7" @click="onKyc"><span class="mr-1"></span>Get Verified</div>
+              <div v-if="whitelisted && isConnected && hasKyc" class="p-3" @click="kycInfo">
+                <unicon name="user-check" :width="24" :height="24" fill="green" alt="address verified"/>
+              </div>
+            </a>
+            <hr class="dropdown-divider">
+
+            <a  class="dropdown-item">
+              <div v-if="whitelisted && isConnected && hasKyc" class="" @click="onVouch">Vouch</div>
             </a>
             <a @click="onLogout" class="dropdown-item">
               Logout
             </a>
             <hr class="dropdown-divider">
-            
           </div>
         </div>
       </div>
@@ -110,10 +112,10 @@ export default {
       }
     },
     onVouch() {
-      this.$router.push(`${this.$route.params.assetId}/vouch`)
+      this.$router.push({name: "vouch"})
     },
     onKyc() {
-      this.$router.push(`${this.$route.params.assetId}/kyc`)
+      this.$router.push({ name: "kyc"})
     },
     kycInfo() {
       this.$toast.success("You are a verified member with full voting abilities", { position: "top", duration: false})

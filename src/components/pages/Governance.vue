@@ -2,7 +2,12 @@
   <div v-if="assetId" class="container p-5 is-dark">
     <StackNavigationBar @onBack="goBack" :address="assetId" />
     <div class="is-flex is-justify-content-end">
-      <button class="button is-primary" v-on:click="toggleSelector">{{ showSelector ? "Close dialog": "New Proposal" }}</button>
+      <button 
+        :class="[showSelector? 'is-danger' : 'is-primary', ' button']" 
+        v-on:click="toggleSelector"
+      >
+        {{ showSelector ? "X": "New Proposal" }}
+      </button>
     </div>
     <NewProposalSelector v-if="showSelector"/>
     <div class="tabs is-toggle is-toggle-rounded is-centered  ">

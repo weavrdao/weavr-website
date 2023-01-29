@@ -33,7 +33,7 @@ $lightGray: #CACACA;
 $white: #FFFFFF;
 $black: #13111A;
 $magenta: #D841DE;
-$green: #50d85a;
+$green: #5ed88e;
 $mint: #5ed88e;
 $red: #d85a50;
 $cyan: #5aafd8;
@@ -59,7 +59,7 @@ $text: $lightGray;
 
 $primary: $mediumBlue;
 $primary-invert: findColorInvert($primary);
-$danger: $lightBlue;
+$danger: $red;
 $success: $mint;
 $transparent: rgba(0, 0, 0, 0);
 
@@ -77,7 +77,11 @@ $card-radius: 0.50rem;
 $tiny-radius: 5px;
 $small-radius: 10px;
 
-$tabs-boxed-link-active-border-color: $primary;
+
+$tabs-link-color: $mediumGray;
+$tabs-toggle-link-active-background-color: $primary;
+$tabs-toggle-link-active-border-color: $primary;
+$tabs-toggle-link-border-color: $mediumGray;
 /*************************
   DROPDOWN
 *************************/ 
@@ -239,6 +243,35 @@ $colors: map-merge($colors, $addColors);
 :export {
   primaryColor: $primary
 }
+
+.proposal-type {
+  display: inline-block;
+  font-weight: 400;
+  padding: 5px 10px;
+  border: 0px solid white;
+  border-radius: $tiny-radius;
+  margin-bottom: 20px;
+}
+.paper {
+  border-color: #00EDC4;
+  color: #00EDC4;
+}
+
+.participant {
+  border-color: whitesmoke;
+  color: whitesmoke;
+}
+
+.upgrade {
+  border-color: #D841DE;
+  color: #D841DE;
+}
+
+.thread {
+  border-color: yellow;
+  color: yellow;
+}
+
 
 //From Marketplace
 

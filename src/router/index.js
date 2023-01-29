@@ -241,6 +241,7 @@ const router = new createRouter({
         },
         {
           path: "kyc",
+          name: "kyc",
           component: Modal,
           props: { component: SumSub }
         },
@@ -272,6 +273,7 @@ const router = new createRouter({
         },
         {
           path: "vouch",
+          name: "vouch",
           component: Modal,
           props: { component: Vouch },
         },
@@ -380,7 +382,7 @@ router.beforeEach(async (to, from) => {
           if( !isWhitelisted ) {
             // not whitelisted
             console.log("not whitelisted");
-            return { path: "/whitelist" }
+            return { name: "whitelist" }
           }
           else if ( isWhitelisted ) {
             // whitelisted
@@ -394,7 +396,7 @@ router.beforeEach(async (to, from) => {
       else if( !ethers.utils.isAddress(cookie.wallet)  ) { 
         // - go to walletconnect
         console.log("go to whitelist")
-        return { path: "/whitelist"}
+        return { name: "whitelist"}
       }
     }
     // connected

@@ -3,6 +3,7 @@ export const _NETWORKS = {
     name: "Arbitrum One", 
     id: 42161, 
     graph: "https://api.thegraph.com/subgraphs/name/abstrucked/weavr_goerli",
+    explorer: "https://arbiscan.io",
     contracts: {
       TOKEN_ADDRESS:"0x90BE6F8f30931322e60b913ecE49d1724D996054",
       BEACON_ADDRESS:"0x09f78bbefec822c6d81efb7a1474dee5727cc610",
@@ -18,6 +19,7 @@ export const _NETWORKS = {
     name: "Arbitrum Goerli Testnet", 
     id: 421613, 
     graph: "https://api.thegraph.com/subgraphs/name/abstrucked/weavr-arbtest-0123",    
+    explorer: "https://goerli.arbiscan.io",
     contracts: {
       TOKEN_ADDRESS:"0x386575974C05E558D82FE6Cc965cD69503969125",
       BEACON:"0x12C1389c43Af590EF1170E222E163f88f269699A",
@@ -55,7 +57,7 @@ export const DAO = "weavr";
 export const GUEST = "0x0000000000000000000000000000000000000000";
 
 const chain = process.env.VUE_APP_SELECTED_CHAIN
-export const NETWORK = _NETWORKS['arbitrum_goerli'];
+export const NETWORK = _NETWORKS[chain];
 
 export const CONTRACTS = NETWORK.contracts;
 

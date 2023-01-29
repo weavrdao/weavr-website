@@ -1,10 +1,9 @@
 <template>
   <div>
-    <nav class="navbar p-6">
+    <nav class="navbar p-6" style="z-index: 0;">
       <div class="" v-for="item in routes" :key="item.name">
         <router-link :class="[ isItemCurrent(item) ? 'router-link-active' : '' ]" :to="item.route" >{{item.name}}</router-link>
       </div>
-      
     </nav>
     <div class="box p-5">
       <router-view ></router-view>

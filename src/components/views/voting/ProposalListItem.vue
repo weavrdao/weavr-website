@@ -1,34 +1,32 @@
 <template>
-    <section @click="openProposal" class="card p-4 proposal has-background-darkGray has-radius-lg mb-5" aria-labelledby="proposal">
-      <div class="card-header">
+    <section @click="openProposal" class="card p-4 proposal has-background-darkGray has-radius-lg mb-1" aria-labelledby="proposal">
+      <div class="card-header mb-0">
         <span class="proposal-type" :class="this.typeStylingData.class">
           {{ this.typeStylingData.text }}
         </span>
-        <div @click="routeToProposal" class="">
-          <h1 :class="[proposal.state=='Cancelled' || proposal.state=='Failed' ? 'has-text-red' : 'has-text-success', 'is-title']">{{proposal.state}}</h1>
-          <div>
-            <h2 class="is-size-5 has-text-mediumBlue">
+        <div class="proposal-date">
+          <h2 class="is-size-5 has-text-mediumBlue">
               {{ this.startDate }}
-            </h2>
-          </div>
+          </h2>
+        </div>
+        <div @click="routeToProposal" class="mt-1">
+          <h1 :class="[proposal.state=='Cancelled' || proposal.state=='Failed' ? 'has-text-red' : 'has-text-success']">{{proposal.state}}</h1>
         </div>
       </div>
       <div class="card-content px-0">
-        <div class=" py-3">
+        <div class=" py-0">
           <div class="py-0">
-            <div class="label is-size-6">Title:</div>
             <div id="proposal-title" class="is-size-5 has-text-white mb-4">
               {{ proposal.title }}
             </div>    
           </div>
-          <div class="label is-size-6">Creator:</div>    
           <Address class="has-text-white" :value="proposal.creator"/>
           <!-- <div class="is-size-7 tag is-primary rounded">{{ proposal.creator }}</div> -->
           <div v-if="!ended" class="is-flex is-justify-content-flex-end">
             <Button
               v-if="!embedded"
-              label="Details"
-              extraClasses="p-5 is-mediumBlue m-2"
+              label="Open Proposal"
+              extraClasses="is-primary m-2"
               @click="openProposal"
             />
           </div>
@@ -175,25 +173,20 @@ export default {
 .proposal-type {
   font-weight: 400;
   padding: 5px 10px;
-  border: 2px solid white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  border-radius: 0 0.5rem 0 0.5rem !important;
+}
+.proposal-date {
+  font-weight: 400;
+  padding: 5px 10px;
   position: absolute;
   top: 0;
   right: 0;
-  border-radius: 0 0.5rem 0 0 !important;
-}
-.paper {
-  border-color: $success;
-  color: $success;
-}
-
-.participant {
-  border-color: whitesmoke;
-  color: whitesmoke;
-}
-
-.upgrade {
-  border-color: #D841DE;
-  color: #D841DE;
+  width: auto;
+  border-radius: 0 0.5rem 0 0.5rem !important;
 }
 
 .outcome-box {
@@ -226,11 +219,11 @@ export default {
 }
 
 
-    @media (max-width: 767px) {
-        .markdown-body {
-            padding: 15px;
-        }
+@media (max-width: 767px) {
+    .markdown-body {
+        padding: 15px;
     }
+}
 
 .bottom-right-corner {
   position: absolute;
