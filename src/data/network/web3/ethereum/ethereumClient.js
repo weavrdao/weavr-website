@@ -83,10 +83,10 @@ class EthereumClient {
       try {
         const coinbase = getCoinbaseWalletProvider();
         this.walletProvider = coinbase;
-        const connector = new CoinbaseConnector(coinbase);
-        this.account = await connector.getAddress();
-        this.walletSigner = await connector.getSigner(
-          await connector.getChainId()
+        this._connector = new CoinbaseConnector(coinbase);
+        this.account = await this._connector.getAddress();
+        this.walletSigner = await this._connector.getSigner(
+          await this._connector.getChainId()
         );
         return;
       } catch (error) {
