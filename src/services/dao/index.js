@@ -3,7 +3,11 @@
 import {Proposal} from "../../models/proposal";
 import {VoteType} from "../../models/vote";
 import {
-  GraphQLAPIClient, ALL_ASSETS_QUERY, PARTICIPANTS_BY_TYPE, ALL_PROPOSALS, VOUCHES_PER_PARTICIPANT,
+  GraphQLAPIClient,
+  ALL_ASSETS_QUERY,
+  PARTICIPANTS_BY_TYPE,
+  ALL_PROPOSALS,
+  VOUCHES_PER_PARTICIPANT,
 } from "../../data/network/graph/graphQLAPIClient";
 import {CONTRACTS} from "../constants";
 import AssetContract from "../../data/network/web3/contracts/assetContract";
@@ -114,38 +118,69 @@ class DAO {
    * @param {String} documents of the property
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
    */
-  async createThreadProposal(assetId, name, descriptor, title, description, forumLink, symbol, tradeToken, target, images, documents,) {
+  async createThreadProposal(
+    assetId,
+    blobVersion,
+    name,
+    descriptor,
+    title,
+    description,
+    metrics,
+    forumLink,
+    symbol,
+    tradeToken,
+    target,
+    images,
+    documents,
+  ) {
     const assetContract = new AssetContract(this.ethereumClient, assetId);
 
     let imagesHashes;
     try {
-      imagesHashes = await Promise.all(Array.from(images).map(async (image) => (await this.storageNetwork.addArbitraryFile(image))));
+      imagesHashes = await Promise.all(Array.from(images).map(
+        async (image) => (await this.storageNetwork.addArbitraryFile(image.name))
+      ));
     } catch (e) {
-      console.log("Error uploading images");
+      console.log("Error uploading images", e);
     }
 
     let documentHashes;
     try {
-      documentHashes = await Promise.all(Array.from(documents).map(async (document) => (await this.storageNetwork.addArbitraryFile(document))));
+      documentHashes = await Promise.all(Array.from(documents).map(
+        async (document) => (await this.storageNetwork.addArbitraryFile(document.name))
+      ));
     } catch (e) {
-      console.log("Error uploading documents");
+      console.log("Error uploading documents", e);
     }
-
     const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
       title, description, forumLink,
     });
 
     const descriptorHash = await this.storageNetwork.uploadAndGetPathAsBytes({
+      blobVersion,
       descriptor, name, imagesHashes, documentHashes,
+      metrics
     });
 
-    const data = new ethers.utils.AbiCoder().encode(["address", "uint112"], [tradeToken, ethers.utils.parseUnits(String(target), 6).toString()]);
+    const data = new ethers.utils.AbiCoder().encode(
+      ["address", "uint112"],
+      [tradeToken, ethers.utils.parseUnits(String(target), 6).toString()]
+    );
 
     if (!infoHash) return;
     if (!descriptorHash) return;
 
-    const status = await assetContract.proposeThread(ethers.BigNumber.from(0), // Only valid "variant" number
-      name, symbol, descriptorHash, data, infoHash);
+    const status = await assetContract.proposeThread(
+      ethers.BigNumber.from(0), // Only valid "variant" number
+      name,
+      symbol,
+      descriptorHash,
+      data,
+      infoHash,
+      {
+        gasLimit: 300000
+      }
+    );
     return status;
   }
 
@@ -333,6 +368,15 @@ class DAO {
     const assetContract = new AssetContract(this.ethereumClient, assetAddress);
     const status = await assetContract.withdrawProposal(proposalId);
     return status;
+  }
+
+  async quorum(assetAddress) {
+    const assetContract = new AssetContract(
+      this.ethereumClient,
+      assetAddress
+    );
+    const quorum = await assetContract.requiredParticipation();
+    return quorum;
   }
 
   async getTokenAddress(frabricAddress) {

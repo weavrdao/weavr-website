@@ -42,4 +42,22 @@ export default {
 .modal-content {
   border-radius: $card-radius;
 }
+.close-icon {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 1000px;
+    background: rgba(255, 255, 255, 0);
+    transition: all 150ms;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+  }
 </style>

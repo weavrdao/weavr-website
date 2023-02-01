@@ -141,7 +141,7 @@ export default {
 }
 
 .green-bar {
-  background: $mint;
+  background: $green;
   height: 30px;
 }
 

@@ -2,7 +2,7 @@
 <div>
     <div class="p-5">
         <div class="title-box">
-          <h3>Connect Wallet</h3>
+          <div class="is-size-4">Connect Wallet</div>
         </div>
         <div class="close-icon" @click="routeToHome">
              <unicon

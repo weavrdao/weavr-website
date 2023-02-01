@@ -1,146 +1,130 @@
 <template>
   <div class="has-text-white has-radius-lg">
-    <div class="">
-      <label for="search" class="is-sr-only">
-        Search by token name or address
-      </label>
-      <div class="mt-1 relative">
-        <input
-          type="text"
-          name="search"
-          id="search"
-          class="input is-rounded is-borderless"
-          placeholder="Search by token name or address"
-          v-model="searchQuery"
-        />
-      </div>
+    <div class="cover-image-container">
+      <h3>Threads</h3>
     </div>
-    <div class="mt-1" v-if="isAssetsLoaded">
-      
-      <div class="block is-flex is-justify-content-flex-end is-flex-wrap-wrap">
-        <a role="button" @click="toggleView" v-show="!isMobile">
-          <unicon
-            v-if="!isGrid"
-            name="apps"
-            :width="iconSize"
-            :height="iconSize"
-            fill="white"
-            icon-style="solid"
-          ></unicon>
-          <unicon
-            v-if="isGrid"
-            name="list-ul"
-            :width="iconSize"
-            :height="iconSize"
-            :fill="colors.foam"
-            icon-style="solid"
-          ></unicon>
-        </a>
-      </div>
-      
-      <ul v-if="!isGrid && !isMobile">
-        <li v-for="asset in searchResults" :key="asset.id" class="px-8 py-8">
-          <div class="block p-3">
-            <MarketListItem :is-grid="isGrid" :asset="asset" />
-          </div>
-        </li>
-      </ul>
-      <div class="block" v-if="isGrid">
-        <div
-          class="is-flex is-flex-direction-row is-flex-wrap-wrap is-flex-grow-3"
-          v-for="asset in searchResults"
-          :key="asset.id"
-        >
-          <div class="block p-3">
-            <ThreadMarketListItem :isGrid="isGrid" :asset="asset" />
-          </div>
+   <!-- <div class="columns p-6">
+      <div class="column is-one-third">
+        <div class="field">
+          <p class="control has-icons-left has-icons-right">
+            <input class="input is-rounded" type="text" placeholder="Search Thread">
+            <span class="icon is-small is-left">
+              <unicon width="15" height="15" name="search" fill="white"></unicon>
+            </span>
+          </p>
         </div>
       </div>
+   </div> -->
+
+    <div v-if="loading" class="is-flex is-justify-content-center" >
+      <Loading :message="`Loading threads`" />
     </div>
-    <div class="mt-1" v-else>
-      <Loader :shadowless="true" />
+    <div class="is-flex is-justify-content-center is-align-items-center mt-5 pt-5" v-else-if="this.threads.length === 0">
+      <h2 class="title">No threads have been created yet</h2>
+    </div>
+    <div v-else class="threads-container mt-5">
+      <div v-for="thread in this.threads" :key="thread.id">
+        <ThreadMarketListItem :thread="thread" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import ThreadMarketListItem from "./ThreadMarketListItem.vue";
-import { Colors } from "@/styles/theme";
-import Loader from "@/components/utils/Loader.vue";
+import ThreadMarketListItem from "./ThreadMarketListItem.vue"
+import Loading from "../../views/loading/Loading.vue";
+import styles from "@/styles/weavr-custom.scss"
 export default {
   name: "ThreadMarketplace",
   components: {
     ThreadMarketListItem,
-    Loader,
+    Loading,
   },
   data() {
-    return {
-      searchQuery: "",
-      isGrid: true,
-      iconSize: "24",
-      windowWidth: 0,
-      colors: Colors,
-    };
+    return { 
+      searchStr: "",
+      threads: []
+     }
   },
   computed: {
     ...mapGetters({
-      assets: "allThreads",
+      threadsMap: "allThreads",
     }),
-    searchResults() {
-      if (!this.assets) return [];
-
-      if (this.searchQuery.length == 0) {
-        return this.assets;
-      }
-
-      return this.assets.filter((item) => {
-        console.log(item);
-        return item.address
-          .toLowerCase()
-          .includes(this.searchQuery.trim().toLowerCase());
-      });
-    },
-    isMobile() {
-      return this.getWindowWidth() < 768;
-    },
-    isAssetsLoaded() {
-      return this.assets !== null;
-    },
+    loading() {
+      return this.threads === null;
+    }
   },
   methods: {
     ...mapActions({
-      refresh: "refreshThreads",
-      syncWallet: "syncWallet",
+      getThreads: "refreshThreads",
     }),
-    toggleView() {
-      this.isGrid = !this.isGrid;
+    filterThreads(threads) {
+      return threads.filter((thread) => !!thread.imageHashes)
     },
-    getWindowWidth() {
-      this.windowWidth = document.documentElement.clientWidth;
-
-      if (this.isMobile && !this.isGrid) {
-        this.isGrid = true;
+    threadSearch() {
+      if(this.searchStr == "") {
+        this.threads = this.threadsMap
+      } else {
+        this.threads.forEach( (asset) => {
+        for(let prop in asset) {
+          if(asset[prop].includes(this.searchStr)) {
+            return new Map().set(asset.id, asset)
+          }
+        }
+      })
       }
-    },
+
+      
+    }
   },
   mounted() {
-    this.refresh();
-    console.log("Marketplace", this.assets)
-    this.syncWallet({ $toast: this.$toast });
-    this.$nextTick(function () {
-      window.addEventListener("resize", this.getWindowWidth);
-
-      //Init
-      this.getWindowWidth();
-    });
-  },
-  watch: {
-    $route: "refresh",
-  },
-  beforeDestroy() {
-    window.removeEventListener("resize", this.windowWidth);
+    // this.getThreads();
+    this.threads = this.threadsMap
   },
 };
 </script>
 
+<style scoped lang="scss">
+@import "../../../styles/weavr-custom.scss";
+@import "../../../styles/_variables.sass";
+
+.threads-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 0px;
+
+  @media screen and (max-width: 1100px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: 700px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.cover-image-container {
+  position: relative;
+  background-image: linear-gradient(to left, rgba(22, 23, 30, 0), rgba(22, 23, 30, 0.3)), url("../../../assets/pics/needlecoverimage.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+  border-radius: 12px;
+  height: 300px;
+
+  h3 {
+    position: absolute;
+    top: 1rem;
+    left: 1.5rem;
+    font-weight: 600;
+    font-size: 2rem;
+  }
+
+  img {
+    object-fit: cover;
+    object-position: center;
+    height: 100%;
+  }
+}
+</style>

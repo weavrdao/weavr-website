@@ -38,10 +38,22 @@
         <textarea class="textarea" v-model="description" type="text" placeholder="Description"></textarea>
       </div>
     </div>
-    <div class="is-flex is-justify-content-space-between mt-5">
-      <button @click="publish" class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
-      <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
-    </div>
+    <div class="block  mt-5">
+    <div :class="[preview ? 'is-primary ': 'is-secondary ', 'button has-text-white is-size-5 p-3']" @click=togglePreview>
+        <span class="mr-2">
+          <unicon 
+          height="18" 
+          width="18" 
+          fill="white"
+          :name="preview ? 'pen' : 'eye'"></unicon>
+
+        </span>
+      {{ preview ? "Edit" : "Preview" }}</div>
+  </div>
+  <div class="box is-flex is-justify-content-space-between mt-5">
+    <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
+    <button @click="publish"  class="button has-background-success has-text-white has-text-weight-bold">Submit Proposal</button>
+  </div>
     <!-- End Form -->
   </div>
 </template>
@@ -52,12 +64,11 @@ import { ethers } from "ethers";
 import { ProposalTypes } from "@/models/common"
 import { CONTRACTS, DAO } from "../../services/constants" 
 const GOERLI_TEST = {
-  governor: "0xDba4eF785E003F7efc80Ba3900e260FA893804BC",
-  signer: "0x4C3D84E96EB3c7dEB30e136f5150f0D4b58C7bdB"
+  governor: "0xA28C6A770dC1E6DCd94Ea93B7464E3B3DF77689D",
+  signer: "0xd7623F78545a3D1138Ae435c7D224F7bC32Ae038"
 }
 
 export default {
-
   name: "newUpgradeProposal",
   props: {
     assetId: {
@@ -95,7 +106,7 @@ export default {
         return;
       }
       console.log(this.signerAddress);
-      let assetAddress = this.assetId
+      let assetAddress = this.$route.params.assetId;
       console.log("#ASSET_ID: ", this.assetId);
       await this.createUpgradeProposal({
         assetAddress,
@@ -115,8 +126,7 @@ export default {
     }
   },
   mounted() {
-    this.refresh({ assetId: this.assetId});
-    this.syncWallet();
+    
   },
 }
 </script>

@@ -1,30 +1,66 @@
 <template>
   <div>
-    <!-- <nav class="navbar">
-      <div class="navlink">
-        <router-link class="has-text-lightGray" to="/marketplace">
-          <span><unicon class="mr-0" :width="25" :height="25" name="angle-left" fill="darkGray"></unicon></span>
-          </router-link>
+    <nav class="navbar p-6" style="z-index: 0;">
+      <div class="" v-for="item in routes" :key="item.name">
+        <router-link :class="[ isItemCurrent(item) ? 'router-link-active' : '' ]" :to="item.route" >{{item.name}}</router-link>
       </div>
-    </nav> -->
+    </nav>
     <div class="box p-5">
-      <router-view></router-view>
+      <router-view ></router-view>
     </div>
     
   </div>
 </template>
 <script>
+import { useRoute } from "vue-router"
+
 export default {
-    name: "Marketplace",
-    mounted() {
-      this.$router.push({name: "comingSoon"})
+  name: "Marketplace",
+  data() {
+    return {
+      routes: [
+        {
+          name: "Coming Soon",
+          route: "/marketplace/coming-soon",
+          id: "coming-soon"
+        },
+        {
+          name: "Needles",
+          route: "/marketplace/needles"
+        },
+        {
+          name: "Threads",
+          route: "/marketplace/threads"
+        }
+      ]
+    }
+  },
+  methods: {
+    isItemCurrent(item) {
+      return useRoute().fullPath.includes(item.route)
     },
-    
+  }
 }
 </script>
 
-<style scoped>
-  .nav {
-    z-index: -9999;
+<style lang="scss" scoped>
+@import "../../styles/weavr-custom.scss";
+
+a {
+  border-bottom: 4px transparent solid !important;
+  padding: 1rem;
+  color: $lightGray;
+  margin-right: 0.8rem;
+  &:hover {
+    color: $white;
+    border-color:$white !important;
   }
+}
+.router-link-active {
+  color: $lightBlue;
+  border-color: $lightBlue !important;
+  background: transparent;
+}
+  
+  
 </style>

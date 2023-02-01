@@ -1,6 +1,6 @@
 import { CONTRACTS } from "../../services/constants";
 import { WHITELIST_COOKIE_KEY } from "../constants";
-import { getCookie } from "../cookies";
+import { getCookie, setCookie } from "../cookies";
 
 export function whitelistState() {
   return {
@@ -53,6 +53,7 @@ export const whitelistActions = (whitelistService) => ({
 
 export const whitelistMutations = {
   setWhitelisted(state, whitelisted) {
+    setCookie(WHITELIST_COOKIE_KEY, whitelisted, 100)
     state.whitelisted = whitelisted;
   },
   setKyc(state, kyc) {

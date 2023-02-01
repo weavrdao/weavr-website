@@ -2,6 +2,10 @@ import { ethers } from "ethers";
 
 /**
  * Vote model.
+ * @property {string} proposalID ID of the proposal this vote belongs to
+ * @property {string} voterAddress Address of the voter
+ * @property {VoteType} type Type of the vote posted
+ * @property {number} count Voting power of the voter
  */
 
 export class Vote {

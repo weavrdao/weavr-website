@@ -4,15 +4,29 @@
       <div class="navbar-brand">
         <a class="navbar-item" @click="transitTo('/')">
           <div class="title brand has-text-white is-flex is-align-items-center">
-            <div class="image p-2"><img class="mx-2" src="../../../assets/logo/new-logo.svg" alt=""></div>
+            <div class="image p-2">
+              <img
+                class="mx-2"
+                src="../../../assets/logo/new-logo.svg"
+                alt=""
+              />
+            </div>
             Weavr
           </div>
         </a>
-        <a role="button" ref="menuButton" :class="[
-          navigation.isOpen ? 'is-active' : '',
-          'navbar-burger',
-          'has-border-bottom',
-        ]" @click="menuToggle()" aria-label="menu" aria-expanded="false" data-target="frabric-navbar">
+        <a
+          role="button"
+          ref="menuButton"
+          :class="[
+            navigation.isOpen ? 'is-active' : '',
+            'navbar-burger',
+            'has-border-bottom',
+          ]"
+          @click="menuToggle()"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="frabric-navbar"
+        >
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -21,15 +35,25 @@
 
       <div :class="[navigation.isOpen ? 'is-active' : '', 'navbar-menu']">
         <div class="navbar-start">
-          <a :class="[
-            isItemCurrent(item) ? 'active-link' : '',
-            'navbar-item navlink',
-            '',
-            'p-3 mt-2 is-primary'
-          ]" v-for="item in navigation.items" :key="item.name" v-on:click="transitTo(item.route)">
+          <a
+            :class="[
+              isItemCurrent(item) ? 'active-link' : '',
+              'navbar-item navlink',
+              '',
+              'p-3 mt-2 is-primary',
+            ]"
+            v-for="item in navigation.items"
+            :key="item.name"
+            v-on:click="transitTo(item.route)"
+          >
             {{ item.name }}
             <span v-if="item.icon">
-              <unicon width="15" height="15" :name="item.icon" fill="gray"></unicon>
+              <unicon
+                width="15"
+                height="15"
+                :name="item.icon"
+                fill="gray"
+              ></unicon>
             </span>
           </a>
         </div>
@@ -41,7 +65,7 @@
         </div>
       </div>
     </div>
-
+    
   </nav>
 </template>
 
@@ -60,14 +84,24 @@ export default {
       navigation: {
         isOpen: false,
         items: [
-          { name: "Governance", route: `/${CONTRACTS.WEAVR}` },
-          { name: "Dashboard", route: "/dashboard" },
-          { name: "Resolutions", route: "/resolutions", icon: "arrow-up-right" },
-          { name: "FAQ", route: "/faq", icon: "arrow-up-right" },
-          { name: "Forums", route: "/forums", icon: "arrow-up-right" },
+          { name: "Governance", route: `/dao/${CONTRACTS.WEAVR}`},
+          {
+            name: "Marketplace",
+            route: "/marketplace" ,
+            childs: [
+              {
+                name: "Needles" ,
+                route: { path: "marketplace", params: { market: "needle"}}
+              },
+              {
+                name: "Threads",
+                route: { path: "/marketplace/threads"}
+              }
+            ]
+          },
         ],
       },
-    }
+    };
   },
   computed: {
     ...mapGetters(["currentNavigationItem"]),
@@ -75,17 +109,20 @@ export default {
   methods: {
     ...mapActions(["goBack"]),
     isItemCurrent(item) {
-      return useRoute().fullPath.includes(item.route)
+      return useRoute().fullPath.includes(item.route);
     },
     transitTo(path) {
       this.$router.push(path)
-      this.menuToggle()
+      this.navigation.isOpen ? this.menuToggle() : null;
     },
     menuToggle() {
-      this.navigation.isOpen = !this.navigation.isOpen
+      this.navigation.isOpen = !this.navigation.isOpen;
     },
+    print(child) {
+      console.log(child)
+    }
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -116,6 +153,10 @@ export default {
 }
 
 .active-link {
-  background: linear-gradient(to top, rgba(255, 255, 255, 0) 20%, $mediumBlue 100%);
+  color: $mediumBlue;
+}
+
+.dropdown-content {
+  padding: 4px;
 }
 </style>

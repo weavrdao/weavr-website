@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="is-flex is-justify-content-space-between mt-5">
-      <button @click="publish" class="button has-background-mint has-text-white has-text-weight-bold">Approve</button>
+      <button @click="publish" class="button has-background-success has-text-white has-text-weight-bold">Approve</button>
       <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
     </div>
     <!-- End Form -->

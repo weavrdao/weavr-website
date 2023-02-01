@@ -35,10 +35,17 @@ class IPFSStorageNetwork extends StorageNetwork {
     return test;
   }
 
+
   async addImage(imageFile) {
     const image = await this.ipfsInfuraAPIClient.add(imageFile, {pin: true});
     return image;
   }
+
+  async addArbitraryFile(file) {
+    const filesHash = await this.ipfsInfuraAPIClient.add(file, {pin: true})
+    return filesHash.path
+  }
+
 
   // eslint-disable-next-line class-methods-use-this
   async getFiles(names, localStorage) {

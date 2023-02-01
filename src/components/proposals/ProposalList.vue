@@ -1,8 +1,9 @@
 <template>
-  <div class="proposal-list column py-3 px-5">
-    <h3 class="title is-size-3 my-4">{{ proposalStatus }}</h3>
+  <div class="py-3 px-5">
+  <div class="my-5"><RefreshButton :assetId="assetId"/></div>
+
     <div v-if="this.proposals.length !== 0">
-      <div class="is-flex is-justify-content-center mb-4 overflow-hidden filter-button-container"
+      <div class="card m-0 p-0  filter-button-container"
            :class="filterMenuIsOpen && 'container-open'">
         <div
             v-for="{key, class: styles, text, selected} in filterButtons"
@@ -13,21 +14,28 @@
           {{ text }}
         </div>
       </div>
-      <div v-for="proposal in this.filteredProposals" v-bind:key="proposal.id">
+      <div class="columns is-multiline">
+        <div class="column is-one-third" v-for="proposal in this.filteredProposals" v-bind:key="proposal.id">
+          <div >
         <ProposalListItem :proposal="proposal" :assetId="assetId"/>
+      </div>
+        </div>
       </div>
     </div>
     <div v-else class="is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-      <img class="no-proposals-image my-5" src="../../assets/common/no-proposals.svg"/>
-      <p>No proposals right now</p>
+      <figure class="image">
+        <img class="no-proposals-image my-5" src="../../assets/common/no-proposals.svg"/>
+      </figure>
+      <div class="label is-size-4">No {{ proposalStatus }} right now</div>
     </div>
   </div>
 </template>
 
 <script>
 import ProposalListItem from "../views/voting/ProposalListItem.vue";
-import {ProposalTypes} from "../../models/common";
-import {getProposalTypeStyling} from "@/data/helpers";
+import { ProposalTypes } from "../../models/common";
+import { getProposalTypeStyling } from "@/data/helpers";
+import RefreshButton from "../sections/RefreshButton.vue";
 
 export default {
   name: "ProposalList",
@@ -43,6 +51,7 @@ export default {
   },
   components: {
     ProposalListItem,
+    RefreshButton
   },
   props: {
     proposalStatus: {

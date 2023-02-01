@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import {createRouter, createWebHashHistory, createWebHistory, useRoute} from "vue-router";
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue";
@@ -9,6 +10,9 @@ import Marketplace from "@/components/pages/Marketplace";
 import Dashboard from "@/components/pages/Dashboard";
 import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.vue";
 import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
+import ThreadsMarketplace from "@/components/sections/Threads/ThreadMarketplace.vue";
+import SingleThread from "@/components/sections/Threads/SingleThread.vue";
+import ThreadOverview from "@/components/views/market/ThreadOverview.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue";
 import newParticipantRemovalProposal from "@/components/proposals/newParticipantRemoval.vue";
@@ -126,18 +130,88 @@ const router = new createRouter({
       children: [
         {
           path: "",
-          component: ComingSoon,
-          meta: { requiresAuth: false }
+          redirect: {name: "comingSoon"}
         },
         {
           path: "needles",
           name: "needle-market",
           component: NeedlesMarketplace,
+          meta: {requiresAuth: true},
+          beforeEnter: async (to, from ) => {
+
+            store.dispatch("setLoadingState", {isLoading: true, message: "Loading Needles"})
+
+            await store.dispatch("refreshNeedles")
+
+            store.dispatch("setLoadingState", {isLoading: false, message: ""})
+
+            return true
+          }
         },
         {
-          path: "needle/:needleId",
+          path: "needles/:needleId",
           name: "needle",
           component: SingleNeedle,
+          meta: {requiresAuth: true},
+
+          beforeEnter: async (to, from ) => {
+
+            store.dispatch("setLoadingState", {isLoading: true, message: `Loading data for \n ${"Needle"}`})
+
+            await store.dispatch("refreshNeedles")
+
+            store.dispatch("setLoadingState", {isLoading: false, message: ""})
+
+            return true
+          }
+        },
+        {
+          path: "threads",
+          name: "thread-market",
+          component: ThreadsMarketplace,
+          meta: {requiresAuth: true},
+          beforeEnter: async (to, from ) => {
+
+            store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
+
+            await store.dispatch("refreshThreads")
+            console.log("BEFORE ENTER: THREADS => ", store.getters.allThreads)
+            store.dispatch("setLoadingState", {isLoading: false, message: ""})
+
+            return true
+          }
+        },
+        {
+          path: "threads/:threadId",
+          name: "thread",
+          component: SingleThread,
+          meta: { requiresAuth: true},
+          beforeEnter: async (to, from ) => {
+            if(!store.getters.threads){
+              store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
+
+              await store.dispatch("refreshThreads")
+
+              store.dispatch("setLoadingState", {isLoading: false, message: ""})
+            }
+            return true
+          },
+          children: [
+            {
+              path: "",
+              redirect: { name: "overview"}
+            },
+            {
+              path: "overview",
+              name: "overview",
+              component: ThreadOverview
+            },
+            {
+              path: "governance",
+              name: "governance",
+              component: Governance
+            }
+          ]
         },
         {
           path: "coming-soon",
@@ -150,19 +224,32 @@ const router = new createRouter({
           component: SingleComingSoonPage,
         },
       ]
-    },
+    },  
     {
-      path: `/:assetId`,
+      path: `/dao/:assetId`,
       component: Governance,
 
       meta: { requiresAuth: true },
+      beforeEnter: async (to, from) => {
+        const prop = await store.getters.proposalsPerAsset;
+        if (!prop) {
+          store.dispatch("setLoadingState", {isLoading: true, message: "Loading Proposals"})
+          await store.dispatch("refreshProposalsDataForAsset", {
+            assetId: CONTRACTS.WEAVR,
+          });
+          store.dispatch("setLoadingState", {isLoading: false, message: ""})
+        }
+        // clear toast
+        return true;
+      },
       children: [
         {
           path: `${CONTRACTS.WEAVR}`,
-          alias: "weavr",
+          name: "weavr",
         },
         {
           path: "kyc",
+          name: "kyc",
           component: Modal,
           props: { component: SumSub }
         },
@@ -199,6 +286,7 @@ const router = new createRouter({
         },
         {
           path: "vouch",
+          name: "vouch",
           component: Modal,
           props: { component: Vouch },
         },
@@ -257,75 +345,95 @@ router.beforeEach(async (to, from) => {
    * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
    * ON not
    */
-  console.log("HAS_REDIRECTED___", hasRedirectedAfterWhitelisting);
+   console.log("HAS_REDIRECTED___", hasRedirectedAfterWhitelisting);
 
   const address = store.getters.userWalletAddress;
   const isConnected = ethers.utils.isAddress(address);
   const isWhitelisted = store.getters.isWhitelisted;
   const isGuest = store.getters.guestCookie;
-  const cookie = getCookie(USER_COOKIE_KEY)
+  const decoded_cookie = getCookie(USER_COOKIE_KEY)
+  let cookie = {}
+  if(decoded_cookie) {
+    console.log("COOKIE IS SET___, ", decoded_cookie);
+    cookie.wallet = decoded_cookie.split("_")[0]
+    cookie.provider = decoded_cookie.split("_")[1]
+  }
   // require auth
-  if (to.meta.locked) {
+  if( to.meta.locked ) {
     const toast = createToaster({});
-    toast.error("The route you are trying to access is currently locked", { position: "top" });
+    toast.error("The route you are trying to access is currently locked", { position: "top"});
     return false
   }
-  if (to.meta.requiresAuth) {
+  // if( !to.meta.requiresAuth ) {
+  //   console.log("NO AUTH AT THE TOP");
+  //   return true
+  // }
+  if( to.meta.requiresAuth ) {
     console.log("META_AUTH_ TRUE");
+    console.log(
+      {
+        isWhitelisted,
+        address,
+        isConnected,
+        decoded_cookie,
+        cookie
+      }
+    );
     // not connected
-    if (!isConnected) {
+    if( !isConnected ) {
       // cookie
-      if (ethers.utils.isAddress(cookie)) {
-        if (cookie === GUEST) {
+      if (ethers.utils.isAddress(cookie.wallet)) {
+        if (cookie.wallet === GUEST) {
           console.log("IS GUEST");
           return true
         }
         // - autoconnect and navigate
         console.log("autoconnect and navigate");
         const toast = createToaster({})
-        await store.dispatch("syncWallet", { wallet: "metamask", $toast: toast })
+        await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
         await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
           if (!isWhitelisted) {
             // not whitelisted
             console.log("not whitelisted");
-            return { path: "/whitelist" }
+            return { name: "whitelist" }
           }
-          else if (isWhitelisted) {
+          else if ( isWhitelisted ) {
             // whitelisted
             console.log("whitelisted");
-            return true
+            return { path: to.fullPath}
           }
         })
-
+        
       }
       // !cookie
-      else if (!ethers.utils.isAddress(cookie)) {
+      else if (!ethers.utils.isAddress(cookie.wallet)) {
         // - go to walletconnect
         console.log("go to whitelist")
-        return {path: "/whitelist" }
+        return {name: "whitelist" }
       }
     }
     // connected
     if (isConnected) {
-      console.log("navigate to route");
+      console.log("navigate to route:\n", to.fullPath);
       // -navigate to route
-
       return true
     }
   }
   // to.whitelist
-  if (to.path === "whitelist") {
+  if( to.path === "whitelist" ) {
     // - navigating to whitelist and set vars
     console.log("into whitelist");
   }
-
-
+ 
+  
   // from.whitelist
-  if (from.path === "whitelist") {
+  if (to.fullPath === "/dao/"+CONTRACTS.WEAVR) {
     // - navigate path and reset vars
+    console.log("Navigate to WEAVR____GOV______________\n\n\n");
+    return {path: to.fullPath}
   }
   // no auth
-  // - navigate to path
+    // - navigate to path
   console.log("no auth required");
   return true
 })
