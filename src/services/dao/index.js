@@ -138,19 +138,19 @@ class DAO {
     let imagesHashes;
     try {
       imagesHashes = await Promise.all(Array.from(images).map(
-        async (image) => (await this.storageNetwork.addArbitraryFile(image))
+        async (image) => (await this.storageNetwork.addArbitraryFile(image.name))
       ));
-    } catch(e) {
-      console.log("Error uploading images");
+    } catch (e) {
+      console.log("Error uploading images", e);
     }
 
     let documentHashes;
     try {
       documentHashes = await Promise.all(Array.from(documents).map(
-        async (document) => (await this.storageNetwork.addArbitraryFile(document))
+        async (document) => (await this.storageNetwork.addArbitraryFile(document.name))
       ));
-    } catch(e) {
-      console.log("Error uploading documents");
+    } catch (e) {
+      console.log("Error uploading documents", e);
     }
     const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
       title, description, forumLink,
