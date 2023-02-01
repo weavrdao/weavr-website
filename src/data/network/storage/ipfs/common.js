@@ -1,4 +1,4 @@
-import { ethers } from "ethers"
+import {ethers} from "ethers"
 import "dotenv/config";
 
 export const getBytes32FromIpfsHash = (ipfsListing) => {
@@ -15,7 +15,7 @@ export const getIpfsHashFromBytes32 = (bytes32Hex) => {
   return hashStr;
 };
 
-export const getIpfsAuthHeader = () => {
+export const getInfuraAuthHeader = () => {
   if (!process.env.VUE_APP_PROJECT_ID) throw new Error("PROJECT_ID not set in environment variables");
   if (!process.env.VUE_APP_PROJECT_SECRET) throw new Error("PROJECT_SECRET not set in environment variables");
   return "Basic " + Buffer.from(process.env.VUE_APP_PROJECT_ID + ":" + process.env.VUE_APP_PROJECT_SECRET).toString("base64");

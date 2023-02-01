@@ -3,8 +3,7 @@
     <div class="modal is-active">
       <div class="modal-background" @click="goBack()"></div>
       <div class="modal-content has-background-darkGray animate__animated animate__fadeInDown animate__faster">
-       
-        <component :is="component" v-bind="$attrs" @proposed="goBack()" @submited="() => { isSubmited=true }"/>
+        <component :is="component" v-bind="$attrs" @proposed="goBack()" @submited="() => { isSubmited = true }" />
       </div>
     </div>
   </Portal>
@@ -14,10 +13,11 @@
 import "animate.css";
 import { DAO } from "../../../services/constants";
 import { mapActions } from 'vuex';
+
 export default {
   name: "Modal",
   props: ["component", "assetId"],
-  data(){
+  data() {
     return {
       isSubmited: false,
     }
@@ -31,7 +31,7 @@ export default {
     }
   },
   computed: {
-   
+
   }
 };
 </script>
@@ -55,7 +55,7 @@ export default {
     background: rgba(255, 255, 255, 0);
     transition: all 150ms;
     cursor: pointer;
-  
+
     &:hover {
       background: rgba(255, 255, 255, 0.25);
     }

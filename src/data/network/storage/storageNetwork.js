@@ -1,9 +1,16 @@
 class StorageNetwork {
-  constructor() { }
+  constructor() {
+  }
 
-  async addFile(file) { }
-  getFile = (name) => new Promise((resolve, reject) => { })
-  async getFiles(names) { }
+  async addFile(file) {
+  }
+
+  async getFile(name) {
+
+  }
+
+  async getFiles(names, localStorage) {
+  }
 }
 
 export default StorageNetwork

@@ -6,7 +6,8 @@ import Homepage from "@/components/pages/Homepage.vue"
 import PrivacyPage from "@/components/pages/PrivacyPage.vue"
 import TermsPage from "@/components/pages/TermsPage.vue"
 import Governance from "@/components/pages/Governance.vue";
-import Marketplace from "@/components/pages/Marketplace"
+import Marketplace from "@/components/pages/Marketplace";
+import Dashboard from "@/components/pages/Dashboard";
 import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.vue";
 import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
 import ThreadsMarketplace from "@/components/sections/Threads/ThreadMarketplace.vue";
@@ -14,6 +15,7 @@ import SingleThread from "@/components/sections/Threads/SingleThread.vue";
 import ThreadOverview from "@/components/views/market/ThreadOverview.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue";
+import newParticipantRemovalProposal from "@/components/proposals/newParticipantRemoval.vue";
 import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue";
 import newTokenAction from "@/components/proposals/newTokenAction.vue";
 import newThreadProposal from "@/components/proposals/newThreadProposal.vue";
@@ -24,8 +26,8 @@ import Complete from "@/components/proposals/Complete"
 import VerifyParticipant from "@/components/proposals/VerifyParticipant";
 import tokenDetails from "@/components/sections/TokenDetails.vue";
 import walletConnect from "@/components/sections/WalletConnect.vue";
-import {WhitelistPage} from "@/whitelist";
-import { CONTRACTS } from "@/services/constants";
+import { WhitelistPage } from "@/whitelist";
+import { CONTRACTS, DAO } from "@/services/constants";
 import store from "@/store";
 import ComingSoon from "@/components/sections/ComingSoon/ComingSoon.vue";
 import SingleComingSoonPage from "@/components/sections/ComingSoon/SingleComingSoonPage.vue";
@@ -37,9 +39,7 @@ import Airdrop from "@/components/pages/Airdrop.vue";
 import Login from "@/components/sections/Login.vue"
 import { GUEST } from "../services/constants";
 import { createToaster } from "@meforma/vue-toaster";
-
-
-
+import AirdropClaimModal from "@/components/views/modals/AirdropClaimModal.vue"
 
 const router = new createRouter({
   history: createWebHashHistory(),
@@ -55,7 +55,7 @@ const router = new createRouter({
     {
       path: "/toc",
       component: Modal,
-      props: { component: TermsPage}
+      props: { component: TermsPage }
     },
     {
       path: "/privacy",
@@ -64,15 +64,14 @@ const router = new createRouter({
     },
     {
       path: "/resolutions",
-      beforeEnter(){
-        window.open("https://resolutions.weavr.org", "_blanc")
+      beforeEnter() {
+        window.open("https://resolutions.weavr.org", "_blank")
       }
     },
     {
       path: "/faq",
       beforeEnter() {
-        window.open("https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics", "_blanc")
-
+        window.open("https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics", "_blank")
       }
     },
     {
@@ -82,20 +81,23 @@ const router = new createRouter({
       }
     },
     {
-      path: "/airdrop",
-      redirect: `/airdrop/${CONTRACTS.AIRDROP}`
-    },
-    {
       path: "/airdrop/:airdropAddress",
       name: "airdrop",
       component: Airdrop,
-      meta: {requiresAuth: true},
+      meta: { requiresAuth: true },
       children: [
         {
           path: `${CONTRACTS.AIRDROP}`,
           name: "firstAirdrop",
         }
       ]
+    },
+    {
+      path: "/airdrop/:airdropAddress/claim",
+      component: Modal,
+      props: {
+        component: AirdropClaimModal
+      }
     },
     {
       path: "/whitelist",
@@ -106,13 +108,19 @@ const router = new createRouter({
       path: "/walletConnect",
       name: "wallet-connect",
       component: Modal,
-      props: {component: walletConnect},
+      props: { component: walletConnect },
     },
     {
       path: "/login",
       name: "login",
       component: Modal,
-      props: {component: Login}
+      props: { component: Login }
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard,
+      meta: { requiresAuth: true }
     },
     {
       path: "/marketplace",
@@ -128,15 +136,15 @@ const router = new createRouter({
           path: "needles",
           name: "needle-market",
           component: NeedlesMarketplace,
-          meta: {requiresAuth: true}, 
+          meta: {requiresAuth: true},
           beforeEnter: async (to, from ) => {
-            
+
             store.dispatch("setLoadingState", {isLoading: true, message: "Loading Needles"})
-            
+
             await store.dispatch("refreshNeedles")
-            
+
             store.dispatch("setLoadingState", {isLoading: false, message: ""})
-            
+
             return true
           }
         },
@@ -144,16 +152,16 @@ const router = new createRouter({
           path: "needles/:needleId",
           name: "needle",
           component: SingleNeedle,
-          meta: {requiresAuth: true}, 
+          meta: {requiresAuth: true},
 
           beforeEnter: async (to, from ) => {
-            
+
             store.dispatch("setLoadingState", {isLoading: true, message: `Loading data for \n ${"Needle"}`})
-            
+
             await store.dispatch("refreshNeedles")
-            
+
             store.dispatch("setLoadingState", {isLoading: false, message: ""})
-            
+
             return true
           }
         },
@@ -161,15 +169,15 @@ const router = new createRouter({
           path: "threads",
           name: "thread-market",
           component: ThreadsMarketplace,
-          meta: {requiresAuth: true}, 
+          meta: {requiresAuth: true},
           beforeEnter: async (to, from ) => {
-            
+
             store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
-            
+
             await store.dispatch("refreshThreads")
             console.log("BEFORE ENTER: THREADS => ", store.getters.allThreads)
             store.dispatch("setLoadingState", {isLoading: false, message: ""})
-            
+
             return true
           }
         },
@@ -181,9 +189,9 @@ const router = new createRouter({
           beforeEnter: async (to, from ) => {
             if(!store.getters.threads){
               store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
-              
+
               await store.dispatch("refreshThreads")
-              
+
               store.dispatch("setLoadingState", {isLoading: false, message: ""})
             }
             return true
@@ -209,7 +217,6 @@ const router = new createRouter({
           path: "coming-soon",
           name: "comingSoon",
           component: ComingSoon,
-          meta: { requiresAuth: false}
         },
         {
           path: "coming-soon/:comingSoonId",
@@ -221,6 +228,7 @@ const router = new createRouter({
     {
       path: `/dao/:assetId`,
       component: Governance,
+
       meta: { requiresAuth: true },
       beforeEnter: async (to, from) => {
         const prop = await store.getters.proposalsPerAsset;
@@ -261,10 +269,15 @@ const router = new createRouter({
           props: { component: newParticipantProposal },
         },
         {
+          path: "participantRemovalProposal",
+          component: Modal,
+          props: {component: newParticipantRemovalProposal},
+        },
+        {
           path: "upgradeProposal",
           component: Modal,
           props: { component: newUpgradeProposal },
-          meta: { locked: false}
+          meta: { locked: true }
         },
         {
           path: "tokenProposal",
@@ -305,16 +318,16 @@ const router = new createRouter({
         {
           path: "proposal/:proposalId/queue",
           component: Modal,
-          props: {assetId: "", component: Queue}
+          props: { assetId: "", component: Queue }
         },
         {
           path: "proposal/:proposalId/complete",
           component: Modal,
-          props: {assetId: "", component: Complete}
-        }
+          props: { assetId: "", component: Complete }
+        },
       ]
     },
-    {path: "/:pathMatch(.*)*", name: "not-found", component: PageNotFound},
+    { path: "/:pathMatch(.*)*", name: "not-found", component: PageNotFound },
   ],
 });
 
@@ -332,7 +345,7 @@ router.beforeEach(async (to, from) => {
    * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
    * ON not
    */
-  console.log("HAS_REDIRECTED___", hasRedirectedAfterWhitelisting);
+   console.log("HAS_REDIRECTED___", hasRedirectedAfterWhitelisting);
 
   const address = store.getters.userWalletAddress;
   const isConnected = ethers.utils.isAddress(address);
@@ -369,17 +382,17 @@ router.beforeEach(async (to, from) => {
     // not connected
     if( !isConnected ) {
       // cookie
-      if( ethers.utils.isAddress(cookie.wallet) ) {
-        if( cookie.wallet === GUEST ) {
+      if (ethers.utils.isAddress(cookie.wallet)) {
+        if (cookie.wallet === GUEST) {
           console.log("IS GUEST");
           return true
         }
         // - autoconnect and navigate
         console.log("autoconnect and navigate");
         const toast = createToaster({})
-        await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast})
-        await store.dispatch("checkWhitelistStatus", {assetId: CONTRACTS.WEAVR}).then( () => {
-          if( !isWhitelisted ) {
+        await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
+        await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
+          if (!isWhitelisted) {
             // not whitelisted
             console.log("not whitelisted");
             return { name: "whitelist" }
@@ -393,16 +406,16 @@ router.beforeEach(async (to, from) => {
         
       }
       // !cookie
-      else if( !ethers.utils.isAddress(cookie.wallet)  ) { 
+      else if (!ethers.utils.isAddress(cookie.wallet)) {
         // - go to walletconnect
         console.log("go to whitelist")
-        return { name: "whitelist"}
+        return {name: "whitelist" }
       }
     }
     // connected
-    if ( isConnected ) {
+    if (isConnected) {
       console.log("navigate to route:\n", to.fullPath);
-        // -navigate to route
+      // -navigate to route
       return true
     }
   }
@@ -411,18 +424,18 @@ router.beforeEach(async (to, from) => {
     // - navigating to whitelist and set vars
     console.log("into whitelist");
   }
-
-
+ 
+  
   // from.whitelist
-  if( to.fullPath === "/dao/"+CONTRACTS.WEAVR ) {
+  if (to.fullPath === "/dao/"+CONTRACTS.WEAVR) {
     // - navigate path and reset vars
     console.log("Navigate to WEAVR____GOV______________\n\n\n");
     return {path: to.fullPath}
   }
   // no auth
-  // - navigate to path
+    // - navigate to path
   console.log("no auth required");
-  return true  
+  return true
 })
 
 export default router;

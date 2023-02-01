@@ -12,13 +12,13 @@ export const _NETWORKS = {
       BOND:"0xCe5A042ED87Ed92AFE33e3D4fFf600e39d0Cef2F",
       FRABRIC_CODE:"0x117b32BeCE1d46A45fE55470B22fD7C019691a58",
       TRADE_TOKEN: "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
-      AIRDROP: "0xB3CB81B1Bd577fB62C72B426F935B97535D2d5ec"
+      AIRDROP: "0x560ea772dbb194fa471ce9a5573daddc3e632f26"
     }
   },
   arbitrum_goerli: { 
     name: "Arbitrum Goerli Testnet", 
     id: 421613, 
-    graph: "https://api.thegraph.com/subgraphs/name/abstrucked/weavr-arbtest-0123",    
+    graph: "https://api.thegraph.com/subgraphs/name/abstrucked/weavr-arbtest-0123",
     explorer: "https://goerli.arbiscan.io",
     contracts: {
       TOKEN_ADDRESS:"0x386575974C05E558D82FE6Cc965cD69503969125",
@@ -31,9 +31,9 @@ export const _NETWORKS = {
       TRADE_TOKEN: "0xaa72fbFa8120Bb295A126C34348bb3d018c70efD"
     }
   },
-  goerli: { 
-    name: "Goerli", 
-    id: 5, 
+  goerli: {
+    name: "Goerli",
+    id: 5,
     graph: "https://api.thegraph.com/subgraphs/name/0xnshuman/frabric-goerli",
     contracts: {
       TOKEN_ADDRESS:"0x9018f685FdceE5d8A4Db8420C456c7CfBE42352E",
@@ -48,9 +48,9 @@ export const _NETWORKS = {
 
   ethereum: { name: "Ethereum", id: 1 },
   rinkeby: { name: "Rinkeby", id: 4 },
-  polygon: { name: "Polygon", id: 137 },
-  optimism: { name: "Optimism", id: 10 },
-  avalanche: { name: "Avalanche", id: 43114 },
+  polygon: {name: "Polygon", id: 137},
+  optimism: {name: "Optimism", id: 10},
+  avalanche: {name: "Avalanche", id: 43114},
 };
 
 export const DAO = "weavr";
@@ -60,5 +60,3 @@ const chain = process.env.VUE_APP_SELECTED_CHAIN
 export const NETWORK = _NETWORKS[chain];
 
 export const CONTRACTS = NETWORK.contracts;
-
-

@@ -1,6 +1,6 @@
 <template>
-  <nav class="navbar p-5" role="navigation" aria-label="main navigation">
-    <div class="container">
+  <nav class="navbar  p-5" role="navigation" aria-label="main navigation">
+    <div class="container ">
       <div class="navbar-brand">
         <a class="navbar-item" @click="transitTo('/')">
           <div class="title brand has-text-white is-flex is-align-items-center">
@@ -65,14 +65,15 @@
         </div>
       </div>
     </div>
+    
   </nav>
 </template>
 
 <script>
-import SignerAddress from "../../views/address/SignerAddress.vue";
-import { useRoute } from "vue-router";
-import { mapGetters, mapActions } from "vuex";
-import { CONTRACTS, DAO } from "../../../services/constants";
+import SignerAddress from '../../views/address/SignerAddress.vue'
+import { useRoute } from "vue-router"
+import { mapGetters, mapActions } from "vuex"
+import { CONTRACTS, DAO } from '../../../services/constants'
 export default {
   name: "HeaderHavigationBar",
   components: {
@@ -84,16 +85,16 @@ export default {
         isOpen: false,
         items: [
           { name: "Governance", route: `/dao/${CONTRACTS.WEAVR}`},
-          { 
-            name: "Marketplace", 
-            route: "/marketplace", 
+          {
+            name: "Marketplace",
+            route: "/marketplace" ,
             childs: [
-              { 
-                name: "Needles", 
+              {
+                name: "Needles" ,
                 route: { path: "marketplace", params: { market: "needle"}}
               },
-              { 
-                name: "Threads", 
+              {
+                name: "Threads",
                 route: { path: "/marketplace/threads"}
               }
             ]
@@ -111,8 +112,7 @@ export default {
       return useRoute().fullPath.includes(item.route);
     },
     transitTo(path) {
-      this.$router.push(path)      
-      console.log(this.$route.name);
+      this.$router.push(path)
       this.navigation.isOpen ? this.menuToggle() : null;
     },
     menuToggle() {

@@ -3,16 +3,17 @@
   <div class="my-5"><RefreshButton :assetId="assetId"/></div>
 
     <div v-if="this.proposals.length !== 0">
-      <div class="card m-0 p-0  filter-button-container" :class="filterMenuIsOpen && 'container-open'">
-          <div
+      <div class="card m-0 p-0  filter-button-container"
+           :class="filterMenuIsOpen && 'container-open'">
+        <div
             v-for="{key, class: styles, text, selected} in filterButtons"
             @click="toggleFilter(key)"
             class="button filter-button"
             :class="[styles, !selected && 'unselected']"
             :key="key">
-            {{ text }}
-          </div>
-      </div> 
+          {{ text }}
+        </div>
+      </div>
       <div class="columns is-multiline">
         <div class="column is-one-third" v-for="proposal in this.filteredProposals" v-bind:key="proposal.id">
           <div >
@@ -43,8 +44,8 @@ export default {
       filterMenuIsOpen: false,
       // Create object with shape { [proposalType]: true }
       proposalTypesFilter: Object.fromEntries(
-        Object.values(ProposalTypes)
-          .map(v => [v, true])
+          Object.values(ProposalTypes)
+              .map(v => [v, true])
       ),
     }
   },
@@ -69,15 +70,16 @@ export default {
   computed: {
     filteredProposals() {
       return this.proposals
-        .filter(proposal => this.proposalTypesFilter[proposal.type])
-        .filter(proposal => proposal.state !== 'Cancelled')
-        .sort((p1, p2) => p1.endTimestamp < p2.endTimestamp);
+          .filter(proposal => this.proposalTypesFilter[proposal.type])
+          .filter(proposal => proposal.state !== "Cancelled")
+          .sort((p1, p2) => p1.endTimestamp < p2.endTimestamp);
     },
     filterButtons() {
       return Object.values(ProposalTypes).map(proposal => ({
-        key: proposal,
-        selected: this.proposalTypesFilter[proposal],
-        ...getProposalTypeStyling(proposal)}
+            key: proposal,
+            selected: this.proposalTypesFilter[proposal],
+            ...getProposalTypeStyling(proposal)
+          }
       ));
     },
   },
@@ -90,9 +92,6 @@ export default {
       }
     }
   },
-  mounted() {
-    console.log(this.proposals)
-  }
 }
 </script>
 
@@ -120,7 +119,7 @@ export default {
   transition: 150ms all ease-in-out;
   display: inline-flex;
   align-items: center;
-  background: rgba(255,255,255, 0);
+  background: rgba(255, 255, 255, 0);
   padding: 8px 5px;
   height: 25px;
   margin-bottom: 10px;
@@ -145,9 +144,9 @@ export default {
     height: 25px;
     font-stretch: expanded;
   }
-  
+
   &:hover {
-    background: rgba(255,255,255, 0.45);
+    background: rgba(255, 255, 255, 0.45);
   }
 }
 
