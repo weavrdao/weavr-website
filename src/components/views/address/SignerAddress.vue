@@ -32,21 +32,34 @@
         </div>
         <div class="dropdown-menu" id="dropdown-menu3" role="menu">
           <div class="dropdown-content ">
-            <a href="dropdown-item">
+            <a class="dropdown-item">
               <div v-if="whitelisted && isConnected && !hasKyc" class="button is-clickable is-success is-size-7" @click="onKyc"><span class="mr-1"></span>Get Verified</div>
-              <div v-if="whitelisted && isConnected && hasKyc" class="p-3" @click="kycInfo">
-                <unicon name="user-check" :width="24" :height="24" fill="green" alt="address verified"/>
+              <div v-if="whitelisted && isConnected && hasKyc" class="columns is-flex is-vcentered" @click="kycInfo">
+                <span class="column">
+                  <unicon name="user-check" :width="24" :height="24" fill="#5ed88e" alt="address verified"/>
+                </span>
+                <span class="column is-flex is-vcentered has-text-success	">Verified</span>
+              </div>
+            </a>
+            <!-- <hr class="dropdown-divider"> -->
+
+            <a  class="dropdown-item">
+              <div v-if="whitelisted && isConnected && hasKyc" class="columns is-flex is-vcentered" @click="onVouch">
+                <span class="column">
+                  <unicon name="user-plus" :width="24" :height="24" fill="white" alt="address verified"/>
+                </span>
+                <span class="column is-flex is-vcentered has-text-white">Vouch</span>
               </div>
             </a>
             <hr class="dropdown-divider">
-
-            <a  class="dropdown-item">
-              <div v-if="whitelisted && isConnected && hasKyc" class="" @click="onVouch">Vouch</div>
+             <a @click="onLogout" class="dropdown-item">
+                <div class="px-3 columns is-flex is-vcentered">
+                  <span class="column">
+                    <unicon name="sign-out-alt" :width="24" :height="24" fill="white" alt="address verified"/>
+                  </span>
+                  <span class="column is-flex is-vcentered has-text-white">Logout</span>
+                </div>
             </a>
-            <a @click="onLogout" class="dropdown-item">
-              Logout
-            </a>
-            <hr class="dropdown-divider">
           </div>
         </div>
       </div>
