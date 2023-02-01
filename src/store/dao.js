@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 // import router from "../router/index";
-import { ethers } from "ethers";
-import { createToaster } from "@meforma/vue-toaster";
-import { params } from "stylus/lib/utils";
+import {ethers} from "ethers";
+import {createToaster} from "@meforma/vue-toaster";
+import {params} from "stylus/lib/utils";
 import ServiceProvider from "../services/provider";
-import { CONTRACTS, NETWORK } from "../services/constants";
+import {CONTRACTS, NETWORK} from "../services/constants";
 
 import blacklist from "@/blacklist.json";
 
@@ -17,7 +17,7 @@ const wallet = ServiceProvider.wallet();
 const dao = ServiceProvider.dao();
 
 function state() {
-  return {    
+  return {
     platform: {
       assets: [],
       quorum: 0,
@@ -28,7 +28,7 @@ function state() {
 
 
 const getters = {
-  
+
   allAssets(state) {
     return state.platform.assets;
   },
@@ -58,7 +58,6 @@ const getters = {
     return assetMap;
   },
 
- 
 
   assetProposals(state) {
     return state.platform.proposals.filter((proposal) => {
@@ -81,19 +80,19 @@ const getters = {
 
     return proposalsMap;
   },
-  
+
 };
 
 
 const actions = {
-  
+
   async refreshProposalsDataForAsset(context, params) {
     // NOTE (bill) Quick fix to allow loading from child paths, better solutions available
     if (context.getters.assetProposals.length > 1 && !params.forceRefresh)
       return false;
     const toast = params.$toast || createToaster({});
     let assetId = params.assetId.toLowerCase();
-    let assetProposals = await dao.getProposalsForAsset(assetId);
+    let assetProposals = await dao.getProposalsForAsset(assetId, localStorage);
 
     context.commit("setProposalsForAsset", {
       assetId: assetId.toLowerCase(),
@@ -103,7 +102,7 @@ const actions = {
   },
 
   async createPaperProposal(context, props) {
-    const { assetAddr, daoResolution, title, description, forumLink } = props;
+    const {assetAddr, daoResolution, title, description, forumLink} = props;
     const toast = params.$toast || createToaster({});
 
     toast.clear();
@@ -129,7 +128,7 @@ const actions = {
 
   async createParticipantProposal(context, props) {
     const toast = params.$toast || createToaster({});
-    const { assetId, participantType, participant, description, forumLink } = props;
+    const {assetId, participantType, participant, description, forumLink} = props;
 
     toast.show("Confirming transaction...", {
       duration: 15000,
@@ -312,7 +311,7 @@ const actions = {
   async vote(context, props) {
     const toast = params.$toast || createToaster({});
 
-    const { assetAddress, proposalId, votes } = props;
+    const {assetAddress, proposalId, votes} = props;
 
     const status = await dao.vote(
       assetAddress || CONTRACTS.WEAVR,
@@ -338,8 +337,8 @@ const actions = {
   async withdrawProposal(context, props) {
     const toast = params.$toast || createToaster({});
 
-    const { assetAddress, proposalId } = props;
-    
+    const {assetAddress, proposalId} = props;
+
     const status = await dao.withdraw(
       assetAddress || CONTRACTS.WEAVR,
       proposalId,
@@ -360,7 +359,7 @@ const actions = {
   async queueProposal(context, props) {
     const toast = params.$toast || createToaster({});
     const id = ethers.BigNumber.from(props.proposalId)
-    
+
     const status = await dao.queue(id);
     console.log(status)
 
@@ -376,8 +375,8 @@ const actions = {
 
   async vouchParticipant(context, props) {
     const toast = params.$toast || createToaster({});
-    const { customDomain, participant } = props;
-    
+    const {customDomain, participant} = props;
+
     const domain = customDomain || {
       name: "Weavr Protocol",
       version: "1",
@@ -385,18 +384,18 @@ const actions = {
       verifyingContract: CONTRACTS.WEAVR
     };
     const types = {
-      Vouch: [{ type: "address", name: "participant" }],
+      Vouch: [{type: "address", name: "participant"}],
     };
-    const data = { 
-      participant: participant 
+    const data = {
+      participant: participant
     };
-    
-    toast.info("Waiting for signature..", { position: "top" });
-    
+
+    toast.info("Waiting for signature..", {position: "top"});
+
     const signatures = await wallet.getSignature(domain, types, data);
     Promise.all([signatures])
       .then(() => {
-      // console.log(signature[0]);
+        // console.log(signature[0]);
         const expectedSignerAddress = context.state.user.wallet.address;
         const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
         console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
@@ -405,7 +404,7 @@ const actions = {
     const signature = signatures[0]
     console.log(signature);
     const status = await dao.vouch(participant, signature);
-    
+
     if (status) {
       toast.success("Transaction confirmed...", {
         duration: 2000,
@@ -423,8 +422,8 @@ const actions = {
 
   async verifyParticipant(context, props) {
     const toast = params.$toast || createToaster({});
-    const { customDomain, participant, pType, kycHash, nonce } = props;
-    console.log({ customDomain, participant, pType, kycHash, nonce })
+    const {customDomain, participant, pType, kycHash, nonce} = props;
+    console.log({customDomain, participant, pType, kycHash, nonce})
     const domain = customDomain || {
       name: "Weavr Protocol",
       version: "1",
@@ -433,34 +432,34 @@ const actions = {
     };
     const types = {
       KYCVerification: [
-        { type: "uint8",   name: "participantType" },
-        { type: "address", name: "participant" },
-        { type: "bytes32", name: "kyc" },
-        { type: "uint256", name: "nonce" }
+        {type: "uint8", name: "participantType"},
+        {type: "address", name: "participant"},
+        {type: "bytes32", name: "kyc"},
+        {type: "uint256", name: "nonce"}
       ]
     };
-    const data = { 
+    const data = {
       participantType: pType,
       participant: participant,
       kyc: ethers.utils.id(kycHash),
-      nonce: ethers.BigNumber.from(nonce) 
+      nonce: ethers.BigNumber.from(nonce)
     };
-    
-    toast.info("Waiting for signature..", { position: "top" });
-    
+
+    toast.info("Waiting for signature..", {position: "top"});
+
     const signatures = await wallet.getSignature(domain, types, data);
     Promise.all([signatures])
       .then(() => {
-      // // console.log(signature[0]);
-      // const expectedSignerAddress = context.state.user.wallet.address;
-      // const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
-      // console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
-      // console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
+        // // console.log(signature[0]);
+        // const expectedSignerAddress = context.state.user.wallet.address;
+        // const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
+        // console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
+        // console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
       });
     const signature = signatures[0]
     console.log(signature);
     const status = await dao.approve(data.participantType, data.participant, data.kyc, signature);
-    
+
     if (status) {
       toast.success("Transaction confirmed...", {
         duration: 2000,
@@ -482,20 +481,20 @@ const actions = {
   },
 
   async quorum(context, params) {
-    console.log("PARAMS: ",params.assetId)
+    console.log("PARAMS: ", params.assetId)
     const assetId = params.assetId;
-    const quorum =await dao.quorum(assetId);
+    const quorum = await dao.quorum(assetId);
     context.commit("setQuorum", ethers.utils.formatUnits(quorum, "ether"))
   }
 };
 
 const mutations = {
-  
+
   setAssets(state, assets) {
     state.platform.assets = assets;
   },
 
-  setProposalsForAsset(state, { proposals, assetId }) {
+  setProposalsForAsset(state, {proposals, assetId}) {
     state.platform.proposals = proposals; // state.platform.proposals.set(assetId, proposals);
   },
 
@@ -505,11 +504,11 @@ const mutations = {
   setNeedles(state, needles) {
     state.platform.needles = needles;
   },
-  
+
   setQuorum(state, quorum) {
     state.platform.quorum = quorum;
   }
-  
+
 };
 
 export default {

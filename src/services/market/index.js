@@ -6,10 +6,15 @@ import PlatformContract from "../../data/network/web3/contracts/platformContract
 import AssetContract from "../../data/network/web3/contracts/assetContract"
 import StorageNetwork from "../../data/network/storage/storageNetwork"
 import Asset from "../../models/asset"
-import { GraphQLAPIClient, ALL_ASSETS_QUERY, ALL_THREADS_QUERY, ALL_NEEDLES_QUERY } from "../../data/network/graph/graphQLAPIClient"
+import {
+  GraphQLAPIClient,
+  ALL_ASSETS_QUERY,
+  ALL_THREADS_QUERY,
+  ALL_NEEDLES_QUERY
+} from "../../data/network/graph/graphQLAPIClient"
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
-import { getIpfsHashFromBytes32 } from "../../data/network/storage/ipfs/common";
-import { NETWORK } from "../constants"
+import {getIpfsHashFromBytes32} from "../../data/network/storage/ipfs/common";
+import {NETWORK} from "../constants"
 
 /**
  * Market Provider service
@@ -18,7 +23,7 @@ import { NETWORK } from "../constants"
  * @param {StorageNetwork} storageNetwork Storage network to use
  */
 class Market {
-  constructor (
+  constructor(
     ethereumClient,
     graphQLAPIClient,
     storageNetwork,
@@ -27,7 +32,7 @@ class Market {
     this.graphQLAPIClient = graphQLAPIClient
     this.storageNetwork = storageNetwork
   }
-  
+
   /**
    * Get assets that are currently trading on the market.
    * @param {number} limit
@@ -41,21 +46,23 @@ class Market {
    * await getAssetsOnTheMarket(100, 0, [1,2,3,4,5])
    */
   async getAssetsOnTheMarket(
-    limit = 100, 
-    offset = 0, 
-    idsArray = null, 
-    sort = null, 
+    limit = 100,
+    offset = 0,
+    idsArray = null,
+    sort = null,
     minBlockNumber = null
   ) {
     // Get indexed on-chain data
 
     var assets = await this.graphQLAPIClient
       .query(
-        ALL_THREADS_QUERY, 
+        ALL_THREADS_QUERY,
         {
           weavrId: NETWORK.contracts.WEAVR
-        }, 
-        (mapper, response) => { return mapper.mapThreads(response.data) }
+        },
+        (mapper, response) => {
+          return mapper.mapThreads(response.data)
+        }
       )
 
     console.log("Mapped assets:")
@@ -69,7 +76,7 @@ class Market {
       .map(asset => asset.dataURI)
     let assetOffchainDataArray = (
       await this.storageNetwork
-        .getFiles(assetDataURIArray.map(uri => CommonUtils.pathFromURL(uri)))
+        .getFiles(assetDataURIArray.map(uri => CommonUtils.pathFromURL(uri)), localStorage)
     )
       .map(obj => obj.world.property)
 
@@ -113,23 +120,23 @@ class Market {
 
 
   async getThreads(
-    limit = 100, 
-    offset = 0, 
-    idsArray = null, 
-    sort = null, 
-    minBlockNumber = null
+    limit = 100,
+    offset = 0,
+    idsArray = null,
+    sort = null,
+    minBlockNumber = null,
   ) {
     // Get indexed on-chain data
 
     const threads = await this.graphQLAPIClient
       .query(
-        ALL_THREADS_QUERY, 
+        ALL_THREADS_QUERY,
         {
           weavrId: NETWORK.contracts.WEAVR
-        }, 
-        (mapper, response) => { 
+        },
+        (mapper, response) => {
           console.log(response.data.crowdfunds)
-          const mappedThreads =  mapper.mapRawThreads(response.data.crowdfunds) 
+          const mappedThreads = mapper.mapRawThreads(response.data.crowdfunds)
           console.log(mappedThreads)
           return mappedThreads
         }
@@ -142,19 +149,20 @@ class Market {
 
     // Fetch and append off-chain data
     try {
-      
-      const descriptors = threads.map(( thread ) => {
+
+      const descriptors = threads.map((thread) => {
         console.log(thread.descriptor);
         return getIpfsHashFromBytes32(thread.descriptor)
       })
       console.log(descriptors);
       const offChainData = await this.storageNetwork.getFiles(
-        descriptors
+        descriptors,
+        localStorage
       );
-      
-      for(let i=0; i < threads.length; i++) {
+
+      for (let i = 0; i < threads.length; i++) {
         console.log(offChainData[i].value.descriptor)
-        if(offChainData[i].value) {
+        if (offChainData[i].value) {
           threads[i].descriptor = offChainData[i].value.descriptor;
           threads[i].name = offChainData[i].value.name;
           threads[i].imagesHashes = offChainData[i].value.imagesHashes;
@@ -168,7 +176,7 @@ class Market {
           threads[i].metrics = offChainData[i].value.metrics;
         }
       }
-    } catch(e) {
+    } catch (e) {
       // no-op
       console.log(e);
     }
@@ -179,25 +187,26 @@ class Market {
   async getNeedles() {
     const needles = await this.graphQLAPIClient
       .query(
-        ALL_NEEDLES_QUERY, 
+        ALL_NEEDLES_QUERY,
         {
           weavrId: NETWORK.contracts.WEAVR
-        }, 
-        (mapper, response) => { 
+        },
+        (mapper, response) => {
           console.log("RESPONSE:  ", response);
-          const mappedNeedles =  mapper.mapRawNeedles(response.data.crowdfunds) 
+          const mappedNeedles = mapper.mapRawNeedles(response.data.crowdfunds)
           return mappedNeedles
         }
       )
-      console.log(needles)
+    console.log(needles)
 
     try {
       const offChainData = await this.storageNetwork.getFiles(
-        needles.map(({ thread }) => getIpfsHashFromBytes32(thread.descriptor))
+        needles.map(({thread}) => getIpfsHashFromBytes32(thread.descriptor)),
+        localStorage
       );
       console.log("offChainData", offChainData);
-      for(let i=0; i < needles.length; i++) {
-        if(offChainData[i].value) {
+      for (let i = 0; i < needles.length; i++) {
+        if (offChainData[i].value) {
           needles[i].descriptor = offChainData[i].value.descriptor;
           needles[i].name = offChainData[i].value.name;
           needles[i].imagesHashes = offChainData[i].value.imagesHashes;
@@ -210,7 +219,7 @@ class Market {
           needles[i].metrics = offChainData[i].metrics;
         }
       }
-    } catch(e) {
+    } catch (e) {
       // no-op
     }
     return needles;
