@@ -40,8 +40,9 @@ class IPFSStorageNetwork extends StorageNetwork {
     const image = await this.ipfsInfuraAPIClient.add(imageFile, {pin: true});
     return image;
   }
+
   async addArbitraryFile(file) {
-    const filesHash =  await this.ipfsAPIClient.add(file, { pin: true })
+    const filesHash = await this.ipfsInfuraAPIClient.add(file, {pin: true})
     return filesHash.path
   }
 
