@@ -44,9 +44,7 @@ const getters = {
   },
 
   proposalsPerAsset(state) {
-    if (state.platform.proposals.length < 1) {
-      dao.getProposalsForAsset();
-    }
+    return state.platform.proposals
   },
 
   assetsAddressById(state) {

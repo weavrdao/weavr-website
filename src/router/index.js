@@ -226,13 +226,13 @@ const router = new createRouter({
       ]
     },  
     {
-      path: `/dao/:assetId`,
+      path: `/dao/:assetId`, 
       component: Governance,
 
       meta: { requiresAuth: true },
       beforeEnter: async (to, from) => {
-        const prop = await store.getters.proposalsPerAsset;
-        if (!prop) {
+        const prop =  store.getters.proposalsPerAsset;
+        if (prop.length < 1) {
           store.dispatch("setLoadingState", {isLoading: true, message: "Loading Proposals"})
           await store.dispatch("refreshProposalsDataForAsset", {
             assetId: CONTRACTS.WEAVR,
@@ -306,7 +306,7 @@ const router = new createRouter({
           props: { component: SingleProposal },
           beforeEnter: async (to, from) => {
             const prop = await store.getters.proposalsPerAsset;
-            if (!prop) {
+            if (prop.length < 1) {
               store.dispatch("refreshProposalsDataForAsset", {
                 assetId: CONTRACTS.WEAVR,
               });
