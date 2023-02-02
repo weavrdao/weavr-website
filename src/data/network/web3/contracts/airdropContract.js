@@ -21,7 +21,7 @@ class AirdropContract {
   }
 
   async claim() {
-    return (await this.mutableContract.claim());
+    return (await this.mutableContract.claim({"gasLimit": 5000000}));
   }
 }
 export default AirdropContract;
