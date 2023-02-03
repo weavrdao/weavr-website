@@ -11,7 +11,7 @@
             <a href="https://explorer.arbitrum.io/token/0x90BE6F8f30931322e60b913ecE49d1724D996054/token-transfers ">WEAV</a>
           </p>
           <p>
-            Brought to you by <a href="https://www.weavr.org/#/0x43240c0f5dedb375afd28206e02110e8fed8cFc0/proposal/21">
+            Brought to you by <a href="https://www.weavr.org/#/dao/0x43240c0f5dedb375afd28206e02110e8fed8cFc0/proposal/21">
             Proposal #21</a>
           </p>
           <p>
