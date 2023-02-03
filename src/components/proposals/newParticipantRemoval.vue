@@ -1,6 +1,6 @@
 <template>
   <div class="container p-5">
-    <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Participant Proposal</div>
+    <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Participant Removal Proposal</div>
     <!-- PAPER PROPOSAL FORM -->
     <div v-if="!preview">
       <div class="field">
