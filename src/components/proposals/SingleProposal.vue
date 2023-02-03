@@ -75,40 +75,41 @@
     </div>
     {{assetId}}
   </div>
-  </template>
+</template>
   
-  <script>
-  import { mapGetters, mapActions } from "vuex";
-  import slider from "vue3-slider"
-  import {
-    getProposalTypeStyling,
-    padWithZeroes,
-    dateStringForTimestamp,
-    getVotes,
-    hasEnded,
-    getResult,
-  } from "../../data/helpers";
-  import { PASSED } from "../../models/common";
-  import { DAO } from "../../services/constants"
-  import {CommonProposalType, ProposalTypes} from "@/models/common.js"
-  import Proposal from "@/components/proposals/Proposal.vue"
-  import { ethers } from "ethers";
-  
-  export default {
-    name: "SingleProposal",
-    components: {
-      slider,
-      Proposal
-    },
-    data () {
+<script>
+import { mapGetters, mapActions } from "vuex";
+import slider from "vue3-slider"
+import {
+  getProposalTypeStyling,
+  padWithZeroes,
+  dateStringForTimestamp,
+  getVotes,
+  hasEnded,
+  getResult,
+} from "../../data/helpers";
+import { PASSED } from "../../models/common";
+import { DAO } from "../../services/constants"
+import {CommonProposalType, ProposalTypes} from "@/models/common.js"
+import Proposal from "@/components/proposals/Proposal.vue"
+import { ethers } from "ethers";
+
+export default {
+  name: "SingleProposal",
+  components: {
+    slider,
+    Proposal
+  },
+  data () {
     return {
       proposalId: Number(this.$route.params.proposalId),
       voteAmount: 0,
       timeRemainingString: "",
       PASSED,
-    }},
-    computed: {
-      ...mapGetters({
+    }
+  },
+  computed: {
+    ...mapGetters({
       proposals: "assetProposals",
       address: "userWalletAddress",
       balance: "userTokenBalance",
@@ -170,7 +171,7 @@
     ...mapActions({
       vote: "vote",
       refresh: "refreshProposalsDataForAsset",
-      withdraw: "withdraw",
+      withdraw: "withdrawProposal",
       getQuorum: "quorum"
     }), // Voting action
     routeToHome() {
@@ -237,100 +238,100 @@
   },
 }
 </script>
+
+<style lang="scss" scoped>
+@import "../../styles/weavr-custom.scss";
+@import "../../styles/markdown.scss";
+
+.container {
+  min-width: 80% !important;
+}
+.relative {
+  position: relative;
+}
+
+.label {
+  margin-top: 30px;
+}
+
+
+
+.proposal-type {
+  display: inline-block;
+  font-weight: 400;
+  padding: 5px 10px;
+  border: 2px solid white;
+  border-radius: $tiny-radius;
+  margin-bottom: 20px;
+}
+.paper {
+  border-color: #00EDC4;
+  color: #00EDC4;
+}
+
+.participant {
+  border-color: whitesmoke;
+  color: whitesmoke;
+}
+
+.upgrade {
+  border-color: #D841DE;
+  color: #D841DE;
+}
+
+.thread {
+  border-color: yellow;
+  color: yellow;
+}
+
+.description-container {
+  background: transparent !important;
+  padding: 25px;
+  border-radius: $tiny-radius;
   
-  <style lang="scss" scoped>
-  @import "../../styles/weavr-custom.scss";
-  @import "../../styles/markdown.scss";
-  
-  .container {
-    min-width: 80% !important;
+  p {
+    max-width: 56ch;
   }
-  .relative {
-    position: relative;
+}
+.votes-bar {
+  width: 100%;
+  height: 25px;
+  background: $red;
+  overflow: hidden;
+  border: none;
+}
+
+.green-bar {
+  background: $success;
+  height: 30px;
+}
+
+.outcome-box {
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  padding: 15px 20px;
+}
+
+.slider {
+  margin-bottom: 5px;
+  height: 23px;
+  transition: all 150ms;
+
+  &:hover {
+    filter: contrast(120%);
   }
-  
-  .label {
-    margin-top: 30px;
-  }
-  
-  
-  
-  .proposal-type {
-    display: inline-block;
-    font-weight: 400;
-    padding: 5px 10px;
-    border: 2px solid white;
-    border-radius: $tiny-radius;
-    margin-bottom: 20px;
-  }
-  .paper {
-    border-color: #00EDC4;
-    color: #00EDC4;
-  }
-  
-  .participant {
-    border-color: whitesmoke;
-    color: whitesmoke;
-  }
-  
-  .upgrade {
-    border-color: #D841DE;
-    color: #D841DE;
-  }
-  
-  .thread {
-    border-color: yellow;
-    color: yellow;
-  }
-  
-  .description-container {
-    background: transparent !important;
-    padding: 25px;
-    border-radius: $tiny-radius;
-    
-    p {
-      max-width: 56ch;
-    }
-  }
-  .votes-bar {
-    width: 100%;
-    height: 25px;
-    background: $red;
-    overflow: hidden;
-    border: none;
-  }
-  
-  .green-bar {
-    background: $success;
-    height: 30px;
-  }
-  
-  .outcome-box {
+}
+
+.buttons-container {
+  margin-top: 10px;
+  .button {
+    background: $mediumBlue;
     color: white;
+    width: 3rem;
+    height: 1.5rem;
+    font-size: 12px;
     font-weight: 600;
-    border-radius: 0.5rem;
-    padding: 15px 20px;
   }
-  
-  .slider {
-    margin-bottom: 5px;
-    height: 23px;
-    transition: all 150ms;
-  
-    &:hover {
-      filter: contrast(120%);
-    }
-  }
-  
-  .buttons-container {
-    margin-top: 10px;
-    .button {
-      background: $mediumBlue;
-      color: white;
-      width: 3rem;
-      height: 1.5rem;
-      font-size: 12px;
-      font-weight: 600;
-    }
-  }
-  </style>
+}
+</style>
