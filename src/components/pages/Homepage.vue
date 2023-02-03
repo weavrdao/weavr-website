@@ -18,17 +18,6 @@
               Learn more
             </a>
           </div>
-          <!--          <div class="column">-->
-          <!--            <a class="-->
-          <!--              button -->
-          <!--              is-secondary -->
-          <!--              is-fullwidth -->
-          <!--              has-text-white  -->
-          <!--              is-size-4 "-->
-          <!--               @click="navigateToApp('weavr')">-->
-          <!--              Governance-->
-          <!--            </a>-->
-          <!--          </div>-->
         </div>
       </div>
       <div class="column logo-container p-6">
@@ -92,11 +81,11 @@
       </div>
     </div>
 
-    <div class="box columns is-6 has-background-dimmedBlue">
-      <div class="column is-vcentered is-one-fifth p-6 is-3">
-        <div class="title is-1 text-align-">What makes us Unique?</div>
-      </div>
-      <div class="column is-full p-5">
+    <div class="box column is-full has-background-dimmedBlue">
+      <div class="title is-medium ">What makes us Unique?</div>
+<!--      <div class="column is-vcentered is-half p-6 is-2">-->
+<!--      </div>-->
+      <div class="column ">
         <div class="columns is-multiline">
           <div
             class="column is-one-third has-radius-lg has-background-darkGray mt-4"
@@ -210,21 +199,21 @@ export default {
   data() {
     return {
       forBuyers: [
-        "Buy property token in our marketplace",
-        "Manage it collaboratively",
-        "See your token value increase",
-        "Sell anytime",
+        "Buy property tokens on our marketplace",
+        "Manage your assets collaboratively",
+        "See your asset value appreciate in value",
+        "Sell anytime you want",
       ],
       forBuilders: [
-        "Find the Real estate project of your dream",
+        "Find the Real estate project of your dreams",
         "Submit your proposal to Weavr",
-        "Find likeminded investors who will help to buy it",
+        "Find likeminded investors who will back your project",
       ],
       uniquePoints: [
         {
           id: 1,
           heading: "Earn appreciation & rental income",
-          text: "Earn as you collect rents, and see the value of your tokens increase with land value. \n Access one of the most value stable asset class.",
+          text: "Earn as you collect rents, and see the value of your tokens increase with land value. \n Access one of the most value stable asset classes.",
         },
         {
           id: 2,
