@@ -1,22 +1,18 @@
 <template>
-    <section @click="openProposal" class="card p-4 proposal has-background-darkGray has-radius-lg mb-1" aria-labelledby="proposal">
-      <div class="card-header mb-0">
-        <span class="proposal-type" :class="this.typeStylingData.class">
-          {{ this.typeStylingData.text }}
-        </span>
-        <div class="proposal-date">
-          <h2 class="is-size-5 has-text-mediumBlue">
-              {{ this.startDate }}
-          </h2>
-        </div>
-        <div @click="routeToProposal" class="mt-1">
-          <h1 :class="[proposal.state=='Cancelled' || proposal.state=='Failed' ? 'has-text-red' : 'has-text-success']">{{proposal.state}}</h1>
-        </div>
+    <section @click="openProposal" class="card p-4 proposal has-background-darkGray has-radius-lg mb-1 h-100" aria-labelledby="proposal">
+      <div :class="this.typeStylingData.class">
+        {{ this.typeStylingData.text }}
+      </div>
+      <div :class="[proposal.state=='Cancelled' || proposal.state=='Failed' ? 'has-text-red' : 'has-text-success']">{{proposal.state}}</div>
+      <div class="proposal-date">
+        <h2 class="is-size-5 has-text-mediumBlue">
+            {{ this.startDate }}
+        </h2>
       </div>
       <div class="card-content px-0">
         <div class=" py-0">
           <div class="py-0">
-            <div id="proposal-title" class="is-size-5 has-text-white mb-4">
+            <div id="proposal-title" class="proposal-title is-size-5 has-text-white mb-4">
               {{ proposal.title }}
             </div>    
           </div>
@@ -162,6 +158,7 @@ export default {
 .proposal {
   
   position: relative;
+  height: 15rem;
   
   cursor: pointer;
   transition: all 150ms;
@@ -170,23 +167,23 @@ export default {
   }
 }
 
-.proposal-type {
-  font-weight: 400;
-  padding: 5px 10px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
-  border-radius: 0 0.5rem 0 0.5rem !important;
+.proposal-type, .proposal-status {
+  display: block;
+  font-size: 1rem;
 }
+
+.proposal-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .proposal-date {
   font-weight: 400;
   padding: 5px 10px;
   position: absolute;
   top: 0;
   right: 0;
-  width: auto;
-  border-radius: 0 0.5rem 0 0.5rem !important;
 }
 
 .outcome-box {
@@ -207,9 +204,6 @@ export default {
   text-overflow: ellipsis;
 }
 
-
-
-
 .markdown-body {
   background: transparent;
   max-height: 15ch;
@@ -217,7 +211,6 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 
 @media (max-width: 767px) {
     .markdown-body {
@@ -229,7 +222,7 @@ export default {
   position: absolute;
   bottom: 0;
   right: 0;
-  border-radius: 0 0 0.5rem 0;
+  border-radius: 0.5rem 0 !important;
 }
 
 .passed {
