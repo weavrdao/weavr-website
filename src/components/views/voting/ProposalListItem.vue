@@ -19,12 +19,12 @@
           <Address class="has-text-white" :value="proposal.creator"/>
           <!-- <div class="is-size-7 tag is-primary rounded">{{ proposal.creator }}</div> -->
           <div v-if="!ended" class="is-flex is-justify-content-flex-end">
-            <Button
+            <!-- <Button
               v-if="!embedded"
               label="Open"
               extraClasses="is-primary m-2"
               @click="openProposal"
-            />
+            /> -->
           </div>
           <div v-else class="is-flex is-justify-content-flex-end">
             <div class="tag is-medium bottom-right-corner is-success" v-if="this.passed == this.PASSED.Yes">PASSED</div>
@@ -55,7 +55,7 @@ export default {
   name: "ProposalListItem",
   components: {
     Address,
-    Button,
+    // Button,
     // VueMarkdown
   },
   props: {
