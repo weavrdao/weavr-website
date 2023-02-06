@@ -22,10 +22,10 @@
       </div>
     </div>
     <div v-else class="is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-      <figure class="image">
+      <figure>
         <img class="no-proposals-image my-5" src="../../assets/common/no-proposals.svg"/>
       </figure>
-      <div class="label is-size-4">No {{ proposalStatus }} right now</div>
+      <div class="label is-size-4">No {{ proposalStatus.toLowerCase() }} right now</div>
     </div>
   </div>
 </template>
@@ -109,12 +109,6 @@ export default {
   }
 }
 
-.no-proposals-image {
-  height: 20rem;
-  width: 20rem;
-  transform: translateX(-1.5rem);
-}
-
 .filter-menu-toggler {
   border-radius: $tiny-radius;
   transition: 150ms all ease-in-out;
@@ -149,6 +143,11 @@ export default {
   &:hover {
     background: rgba(255, 255, 255, 0.45);
   }
+}
+
+.no-proposals-image {
+  height: 20rem;
+  transform: translateX(-1.5rem);
 }
 
 .filter-button-container {
