@@ -1,5 +1,7 @@
 <template>
   <div v-if="assetId" class="container p-5 is-dark">
+      <!-- <div class="my-5"><RefreshButton  @refreshed="() => {}" :assetId="assetId"/></div>
+      <div class="button is-primary" @click="refresh">Refresh</div> -->
     <StackNavigationBar @onBack="goBack" :address="assetId" />
     <div class="is-flex is-justify-content-end">
       <button 
@@ -59,6 +61,7 @@ import { mapGetters, mapActions } from "vuex";
 import StackNavigationBar from "../layout/navigation/StackNavigationBar.vue";
 import ProposalList from "../proposals/ProposalList.vue";
 import NewProposalSelector from "../sections/NewProposalSelector.vue";
+// import RefreshButton from "../sections/RefreshButton.vue";
 
 export default {
   name: "Governance",
@@ -66,6 +69,7 @@ export default {
     StackNavigationBar,
     ProposalList,
     NewProposalSelector,
+    // RefreshButton
   },
   computed: {
     ...mapGetters({
@@ -147,11 +151,12 @@ export default {
 
   methods: {
     ...mapActions({
-      refresh: "refreshProposalsDataForAsset",
-      syncWallet: "syncWallet",
-      swap: "swapToAsset",
+      refreshProposals: "refreshProposalsDataForAsset",
+      
     }),
-    
+    refresh() {
+      this.refreshProposals({ assetId: this.assetId, forceRefresh: true });    
+    },
     goBack() {
       this.$router.back();
     },
@@ -171,9 +176,9 @@ export default {
       evt = evt ? evt : window.event;
       var charCode = evt.which ? evt.which : evt.keyCode;
       if (
-          charCode > 31 &&
-          (charCode < 48 || charCode > 57) &&
-          charCode !== 46
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
       ) {
         evt.preventDefault();
       } else {
@@ -193,14 +198,6 @@ export default {
       showSelector: false,
       isActiveProposals: true
     };
-  },
-
-  mounted() {
-    console.log("GOV_CHECK__ASSET_ID___",this.$route.params['assetId']);
-    console.log("PROPOSALS: ", this.assetProposalMap);
-    console.log(this.pastProposals)
-    // this.refresh({ assetId: this.assetId, $toast: this.$toast });
-    // this.syncWallet();
   },
 };
 </script>

@@ -1,16 +1,22 @@
 <template>
     <section @click="openProposal" class="card p-4 proposal has-background-darkGray has-radius-lg mb-1" aria-labelledby="proposal">
       <div class="card-header mb-0">
-        <span class="proposal-type" :class="this.typeStylingData.class">
-          {{ this.typeStylingData.text }}
-        </span>
-        <div class="proposal-date">
-          <h2 class="is-size-5 has-text-mediumBlue">
-              {{ this.startDate }}
-          </h2>
+        <div class="columns">
+          <div class="column is-two-thirds">
+            <span class="proposal-type" :class="this.typeStylingData.class">
+              {{ this.typeStylingData.text }}
+            </span>    
+          </div>
+          <div class="column is-one-third">
+            <div class="proposal-date">
+              <h2 class="is-size-5 has-text-mediumBlue">
+                {{ this.startDate }}
+              </h2>
+            </div>
+          </div>
         </div>
         <div @click="routeToProposal" class="mt-1">
-          <h1 :class="[proposal.state=='Cancelled' || proposal.state=='Failed' ? 'has-text-red' : 'has-text-success']">{{proposal.state}}</h1>
+          <div :class="[proposal.state=='Cancelled' || proposal.state=='Failed' ? 'has-text-red' : 'has-text-success']">{{proposal.state}}</div>
         </div>
       </div>
       <div class="card-content px-0">
@@ -25,7 +31,7 @@
           <div v-if="!ended" class="is-flex is-justify-content-flex-end">
             <Button
               v-if="!embedded"
-              label="Open Proposal"
+              label="Open"
               extraClasses="is-primary m-2"
               @click="openProposal"
             />
@@ -53,7 +59,7 @@ import {
   hasEnded,
 } from "@/data/helpers";
 import { PASSED } from "@/models/common";
-import { DAO } from '../../../services/constants';
+import { DAO } from "../../../services/constants";
 
 export default {
   name: "ProposalListItem",
@@ -162,7 +168,8 @@ export default {
 .proposal {
   
   position: relative;
-  
+  word-wrap: break-word;
+  min-height: 100% !important;
   cursor: pointer;
   transition: all 150ms;
   &:hover {
@@ -176,7 +183,7 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  width: 50%;
+  width: 70%;
   border-radius: 0 0.5rem 0 0.5rem !important;
 }
 .proposal-date {

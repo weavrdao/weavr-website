@@ -88,15 +88,13 @@ const actions = {
     // NOTE (bill) Quick fix to allow loading from child paths, better solutions available
     if (context.getters.assetProposals.length > 1 && !params.forceRefresh)
       return false;
-    const toast = params.$toast || createToaster({});
     let assetId = params.assetId.toLowerCase();
     let assetProposals = await dao.getProposalsForAsset(assetId, localStorage);
-
+    console.log(context.getters.assetProposals)
     context.commit("setProposalsForAsset", {
       assetId: assetId.toLowerCase(),
       proposals: assetProposals,
     });
-    toast.clear();
   },
 
   async createPaperProposal(context, props) {

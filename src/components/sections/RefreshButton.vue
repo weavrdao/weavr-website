@@ -1,6 +1,9 @@
 <template>
 <div class="is-flex is-justify-content-flex-end">
-    <button :class="` button is-hover-transparent is-reponsive is-${style}`">
+    <button 
+      :class="` button is-hover-transparent is-reponsive is-${style}`"
+      @click="refreshData"
+    >
       <i>
         <unicon name="sync" :fill="color" :width="size" :height="size"></unicon>
       </i>
@@ -20,6 +23,7 @@ import { mapActions } from "vuex";
 
 export default {
   name: "RefreshButton",
+  emits: ['refreshed'],
   props: {
     assetId: {
       type: String,
@@ -43,7 +47,9 @@ export default {
       refresh: "refreshProposalsDataForAsset",
     }),
     refreshData() {
+      console.log("REFRESH")
       this.refresh({ assetId: this.assetId, forceRefresh: true });
+      this.$emit("refreshed")
     }
   }
 }

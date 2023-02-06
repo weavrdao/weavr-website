@@ -78,6 +78,7 @@ class DAO {
     } catch (e) {
       console.log(e)
     }
+    console.log("Proposals", proposals);
     return proposals;
   }
 
