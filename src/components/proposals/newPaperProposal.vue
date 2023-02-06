@@ -95,9 +95,10 @@ export default {
       console.log("ADD:" + assetAddr)
       const title = this.title;
       const description = this.description;
-      const proposalType = this.proposalType
-      const daoResolution = this.daoResolution
-      const proposal = await this.createPaperProposal({assetAddr, proposalType, title, description, daoResolution,  $toast: this.$toast} );
+      const proposalType = this.proposalType;
+      const daoResolution = this.daoResolution;
+      const forumLink = this.forumLink;
+      await this.createPaperProposal({assetAddr, proposalType, title, description, daoResolution, forumLink,  $toast: this.$toast} );
       this.$emit("proposed");
     },
     togglePreview(){
