@@ -9,7 +9,7 @@
             {{ this.startDate }}
         </h2>
       </div>
-      <div class="card-content px-0">
+      <div class="card-content px-0 py-1">
         <div class=" py-0">
           <div class="py-0">
             <div id="proposal-title" class="proposal-title is-size-5 has-text-white mb-4">
@@ -19,12 +19,12 @@
           <Address class="has-text-white" :value="proposal.creator"/>
           <!-- <div class="is-size-7 tag is-primary rounded">{{ proposal.creator }}</div> -->
           <div v-if="!ended" class="is-flex is-justify-content-flex-end">
-            <Button
+            <!-- <Button
               v-if="!embedded"
-              label="Open Proposal"
+              label="Open"
               extraClasses="is-primary m-2"
               @click="openProposal"
-            />
+            /> -->
           </div>
           <div v-else class="is-flex is-justify-content-flex-end">
             <div class="tag is-medium bottom-right-corner is-success" v-if="this.passed == this.PASSED.Yes">PASSED</div>
@@ -49,13 +49,13 @@ import {
   hasEnded,
 } from "@/data/helpers";
 import { PASSED } from "@/models/common";
-import { DAO } from '../../../services/constants';
+import { DAO } from "../../../services/constants";
 
 export default {
   name: "ProposalListItem",
   components: {
     Address,
-    Button,
+    // Button,
     // VueMarkdown
   },
   props: {
@@ -158,7 +158,7 @@ export default {
 .proposal {
   
   position: relative;
-  height: 15rem;
+  height: 12rem;
   
   cursor: pointer;
   transition: all 150ms;

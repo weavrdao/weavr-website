@@ -1,6 +1,5 @@
 <template>
   <div class="py-3 px-5">
-  <div class="my-5"><RefreshButton :assetId="assetId"/></div>
 
     <div v-if="this.proposals.length !== 0">
       <div class="card m-0 p-0  filter-button-container"
@@ -35,7 +34,7 @@
 import ProposalListItem from "../views/voting/ProposalListItem.vue";
 import { ProposalTypes } from "../../models/common";
 import { getProposalTypeStyling } from "@/data/helpers";
-import RefreshButton from "../sections/RefreshButton.vue";
+import { mapActions } from 'vuex';
 
 export default {
   name: "ProposalList",
@@ -51,7 +50,6 @@ export default {
   },
   components: {
     ProposalListItem,
-    RefreshButton
   },
   props: {
     proposalStatus: {
@@ -70,20 +68,23 @@ export default {
   computed: {
     filteredProposals() {
       return this.proposals
-          .filter(proposal => this.proposalTypesFilter[proposal.type])
-          .filter(proposal => proposal.state !== "Cancelled")
-          .sort((p1, p2) => p1.endTimestamp < p2.endTimestamp);
+        .filter(proposal => this.proposalTypesFilter[proposal.type])
+        .filter(proposal => proposal.state !== "Cancelled")
+        .sort((p1, p2) => p1.endTimestamp < p2.endTimestamp);
     },
     filterButtons() {
       return Object.values(ProposalTypes).map(proposal => ({
-            key: proposal,
-            selected: this.proposalTypesFilter[proposal],
-            ...getProposalTypeStyling(proposal)
-          }
+        key: proposal,
+        selected: this.proposalTypesFilter[proposal],
+        ...getProposalTypeStyling(proposal)
+      }
       ));
     },
   },
   methods: {
+    ...mapActions({
+      refresh: "refreshProposalsDataForAsset",
+    }),
     // Switch a given filter on or off
     toggleFilter(proposalType) {
       this.proposalTypesFilter = {
