@@ -51,9 +51,6 @@
                 <span class="column is-flex is-vcentered has-text-white">Vouch</span>
               </div>
             </a>
-            <a class="dropdown-item">
-              <!-- <AddToken/> -->
-            </a>
             <hr class="dropdown-divider">
              <a @click="onLogout" class="dropdown-item">
                 <div class="px-3 columns is-flex is-vcentered">
@@ -86,16 +83,10 @@
   
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { DAO, CONTRACTS } from "../../../services/constants"
-import { Modal } from "../modal/Modal.vue"
 import { ethers } from 'ethers';
-import { createToaster } from "@meforma/vue-toaster";
-// import { AddToken } from "@sections/AddToken.vue";
+
 export default {
   name: "SignerAddress",
-  components: {
-    // AddToken
-  },
   computed: {
     ...mapGetters({
       whitelisted: "isWhitelisted",
@@ -165,7 +156,6 @@ export default {
   },
   async mounted() {
     this.participantsList({type: "GENESIS"})
-    console.log("Calling kyc...")
   },
   
 };
