@@ -90,7 +90,7 @@ export default {
       createProposal: "createParticipantProposal",
     }),
     togglePreview() {
-      this.title = `Proposing ${this.address} for level ${this.pTypeList[this.selectedType]}`
+      this.title = `Proposing ${this.address} as ${this.selectedType}`
       this.proposal = {
         title: this.title,
         description: this.description,
@@ -99,12 +99,12 @@ export default {
         startTimeStamp: 0,
         endTimeStamp: 0,
         address: this.address,
-        forumLink: this.forumLink
-
+        forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/"
       }
       this.preview = !this.preview
     },
     async publish() {
+      console.log(ParticipantType)
       if(!ethers.utils.isAddress(this.address)) {
         this.$toast.error("Address not valid", {
           position: "top"
@@ -116,16 +116,17 @@ export default {
       this.$emit("submited");
       const participant = this.address
       const props = {
-        title: `Proposing ${participant} for level ${this.pTypeList[this.selectedType]}`,
+        title: `Proposing ${participant} as ${this.selectedType}`,
         assetId: this.assetId,
         participantType: this.pTypeList[this.selectedType],
         participant: this.address,
-        forumLink: this.forumLink,
+        forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/",
         info: this.description,
         $toast: this.$toast
       }
 
       console.log("ParticipantType:  ", props['participantType']);
+      console.log("FULL PROPS_______:  ", props);
       await this.createProposal(props);
       this.$emit("proposed");
     },
