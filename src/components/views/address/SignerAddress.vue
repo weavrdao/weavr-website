@@ -41,7 +41,7 @@
                 <span class="column is-flex is-vcentered has-text-lightBlue">Verify</span>
               </div>
             </a>
-            <a v-else class="dropdown-item">
+            <a v-else-if="whitelisted && isConnected && hasKyc" class="dropdown-item">
                <div  class="columns is-flex is-vcentered" @click="kycInfo">
                 <span class="column">
                   <unicon name="user-check" :width="24" :height="24" fill="#5ed88e" alt="address verified"/>

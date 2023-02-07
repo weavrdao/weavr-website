@@ -395,7 +395,7 @@ router.beforeEach(async (to, from) => {
           if (!isWhitelisted) {
             // not whitelisted
             console.log("not whitelisted");
-            return { name: "whitelist" }
+            return  { name: "whitelist"}
           }
           else if ( isWhitelisted ) {
             // whitelisted
@@ -406,17 +406,19 @@ router.beforeEach(async (to, from) => {
         
       }
       // !cookie
-      else if (!ethers.utils.isAddress(cookie.wallet)) {
+      else if (!ethers.utils.isAddress(cookie.wallet) || ((cookie.wallet != address) && !isWhitelisted ) ) {
         // - go to walletconnect
         console.log("go to whitelist")
         return {name: "whitelist" }
       }
     }
     // connected
-    if (isConnected) {
+    if (isConnected && isWhitelisted) {
       console.log("navigate to route:\n", to.fullPath);
       // -navigate to route
       return true
+    }else if (isConnected && !isWhitelisted) {
+      return { name: "whitelist"}
     }
   }
   // to.whitelist
@@ -427,11 +429,18 @@ router.beforeEach(async (to, from) => {
  
   
   // from.whitelist
-  if (to.fullPath === "/dao/"+CONTRACTS.WEAVR) {
-    // - navigate path and reset vars
-    console.log("Navigate to WEAVR____GOV______________\n\n\n");
-    return {path: to.fullPath}
-  }
+  // if (to.fullPath === "/dao/"+CONTRACTS.WEAVR ) {
+  //   // - navigate path and reset vars
+  //   if(cookie.wallet != address) {
+  //     createToaster({position: "top", duration: 4000 }).info(
+  //       "You are visiting the website with a non whitelisted address!! [only read mode]. " +
+  //       "Please switch to your whitelisted wallet " + cookie.wallet)
+  //     setInterval(()=>{
+  //     }, 4000)
+  //   }
+  //   console.log("Navigate to WEAVR____GOV______________\n\n\n");
+  //   return {path: to.fullPath}
+  // }
   // no auth
     // - navigate to path
   console.log("no auth required");
