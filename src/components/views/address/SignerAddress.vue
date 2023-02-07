@@ -32,9 +32,17 @@
         </div>
         <div class="dropdown-menu" id="dropdown-menu3" role="menu">
           <div class="dropdown-content ">
-            <a class="dropdown-item">
-              <div v-if="whitelisted && isConnected && !hasKyc" class="button is-clickable is-success is-size-7" @click="onKyc"><span class="mr-1"></span>Get Verified</div>
-              <div v-if="whitelisted && isConnected && hasKyc" class="columns is-flex is-vcentered" @click="kycInfo">
+            <a  v-if="whitelisted && isConnected && !hasKyc"  class="dropdown-item">
+              <!-- <div class="button is-clickable is-success is-size-7" @click="onKyc"><span class="mr-1"></span>Get Verified</div> -->
+              <div  class="columns is-flex is-vcentered" @click="onKyc">
+                <span class="column">
+                  <unicon name="shield-check" :width="24" :height="24" fill="#968EFF" alt="address verified"/>
+                </span>
+                <span class="column is-flex is-vcentered has-text-lightBlue">Verify</span>
+              </div>
+            </a>
+            <a v-else class="dropdown-item">
+               <div  class="columns is-flex is-vcentered" @click="kycInfo">
                 <span class="column">
                   <unicon name="user-check" :width="24" :height="24" fill="#5ed88e" alt="address verified"/>
                 </span>
@@ -43,8 +51,8 @@
             </a>
             <!-- <hr class="dropdown-divider"> -->
 
-            <a  class="dropdown-item">
-              <div v-if="whitelisted && isConnected && hasKyc" class="columns is-flex is-vcentered" @click="onVouch">
+            <a  v-if="whitelisted && isConnected && hasKyc" class="dropdown-item">
+              <div  class="columns is-flex is-vcentered" @click="onVouch">
                 <span class="column">
                   <unicon name="user-plus" :width="24" :height="24" fill="white" alt="address verified"/>
                 </span>
