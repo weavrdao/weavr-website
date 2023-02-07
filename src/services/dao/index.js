@@ -67,14 +67,27 @@ class DAO {
 
     try {
       console.log("getting descriptors")
-      const descriptorData = await this.storageNetwork.getFiles(proposals.map((proposal) => proposal.descriptor), localStorage);
-      for (let i = 0; i < proposals.length; i++) {
-        if (descriptorData[i] && descriptorData[i].value) {
-          proposals[i].descriptor = descriptorData[i].value.descriptor || "Could not load descriptor";
-        } else {
-          proposals[i].descriptor = "Could not load descriptor";
+      const threadProposalsMap = new Map();
+      proposals.forEach( (proposal) => {
+        if(proposal.descriptor) {
+          threadProposalsMap.set(proposal.id, proposal.descriptor)
         }
-      }
+      })
+      console.log(threadProposalsMap.values());
+      const descriptorData = await this.storageNetwork.getFiles(Array.from(threadProposalsMap.values()), localStorage)
+      const indexes = Array.from(threadProposalsMap.keys())
+      indexes.length != descriptorData.length ? console.log("Something wrong") : null
+
+      console.log(descriptorData);
+      descriptorData.forEach( (descriptor, i) => {
+        if (descriptor && descriptor.value) {
+          proposals[indexes[i]].descriptor = descriptor.value || "Could not load descriptor";
+        } else {
+          proposals[indexes[i]].descriptor = "Could not load descriptor";
+        }
+      })
+        
+      
     } catch (e) {
       console.log(e)
     }
