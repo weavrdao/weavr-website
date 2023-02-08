@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-const path = require("path");
 
 const globalSassFiles = [
 

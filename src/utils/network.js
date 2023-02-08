@@ -55,7 +55,7 @@ async function allRequests({
             resolve(null)
           }
         })
-        .catch((thrown) => {
+        .catch(() => {
           resolve(null)
         })
     })

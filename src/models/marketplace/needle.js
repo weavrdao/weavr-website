@@ -50,33 +50,33 @@
 //     }
 //   }
 class Needle {
-    constructor(
-      id,
-      state,
-      amountDeposited,
-      target,
-      thread,
-      deposits,
-      withdrawals,
-      distributions
-    ) {
-      this.id = id
-      this.state = state
-      this.amountDeposited = amountDeposited
-      this.target = target
-      this.thread = thread
-      this.deposits = deposits
-      this.withdrawals = withdrawals || null
-      this.distribution = distributions || null
-      // this.coverPictureURI = coverPictureURI
-      // this.currentRent = currentRent
-      // this.description = description
-      // this.grossYieldPct = grossYieldPct
-      // this.marketValue = marketValue
-      // this.bedroomCount = bedroomCount
-      // this.bathroomCount = bathroomCount
-      // this.yearBuilt = yearBuilt
-    }
+  constructor(
+    id,
+    state,
+    amountDeposited,
+    target,
+    thread,
+    deposits,
+    withdrawals,
+    distributions
+  ) {
+    this.id = id
+    this.state = state
+    this.amountDeposited = amountDeposited
+    this.target = target
+    this.thread = thread
+    this.deposits = deposits
+    this.withdrawals = withdrawals || null
+    this.distribution = distributions || null
+    // this.coverPictureURI = coverPictureURI
+    // this.currentRent = currentRent
+    // this.description = description
+    // this.grossYieldPct = grossYieldPct
+    // this.marketValue = marketValue
+    // this.bedroomCount = bedroomCount
+    // this.bathroomCount = bathroomCount
+    // this.yearBuilt = yearBuilt
   }
-  
-  export default Needle
+}
+
+export default Needle

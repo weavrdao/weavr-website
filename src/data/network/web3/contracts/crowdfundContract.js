@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import contractAbi from "./abi/Crowdfund";
 
 class CrowdfundContract {

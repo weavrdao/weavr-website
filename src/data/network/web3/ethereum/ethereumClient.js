@@ -1,19 +1,17 @@
+/* eslint-disable no-invalid-this */
 /* eslint-disable max-lines-per-function */
 import { createToaster } from "@meforma/vue-toaster";
 const {
   getCoinbaseWalletProvider,
   getMetaMaskProvider,
-  getWalletConnectProvider
 } = require("./providers");
 import { CoinbaseConnector } from "./walletProviders/CoinbaseConnector.js";
 import { MetaMaskConnector } from "./walletProviders/MetaMaskConnector";
 import { toHex } from "@/utils/common.js";
 import {NETWORK} from "../../../../services/constants"
-
-
 require("dotenv").config();
 const { ethers } = require("ethers");
-const { CoinbaseWalletSDK } = require("@coinbase/wallet-sdk");
+
 /**
  * @property {ethers.JsonRpcSigner} walletProvider
  * @property {ethers.JsonRpcSigner} walletSigner
@@ -33,10 +31,10 @@ class EthereumClient {
    * Get current block number.
    */
   async getBlockNumber() {
-    const number = await this.readProvider.getBlockNumber();
+    return (await this.readProvider.getBlockNumber());
   }
 
-  changeAccount = new Event('accountChange', this.walletProvider?.on('accountsChanged', async (account) => {
+  changeAccount = new Event("accountChange", this.walletProvider?.on("accountsChanged", async (account) => {
     console.log("AccountsChanged ", account)
   }))
 
@@ -45,7 +43,6 @@ class EthereumClient {
     // Using in-browser wallet to access wallet state and sign transactions
     if (wallet == "metamask") {
       try {
-        
         const metamask = getMetaMaskProvider();
         if(metamask.chainId !== ethers.utils.hexValue(NETWORK.id)) {
           const toast = createToaster({});
@@ -59,10 +56,10 @@ class EthereumClient {
         this._connector = new MetaMaskConnector(metamask);
         this.account = await this._connector.getAddress();
         await this._connector.getChainId()
-        metamask.on("accountsChanged", (log, event) => {
+        metamask.on("accountsChanged", () => {
           window.location.reload()
         })
-        metamask.on("chainChanged", (log, event) => { 
+        metamask.on("chainChanged", () => { 
           window.location.reload()
         })
         console.log("CHAIN_ID___", this._connector.chainId)
@@ -106,7 +103,7 @@ class EthereumClient {
     return this._connector.chainId
   }
 
-  switchNetwork = async (network) => {
+  switchNetwork = async () => {
     try {
       await this.walletProvider.request({
         method: "wallet_switchEthereumChain",

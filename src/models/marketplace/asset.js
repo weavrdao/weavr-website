@@ -20,45 +20,45 @@
  * @property {number} yearBuilt The year property was built
  */
 class Asset {
-    constructor(
-      id,
-      dataURI,
-      contractAddress,
-      symbol,
-      numOfShares,
-      owners,
-      marketOrders,
-      proposals,
-      address = null,
-      area = null,
-      coverPictureURI = null,
-      currentRent = null,
-      description = null,
-      grossYieldPct = null,
-      marketValue = null,
-      bedroomCount = null,
-      bathroomCount = null,
-      yearBuilt = null
-    ) {
-      this.id = id
-      this.dataURI = dataURI
-      this.contractAddress = contractAddress
-      this.symbol = symbol
-      this.numOfShares = numOfShares
-      this.owners = owners
-      this.marketOrders = marketOrders
-      this.proposals = proposals
-      this.address = address
-      this.area = area
-      this.coverPictureURI = coverPictureURI
-      this.currentRent = currentRent
-      this.description = description
-      this.grossYieldPct = grossYieldPct
-      this.marketValue = marketValue
-      this.bedroomCount = bedroomCount
-      this.bathroomCount = bathroomCount
-      this.yearBuilt = yearBuilt
-    }
+  constructor(
+    id,
+    dataURI,
+    contractAddress,
+    symbol,
+    numOfShares,
+    owners,
+    marketOrders,
+    proposals,
+    address = null,
+    area = null,
+    coverPictureURI = null,
+    currentRent = null,
+    description = null,
+    grossYieldPct = null,
+    marketValue = null,
+    bedroomCount = null,
+    bathroomCount = null,
+    yearBuilt = null
+  ) {
+    this.id = id
+    this.dataURI = dataURI
+    this.contractAddress = contractAddress
+    this.symbol = symbol
+    this.numOfShares = numOfShares
+    this.owners = owners
+    this.marketOrders = marketOrders
+    this.proposals = proposals
+    this.address = address
+    this.area = area
+    this.coverPictureURI = coverPictureURI
+    this.currentRent = currentRent
+    this.description = description
+    this.grossYieldPct = grossYieldPct
+    this.marketValue = marketValue
+    this.bedroomCount = bedroomCount
+    this.bathroomCount = bathroomCount
+    this.yearBuilt = yearBuilt
   }
-  
-  export default Asset
+}
+
+export default Asset

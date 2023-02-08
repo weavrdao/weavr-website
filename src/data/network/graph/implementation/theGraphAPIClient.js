@@ -19,6 +19,7 @@ class TheGraphAPIClient extends GraphQLAPIClient {
     this.client = client
   }
 
+  // eslint-disable-next-line default-param-last
   async query(query, vars = {}, mappingCallback) {
     return new Promise((resolve) => {
       this.client

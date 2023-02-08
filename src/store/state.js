@@ -124,8 +124,7 @@ const actions = {
       walletState.address
     );
 
-    Promise.all([walletState, symbol, balance]).then((val) => {
-    });
+    Promise.all([walletState, symbol, balance])
 
     const isWhitelisted = await whitelist.checkWhitelistedStatus(
       CONTRACTS.WEAVR,
@@ -134,7 +133,7 @@ const actions = {
 
     context.commit("setWhitelisted", isWhitelisted);
     isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address + "_" + params.wallet, 100)
-    const balancePromise = await token.getTokenBalance(
+    await token.getTokenBalance(
       CONTRACTS.TOKEN_ADDRESS,
       walletState.address
     );

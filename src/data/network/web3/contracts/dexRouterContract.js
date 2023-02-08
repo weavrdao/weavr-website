@@ -1,6 +1,3 @@
-/* global BigInt */
-import EthereumClient from "../ethereum/ethereumClient"
-
 const contractAbi = [
   // Make a buy order
   "function buy(address token, address tradeToken, uint256 payment, uint256 price, uint256 minimumAmount)", 

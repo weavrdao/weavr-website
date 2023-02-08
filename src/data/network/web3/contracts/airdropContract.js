@@ -1,6 +1,3 @@
-import { CONTRACTS } from "../../../../services/constants";
-import { ethers } from "ethers";
-import { createToaster } from "@meforma/vue-toaster";
 import contractAbi from "./abi/Airdrop";
 
 class AirdropContract {

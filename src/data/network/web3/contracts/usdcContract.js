@@ -1,7 +1,4 @@
-/* global BigInt */
-import EthereumClient from "../ethereum/ethereumClient";
 import contractAbi from "./abi/USDC";
-import { ethers } from "ethers";
 
 /**
  * Frabric ERC20 contract
