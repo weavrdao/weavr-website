@@ -2,11 +2,11 @@
 /* eslint-disable max-lines-per-function */
 
 import GraphQLAPIMapper from "../graphQLAPIMapper"
-import Thread from "@/models/thread"
-import Needle from "@/models/needle"
+import Thread from "@/models/marketplace/thread"
+import Needle from "@/models/marketplace/needle"
 import Erc20 from "@/models/erc20"
 import { Vote } from "@/models/vote"
-import { MarketOrder } from "@/models/marketOrder"
+import { MarketOrder } from "@/models/markeplace/marketOrder"
 import {
   mapPaperProposals,
   mapUpgradeProposals,
