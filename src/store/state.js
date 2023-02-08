@@ -1,22 +1,16 @@
 /* eslint-disable max-lines-per-function */
 // import router from "../router/index";
-import {ethers} from "ethers";
-import {createToaster} from "@meforma/vue-toaster";
-import {params} from "stylus/lib/utils";
+import { ethers } from "ethers";
 import ServiceProvider from "../services/provider";
 import WalletState from "../models/walletState";
-import {CONTRACTS, DAO, GUEST, NETWORK} from "../services/constants";
+import { CONTRACTS, GUEST } from "../services/constants";
 import {
-  whitelistState,
   whitelistGetters,
-  whitelistActions,
   whitelistMutations,
   getCookie,
   setCookie,
 } from "../whitelist";
 import {USER_COOKIE_KEY} from "../whitelist/constants";
-import blacklist from "@/blacklist.json";
-import ipfsCluster from "ipfs-cluster-api"
 
 /**
  * TODO - Abstrucked -
@@ -24,7 +18,6 @@ import ipfsCluster from "ipfs-cluster-api"
  */
 
 const wallet = ServiceProvider.wallet();
-const dao = ServiceProvider.dao();
 const token = ServiceProvider.token();
 const whitelist = ServiceProvider.whitelist();
 

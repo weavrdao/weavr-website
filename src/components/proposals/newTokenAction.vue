@@ -81,8 +81,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { MintType } from "@/models/common.js";
-import {ParticipantType, ProposalTypes} from "@/models/common.js";
-
+import { ProposalTypes} from "@/models/common.js";
 import {ethers} from "ethers";
 import { CONTRACTS } from "../../services/constants";
 import Proposal from "@/components/proposals/Proposal.vue"
@@ -125,8 +124,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      refresh: "refreshProposalsDataForAsset",
-      syncWallet: "syncWallet",
       createTokenActionProposal: "createTokenActionProposal",
     }),
     async publish() {
@@ -136,7 +133,6 @@ export default {
         });
         return;
       }
-  
       await this.createTokenActionProposal({
         assetId: this.assetId || CONTRACTS.WEAVR,
         mint: this.mintTypes[this.mintType],

@@ -131,7 +131,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import {ethers} from "ethers";
-import { CONTRACTS, DAO } from "../../services/constants";
+import { CONTRACTS } from "../../services/constants";
 import {ProposalTypes} from "@/models/common";
 import Proposal from "@/components/proposals/Proposal.vue"
 import { isJson } from "@/utils/common"
@@ -170,8 +170,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      refresh: "refreshProposalsDataForAsset",
-      syncWallet: "syncWallet",
       createThreadProposal: "createThreadProposal",
     }),
     // eslint-disable-next-line max-lines-per-function
@@ -183,7 +181,6 @@ export default {
         });
         return;
       }
-
       if (this.name.length < 6 || this.name.length > 64 ) {
         this.$toast.warning("Name must be between 6 and 64 characters", {
           duration: 2000,
@@ -191,7 +188,6 @@ export default {
         });
         return;
       }
-
       if (this.symbol.length < 2 || this.symbol.length > 5 ) {
         this.$toast.warning("Symbol must be between 2 and 5 characters", {
           duration: 2000,
@@ -226,7 +222,6 @@ export default {
         documents: this.documents,
         $toast: this.$toast
       }
-      console.log(payload);
       await this.createThreadProposal(payload);
     },
     
@@ -255,7 +250,6 @@ export default {
         documents: this.documents,
         symbol: this.symbol,
         assetId: this.assetId
-
       }
       this.preview = !this.preview
     },

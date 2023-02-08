@@ -17,14 +17,7 @@
             </div>    
           </div>
           <Address class="has-text-white" :value="proposal.creator"/>
-          <!-- <div class="is-size-7 tag is-primary rounded">{{ proposal.creator }}</div> -->
           <div v-if="!ended" class="is-flex is-justify-content-flex-end">
-            <!-- <Button
-              v-if="!embedded"
-              label="Open"
-              extraClasses="is-primary m-2"
-              @click="openProposal"
-            /> -->
           </div>
           <div v-else class="is-flex is-justify-content-flex-end">
             <div class="tag is-medium bottom-right-corner is-success" v-if="this.passed == this.PASSED.Yes">PASSED</div>
@@ -38,8 +31,7 @@
   
 <script>
 import Address from "../address/Address.vue";
-import Button from "../common/Button.vue";
-// import VueMarkdown from "vue-markdown-render"
+
 import {
   getProposalTypeStyling,
   padWithZeroes,
@@ -55,21 +47,11 @@ export default {
   name: "ProposalListItem",
   components: {
     Address,
-    // Button,
-    // VueMarkdown
   },
   props: {
-    assetId: {
-      type: String,
-      required: true,
-    },
     proposal: {
       type: Object,
       required: true,
-    },
-    embedded: {
-      type: Boolean,
-      required: false,
     },
   },
   data() {
@@ -80,21 +62,9 @@ export default {
   },
   computed: {
 
-    votes() {
-      return getVotes(this.proposal);
-    },
-
     startDate() {
       const startDate = new Date(this.proposal.startTimestamp * 1000);
       return `${padWithZeroes(startDate.getDate())}/${padWithZeroes(startDate.getMonth() + 1)}`;
-    },
-
-    startDateString() {
-      return dateStringForTimestamp(this.proposal.startTimestamp);
-    },
-
-    endDateString() {
-      return dateStringForTimestamp(this.proposal.endTimestamp);
     },
 
     ended() {
@@ -110,29 +80,6 @@ export default {
     },
   },
   methods: {
-    setTimeRemainingCountdown() {
-      clearInterval(this.countdownRef);
-
-      this.countdownRef = setInterval(
-        function () {
-          let now = new Date().getTime() / 1000;
-
-          let t = this.proposal.endTimestamp - now;
-
-          if (t >= 0) {
-            let days = Math.floor(t / (60 * 60 * 24));
-            let hours = Math.floor((t % (60 * 60 * 24)) / (60 * 60));
-            let mins = Math.floor((t % (60 * 60)) / 60);
-            let secs = Math.floor(t % 60);
-
-            this.timeRemainingString = `${days}d, ${hours}h, ${mins}m, ${secs}s`;
-          } else {
-            this.timeRemainingString = "The voting is over";
-          }
-        }.bind(this),
-        1000
-      );
-    },
 
     openProposal() {
       this.$router.push(this.$route.path+`/proposal/${this.proposal.id}`);
@@ -144,7 +91,6 @@ export default {
   },
 
   routeToProposal() {
-    console.log("opening proposal")
     this.$router.push(`/${DAO}/proposal/${this.proposal.id}`);
   },
 };

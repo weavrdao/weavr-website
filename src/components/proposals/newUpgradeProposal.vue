@@ -61,8 +61,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { ethers } from "ethers";
-import { ProposalTypes } from "@/models/common"
-import { CONTRACTS, DAO } from "../../services/constants" 
+import { CONTRACTS } from "../../services/constants" 
 const GOERLI_TEST = {
   governor: "0xA28C6A770dC1E6DCd94Ea93B7464E3B3DF77689D",
   signer: "0xd7623F78545a3D1138Ae435c7D224F7bC32Ae038"

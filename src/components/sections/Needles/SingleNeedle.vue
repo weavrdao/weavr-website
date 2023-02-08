@@ -104,7 +104,6 @@
       </div>
       <div class="column is-one-third">
         <div class="card mt-6 p-3 has-gray-border">
-          <!-- <p class="subtitle mb-3">Metrics</p> -->
           <div class="columns" v-for="metric in metrics" :key="metric">
             <div class="column is-half">
               <div class="label">{{ metric.label}}:</div>
@@ -236,10 +235,9 @@ export default {
   }
 }
 </script>
+
 <style scoped lang="scss">
 @import "../../../styles/_variables.sass";
 @import "../../../styles/weavr-custom.scss";
 @import "../../../styles/markdown.scss";
-
-
 </style>

@@ -1,5 +1,4 @@
 /* eslint-disable class-methods-use-this */
-import EthereumClient from "../../data/network/web3/ethereum/ethereumClient";
 import CrowdfundContract from "../../data/network/web3/contracts/crowdfundContract";
 import USDCContract from "../../data/network/web3/contracts/usdcContract";
 

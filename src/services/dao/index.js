@@ -1,10 +1,9 @@
 /* eslint-disable max-lines-per-function */
 
-import {Proposal} from "../../models/proposal";
+import {Proposal} from "../../models/proposals/proposal";
 import {VoteType} from "../../models/vote";
 import {
   GraphQLAPIClient,
-  ALL_ASSETS_QUERY,
   PARTICIPANTS_BY_TYPE,
   ALL_PROPOSALS,
   VOUCHES_PER_PARTICIPANT,
@@ -13,8 +12,6 @@ import {CONTRACTS} from "../constants";
 import AssetContract from "../../data/network/web3/contracts/assetContract";
 import {ethers} from "ethers";
 import {createToaster} from "@meforma/vue-toaster";
-
-// TODO: Should there be a single service instance per proposal?
 
 /**
  * DAO service

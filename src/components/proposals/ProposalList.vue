@@ -99,15 +99,6 @@ export default {
 <style lang="scss" scoped>
 @import "../../styles/weavr-custom.scss";
 
-.proposal-list {
-  border: 1px solid #575757;
-  border-radius: 10px;
-
-  h3 {
-    color: white;
-    font-size: 2rem;
-  }
-}
 
 .filter-menu-toggler {
   border-radius: $tiny-radius;
@@ -178,37 +169,6 @@ export default {
   &:hover {
     color: white;
   }
-}
-
-.paper {
-  border-color: #00EDC4;
-  background: #00EDC4;
-}
-
-.participant {
-  border-color: whitesmoke;
-  color: black;
-  background: whitesmoke;
-
-  &:hover {
-    color: black;
-  }
-}
-
-.upgrade {
-  border-color: #D841DE;
-  background: #D841DE;
-}
-
-.token-action {
-  border-color: $red;
-
-  background: $red;
-}
-
-.unselected {
-  color: white;
-  background: none !important;
 }
 
 </style>

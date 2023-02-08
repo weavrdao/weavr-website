@@ -2,13 +2,11 @@
 /* global BigInt */
 
 import * as CommonUtils from "../../utils/common"
-import PlatformContract from "../../data/network/web3/contracts/platformContract"
 import AssetContract from "../../data/network/web3/contracts/assetContract"
 import StorageNetwork from "../../data/network/storage/storageNetwork"
-import Asset from "../../models/asset"
+import Asset from "../../models/marketplace/asset"
 import {
   GraphQLAPIClient,
-  ALL_ASSETS_QUERY,
   ALL_THREADS_QUERY,
   ALL_NEEDLES_QUERY
 } from "../../data/network/graph/graphQLAPIClient"

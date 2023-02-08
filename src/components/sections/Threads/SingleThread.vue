@@ -80,12 +80,6 @@ export default {
     },
     
   },
-  mounted() {
-    console.log("THREAD", this.thread);
-    // this.fetchThreadTokenData({
-    //   assetId: this.threadId,
-    // })
-  }
 }
 </script>
   <style scoped lang="scss">
