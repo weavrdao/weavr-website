@@ -123,7 +123,7 @@ import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import { ethers } from "ethers";
 import Address from "../../views/address/Address.vue";
 import VueMarkdown from "vue-markdown-render";
-import { isJson } from '../../../utils/common';
+import { isJson } from "../../../utils/common";
 
 export default {
   name: "SingleNeedle",

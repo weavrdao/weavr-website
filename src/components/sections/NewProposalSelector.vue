@@ -17,9 +17,6 @@
 </template>
 
 <script>
-import {useRoute} from "vue-router";
-import {DAO} from "../../services/constants"
-
 export default {
   name: "NewProposalSelector",
   data() {

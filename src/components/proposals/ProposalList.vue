@@ -34,7 +34,7 @@
 import ProposalListItem from "../views/voting/ProposalListItem.vue";
 import { ProposalTypes } from "../../models/common";
 import { getProposalTypeStyling } from "@/data/helpers";
-import { mapActions } from 'vuex';
+import { mapActions } from "vuex";
 
 export default {
   name: "ProposalList",
@@ -43,8 +43,8 @@ export default {
       filterMenuIsOpen: false,
       // Create object with shape { [proposalType]: true }
       proposalTypesFilter: Object.fromEntries(
-          Object.values(ProposalTypes)
-              .map(v => [v, true])
+        Object.values(ProposalTypes)
+          .map(v => [v, true])
       ),
     }
   },

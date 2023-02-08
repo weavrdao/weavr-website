@@ -68,7 +68,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import  VueMarkdown  from "vue-markdown-render"
-import { useRoute } from 'vue-router';
+import { useRoute } from "vue-router";
 import "vue3-carousel/dist/carousel.css"
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import { isJson } from "../../../utils/common";
@@ -95,7 +95,7 @@ export default {
       threads: "threadById",
     }),
     thread() {
-      return this.threads.get(this.$route.params['threadId'])
+      return this.threads.get(this.$route.params.threadId)
     },
     erc20() {
       return {
@@ -126,9 +126,9 @@ export default {
     }),
     copy() {
       navigator.clipboard.writeText(this.threadId).then(function() {
-        console.log('Async: Copying to clipboard was successful!');
+        console.log("Async: Copying to clipboard was successful!");
       }, function(err) {
-        console.error('Async: Could not copy text: ', err);
+        console.error("Async: Could not copy text: ", err);
       });
     },
     getIpfsUrl(path) {

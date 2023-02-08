@@ -18,8 +18,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import { ethers } from 'ethers';
-import { DAO } from "../../services/constants"
+import { ethers } from "ethers";
 
 export default {
 
@@ -44,7 +43,7 @@ export default {
       const participant = this.participant;
       if(!ethers.utils.isAddress(participant)) {
         this.$toast.error("Address not valid",
-           {
+          {
             position: "top"
           });
         this.participant = "";

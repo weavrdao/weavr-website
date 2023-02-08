@@ -71,9 +71,9 @@
 </template>
 
 <script>
-import { useRoute } from 'vue-router';
+import { useRoute } from "vue-router";
 import { mapGetters, mapActions } from "vuex";
-import { CONTRACTS } from '../../services/constants';
+import { CONTRACTS } from "../../services/constants";
 import StackNavigationBar from "../layout/navigation/StackNavigationBar.vue";
 import Button from "../views/common/Button.vue";
 

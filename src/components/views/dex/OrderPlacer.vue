@@ -45,8 +45,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import { CONTRACTS } from '../../../services/constants';
+import { mapActions } from "vuex";
+import { CONTRACTS } from "../../../services/constants";
 
 
 const orderTypes = {

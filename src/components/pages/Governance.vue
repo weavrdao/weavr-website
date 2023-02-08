@@ -64,8 +64,8 @@ export default {
     }),
 
     assetId() {
-      this.$route.fullPath.includes("marketplace") ? this.$route.params['threadId'] : console.log("WEAVR")
-      return this.$route.params['assetId'] != 'marketplace' ? this.$route.params['assetId'] : this.$route.params['threadId']
+      this.$route.fullPath.includes("marketplace") ? this.$route.params.threadId : console.log("WEAVR")
+      return this.$route.params.assetId != "marketplace" ? this.$route.params.assetId : this.$route.params.threadId
     },
 
     proposals() {

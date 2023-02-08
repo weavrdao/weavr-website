@@ -79,7 +79,7 @@ export default {
       walletAddress: "userWalletAddress",
     }),
     airdropAddress() {
-      return this.$route.params["airdropAddress"];
+      return this.$route.params.airdropAddress;
     },
   },
   methods: {
