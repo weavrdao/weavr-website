@@ -228,19 +228,19 @@ class DAO {
    * @param {string} forumLink Link to forum discussion
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
    */
-  async createParticipantProposal(assetId, participantType, participant, title, description, forumLink) {
+  async createParticipantProposal(assetId, title, participantType, participant, description, forumLink) {
 
     const assetContract = new AssetContract(this.ethereumClient, assetId);
     console.log({
-      title: title, description, forumLink
+      title, description, forumLink
     })
 
     let infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
-      title: title, description, forumLink
+      title, forumLink
     });
 
     console.log("INFOHASH___", infoHash)
-
+    console.log(assetId, participant, participantType);
     if (!infoHash) return;
 
     let status = await assetContract.proposeParticipant(participantType, participant, infoHash);
@@ -252,6 +252,7 @@ class DAO {
     let infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
       title: title, description, forumLink
     });
+    
     if (!infoHash) return;
     let status = await assetContract.proposeParticipantRemoval(participant, removalFee, signatures, infoHash);
     return status;

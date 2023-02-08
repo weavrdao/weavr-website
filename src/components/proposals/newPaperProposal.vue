@@ -97,7 +97,7 @@ export default {
       const description = this.description;
       const proposalType = this.proposalType;
       const daoResolution = this.daoResolution;
-      const forumLink = this.forumLink;
+      const forumLink = this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/";
       await this.createPaperProposal({assetAddr, proposalType, title, description, daoResolution, forumLink,  $toast: this.$toast} );
       this.$emit("proposed");
     },

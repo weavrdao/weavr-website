@@ -203,10 +203,10 @@ export default {
         this.metrics = JSON.stringify(JSON.parse(this.metrics))
       }else {
         this.$toast.warning("Metrics not in valid JSON format",
-        {
-          duration: 2000,
-          position: "bottom",
-        }
+          {  
+            duration: 2000,
+            position: "bottom",
+          }
         )
         return
       }
@@ -215,7 +215,7 @@ export default {
         blobVersion: this.blobVersion,
         name: this.name,
         descriptor: this.descriptor,
-        forumLink: this.forumLink,
+        forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/",
         description: this.description,
         metrics: this.metrics,
         symbol: String(this.symbol).toUpperCase(),
@@ -248,7 +248,7 @@ export default {
         startTimeStamp: 0,
         endTimeStamp: 0,
         address: this.address,
-        forumLink: this.forumLink,
+        forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/",
         tradeToken: this.tradeToken,
         target: this.target,
         images: this.images,

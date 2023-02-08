@@ -85,7 +85,7 @@ export default {
         address: this.address,
         removalFee: this.removalFee,
         signatures: this.signatures,
-        forumLink: this.forumLink
+        forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/"
       }
       this.preview = !this.preview
     },
@@ -106,7 +106,7 @@ export default {
         signatures: this.signatures,
         title: `${this.address} to be removed from Weavr DAO`,
         description: this.description,
-        forumLink: this.forumLink,
+        forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/",
         $toast: this.$toast
       }
 
