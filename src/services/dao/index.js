@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 
-import {Proposal} from "@/models/proposals/proposal";
-import {VoteType} from "../../models/vote";
+// import {Proposal} from "@/models/proposals/proposal";
+// import {VoteType} from "../../models/vote"; 
 import {
+  // eslint-disable-next-line no-unused-vars
   GraphQLAPIClient,
-  PARTICIPANTS_BY_TYPE,
   ALL_PROPOSALS,
   VOUCHES_PER_PARTICIPANT,
 } from "../../data/network/graph/graphQLAPIClient";
@@ -92,15 +92,6 @@ class DAO {
     return proposals;
   }
 
-  async getParticipantsByType(type) {
-    const participants = await this.graphQLAPIClient.query(PARTICIPANTS_BY_TYPE, {
-      type: type
-    }, (mapper, response) => {
-      return mapper.mapParticipantsByType(response.data.frabric);
-    })
-
-    console.log("PARTICIPANTS____", participants)
-  }
 
   async getUserVouches(signer) {
     console.log("vouches");

@@ -35,8 +35,6 @@ import Address from "../address/Address.vue";
 import {
   getProposalTypeStyling,
   padWithZeroes,
-  dateStringForTimestamp,
-  getVotes,
   getResult,
   hasEnded,
 } from "@/data/helpers";

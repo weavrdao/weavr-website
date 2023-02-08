@@ -11,26 +11,26 @@
  */
 
 class Proposal {
-    constructor(
-      id,
-      creatorAddress,
-      dataURI,
-      startTimestamp,
-      endTimestamp,
-      votes,
-      title = null,
-      description = null
-    ) {
-      this.id = id
-      this.creatorAddress = creatorAddress
-      this.dataURI = dataURI
-      this.startTimestamp = startTimestamp
-      this.endTimestamp = endTimestamp
-      this.votes = votes,
-      this.title = title
-      this.description = description
-    }
+  constructor(
+    id,
+    creatorAddress,
+    dataURI,
+    startTimestamp,
+    endTimestamp,
+    votes,
+    title = null,
+    description = null
+  ) {
+    this.id = id
+    this.creatorAddress = creatorAddress
+    this.dataURI = dataURI
+    this.startTimestamp = startTimestamp
+    this.endTimestamp = endTimestamp
+    this.votes = votes,
+    this.title = title
+    this.description = description
   }
-  
-  
-  export default Proposal
+}
+
+
+export default Proposal

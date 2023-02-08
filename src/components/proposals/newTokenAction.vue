@@ -149,7 +149,7 @@ export default {
         title: this.title,
         description: this.description,
         type: this.proposalType,
-        creator: '0x00000',
+        creator: "0x00000",
         startTimeStamp: 0,
         endTimeStamp: 0,
         forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/",

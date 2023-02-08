@@ -61,7 +61,7 @@ export default {
   components: {
     Proposal
   },
-  emits: ['submited', "proposed"],
+  emits: ["submited", "proposed"],
   computed: {
     assetId() {
       return this.$route.params.assetId

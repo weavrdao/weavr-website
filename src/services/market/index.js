@@ -1,16 +1,15 @@
 /* eslint-disable max-lines-per-function */
-/* global BigInt */
 
 import * as CommonUtils from "../../utils/common"
-import AssetContract from "../../data/network/web3/contracts/assetContract"
-import StorageNetwork from "../../data/network/storage/storageNetwork"
+import AssetContract from "../../data/network/web3/contracts/assetContract" 
+import StorageNetwork from "../../data/network/storage/storageNetwork" // eslint-disable-line no-unused-vars
 import Asset from "../../models/marketplace/asset"
 import {
-  GraphQLAPIClient,
+  GraphQLAPIClient, // eslint-disable-line no-unused-vars
   ALL_THREADS_QUERY,
   ALL_NEEDLES_QUERY
-} from "../../data/network/graph/graphQLAPIClient"
-import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
+} from "../../data/network/graph/graphQLAPIClient" 
+import EthereumClient from "../../data/network/web3/ethereum/ethereumClient" // eslint-disable-line no-unused-vars
 import {getIpfsHashFromBytes32} from "../../data/network/storage/ipfs/common";
 import {NETWORK} from "../constants"
 
@@ -43,13 +42,7 @@ class Market {
    * await getAssetsOnTheMarket()
    * await getAssetsOnTheMarket(100, 0, [1,2,3,4,5])
    */
-  async getAssetsOnTheMarket(
-    limit = 100,
-    offset = 0,
-    idsArray = null,
-    sort = null,
-    minBlockNumber = null
-  ) {
+  async getAssetsOnTheMarket( ) {
     // Get indexed on-chain data
 
     var assets = await this.graphQLAPIClient
@@ -117,13 +110,7 @@ class Market {
   }
 
 
-  async getThreads(
-    limit = 100,
-    offset = 0,
-    idsArray = null,
-    sort = null,
-    minBlockNumber = null,
-  ) {
+  async getThreads() {
     // Get indexed on-chain data
 
     const threads = await this.graphQLAPIClient
