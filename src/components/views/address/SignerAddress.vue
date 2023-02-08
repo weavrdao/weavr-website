@@ -91,7 +91,7 @@
   
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { ethers } from 'ethers';
+import { ethers } from "ethers";
 
 export default {
   name: "SignerAddress",
@@ -140,7 +140,7 @@ export default {
     },
     onLogout() {
       this.logout()
-      this.$router.go('/')
+      this.$router.go("/")
     },
     async tokenDetails() {
       
