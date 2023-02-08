@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 
-import {Proposal} from "../../models/proposal";
+import {Proposal} from "@/models/proposals/proposal";
 import {VoteType} from "../../models/vote";
 import {
   GraphQLAPIClient,

@@ -6,7 +6,7 @@ import Thread from "@/models/marketplace/thread"
 import Needle from "@/models/marketplace/needle"
 import Erc20 from "@/models/erc20"
 import { Vote } from "@/models/vote"
-import { MarketOrder } from "@/models/markeplace/marketOrder"
+import { MarketOrder } from "@/models/marketplace/marketOrder"
 import {
   mapPaperProposals,
   mapUpgradeProposals,

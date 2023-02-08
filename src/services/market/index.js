@@ -4,7 +4,7 @@
 import * as CommonUtils from "../../utils/common"
 import AssetContract from "../../data/network/web3/contracts/assetContract"
 import StorageNetwork from "../../data/network/storage/storageNetwork"
-import Asset from "../../models/asset"
+import Asset from "../../models/marketplace/asset"
 import {
   GraphQLAPIClient,
   ALL_THREADS_QUERY,
