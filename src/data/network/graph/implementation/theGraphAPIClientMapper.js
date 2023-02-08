@@ -5,8 +5,8 @@ import GraphQLAPIMapper from "../graphQLAPIMapper"
 import Thread from "@/models/thread"
 import Needle from "@/models/needle"
 import Erc20 from "@/models/erc20"
-import { Vote } from "../../../../models/vote"
-import { MarketOrder } from "../../../../models/marketOrder"
+import { Vote } from "@/models/vote"
+import { MarketOrder } from "@/models/marketOrder"
 import {
   mapPaperProposals,
   mapUpgradeProposals,
