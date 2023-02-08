@@ -20,10 +20,10 @@ class MarketOrder {
     this.totalAmount = totalAmount;
   }
 }
-  
+    
 const MarketOrderType = {
   Buy: "Buy",
   Sell: "Sell"
 }
-
+  
 export { MarketOrder, MarketOrderType }

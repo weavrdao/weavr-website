@@ -1,24 +1,10 @@
 /* eslint-disable max-lines-per-function */
 // import router from "../router/index";
 import { ethers } from "ethers";
-import { createToaster } from "@meforma/vue-toaster";
-import { params } from "stylus/lib/utils";
 import ServiceProvider from "../services/provider";
-import WalletState from "../models/walletState";
-import { CONTRACTS, DAO, GUEST, NETWORK } from "../services/constants";
 import {
-  whitelistState,
-  whitelistGetters,
   whitelistActions,
-  whitelistMutations,
-  getCookie,
-  setCookie,
-  WHITELIST_COOKIE_KEY,
-  WALLET_STATE_COOKIE_KEY,
-  addressMatchesCookie,
 } from "../whitelist";
-import { USER_COOKIE_KEY } from "../whitelist/constants";
-import blacklist from "@/blacklist.json";
 import { hexToDecimals } from "../data/helpers/numbers";
 import { crowfundStates } from "./helpers";
 
@@ -34,7 +20,6 @@ const dao = ServiceProvider.dao();
 const dex = ServiceProvider.dex();
 const whitelist = ServiceProvider.whitelist();
 const crowdfund = ServiceProvider.crowdfund();
-const token = ServiceProvider.token();
 
 function state() {
   // const walletCookie = getCookie(WALLET_STATE_COOKIE_KEY);

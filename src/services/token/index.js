@@ -1,13 +1,5 @@
 import TokenContract from "../../data/network/web3/contracts/tokenContract";
 
-function awaitOn(promise) {
-  Promise.all([promise]).then(
-    () => {
-      return promise;
-    }
-  )
-}
-
 export default class Token {
   constructor(
     ethereumClient,

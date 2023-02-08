@@ -26,13 +26,10 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Address from "@/components/views/address/Address.vue";
-import { ethers } from "ethers";
 
 export default {
   name: "ThreadMarketListItem",
   components: {
-    // Address,
   },
   props: {
     thread: {

@@ -73,7 +73,7 @@
 import SignerAddress from '../../views/address/SignerAddress.vue'
 import { useRoute } from "vue-router"
 import { mapGetters, mapActions } from "vuex"
-import { CONTRACTS, DAO } from '../../../services/constants'
+import { CONTRACTS } from '../../../services/constants'
 export default {
   name: "HeaderHavigationBar",
   components: {

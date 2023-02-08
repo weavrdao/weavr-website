@@ -27,34 +27,32 @@
       <label class="label">Forum link</label>
       <input v-model="forumLink" type="text" class="input"/>
     </div>
-    </div>
     <div v-if="preview">
       <Proposal :proposal="proposal" />
     </div>
-    <div class="block mt-5">
-    <div :class="[preview ? 'is-primary ': 'is-secondary ', 'button has-text-white is-size-5 p-3']" @click=togglePreview>
-        <span class="mr-2">
-          <unicon 
-          height="18" 
-          width="18" 
-          fill="white"
-          :name="preview ? 'pen' : 'eye'"></unicon>
+    <div class="block">
+      <div :class="[preview ? 'is-primary ': 'is-secondary ', 'button has-text-white is-size-5 p-3']" @click=togglePreview>
+          <span class="mr-2">
+            <unicon 
+            height="18" 
+            width="18" 
+            fill="white"
+            :name="preview ? 'pen' : 'eye'"></unicon>
 
-        </span>
-      {{ preview ? "Edit" : "Preview" }}</div>
+          </span>
+        {{ preview ? "Edit" : "Preview" }}</div>
+    </div>
+    <div class="block is-flex is-justify-content-space-between mt-5">
+      <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
+      <button @click="publish"  class="button has-background-success has-text-white has-text-weight-bold">Submit Proposal</button>
+    </div>
   </div>
-  <div class="block p-6 is-flex is-justify-content-space-between mt-5">
-    <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
-    <button @click="publish"  class="button has-background-success has-text-white has-text-weight-bold">Submit Proposal</button>
-  </div>
-    <!-- End Form -->
-  </div>
+</div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import {ParticipantType, ProposalTypes} from "@/models/common.js";
-import { DAO } from "../../services/constants"
 import {ethers} from "ethers";
 import Proposal from "@/components/proposals/Proposal.vue"
 
@@ -64,7 +62,7 @@ export default {
   components: {
     Proposal
   },
-  emits: ['submited', "proposed"],
+  emits: ["submited", "proposed"],
   data(){
     return {
       address: "",
@@ -85,8 +83,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      refresh: "refreshProposalsDataForAsset",
-      syncWallet: "syncWallet",
       createProposal: "createParticipantProposal",
     }),
     togglePreview() {
@@ -95,7 +91,7 @@ export default {
         title: this.title,
         description: this.description,
         type: this.proposalType,
-        creator: '0x00000',
+        creator: "0x00000",
         startTimeStamp: 0,
         endTimeStamp: 0,
         address: this.address,
@@ -103,8 +99,8 @@ export default {
       }
       this.preview = !this.preview
     },
+
     async publish() {
-      console.log(ParticipantType)
       if(!ethers.utils.isAddress(this.address)) {
         this.$toast.error("Address not valid", {
           position: "top"
@@ -112,7 +108,6 @@ export default {
         this.address=""
         return
       }
-      
       this.$emit("submited");
       const participant = this.address
       const props = {
@@ -124,9 +119,6 @@ export default {
         info: this.description,
         $toast: this.$toast
       }
-
-      console.log("ParticipantType:  ", props['participantType']);
-      console.log("FULL PROPS_______:  ", props);
       await this.createProposal(props);
       this.$emit("proposed");
     },
@@ -134,9 +126,5 @@ export default {
       this.$router.back();
     }
   },
-  mounted() {
-    this.refresh({ assetId: this.assetId});
-
-  }
 }
 </script>

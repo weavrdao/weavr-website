@@ -1,4 +1,3 @@
-import EthereumClient from "../../data/network/web3/ethereum/ethereumClient"
 import WalletState from "../../models/walletState"
 
 /**
@@ -57,6 +56,7 @@ class Wallet {
     return this.client.getChainId()
   }
 
+  // eslint-disable-next-line class-methods-use-this
   disconnect() {
     return new WalletState(
       "",

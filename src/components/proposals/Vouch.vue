@@ -35,17 +35,12 @@ export default {
       participant: "",
     }
   },
-  computed: {
-  
-  },
   methods: {
     ...mapActions({
-      refresh: "refreshProposalsDataForAsset",
-      syncWallet: "syncWallet",
       vouch: "vouchParticipant"
     }),
+
     async publish() {
-      
       const participant = this.participant;
       if(!ethers.utils.isAddress(participant)) {
         this.$toast.error("Address not valid",
@@ -57,13 +52,10 @@ export default {
       }
       await this.vouch({participant: participant})
     },
+    
     onCancel() {
       this.$router.back();
     }
-  },
-  mounted() {
-    this.refresh({ assetId: this.assetId });
-    this.syncWallet();
   },
 }
 </script>

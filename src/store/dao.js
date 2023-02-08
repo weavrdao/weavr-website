@@ -8,10 +8,6 @@ import {CONTRACTS, NETWORK} from "../services/constants";
 
 import blacklist from "@/blacklist.json";
 
-/**
- * TODO - Abstrucked -
- *  ;Implement clickable toast to link to chain explorer to review the tx
- */
 
 const wallet = ServiceProvider.wallet();
 const dao = ServiceProvider.dao();
@@ -353,16 +349,13 @@ const actions = {
   },
 
   async queueProposal(context, props) {
-    const toast = params.$toast || createToaster({});
     const id = ethers.BigNumber.from(props.proposalId)
-
     const status = await dao.queue(id);
     console.log(status)
 
   },
 
   async completeProposal(context, props) {
-    const toast = params.$toast || createToaster({});
     const id = ethers.BigNumber.from(props.proposalId)
     const DATA = params.data || "0x000000"
     const status = await dao.complete(id, DATA);
@@ -471,10 +464,6 @@ const actions = {
     }
   },
 
-  async participantsByType(context, params) {
-    const type = params.type || 2;
-    // await dao.getParticipantsByType(type)
-  },
 
   async quorum(context, params) {
     console.log("PARAMS: ", params.assetId)
@@ -490,8 +479,8 @@ const mutations = {
     state.platform.assets = assets;
   },
 
-  setProposalsForAsset(state, {proposals, assetId}) {
-    state.platform.proposals = proposals; // state.platform.proposals.set(assetId, proposals);
+  setProposalsForAsset(state, {proposals}) {
+    state.platform.proposals = proposals;
   },
 
   setThreads(state, assets) {

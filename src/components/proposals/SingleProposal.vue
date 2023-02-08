@@ -89,8 +89,6 @@ import {
   getResult,
 } from "../../data/helpers";
 import { PASSED } from "../../models/common";
-import { DAO } from "../../services/constants"
-import {CommonProposalType, ProposalTypes} from "@/models/common.js"
 import Proposal from "@/components/proposals/Proposal.vue"
 import { ethers } from "ethers";
 
@@ -170,28 +168,24 @@ export default {
   methods: {
     ...mapActions({
       vote: "vote",
-      refresh: "refreshProposalsDataForAsset",
-      withdraw: "withdrawProposal",
       getQuorum: "quorum"
-    }), // Voting action
+    }), 
+
     routeToHome() {
       this.$router.back();
     },
+
     setTimeRemainingCountdown() {
       clearInterval(this.countdownRef);
-
       this.countdownRef = setInterval(
         function () {
           let now = new Date().getTime() / 1000;
-
           let t = this.proposal.endTimestamp - now;
-
           if (t >= 0) {
             let days = Math.floor(t / (60 * 60 * 24));
             let hours = Math.floor((t % (60 * 60 * 24)) / (60 * 60));
             let mins = Math.floor((t % (60 * 60)) / 60);
             let secs = Math.floor(t % 60);
-
             this.timeRemainingString = `${days}d, ${hours}h, ${mins}m, ${secs}s`;
           } else {
             this.timeRemainingString = "Voting period has ended";
@@ -200,6 +194,7 @@ export default {
         1000
       );
     },
+
     submitYesVote() {
       this.vote({
         assetAddress: this.assetId,
@@ -208,6 +203,7 @@ export default {
         $toast: this.$toast
       })
     },
+
     submitNoVote() {
       this.vote({
         assetAddress: this.assetId,
@@ -216,9 +212,11 @@ export default {
         $toast: this.$toast
       })
     },
+
     formatEther(amount) {
       return ethers.utils.formatEther(amount);
     },
+
     withdrawProposal() {
       this.withdraw({
         assetAddress: this.assetId,
@@ -227,10 +225,12 @@ export default {
       });
     }
   },
+
   mounted() {
     this.setTimeRemainingCountdown();
     this.getQuorum({assetId: this.$route.params.assetId})
   },
+
   created() {
     if(this.balance) {
       this.voteAmount = +this.balance;

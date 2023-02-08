@@ -1,5 +1,5 @@
-// import { GraphQLAPIClient } from "../../data/network/graph/graphQLAPIClient";
-// import EthereumClient from "../../data/network/web3/ethereum/ethereumClient";
+import { GraphQLAPIClient } from "../../data/network/graph/graphQLAPIClient";
+import EthereumClient from "../../data/network/web3/ethereum/ethereumClient";
 import DexRouterContract from "../../data/network/web3/contracts/dexRouterContract";
 import FrabricERC20Contract from "../../data/network/web3/contracts/frabricERC20Contract";
 import {

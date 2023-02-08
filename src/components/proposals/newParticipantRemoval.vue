@@ -9,38 +9,45 @@
           <input class="input" v-model="address" type="text">
         </div>
       </div>
-      <div class="field">
-        <label class="label">Removal Fee</label>
-        <input v-model="removalFee" type="text" class="input"/>
+    </div>
+    <div class="field">
+      <label class="label">Removal Fee</label>
+      <input v-model="removalFee" type="text" class="input"/>
+    </div>
+    <div class="field" v-if="!preview">
+      <label class="label">Description</label>
+      <div class="control">
+        <textarea class="textarea" v-model="description" placeholder="Enter description here"></textarea>
       </div>
-      <div class="field" v-if="!preview">
-        <label class="label">Description</label>
-        <div class="control">
-          <textarea class="textarea" v-model="description" placeholder="Enter description here"></textarea>
-        </div>
-      </div>
-      <div class="field">
-        <label class="label">Forum link</label>
-        <input v-model="forumLink" type="text" class="input"/>
-      </div>
+    </div>
+    <div class="field">
+      <label class="label">Forum link</label>
+      <input v-model="forumLink" type="text" class="input"/>
     </div>
     <div v-if="preview">
-      <Proposal :proposal="proposal"/>
+      <Proposal :proposal="proposal" />
     </div>
-    <div class="is-flex is-justify-content-space-between mt-5">
-      <button @click="publish" class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal
-      </button>
-      <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
+    <div class="block">
+      <div :class="[preview ? 'is-primary ': 'is-secondary ', 'button has-text-white is-size-5 p-3']" @click=togglePreview>
+          <span class="mr-2">
+            <unicon 
+            height="18" 
+            width="18" 
+            fill="white"
+            :name="preview ? 'pen' : 'eye'"></unicon>
+
+          </span>
+        {{ preview ? "Edit" : "Preview" }}</div>
+    </div>
+    <div class="block is-flex is-justify-content-space-between mt-5">
       <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
+      <button @click="publish"  class="button has-background-success has-text-white has-text-weight-bold">Submit Proposal</button>
     </div>
-    <!-- End Form -->
   </div>
 </template>
 
 <script>
-import {mapGetters, mapActions} from "vuex";
-import {ParticipantType, ProposalTypes} from "@/models/common.js";
-import {DAO} from "../../services/constants"
+import { mapActions} from "vuex";
 import {ethers} from "ethers";
 import Proposal from "@/components/proposals/Proposal.vue"
 
@@ -70,8 +77,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      refresh: "refreshProposalsDataForAsset",
-      syncWallet: "syncWallet",
       createProposal: "createParticipantRemovalProposal",
     }),
     togglePreview() {
@@ -97,7 +102,6 @@ export default {
         this.address = ""
         return
       }
-
       this.$emit("submited");
       const props = {
         assetId: this.assetId,
@@ -109,8 +113,6 @@ export default {
         forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/",
         $toast: this.$toast
       }
-
-      console.log("ParticipantRemoval:  ", this.address);
       await this.createProposal(props);
       this.$emit("proposed");
     },
@@ -118,9 +120,5 @@ export default {
       this.$router.back();
     }
   },
-  mounted() {
-    this.refresh({assetId: this.assetId});
-
-  }
 }
 </script>

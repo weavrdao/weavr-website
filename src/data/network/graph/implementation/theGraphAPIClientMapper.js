@@ -2,11 +2,11 @@
 /* eslint-disable max-lines-per-function */
 
 import GraphQLAPIMapper from "../graphQLAPIMapper"
-import Thread from "@/models/thread"
-import Needle from "@/models/needle"
+import Thread from "@/models/marketplace/thread"
+import Needle from "@/models/marketplace/needle"
 import Erc20 from "@/models/erc20"
-import { Vote } from "../../../../models/vote"
-import { MarketOrder } from "../../../../models/marketOrder"
+import { Vote } from "@/models/vote"
+import { MarketOrder } from "@/models/marketplace/marketOrder"
 import {
   mapPaperProposals,
   mapUpgradeProposals,
@@ -117,26 +117,6 @@ class TheGraphAPIMapper extends GraphQLAPIMapper {
       })
   }
 
-  // mapProposals(rawThreads) {
-  //   if (!rawThreads || rawThreads.length < 1) {
-  //     return []
-  //   }
-
-  //   return rawThreads
-
-  //     .map(rawThread => {
-  //       const votes = this.mapVotes(rawThread.votes)
-
-  //       return new Proposal(
-  //         rawThread.id,
-  //         rawThread.creator,
-  //         rawThread.dataURI,
-  //         rawThread.startTimestamp,
-  //         rawThread.endTimestamp,
-  //         votes
-  //       )
-  //     })
-  // }
   
   mapRawErc20(rawErc20) {
     if (!rawErc20 || rawErc20.length < 1) {

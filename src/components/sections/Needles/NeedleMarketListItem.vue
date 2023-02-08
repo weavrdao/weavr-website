@@ -24,20 +24,18 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Address from "@/components/views/address/Address.vue";
 import { ethers } from "ethers";
 
 export default {
   name: "NeedleMarketListItem",
-  components: {
-    // Address,
-  },
+ 
   props: {
     needle: {
       type: Object,
       required: true,
     },
   },
+
   computed: {
     ...mapGetters({
       walletAddress: "userWalletAddress",
@@ -49,6 +47,7 @@ export default {
       return 100 * this.needle.amountDeposited / this.needle.target
     }
   },
+
   methods: {
     getCoverImageIpfsUrl() {
       return this.needle.imagesHashes
@@ -57,16 +56,6 @@ export default {
     },
     getDisplayTarget() {
       return Number(ethers.utils.formatUnits(this.needle.target, 6)).toLocaleString("en-US")
-    },
-    getProgressBarStyle() {
-      return {
-        width: `${100
-          * Number(
-            ethers.utils.formatUnits(this.needle.amountDeposited)
-          ) / Number(
-          ethers.utils.formatUnits(this.needle.target)
-        )}%`
-      }
     },
     routeToNeedlePage() {
       this.$router.push(`needles/${this.needle.id}`);

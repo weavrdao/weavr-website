@@ -89,6 +89,7 @@ class IPFSStorageNetwork extends StorageNetwork {
   async uploadAndGetPathAsBytes(file) {
     try {
       const cid = await this.addFile(file);
+      // eslint-disable-next-line no-unused-vars
       const _ = await this.ipfsCollabAPIClient.pin.add(cid.path);
       return getBytes32FromIpfsHash(cid.path);
     } catch (e) {

@@ -136,14 +136,6 @@ export default {
 <style lang="scss" scoped>
 @import "../../styles/weavr-custom.scss";
 @import "../../styles/markdown.scss";
-
-.container {
-  min-width: 80% !important;
-}
-.relative {
-  position: relative;
-}
-
 .label {
   margin-top: 30px;
 }
@@ -160,15 +152,7 @@ export default {
   border-radius: 1000px;
   transition: all 150ms;
   cursor: pointer;
-
-  .temp-close-dot {
-    width: 15px;
-    height: 15px;
-    border-radius: 100px;
-  }
 }
-
-
 .description-container {
   background: transparent !important;
   padding: 25px;
@@ -178,45 +162,5 @@ export default {
     max-width: 56ch;
   }
 }
-.votes-bar {
-  width: 100%;
-  height: 25px;
-  background: $red;
-  overflow: hidden;
-  border: none;
-}
 
-.green-bar {
-  background: $mint;
-  height: 30px;
-}
-
-.outcome-box {
-  color: white;
-  font-weight: 600;
-  border-radius: 0.5rem;
-  padding: 15px 20px;
-}
-
-.slider {
-  margin-bottom: 5px;
-  height: 23px;
-  transition: all 150ms;
-
-  &:hover {
-    filter: contrast(120%);
-  }
-}
-
-.buttons-container {
-  margin-top: 10px;
-  .button {
-    background: $mediumBlue;
-    color: white;
-    width: 3rem;
-    height: 1.5rem;
-    font-size: 12px;
-    font-weight: 600;
-  }
-}
 </style>

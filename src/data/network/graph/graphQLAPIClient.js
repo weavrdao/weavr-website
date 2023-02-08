@@ -33,6 +33,7 @@ class GraphQLAPIClient {
    * @param {Array} vars Query variables
    * @param {mappingCallback} mappingCallback Model mapping callback
    */
+  // eslint-disable-next-line
   async query(query, vars = {}, mappingCallback = {}) { }
 }
 

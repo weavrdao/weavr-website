@@ -20,10 +20,9 @@
     </div>
 </div>    
 </template>
+
 <script>
-// import {mapActions}
 import { mapActions, mapGetters } from "vuex"
-import { DAO } from "@/services/constants.js"
 
 export default {
   name: "Login",

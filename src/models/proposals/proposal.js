@@ -10,7 +10,7 @@
  * @property {string} description Body of the proposal
  */
 
- class Proposal {
+class Proposal {
   constructor(
     id,
     creatorAddress,

@@ -178,12 +178,7 @@
   transition: all 150ms;
   cursor: pointer;
 }
-.list-text {
-  text-align: left !important;
-}
-.primary-border {
-  border-color: $primary !important ;
-}
+
 .primary-border-2 {
   border-color: $primary !important ;
   border-width: 4px;

@@ -50,9 +50,9 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 
-import {CommonProposalType, ProposalTypes} from "@/models/common.js"
+import { ProposalTypes} from "@/models/common.js"
 import Proposal from "@/components/proposals/Proposal.vue"
 
 
@@ -61,7 +61,7 @@ export default {
   components: {
     Proposal
   },
-  emits: ['submited', "proposed"],
+  emits: ["submited", "proposed"],
   computed: {
     assetId() {
       return this.$route.params.assetId
@@ -81,18 +81,16 @@ export default {
   },
   methods: {
     ...mapActions({
-      refresh: "refreshProposalsDataForAsset",
       createPaperProposal: "createPaperProposal",
     }),
+    
     async publish() {
       this.$emit("submited")
       console.dir(this.trigger);
       if (this.title.length < 1 || this.description.length < 1) {
         return;
-      }
-      console.log("___ADDRESS___");
+      }  
       const assetAddr = this.assetId;
-      console.log("ADD:" + assetAddr)
       const title = this.title;
       const description = this.description;
       const proposalType = this.proposalType;
@@ -101,8 +99,8 @@ export default {
       await this.createPaperProposal({assetAddr, proposalType, title, description, daoResolution, forumLink,  $toast: this.$toast} );
       this.$emit("proposed");
     },
+
     togglePreview(){
-      console.log("preview toggled");
       this.proposal = {
         title: this.title,
         description: this.description,
@@ -119,9 +117,6 @@ export default {
     onCancel() {
       this.$router.back();
     }
-  },
-  mounted() {
-    this.refresh({ assetId: this.assetId, $toast: this.$toast });
   },
 }
 </script>

@@ -74,12 +74,9 @@ export default {
         }
       })
       }
-
-      
     }
   },
   mounted() {
-    // this.getThreads();
     this.threads = this.threadsMap
   },
 };

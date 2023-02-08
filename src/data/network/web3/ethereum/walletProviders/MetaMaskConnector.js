@@ -1,10 +1,10 @@
+/* eslint-disable no-invalid-this */
 const { ethers } = require("ethers");
 
 export class MetaMaskConnector {
+  provider = null;
   constructor(metaMaskProvider) {
     this.provider = metaMaskProvider;
-    // this.getCoinbaseEthereumAddress()
-    // this.getChainId()
   }
 
   getAddress = async () => {
@@ -18,7 +18,9 @@ export class MetaMaskConnector {
           console.log(`User's address is ${accounts[0]}`);
           return accounts[0];
         });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   getChainId = async () => {
@@ -75,7 +77,8 @@ export class MetaMaskConnector {
   //   this.handleChainChanged(chainId);
   // }
   
-  handleChainChanged(_chainId) {
+  // eslint-disable-next-line class-methods-use-this
+  handleChainChanged() {
     // We recommend reloading the page, unless you must do otherwise
     window.location.reload();
   }

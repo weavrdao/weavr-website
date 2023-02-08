@@ -7,6 +7,7 @@ import BaseProposal from "./baseProposal";
 export default class DescriptorChangeProposal extends BaseProposal{
 
   // Default attributes that define the "empty" state.
+  // eslint-disable-next-line class-methods-use-this
   defaults() {
     return {
       id: null,

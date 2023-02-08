@@ -11,7 +11,6 @@
 
 <script>
 import "animate.css";
-import { DAO } from "../../../services/constants";
 import { mapActions } from 'vuex';
 
 export default {
@@ -23,16 +22,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      refresh: ""
-    }),
     goBack() {
       this.$router.back();
     }
   },
-  computed: {
-
-  }
 };
 </script>
 

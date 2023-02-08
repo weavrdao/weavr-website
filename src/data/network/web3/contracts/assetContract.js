@@ -1,7 +1,5 @@
 /* global BigInt */
 import {ethers} from "ethers";
-import EthereumClient from "../ethereum/ethereumClient";
-
 
 const contractAbi = [
   // Make a buy order
@@ -57,7 +55,6 @@ const contractAbi = [
   // Event that is triggered every time an order is filled on the market
   "event Filled(address indexed sender, address indexed recipient, uint256 indexed price, uint256 amount)",
 ];
-const startBlock = 0; // TODO: Inject the actual contract deployment block instead
 
 /**
  * Asset contract

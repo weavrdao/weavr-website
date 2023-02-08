@@ -44,14 +44,6 @@ export default {
       return needles.filter((needle) => !!needle.imageHashes)
     }
   },
-  mounted() {
-    console.log("mounted");
-    this.getNeedles();
-    // this.syncWallet({ $toast: this.$toast });
-  },
-  // watch: {
-  //   $route: "refresh",
-  // },
 };
 </script>
 

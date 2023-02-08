@@ -38,31 +38,32 @@
         <textarea class="textarea" v-model="description" type="text" placeholder="Description"></textarea>
       </div>
     </div>
-    <div class="block  mt-5">
-    <div :class="[preview ? 'is-primary ': 'is-secondary ', 'button has-text-white is-size-5 p-3']" @click=togglePreview>
-        <span class="mr-2">
-          <unicon 
-          height="18" 
-          width="18" 
-          fill="white"
-          :name="preview ? 'pen' : 'eye'"></unicon>
+    <div v-if="preview">
+      <Proposal :proposal="proposal" />
+    </div>
+    <div class="block">
+      <div :class="[preview ? 'is-primary ': 'is-secondary ', 'button has-text-white is-size-5 p-3']" @click=togglePreview>
+          <span class="mr-2">
+            <unicon 
+            height="18" 
+            width="18" 
+            fill="white"
+            :name="preview ? 'pen' : 'eye'"></unicon>
 
-        </span>
-      {{ preview ? "Edit" : "Preview" }}</div>
-  </div>
-  <div class="box is-flex is-justify-content-space-between mt-5">
-    <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
-    <button @click="publish"  class="button has-background-success has-text-white has-text-weight-bold">Submit Proposal</button>
-  </div>
-    <!-- End Form -->
+          </span>
+        {{ preview ? "Edit" : "Preview" }}</div>
+    </div>
+    <div class="block is-flex is-justify-content-space-between mt-5">
+      <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
+      <button @click="publish"  class="button has-background-success has-text-white has-text-weight-bold">Submit Proposal</button>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { ethers } from "ethers";
-import { ProposalTypes } from "@/models/common"
-import { CONTRACTS, DAO } from "../../services/constants" 
+import { CONTRACTS } from "../../services/constants" 
 const GOERLI_TEST = {
   governor: "0xA28C6A770dC1E6DCd94Ea93B7464E3B3DF77689D",
   signer: "0xd7623F78545a3D1138Ae435c7D224F7bC32Ae038"

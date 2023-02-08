@@ -68,7 +68,7 @@ const navigateToStatic = (path) => {
   if (location.href.includes("localhost")) {
     route = "http://localhost:8080/#/"+path;
   }
-    else {
+  else {
     route = "https://weavr.org/#/"+path;
   }
   location.href = route;
