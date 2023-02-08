@@ -118,7 +118,6 @@ export default {
       tokenInfo: "tokenInfo",
       checkKyc: "checkKyc",
       logout: "logout",
-      participantsList: "participantsByType"
     }),
     toggleDropdown() {
       
@@ -161,10 +160,7 @@ export default {
       
     // this.$router.push({name: "/"+DAO+"/tokenInfo", params: {assetId: this.assetId}})
     }
-  },
-  async mounted() {
-    this.participantsList({type: "GENESIS"})
-  },
+  }
   
 };
 </script>
