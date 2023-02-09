@@ -212,7 +212,14 @@ const router = new createRouter({
             {
               path: "governance",
               name: "governance",
-              component: ThreadGovernance
+              component: ThreadGovernance,
+              children: [
+                {
+                  path: "paperProposal",
+                  component: Modal,
+                  props: { component: newPaperProposal },
+                },
+              ]
             }
           ]
         },

@@ -195,6 +195,7 @@ class DAO {
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
    */
   async createPaperProposal(asset, title, description, forumLink, daoResolution) {
+    console.log("ASSET::", asset);
     const assetContract = new AssetContract(this.ethereumClient, asset);
 
     const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({

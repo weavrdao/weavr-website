@@ -1,19 +1,30 @@
 <template>
   <div>
     
-    <NewProposalSelector></NewProposalSelector>
+    <NewProposalSelector :isThread="true"></NewProposalSelector>
+    <div class="block">
+      <AccordionVue summary="Active Proposals">
+
+      </AccordionVue>
+      <AccordionVue summary="Past Proposals">
+
+      </AccordionVue>
+    </div>
+    <router-view></router-view>
   </div>
-</template>
+</template> 
 
 <script>
 // import ProposalList from "@/components/proposals/ProposalList"
 import NewProposalSelector from "@/components/sections/NewProposalSelector"
 import { mapGetters } from 'vuex'
+import AccordionVue from '../../utils/Accordion.vue'
 export default {
   name: "ThreadGovernance",
   components: {
     // ProposalList
-    NewProposalSelector
+    NewProposalSelector,
+    AccordionVue
   },
   data() {
     return {

@@ -64,7 +64,11 @@ export default {
   emits: ["submited", "proposed"],
   computed: {
     assetId() {
+      if(this.$route.params.threadId) {
+        return this.$route.params.threadId
+      }
       return this.$route.params.assetId
+
     }
   },
   data(){
@@ -86,7 +90,7 @@ export default {
     
     async publish() {
       this.$emit("submited")
-      console.dir(this.trigger);
+      console.log(this.assetId);
       if (this.title.length < 1 || this.description.length < 1) {
         return;
       }  

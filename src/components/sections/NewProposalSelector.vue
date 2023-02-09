@@ -19,7 +19,7 @@
 <script>
 export default {
   name: "NewProposalSelector",
-  prop: {
+  props: {
     isThread: {
       required: false,
       type: Boolean,
@@ -29,6 +29,7 @@ export default {
   data() {
     return {
       selectedAction: "paperProposal",
+      actionTypes: [],
       // The id field here must match the desired page path
       proposalTypes: [
         {
@@ -70,27 +71,44 @@ export default {
       ],
     }
   },
+  mounted() {
+    this.actionTypes = this.setActionTypes() 
+    console.log(this.actionTypes)
+  },
   computed: {
-    actionTypes() {
-      let actions = []
-      if(this.isThread) {
-        this.proposalTypes.forEach(element => {
-          if( 
-            (element.type == "common" || "thread" ) &&
-            element.thread == true 
-          ) {
-            actions.push(element)
-          }
-        });
-      }
-      return actions 
-    }
+   
   },
   methods: {
     routeToSelectedPage() {
       console.log(this.$route.path)
       this.$router.push({path: this.$route.path + `/${this.selectedAction}`});
     },
+    setActionTypes() {
+      let actions = []
+      console.log("STARTING");
+      if(this.isThread) {
+        console.log("IS_THREAD_SET_PROPERLY");
+        this.proposalTypes.forEach(element => {
+          if( 
+            (element.type == "common" || "thread" ) &&
+            element.thread == true 
+          ) {
+            console.log(element);
+            actions.push(element)
+          }
+        });
+      }else {
+        this.proposalTypes.forEach(element => {
+          if( 
+            element.type == "common" || element.type == "weavr" 
+          ) {
+            console.log(element);
+            actions.push(element)
+          }
+        });
+      }
+      return actions 
+    }
   }
 }
 </script>

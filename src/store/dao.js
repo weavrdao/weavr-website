@@ -95,7 +95,7 @@ const actions = {
   async createPaperProposal(context, props) {
     const {assetAddr, daoResolution, title, description, forumLink} = props;
     const toast = params.$toast || createToaster({});
-
+    console.log(assetAddr);
     toast.clear();
     toast.show("Confirming transaction...", {
       duration: 15000,
