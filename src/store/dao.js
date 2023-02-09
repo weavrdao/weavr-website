@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-// import router from "../router/index";
 import {ethers} from "ethers";
 import {createToaster} from "@meforma/vue-toaster";
 import {params} from "stylus/lib/utils";

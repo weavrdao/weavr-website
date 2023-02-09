@@ -69,7 +69,12 @@ const getters = {
   },
 
   allThreads(state) {
-    return state.platform.threads;
+    // let threadsMap = new Map();
+    // state.platform.threads.forEach(thread => {
+    //   threadsMap.set(thread.id, thread)
+    // })
+    // return threadsMap;
+    return state.platform.threads
   },
   
   allNeedles(state) {

@@ -5,9 +5,9 @@
         <li :class="[ isTabActive('overview') ? 'is-active' : '' ]">
           <a v-on:click="navigateTo('overview')">Overview</a>
         </li>
-        <!-- <li :class="[ isTabActive('governance') ? 'is-active' : '' ]">
+        <li :class="[ isTabActive('governance') ? 'is-active' : '' ]">
           <a disabled="true" aria-disabled="true" v-on:click="navigateTo('governance')">Governance</a>
-        </li> -->
+        </li>
       </ul>
     </div>
     <div :style="getCoverStyle()" class="cover-image mb-5">
@@ -34,19 +34,17 @@ export default {
   name: "SingleThread",
   data() {
     return {
-      threadId: this.$route.params.threadId.toLowerCase(),
       purchaseAmount: 0,
       withdrawAmount: 0,
     }
   },
   computed: {
     ...mapGetters({
-      threads: "allThreads",
+      threads: "threadById",
 
     }),
     thread() {
-      return this.threads
-        .find(n => n.id === this.threadId);
+      return this.threads.get(this.$route.params.threadId)
     },
   },
   methods: {

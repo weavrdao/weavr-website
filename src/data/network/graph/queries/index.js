@@ -208,13 +208,14 @@ export const THREAD_DEX_ORDERS_QUERY = gql`
 export const ALL_PROPOSALS = gql`
 query ALL_PROPOSALS($id: String!) {
   frabric(id: $id) {
-    paperProposals(orderBy: id, orderDirection: desc) {
+    paperProposals(orderBy: id, orderDirection: desc, where: { baseProposal_ : { thread: null}}) {
       id
       baseProposal {
         creator
-        endTimestamp
+        thread
         info
         startTimestamp
+        endTimestamp
         state
         supermajority
         votes {
@@ -329,4 +330,151 @@ query ALL_PROPOSALS($id: String!) {
       }
     }
   }
+}`;
+
+
+export const THREAD_PROPOSALS = gql`
+query ALL_PROPOSALS($thread: String!) {
+  
+  paperProposals(orderBy: id, orderDirection: desc, where: { baseProposal_ : { thread: $thread}}) {
+    id
+    baseProposal {
+      creator
+      thread
+      info
+      startTimestamp
+      endTimestamp
+      state
+      supermajority
+      votes {
+        id
+        voteDirection
+        voter
+        count
+      }
+    }
+  }
+  desriptorChangeProposals(orderBy: id, orderDirection: desc, where: { baseProposal_ : { thread: $thread}}) {
+    id
+    descriptor
+    baseProposal {
+      creator
+      thread
+      info
+      startTimestamp
+      endTimestamp
+      state
+      supermajority
+      votes {
+        id
+        voteDirection
+        voter
+        count
+      }
+    }
+  }
+  governorChangeProposals(orderBy: id, orderDirection: desc, where: { baseProposal_ : { thread: $thread}}) {
+    id
+    governor
+    baseProposal {
+      creator
+      thread
+      info
+      startTimestamp
+      endTimestamp
+      state
+      supermajority
+      votes {
+        id
+        voteDirection
+        voter
+        count
+      }
+    }
+  }
+  dissolutionProposals(orderBy: id, orderDirection: desc, where: { baseProposal_ : { thread: $thread}}) {
+    id
+    token
+    price
+    baseProposal {
+    creator
+    thread
+    info
+    startTimestamp
+    endTimestamp
+    state
+    supermajority
+    votes {
+      id
+      voteDirection
+      voter
+      count
+    }
+  }
+  }
+  participantProposals(orderBy: id, orderDirection: desc, where: { baseProposal_ : { thread: $thread}}) {
+    id
+    baseProposal {
+      creator
+      thread
+      info
+      startTimestamp
+      endTimestamp
+      state
+      supermajority
+      votes {
+        id
+        voteDirection
+        voter
+        count
+      }
+    }
+    participant
+    participantType
+    proposer
+  }
+  participantRemovalProposals(orderBy: id, orderDirection: desc, where: { baseProposal_ : { thread: $thread}}) {
+    id
+    baseProposal {
+      creator
+      thread
+      info
+      startTimestamp
+      endTimestamp
+      state
+      supermajority
+      votes {
+        id
+        voteDirection
+        voter
+        count
+      }
+    }
+      participant
+      removalFee
+  }
+  tokenActionProposals(orderBy: id, orderDirection: desc, where: { baseProposal_ : { thread: $thread}}) {
+    amount
+    id
+    mint
+    price
+    target
+    token
+    baseProposal {
+      creator
+      thread
+      info
+      startTimestamp
+      endTimestamp
+      state
+      supermajority
+      votes {
+        id
+        voteDirection
+        voter
+        count
+      }
+    }
+  }
+  
 }`;

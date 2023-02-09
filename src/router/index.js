@@ -21,6 +21,7 @@ import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
 import ThreadsMarketplace from "@/components/sections/Threads/ThreadMarketplace.vue";
 import SingleThread from "@/components/sections/Threads/SingleThread.vue";
 import ThreadOverview from "@/components/views/market/ThreadOverview.vue";
+import ThreadGovernance from "@/components/views/market/ThreadGovernance.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue";
 import newParticipantRemovalProposal from "@/components/proposals/newParticipantRemoval.vue";
@@ -211,7 +212,7 @@ const router = new createRouter({
             {
               path: "governance",
               name: "governance",
-              component: Governance
+              component: ThreadGovernance
             }
           ]
         },

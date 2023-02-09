@@ -19,37 +19,71 @@
 <script>
 export default {
   name: "NewProposalSelector",
+  prop: {
+    isThread: {
+      required: false,
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       selectedAction: "paperProposal",
       // The id field here must match the desired page path
-      actionTypes: [
+      proposalTypes: [
         {
           id: "paperProposal",
-          name: "Paper Proposal"
+          name: "Paper Proposal",
+          type: "common",
+          thread: true
         },
-        // {
-        //   id: "upgradeProposal",
-        //   name: "Upgrade Proposal",
-        //   hide: true
-        // },
         {
           id: "tokenProposal",
-          name: "Token Action Proposal"
+          name: "Token Action Proposal",
+          type: "common",
+          thread: true
         },
         {
           id: "threadProposal",
           name: "Thread Proposal",
+          type: "weavr",
+          thread: false
         },
         {
           id: "participantProposal",
           name: "Participant Proposal",
+          type: "common",
+          thread: true
         },
         {
           id: "participantRemovalProposal",
           name: "Participant Removal Proposal",
+          type: "common",
+          thread: true
+        },
+        {
+          id: "dissolutionProposal",
+          name: "Dissolution Proposal",
+          type: "thread",
+          thread: true
         }
       ],
+    }
+  },
+  computed: {
+    actionTypes() {
+      let actions = []
+      if(this.isThread) {
+        this.proposalTypes.forEach(element => {
+          if( 
+            (element.type == "common" || "thread" ) &&
+            element.thread == true 
+          ) {
+            actions.push(element)
+          }
+        });
+      }
+      return actions 
     }
   },
   methods: {
