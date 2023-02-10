@@ -168,7 +168,8 @@ export default {
   methods: {
     ...mapActions({
       vote: "vote",
-      getQuorum: "quorum"
+      getQuorum: "quorum",
+      withdraw: "withdrawProposal"
     }), 
 
     routeToHome() {
