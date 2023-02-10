@@ -11,7 +11,9 @@
         {{ showSelector ? "X": "New Proposal" }}
       </button>
     </div>
-    <NewProposalSelector v-if="showSelector"/>
+    <div class="mb-5">
+      <NewProposalSelector v-if="showSelector"/>
+    </div>
     <div class="tabs is-toggle is-toggle-rounded is-centered  ">
       <ul>
         <li :class="[ isActiveProposals ? 'is-active' : '' ]">

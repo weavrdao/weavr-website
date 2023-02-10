@@ -61,7 +61,7 @@
           :key="text"
         >
           <span class="has-radius-md p-3 has-background-primary">◉</span>
-          <span class="has-radius-md has-text-white p-3 is-size-7">{{
+          <span class="has-radius-md has-text-white p-3 is-size-7 is-size-6-desktop">{{
             text
           }}</span>
         </div>
@@ -80,7 +80,7 @@
         >
           <span class="has-radius-md p-3 has-background-primary">◉</span>
           <span
-            class="mx-2 has-radius-md has-text-white p-3 is-size-7 bullet-text has-text-left"
+            class="has-radius-md has-text-white p-3 is-size-7 is-size-6-desktop"
             >{{ text }}</span
           >
         </div>
@@ -91,28 +91,30 @@
         </div>
       </div>
     </div>
-
-    <div class="box columns is-6 has-background-dimmedBlue">
-      <div class="column is-vcentered is-one-fifth p-6 is-3">
-        <div class="title is-1 text-align-">What makes us Unique?</div>
-      </div>
-      <div class="column is-full p-5">
-        <div class="columns is-multiline">
-          <div
-            class="column is-one-third has-radius-lg has-background-darkGray mt-4"
-            v-for="point in uniquePoints"
-            :key="point.id"
-          >
-            <div class="block bullet-point"></div>
-            <div class="subtitle">{{ point.heading }}</div>
-            <div class="is-multiline is-size-6 has-text-mediumGray">
-              {{ point.text }}
+    <div class="has-radius-lg p-3">
+      <div class="is-vcentered is-one-fifth px-6 is-3">
+        <div class="title is-1 is-size-3-mobile mt-3">What makes us Unique?</div>
+       </div>
+      <div class=" columns  mt-0 is-6 ">
+        <div class="column is-full p-5 is-centered">
+          <div class="columns is-multiline is-desktop">
+            <div
+              class="column is-one-third has-radius-lg has-background-darkGray mt-4"
+              v-for="point in uniquePoints"
+              :key="point.id"
+            >
+              <div class="block bullet-point"></div>
+              <div class="subtitle">{{ point.heading }}</div>
+              <div class="is-multiline is-size-6 has-text-mediumGray">
+                {{ point.text }}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    
     <div class="box columns has-text-white p-5 is-5">
       <div class="column is-half is-5">
         <div class="image has-radius-lg has-full-borders-primary p-5">
@@ -162,6 +164,10 @@
 
 <style scoped lang="scss">
 @import "../../styles/weavr-custom.scss";
+
+.is-size-7 {
+  font-size: 0.6rem !important;
+}
 .content.is-vcentered {
   display: flex;
   flex-wrap: wrap;
