@@ -210,9 +210,9 @@ query ALL_PROPOSALS($id: String!) {
   frabric(id: $id) {
     paperProposals(orderBy: id, orderDirection: desc, where: { baseProposal_ : { thread: null}}) {
       id
-      baseProposal {
+      baseProposal (thread: null) {
         creator
-        thread
+        thread 
         info
         startTimestamp
         endTimestamp
@@ -336,24 +336,7 @@ query ALL_PROPOSALS($id: String!) {
 export const THREAD_PROPOSALS = gql`
 query ALL_PROPOSALS($thread: String!) {
   
-  paperProposals(orderBy: id, orderDirection: desc, where: { baseProposal_ : { thread: $thread}}) {
-    id
-    baseProposal {
-      creator
-      thread
-      info
-      startTimestamp
-      endTimestamp
-      state
-      supermajority
-      votes {
-        id
-        voteDirection
-        voter
-        count
-      }
-    }
-  }
+ 
   desriptorChangeProposals(orderBy: id, orderDirection: desc, where: { baseProposal_ : { thread: $thread}}) {
     id
     descriptor
