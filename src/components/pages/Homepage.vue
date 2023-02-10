@@ -71,11 +71,11 @@
     <div class="box columns is-centered has-text-white p-5">
       <div class="column is-half">
         <div class="subtitle is-size-3 has-text-primary">
-          <b>For Builders</b>
+          <b>For Dreamers</b>
         </div>
         <div
           class="has-radius-md mb-3 has-background-darkGray py-3 px-0"
-          v-for="text in forBuilders"
+          v-for="text in forDreamers"
           :key="text"
         >
           <span class="has-radius-md p-3 has-background-primary">◉</span>
@@ -216,7 +216,7 @@ export default {
         "See your token value increase as the asset value increases",
         "Sell at any time, no muss no fuss",
       ],
-      forBuilders: [
+      forDreamers: [
         "Find the Real estate project of your dreams",
         "Submit your proposal to Weavr",
         "Find likeminded owners who will help to acquire it",
