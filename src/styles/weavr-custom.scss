@@ -209,11 +209,11 @@ $colors: map-merge($colors, $addColors);
 }
 
 .select {
-  display: block;
-  cursor: pointer;
+ 
   outline: none !important;
   border-color: $mediumBlue  !important;
-  border-radius: $tiny-radius;
+  padding: 5px !important;
+  
 }
 
 .title {

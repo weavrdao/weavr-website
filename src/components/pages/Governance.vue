@@ -3,15 +3,8 @@
       <!-- <div class="my-5"><RefreshButton  @refreshed="() => {}" :assetId="assetId"/></div>
       <div class="button is-primary" @click="refresh">Refresh</div> -->
     <StackNavigationBar @onBack="goBack" :address="assetId" />
-    <div class="is-flex is-justify-content-end">
-      <button 
-        :class="[showSelector? 'is-danger' : 'is-primary', ' button']" 
-        v-on:click="toggleSelector"
-      >
-        {{ showSelector ? "X": "New Proposal" }}
-      </button>
-    </div>
-    <NewProposalSelector v-if="showSelector"/>
+   
+    <NewProposalSelector/>
     <div class="tabs is-toggle is-toggle-rounded is-centered  ">
       <ul>
         <li :class="[ isActiveProposals ? 'is-active' : '' ]">
@@ -115,10 +108,7 @@ export default {
     },
     createProposal() {
       this.$router.push(`/dao/${this.assetId}/paperProposal`);
-    },
-    toggleSelector() {
-      this.showSelector = !this.showSelector;
-    },
+    }
   },
 
   data() {
