@@ -52,7 +52,7 @@ export default {
   },
   data() {
     return {
-      selectedAction: "paperProposal",
+      selectedAction: this.isThread ? "descriptorChange" : "paperProposal",
       actionTypes: [],
       showSelector: false,
       // The id field here must match the desired page path
@@ -79,7 +79,7 @@ export default {
           id: "participantProposal",
           name: "Participant Proposal",
           type: "common",
-          thread: true
+          thread: false
         },
         {
           id: "participantRemovalProposal",
@@ -88,11 +88,30 @@ export default {
           thread: true
         },
         {
+          id: "descriptorChange",
+          name: "Descriptor Change Proposal",
+          type: "thread",
+          thread: true
+        },
+        {
           id: "dissolutionProposal",
           name: "Dissolution Proposal",
           type: "thread",
           thread: true
-        }
+        },
+        {
+          id: "governorChange",
+          name: "Governor Change Proposal",
+          type: "common",
+          thread: true
+        },
+        {
+          id: "upgradeProposal",
+          name: "Upgrade Proposal",
+          type: "common",
+          thread: true,
+          hide: true
+        },
       ],
     }
   },
@@ -119,7 +138,7 @@ export default {
         this.proposalTypes.forEach(element => {
           if( 
             (element.type == "common" || "thread" ) &&
-            element.thread == true 
+            element.thread == true && !element.hide
           ) {
             console.log(element);
             actions.push(element)
@@ -129,6 +148,7 @@ export default {
         this.proposalTypes.forEach(element => {
           if( 
             element.type == "common" || element.type == "weavr" 
+            && !element.hide
           ) {
             console.log(element);
             actions.push(element)
