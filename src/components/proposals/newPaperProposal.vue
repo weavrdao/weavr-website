@@ -68,7 +68,6 @@ export default {
         return this.$route.params.threadId
       }
       return this.$route.params.assetId
-
     }
   },
   data(){
