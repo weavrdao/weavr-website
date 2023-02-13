@@ -107,7 +107,7 @@ class DAO {
   }
 
   /**
-   * Create a Paper Proposal
+   * Create a Thread Proposal
    * @param {String} assetId Asset's contract address
    * @param {String} name Chosen name for the thread
    * @param {String} descriptor of the thread
@@ -207,6 +207,48 @@ class DAO {
     return status;
   }
 
+  /**
+   * Create a DescriptorChange Proposal
+   * @param {String} asset Asset's contract address
+   * @param {string} title Proposal title
+   * @param {string} description Proposal body
+   * @param {string} forumLink Link to forum discussion
+   * @param {string} descriptor New thread descriptor 
+   * @returns {Boolean} Transaction status (true — mined; false - reverted)
+   */
+  async createDescriptorChangeProposal(asset, title, description, forumLink, blobVersion, documents, images, metrics, descriptor) {
+    console.log("ASSET::", asset);
+    const assetContract = new AssetContract(this.ethereumClient, asset);
+    let imagesHashes;
+    try {
+      imagesHashes = await Promise.all(Array.from(images).map(
+        async (image) => (await this.storageNetwork.addArbitraryFile(image.name))
+      ));
+    } catch (e) {
+      console.log("Error uploading images", e);
+    }
+
+    let documentHashes;
+    try {
+      documentHashes = await Promise.all(Array.from(documents).map(
+        async (document) => (await this.storageNetwork.addArbitraryFile(document.name))
+      ));
+    } catch (e) {
+      console.log("Error uploading documents", e);
+    }
+    const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
+      title, description, forumLink,
+    });
+
+    const descriptorHash = await this.storageNetwork.uploadAndGetPathAsBytes({
+      blobVersion,
+      descriptor, name, imagesHashes, documentHashes,
+      metrics
+    });
+
+    const status = await assetContract.proposeDescriptorChange(descriptorHash, infoHash);
+    return status;
+  }
   /**
    * Create a Participant Proposal
    * @param assetId

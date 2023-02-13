@@ -117,6 +117,31 @@ const actions = {
     });
   },
 
+  async createDescriptorChangeProposal(context, props) {
+    const {assetAddr, title, description, forumLink, descriptor} = props;
+    const toast = params.$toast || createToaster({});
+    console.log(assetAddr);
+    toast.clear();
+    toast.show("Confirming transaction...", {
+      duration: 15000,
+      position: "top",
+    });
+
+    const status = await dao
+      .createDescriptorChangeProposal(assetAddr, title, description, forumLink, descriptor)
+      .then(() => {
+        props.$toast.clear();
+      });
+    Promise.resolve([status]).then((status) => {
+      if (status) {
+        toast.success("Transaction confirmed!");
+      } else {
+        toast.error("Transaction failed. See details in MetaMask.");
+        console.log("Transaction failed. See details in MetaMask.");
+      }
+    });
+  },
+
   async createParticipantProposal(context, props) {
     const toast = params.$toast || createToaster({});
     const {title, assetId, participantType, participant, description, forumLink} = props;

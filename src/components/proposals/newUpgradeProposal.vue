@@ -71,12 +71,6 @@ const GOERLI_TEST = {
 
 export default {
   name: "newUpgradeProposal",
-  props: {
-    assetId: {
-      type: String,
-      required: true,
-    }
-  },
   data(){
     return {
       beaconAddress: CONTRACTS.BEACON,
@@ -94,6 +88,12 @@ export default {
     ...mapGetters({
       assetMap: "assetsById",
     }),
+    assetId() {
+      if(this.$route.params.threadId) {
+        return this.$route.params.threadId
+      }
+      return this.$route.params.assetId
+    }
   },
   methods: {
     ...mapActions({

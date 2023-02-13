@@ -50,6 +50,7 @@ export default {
       default: false
     }
   },
+  // eslint-disable-next-line max-lines-per-function
   data() {
     return {
       selectedAction: this.isThread ? "descriptorChange" : "paperProposal",
@@ -146,9 +147,9 @@ export default {
         });
       }else {
         this.proposalTypes.forEach(element => {
-          if( 
-            element.type == "common" || element.type == "weavr" 
-            && !element.hide
+          if(   
+            (element.type == "common" || element.type == "weavr") 
+            && element.hide != true
           ) {
             console.log(element);
             actions.push(element)

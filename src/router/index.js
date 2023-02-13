@@ -28,6 +28,8 @@ import newParticipantRemovalProposal from "@/components/proposals/newParticipant
 import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue";
 import newTokenAction from "@/components/proposals/newTokenAction.vue";
 import newThreadProposal from "@/components/proposals/newThreadProposal.vue";
+import newDescriptorChange from "@/components/proposals/newDescriptorChange.vue";
+import newDissolutionProposal from "@/components/proposals/newDissolutionProposal.vue";
 import SingleProposal from "@/components/proposals/SingleProposal.vue";
 import Vouch from "@/components/proposals/Vouch";
 import Queue from "@/components/proposals/Queue"
@@ -218,6 +220,32 @@ const router = new createRouter({
                   path: "paperProposal",
                   component: Modal,
                   props: { component: newPaperProposal },
+                },
+                {
+                  path: "descriptorChange",
+                  component: Modal,
+                  props: { component: newDescriptorChange },
+                },
+                {
+                  path: "dissolutionProposal",
+                  component: Modal,
+                  props: { component: newDissolutionProposal },
+                },
+                {
+                  path: "participantRemovalProposal",
+                  component: Modal,
+                  props: {component: newParticipantRemovalProposal},
+                },
+                {
+                  path: "upgradeProposal",
+                  component: Modal,
+                  props: { component: newUpgradeProposal },
+                  meta: { locked: true }
+                },
+                {
+                  path: "tokenProposal",
+                  component: Modal,
+                  props: { component: newTokenAction },
                 },
               ]
             }

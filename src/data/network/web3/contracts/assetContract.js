@@ -29,6 +29,9 @@ const contractAbi = [
   // Propose a thread dissolution
   "function proposeDissolution(string info, address purchaser, address token, uint256 purchaseAmount)",
 
+  // Propose Descriptor Change
+  "function proposeDescriptorChange(bytes32 _descriptor, bytes32 info) returns (uint256 id)",
+  
   // Can Propose
   "function canPropose(address proposer) returns (bool)",
 
@@ -161,6 +164,14 @@ class AssetContract {
     return (await tx.wait()).status;
   }
 
+  async proposeDescriptorChange(descriptor, info) {
+    let tx = await this.mutableContract.proposeDescriptorChange(descriptor, info,
+      {
+        gasLimit: 5000000,
+      });
+    return (await tx.wait()).status;
+  }
+  
   async proposeThread(variant, name, symbol, descriptorHash, data, infoHash) {
     console.log("Creating thread proposal...");
     console.log({
