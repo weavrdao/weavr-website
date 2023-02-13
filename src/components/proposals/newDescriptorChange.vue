@@ -29,7 +29,7 @@
     <div class="field">
       <label class="label">Thread Metrics</label>
       <div class="control">
-        <textarea class="textarea" v-model="metrics" type="text" placeholder="{metricName: metricValue}"></textarea>
+        <textarea class="textarea" v-model="thread.metrics" type="text" placeholder="{metricName: metricValue}"></textarea>
       </div>
     </div>
     <div class="file">
@@ -109,8 +109,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-
+import { mapActions, mapGetters } from "vuex";
+import { isJson } from "@/utils/common";
 import { ProposalTypes} from "@/models/common.js"
 import Proposal from "@/components/proposals/Proposal.vue"
 
@@ -122,12 +122,26 @@ export default {
   },
   emits: ["submited", "proposed"],
   computed: {
+    ...mapGetters({
+      threads: "threadById",
+    }),
+    thread() {
+      return this.threads.get(this.$route.params.threadId)
+    },
     assetId() {
-      if(this.$route.params.threadId) {
-        return this.$route.params.threadId
-      }
-      return this.$route.params.assetId
-    }
+      return this.$route.params.threadId
+    },
+    metrics() {
+      if(!isJson(this.thread?.metrics)) return {}
+      const obj = JSON.parse(this.thread.metrics);
+      const keys = Object.keys(obj);
+      const values = Object.values(obj);
+      const metrics = []
+      for(let i=0; i<keys.length; i++) {
+        metrics.push({label: keys[i], value: values[i]})
+      }  
+      return metrics.toString()
+    },
   },
   data(){
     return {
@@ -144,9 +158,13 @@ export default {
   },
   methods: {
     ...mapActions({
-      createPaperProposal: "createPaperProposal",
+      createDescriptorChangeProposal: "createDescriptorChangeProposal",
     }),
-    
+    getIpfsUrl(path) {
+      return path
+        ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${path}`
+        : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
+    },
     async publish() {
       this.$emit("submited")
       console.log(this.assetId);
@@ -181,5 +199,10 @@ export default {
       this.$router.back();
     }
   },
+  mounted() {
+    this.descriptor = this.thread.descriptor
+    this.images = this.thread.imagesHashes
+    console.log(this.images);
+  }
 }
 </script>

@@ -71,7 +71,7 @@ import  VueMarkdown  from "vue-markdown-render"
 import { useRoute } from "vue-router";
 import "vue3-carousel/dist/carousel.css"
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-import { isJson } from "../../../utils/common";
+import { isJson } from "@/utils/common";
 import styles from "@/styles/weavr-custom.scss"
 import Address from "../address/Address.vue";
 export default {
