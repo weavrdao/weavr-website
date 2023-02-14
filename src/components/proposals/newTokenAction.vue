@@ -152,6 +152,7 @@ export default {
         creator: "0x00000",
         startTimeStamp: 0,
         endTimeStamp: 0,
+        proposalType: this.proposalType,
         forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/",
         mint: this.mintTypes[this.mintType],
         target: this.price === 0 ? this.targetAddress : this.assetId,

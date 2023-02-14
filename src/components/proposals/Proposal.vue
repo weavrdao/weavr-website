@@ -72,48 +72,52 @@
     <!-- End Token Action Proposal -->
 
     <!-- Thread Proposal -->
-    <div v-if="this.proposal.target">
-        <label class="label">Crowdfunding target</label>
-      <p><strong>{{formatEther(this.proposal.target)}}</strong></p>
-        <p>Denominated in USDC</p>
-    </div>
-    <div v-if="this.proposal.name">
-      <label class="label">Thread Name</label>
-      <p><strong>{{this.proposal.name}}</strong></p>
-    </div>
-    <div v-if="this.proposal.symbol">
-      <label class="label">Thread Symbol</label>
-      <p><strong>{{this.proposal.symbol}}</strong></p>
-    </div>
 
-    <div v-if="this.proposal.tradeToken">
-      <label class="label">Stablecoin Used</label>
-      <Address :value="this.proposal.tradeToken" />
-    </div>
-
-    <div v-if="this.proposal.imageHashes">
-      <div class="card mt-5">
-        <div class=" image-container">
-          <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
-            <Slide v-for="imageHash in this.proposal.imageHashes" v-bind:key="imageHash">
-              <div class="slide-image-container">
-                <img v-bind:src="getIpfsUrl(imageHash)" alt="">
-              </div>
-            </Slide>
-            <template #addons>
-              <Navigation />
-              <Pagination />
-            </template>
-          </Carousel>
+    <div v-if="this.proposal.proposalType === ProposalTypes.Thread">
+      <div class="columns">
+        <div class="column is-two-thirds mb-5">
+          <div class="p-3">
+            <div class="card mb-5">
+              <div class="label">Thread Address:</div>
+              <Address value="0x00"></Address>
+            </div>
+          </div>
+          <div class="card mt-5">
+            <div class=" image-container">
+              <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
+                <Slide v-for="imageHash in this.proposal.imageHashes" v-bind:key="imageHash">
+                  <div class="slide-image-container">
+                    <img v-bind:src="getIpfsUrl(imageHash)" alt="">
+                  </div>
+                </Slide>
+                <template #addons>
+                  <Navigation />
+                  <Pagination />
+                </template>
+              </Carousel>
+            </div>
+          </div>
+          <div class="">
+            <p class="label mt-5 mb-5">Property Description</p>
+            <vue-markdown class="content markdown-body"  :source="this.proposal.descriptor"/>
+          </div>
+          <div class="card mt-5">
+            <p class="label mb-3">Documents</p>
+            <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in this.proposal.documentHashes" v-bind:key="document">
+              <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-
-    <div v-if="this.proposal.documentHashes">
-      <div class="card mt-5">
-        <p class="label mb-3">Documents</p>
-        <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in this.proposal.documentHashes" v-bind:key="document">
-          <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
+        <div class="column is-one-third">
+          <div class="card p-3 has-radius-lg border-lightGray">
+            <p class="subtitle mb-3">Metrics</p>
+            <div class="columns mb-0" v-for="metric in this.proposal.metrics" :key="metric">
+              <div class="column is-half">
+                <div class="label">{{ metric.label}}:</div>
+              </div>
+              <div class="column">{{ metric.value}}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -151,9 +155,27 @@ import VueMarkdown from "vue-markdown-render";
 import {ethers} from "ethers";
 import {dateStringForTimestamp, getProposalTypeStyling, padWithZeroes} from "@/data/helpers";
 import {Carousel, Navigation, Pagination, Slide} from "vue3-carousel";
+import {ProposalTypes} from "@/models/common";
+import {isJson} from "@/utils/common";
 
 export default {
   name: "Proposal",
+  computed: {
+    ProposalTypes() {
+      return ProposalTypes
+    },
+    metrics() {
+      if(!isJson(this.proposal?.metrics)) return {}
+      const obj = JSON.parse(this.proposal.metrics);
+      const keys = Object.keys(obj);
+      const values = Object.values(obj);
+      const metrics = []
+      for(let i=0; i<keys.length; i++) {
+        metrics.push({label: keys[i], value: values[i]})
+      }
+      return metrics
+    }
+  },
   components: {
     Address,
     VueMarkdown,
@@ -165,7 +187,7 @@ export default {
   props: ["proposal"],
   data() {
     return {
-      typeStylingData: getProposalTypeStyling(this.proposal.type)
+      typeStylingData: getProposalTypeStyling(this.proposal.proposalType)
     }
   },
   methods: {

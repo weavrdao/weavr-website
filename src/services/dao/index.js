@@ -115,7 +115,7 @@ class DAO {
    * @param {String} description Proposal body
    * @param {String} forumLink Link to forum discussion
    * @param {String} tradeToken addess of the token used for the crowdfund
-   * @param {Number} target amount to be raised through the crowdfund
+   * @param {Number} funding_target amount to be raised through the crowdfund
    * @param {String} images of the property
    * @param {String} documents of the property
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
@@ -131,7 +131,7 @@ class DAO {
     forumLink,
     symbol,
     tradeToken,
-    target,
+    funding_target,
     images,
     documents,
   ) {
@@ -166,7 +166,7 @@ class DAO {
 
     const data = new ethers.utils.AbiCoder().encode(
       ["address", "uint112"],
-      [tradeToken, ethers.utils.parseUnits(String(target), 6).toString()]
+      [tradeToken, ethers.utils.parseUnits(String(funding_target), 6).toString()]
     );
 
     if (!infoHash) return;

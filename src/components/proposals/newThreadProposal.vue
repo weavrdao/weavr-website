@@ -49,7 +49,7 @@
     <div class="field">
       <label class="label">Thread Metrics</label>
       <div class="control">
-        <textarea class="textarea" v-model="metrics" type="text" placeholder="{metricName: metricValue}"></textarea>
+        <textarea class="textarea" v-model="metrics" type="text" placeholder='{"metric_name": "Metric Value"}'></textarea>
       </div>
     </div>
     <div class="file">
@@ -153,8 +153,8 @@ export default {
       tradeToken: CONTRACTS.TRADE_TOKEN,
       funding_target: 0,
       forumLink: "",
-      images: null,
-      documents: null,
+      images: [],
+      documents: [],
       preview: false,
       proposal: null,
       proposalType: ProposalTypes.Thread,
@@ -218,7 +218,7 @@ export default {
         symbol: String(this.symbol).toUpperCase(),
         title: this.title,
         tradeToken: this.tradeToken,
-        target: this.funding_target,
+        funding_target: this.funding_target,
         images: this.images,
         documents: this.documents,
         $toast: this.$toast
@@ -240,7 +240,7 @@ export default {
     async togglePreview() {
       const network = new IPFSStorageNetwork
       let imageHashes = [];
-      let documentHashes = []
+      let documentHashes = [];
       try {
         imageHashes = await Promise.all(Array.from(this.images).map(
           async (image) => (await network.addArbitraryFile(image))
@@ -253,8 +253,9 @@ export default {
       }
 
       this.proposal = {
-        title: this.title,
+        name: this.name,
         description: this.description,
+        descriptor: this.descriptor,
         type: this.proposalType,
         creator: "0x00000",
         startTimeStamp: 0,
@@ -262,13 +263,15 @@ export default {
         address: this.address,
         forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/",
         tradeToken: this.tradeToken,
-        target: this.funding_target,
+        funding_target: this.funding_target,
         images: this.images,
         imageHashes: imageHashes,
         documents: this.documents,
         documentHashes: documentHashes,
         symbol: this.symbol,
-        assetId: this.assetId
+        assetId: this.assetId,
+        metrics: this.metrics,
+        proposalType: ProposalTypes.Thread,
       }
       this.preview = !this.preview
     },

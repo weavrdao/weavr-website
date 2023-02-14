@@ -258,7 +258,7 @@ const actions = {
       forumLink,
       symbol,
       tradeToken,
-      target,
+      funding_target,
       images,
       documents,
     } = props;
@@ -268,7 +268,7 @@ const actions = {
       position: "bottom",
     });
 
-    const status = await dao.createThreadProposal(
+    const status = dao.createThreadProposal(
       assetId,
       blobVersion,
       name,
@@ -279,7 +279,7 @@ const actions = {
       forumLink,
       symbol,
       tradeToken,
-      target,
+      funding_target,
       images,
       documents,
     );
@@ -305,7 +305,7 @@ const actions = {
 
     const {assetAddress, proposalId, votes} = props;
 
-    const status = await dao.vote(
+    const status = dao.vote(
       assetAddress || CONTRACTS.WEAVR,
       proposalId,
       votes
