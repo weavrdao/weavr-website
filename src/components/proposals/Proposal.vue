@@ -71,6 +71,57 @@
     </div>
     <!-- End Token Action Proposal -->
 
+    <!-- Thread Proposal -->
+    <div v-if="this.proposal.target">
+        <label class="label">Crowdfunding target</label>
+      <p><strong>{{formatEther(this.proposal.target)}}</strong></p>
+        <p>Denominated in USDC</p>
+    </div>
+    <div v-if="this.proposal.name">
+      <label class="label">Thread Name</label>
+      <p><strong>{{this.proposal.name}}</strong></p>
+    </div>
+    <div v-if="this.proposal.symbol">
+      <label class="label">Thread Symbol</label>
+      <p><strong>{{this.proposal.symbol}}</strong></p>
+    </div>
+
+    <div v-if="this.proposal.tradeToken">
+      <label class="label">Stablecoin Used</label>
+      <Address :value="this.proposal.tradeToken" />
+    </div>
+
+    <div v-if="this.proposal.imageHashes">
+      <div class="card mt-5">
+        <div class=" image-container">
+          <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
+            <Slide v-for="imageHash in this.proposal.imageHashes" v-bind:key="imageHash">
+              <div class="slide-image-container">
+                <img v-bind:src="getIpfsUrl(imageHash)" alt="">
+              </div>
+            </Slide>
+            <template #addons>
+              <Navigation />
+              <Pagination />
+            </template>
+          </Carousel>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="this.proposal.documentHashes">
+      <div class="card mt-5">
+        <p class="label mb-3">Documents</p>
+        <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in this.proposal.documentHashes" v-bind:key="document">
+          <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
+        </div>
+      </div>
+    </div>
+
+      <!-- End Thread Proposal -->
+
+
+
     <div class="box has-background-darkGray">
       <label class="label">Description</label>
       <div class="description-container p-0">
@@ -99,12 +150,17 @@ import Address from "../views/address/Address.vue";
 import VueMarkdown from "vue-markdown-render";
 import {ethers} from "ethers";
 import {dateStringForTimestamp, getProposalTypeStyling, padWithZeroes} from "@/data/helpers";
+import {Carousel, Navigation, Pagination, Slide} from "vue3-carousel";
 
 export default {
   name: "Proposal",
   components: {
     Address,
-    VueMarkdown
+    VueMarkdown,
+    Carousel,
+    Slide,
+    Pagination,
+    Navigation,
   },
   props: ["proposal"],
   data() {
@@ -128,6 +184,11 @@ export default {
     },
     endDateString() {
       return dateStringForTimestamp(this.proposal.endTimestamp);
+    },
+    getIpfsUrl(path) {
+      return path
+        ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${path}`
+        : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
     },
   }
 }

@@ -137,10 +137,10 @@ class DAO {
   ) {
     const assetContract = new AssetContract(this.ethereumClient, assetId);
 
-    let imagesHashes;
+    let imageHashes;
     try {
-      imagesHashes = await Promise.all(Array.from(images).map(
-        async (image) => (await this.storageNetwork.addArbitraryFile(image.name))
+      imageHashes = await Promise.all(Array.from(images).map(
+        async (image) => (await this.storageNetwork.addArbitraryFile(image))
       ));
     } catch (e) {
       console.log("Error uploading images", e);
@@ -149,7 +149,7 @@ class DAO {
     let documentHashes;
     try {
       documentHashes = await Promise.all(Array.from(documents).map(
-        async (document) => (await this.storageNetwork.addArbitraryFile(document.name))
+        async (document) => (await this.storageNetwork.addArbitraryFile(document))
       ));
     } catch (e) {
       console.log("Error uploading documents", e);
@@ -160,7 +160,7 @@ class DAO {
 
     const descriptorHash = await this.storageNetwork.uploadAndGetPathAsBytes({
       blobVersion,
-      descriptor, name, imagesHashes, documentHashes,
+      descriptor, name, imagesHashes: imageHashes, documentHashes,
       metrics
     });
 

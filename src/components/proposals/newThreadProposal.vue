@@ -9,7 +9,6 @@
           <input class="input" v-model="title" type="text" placeholder="Title">
         </div>
       </div>
-    </div>
     <div class="field">
       <label class="label">Proposal Description</label>
       <div class="control">
@@ -29,15 +28,15 @@
       </div>
     </div>
     <div class="field">
-      <label class="label">Trade Token Address</label>
+      <label class="label">Trade Token Address (defaults to USDC)</label>
       <div class="control">
         <input class="input" v-model="tradeToken" type="text" placeholder="0x0">
       </div>
     </div>
     <div class="field">
-    <label class="label">Crowdfunding target</label>
+    <label class="label">Crowdfunding target (in wei)</label>
       <div class="control">
-        <input class="input" v-model="target" type="text" placeholder="250000">
+        <input class="input" v-model="funding_target" type="text" placeholder="250000">
       </div>
       <p>Denominated in trade token</p>
     </div>
@@ -82,7 +81,7 @@
         <input
           class="file-input has-text-white has-background-mediumBlue"
           type="file"
-          name="images"
+          name="documents"
           v-on:change="onChangeDocuments"
           multiple="multiple"
           accept=".doc,.docx,.pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
@@ -104,6 +103,7 @@
     <div class="field">
       <label class="label">Forum link</label>
       <input v-model="forumLink" type="text" class="input"/>
+    </div>
     </div>
     <div v-if="preview">
       <Proposal :proposal="proposal" />
@@ -134,6 +134,7 @@ import { CONTRACTS } from "../../services/constants";
 import {ProposalTypes} from "@/models/common";
 import Proposal from "@/components/proposals/Proposal.vue"
 import { isJson } from "@/utils/common"
+import IPFSStorageNetwork from "@/data/network/storage/ipfs/IPFSStorageNetwork"
 export default {
 
   name: "newThreadProposal",
@@ -150,7 +151,7 @@ export default {
       description: "",
       metrics: "",
       tradeToken: CONTRACTS.TRADE_TOKEN,
-      target: 0,
+      funding_target: 0,
       forumLink: "",
       images: null,
       documents: null,
@@ -170,6 +171,7 @@ export default {
   methods: {
     ...mapActions({
       createThreadProposal: "createThreadProposal",
+
     }),
     // eslint-disable-next-line max-lines-per-function
     async publish() {
@@ -216,7 +218,7 @@ export default {
         symbol: String(this.symbol).toUpperCase(),
         title: this.title,
         tradeToken: this.tradeToken,
-        target: this.target,
+        target: this.funding_target,
         images: this.images,
         documents: this.documents,
         $toast: this.$toast
@@ -226,14 +228,30 @@ export default {
     
     onChangeImages({ target: { files } }) {
       this.images = files;
+      console.log(this.images)
     },
     onChangeDocuments({ target: { files } }) {
       this.documents = files;
+      console.log(this.documents)
     },
     onCancel() {
       this.$router.back();
     },
-    togglePreview() {
+    async togglePreview() {
+      const network = new IPFSStorageNetwork
+      let imageHashes = [];
+      let documentHashes = []
+      try {
+        imageHashes = await Promise.all(Array.from(this.images).map(
+          async (image) => (await network.addArbitraryFile(image))
+        ));
+        documentHashes = await Promise.all(Array.from(this.documents).map(
+          async (document) => (await network.addArbitraryFile(document))
+        ));
+      } catch (e) {
+        console.log("Error uploading images and files for preview", e);
+      }
+
       this.proposal = {
         title: this.title,
         description: this.description,
@@ -244,9 +262,11 @@ export default {
         address: this.address,
         forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/",
         tradeToken: this.tradeToken,
-        target: this.target,
+        target: this.funding_target,
         images: this.images,
+        imageHashes: imageHashes,
         documents: this.documents,
+        documentHashes: documentHashes,
         symbol: this.symbol,
         assetId: this.assetId
       }

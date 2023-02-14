@@ -23,14 +23,14 @@
       </select>
     </div>
     <div class="field">
-      <label class="label">Price</label>
+      <label class="label">Price (in wei)</label>
       <div class="control">
         <input class="input" v-model="price" type="number">
       </div>
       <p class="has-text-mediumBlue" v-if="price !== 0">Token actions with a price will target the DAO contract</p>
     </div>
     <div class="field">
-      <label class="label">Amount</label>
+      <label class="label">Amount (in wei)</label>
       <div class="control">
         <input class="input" v-model="amount" type="number">
       </div>
