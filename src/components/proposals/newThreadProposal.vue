@@ -163,6 +163,7 @@ export default {
   computed: {
     ...mapGetters({
       assetMap: "assetsById",
+      userWalletAddress: "userWalletAddress"
     }),
     assetId() {
       return this.$route.params.assetId
@@ -251,13 +252,12 @@ export default {
       } catch (e) {
         console.log("Error uploading images and files for preview", e);
       }
-
       this.proposal = {
         name: this.name,
         description: this.description,
         descriptor: this.descriptor,
         type: this.proposalType,
-        creator: "0x00000",
+        creator: this.userWalletAddress,
         startTimeStamp: 0,
         endTimeStamp: 0,
         address: this.address,

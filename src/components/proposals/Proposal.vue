@@ -13,7 +13,7 @@
     </h2>
     <h4 :class="[this.proposal.state=='Cancelled' || this.proposal.state=='Failed' ? 'has-text-red' : 'has-text-success']">{{this.proposal.state}}</h4>
     <h1 class="title has-text-white mb-5">{{ this.proposal.title }}</h1>
-    <label class="label">Creator</label>
+    <label class="label">Creator:</label>
     <Address :value="this.proposal.creator" />
     <p class="mt-2">
       <strong
@@ -77,12 +77,12 @@
       <div class="columns">
         <div class="column is-two-thirds mb-5">
           <div class="p-3">
-            <div class="card mb-5">
+            <div class="box has-background-darkGray">
               <div class="label">Thread Address:</div>
               <Address value="0x00"></Address>
             </div>
           </div>
-          <div class="card mt-5">
+          <div class="box has-background-darkGray">
             <div class=" image-container">
               <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
                 <Slide v-for="imageHash in this.proposal.imageHashes" v-bind:key="imageHash">
@@ -97,11 +97,11 @@
               </Carousel>
             </div>
           </div>
-          <div class="">
+          <div class="box has-background-darkGray">
             <p class="label mt-5 mb-5">Property Description</p>
             <vue-markdown class="content markdown-body"  :source="this.proposal.descriptor"/>
           </div>
-          <div class="card mt-5">
+          <div class="box has-background-darkGray">
             <p class="label mb-3">Documents</p>
             <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in this.proposal.documentHashes" v-bind:key="document">
               <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
@@ -109,9 +109,9 @@
           </div>
         </div>
         <div class="column is-one-third">
-          <div class="card p-3 has-radius-lg border-lightGray">
+          <div class="box has-background-darkGray has-radius-lg border-lightGray">
             <p class="subtitle mb-3">Metrics</p>
-            <div class="columns mb-0" v-for="metric in this.proposal.metrics" :key="metric">
+            <div class="columns mb-0" v-for="metric in metrics" :key="metric">
               <div class="column is-half">
                 <div class="label">{{ metric.label}}:</div>
               </div>
@@ -144,7 +144,6 @@
         </div>
       </div>
     </div>
-    {{assetId}}
   </div>
 
 </template>
@@ -165,7 +164,7 @@ export default {
       return ProposalTypes
     },
     metrics() {
-      if(!isJson(this.proposal?.metrics)) return {}
+      if(!isJson(this.proposal?.metrics)) return "none"
       const obj = JSON.parse(this.proposal.metrics);
       const keys = Object.keys(obj);
       const values = Object.values(obj);
@@ -212,16 +211,14 @@ export default {
         ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${path}`
         : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
     },
-  }
+  },
 }
 </script>
 
 <style lang="scss" scoped>
 @import "../../styles/weavr-custom.scss";
 @import "../../styles/markdown.scss";
-.label {
-  margin-top: 30px;
-}
+
 
 .close-icon {
   position: absolute;
