@@ -13,7 +13,7 @@
     </h2>
     <h4 :class="[this.proposal.state=='Cancelled' || this.proposal.state=='Failed' ? 'has-text-red' : 'has-text-success']">{{this.proposal.state}}</h4>
     <h1 class="title has-text-white mb-5">{{ this.proposal.title }}</h1>
-    <label class="label">Creator:</label>
+    <label class="label">Creator</label>
     <Address :value="this.proposal.creator" />
     <p class="mt-2">
       <strong
@@ -164,7 +164,7 @@ export default {
       return ProposalTypes
     },
     metrics() {
-      if(!isJson(this.proposal?.metrics)) return "none"
+      if(!isJson(this.proposal?.metrics)) return {}
       const obj = JSON.parse(this.proposal.metrics);
       const keys = Object.keys(obj);
       const values = Object.values(obj);
