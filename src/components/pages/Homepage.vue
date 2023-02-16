@@ -71,11 +71,11 @@
     <div class="box columns is-centered has-text-white p-5">
       <div class="column is-half">
         <div class="subtitle is-size-3 has-text-primary">
-          <b>For Builders</b>
+          <b>For Dreamers</b>
         </div>
         <div
           class="has-radius-md mb-3 has-background-darkGray py-3 px-0"
-          v-for="text in forBuilders"
+          v-for="text in forDreamers"
           :key="text"
         >
           <span class="has-radius-md p-3 has-background-primary">◉</span>
@@ -211,26 +211,28 @@ export default {
   data() {
     return {
       forBuyers: [
-        "Buy property token in our marketplace",
-        "Manage it collaboratively",
-        "See your token value increase",
-        "Sell anytime",
+        "Buy asset tokens within weavrDAO",
+        "Manage the asset collaboratively with likeminded owners",
+        "See your token value increase as the asset value increases",
+        "Sell at any time, no muss no fuss",
       ],
-      forBuilders: [
-        "Find the Real estate project of your dream",
+      forDreamers: [
+        "Find the Real estate project of your dreams",
         "Submit your proposal to Weavr",
-        "Find likeminded investors who will help to buy it",
+        "Find likeminded owners who will help to acquire it",
       ],
       uniquePoints: [
         {
           id: 1,
-          heading: "Earn appreciation & rental income",
-          text: "Earn as you collect rents, and see the value of your tokens increase with land value. \n Access one of the most value stable asset class.",
+          heading: "See appreciation & work with likeminded owners",
+          text: "As the Asset collects rents, vote and you'll be compensated for your hard work." +
+              " You may see the value of your tokens increase with land value. " +
+              "\n Access one of the most value stable asset classes in the world, without having to reach for your wallet.",
         },
         {
           id: 2,
           heading: "Full Control",
-          text: "With Weavr, you are in control. You can always have a voice on how to manage assets. Want to repurpose the building and turn it into a vertical garden? You can.",
+          text: "With Weavr, you are in drivers seat. You can always have a voice on how to manage assets. Want to repurpose the building and turn it into a vertical garden? You can.",
         },
         {
           id: 3,
