@@ -14,6 +14,7 @@
     "@apollo/client": "^3.4.5",
     "@coinbase/wallet-sdk": "^3.5.3",
     "@ethereumjs/tx": "^3.3.0",
+    "@lcdev/toml-loader": "1",
     "@meforma/vue-toaster": "^1.3.0",
     "@openzeppelin/contracts": "^4.1.0",
     "@types/dotenv": "^8.2.0",
