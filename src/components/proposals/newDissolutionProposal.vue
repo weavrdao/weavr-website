@@ -25,6 +25,19 @@
       <input type="checkbox" class="checkbox" v-model="daoResolution"/><span class="ml-1 has-text-mediumGray is-italic"> - check this if the proposal will make changes to the DAO</span>
     </div>
   </div>
+  <div class="field">
+      <label class="label">Token</label>
+      <div class="control">
+        <input class="input" v-model="token" type="number">
+      </div>
+      <p class="has-text-mediumBlue" v-if="price !== 0">Token actions with a price will target the DAO contract</p>
+    </div>
+    <div class="field">
+      <label class="label">Price</label>
+      <div class="control">
+        <input class="input" v-model="price" type="number">
+      </div>
+    </div>
   <div v-if="preview">
     <Proposal :proposal="proposal" />
   </div>
@@ -78,6 +91,8 @@ export default {
       title: "",
       description: "",
       daoResolution: false,
+      token: "",
+      price: 0,
       proposalType: ProposalTypes.Paper,
       preview: false,
       markdownSource: null,
@@ -87,7 +102,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      createPaperProposal: "createPaperProposal",
+      createPaperProposal: "createDissolutionProposal",
     }),
     
     async publish() {
