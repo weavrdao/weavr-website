@@ -1,0 +1,31 @@
+[arbitrum]
+name ="Arbitrum One"
+id = 42161
+graph = "https://api.thegraph.com/subgraphs/name/abstrucked/weavr_goerli"
+explorer = "https://arbiscan.io"
+    [arbitrum.contracts]
+    TOKEN_ADDRESS = "0x90BE6F8f30931322e60b913ecE49d1724D996054"
+    BEACON_ADDRESS = "0x09f78bbefec822c6d81efb7a1474dee5727cc610"
+    WEAVR = "0x43240c0f5dedb375afd28206e02110e8fed8cFc0"
+    THREAD_DEPLOYER = "0xB32469F1fba93806C60d8c736EB5830BfE7b5fD4"
+    BOND = "0xCe5A042ED87Ed92AFE33e3D4fFf600e39d0Cef2F"
+    FRABRIC_CODE = "0x117b32BeCE1d46A45fE55470B22fD7C019691a58"
+    TRADE_TOKEN = "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"
+    AIRDROP = "0x560ea772dbb194fa471ce9a5573daddc3e632f26"
+
+[arbitrum_testnet]
+name ="Arbitrum Goerli Testnet"
+id = 421613
+graph = "https://api.thegraph.com/subgraphs/name/abstrucked/weavr-goerli-test"
+explorer = "https://goerli.arbiscan.io"
+    [arbitrum_testnet.contracts]
+    AUCTION = "0xd25dDF457c643b6aC43d7673685E2A4dc71A1828"
+    TOKEN_ADDRESS = "0x022E82b234b8b7E2E1F994bC153C05554B189D82"
+    BEACON_ADDRESS = "0xcd73A7673EF7a6954D9c02C56d268bd002B54c2a"
+    WEAVR = "0x5A6Ec0cB24296f44FdAe11fc8e0523d73eCC0d9b"
+    THREAD_DEPLOYER = "0xce1A29476E07BF0B8AF58d738Ba5baD8C2b95e1C"
+    DEX_ROUTER = "0x803a88EE747aE926746106eB9C25074883B33413"
+    BOND = "0x1461A8C76125A56eceA152004737B6937f23d932"
+    FRABRIC_CODE = "0x847eeef92D4290A51dc7613609471DAcB75751d1"
+    TRADE_TOKEN = "0xaa72fbFa8120Bb295A126C34348bb3d018c70efD"
+    AIRDROP =     "0x00"
