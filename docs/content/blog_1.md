@@ -1,6 +1,6 @@
 ---
-title: How we to solve a housing crisis
-author: zeryx
+title: How are we to solve a housing crisis?
+author: Zeryx
 avatar: https://i.seadn.io/gcs/files/e86337c6737f3fa09b3394c5b26c3867.png
 bio: I'm a software developer, founder of Fractional Finance and member of WeavrDAO
 ---
