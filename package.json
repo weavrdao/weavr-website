@@ -36,6 +36,7 @@
     "hooper-vue3": "^0.4.5",
     "ipfs-http-client": "^52.0.2",
     "lodash": "^4.17.21",
+    "moment": "^2.29.4",
     "sass": "~1.32",
     "sass-loader": "^10.1.1",
     "stylus": "^0.56.0",

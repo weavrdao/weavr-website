@@ -1,0 +1,11 @@
+:root {
+    --vp-c-green: var(--docsearch-primary-color);
+}
+
+.is-home {
+    padding: 1rem 2rem;
+}
+
+.VPFeature {
+    
+}
