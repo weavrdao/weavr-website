@@ -10,9 +10,9 @@ import {
 } from "../../data/network/graph/graphQLAPIClient";
 import {CONTRACTS} from "../constants";
 import AssetContract from "../../data/network/web3/contracts/assetContract";
+import { callSimulateFunc} from "@/proxy/index"
 import {ethers} from "ethers";
 import {createToaster} from "@meforma/vue-toaster";
-
 /**
  * DAO service
  * @param {EthereumClient} ethereumClient Ethereum client
@@ -92,6 +92,16 @@ class DAO {
     return proposals;
   }
 
+  async simulateWillProposalComplete(proposalId, assetId, timeToQueueTimestamp) {
+    const toast = createToaster({});
+    const timeToCompleteTimestamp = timeToQueueTimestamp + 172800;
+
+    toast.info("Simulating Transaction Stack...");
+    const response = callSimulateFunc(proposalId, assetId, timeToQueueTimestamp, timeToCompleteTimestamp);
+    toast.clear();
+    return response
+  }
+
 
   async getUserVouches(signer) {
     console.log("vouches");
@@ -107,12 +117,13 @@ class DAO {
   }
 
   /**
-   * Create a Paper Proposal
+   * Create a Thread Proposal
+   * @param {String} title Proposal title
+   * @param {String} description Proposal body
    * @param {String} assetId Asset's contract address
    * @param {String} name Chosen name for the thread
    * @param {String} descriptor of the thread
-   * @param {String} title Proposal title
-   * @param {String} description Proposal body
+   * @param {string} blobVersion Version of the blob
    * @param {String} forumLink Link to forum discussion
    * @param {String} tradeToken addess of the token used for the crowdfund
    * @param {Number} target amount to be raised through the crowdfund
@@ -192,6 +203,7 @@ class DAO {
    * @param {string} title Proposal title
    * @param {string} description Proposal body
    * @param {string} forumLink Link to forum discussion
+   * @param daoResolution {Boolean} Whether the proposal is a DAO resolution
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
    */
   async createPaperProposal(asset, title, description, forumLink, daoResolution) {

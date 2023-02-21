@@ -73,7 +73,9 @@
         </div>
       </div>
     </div>
-    {{assetId}}
+    <div>
+      <button @click="simulate" class="button is-warning has-text-dark">Simulate Proposal</button>
+    </div>
   </div>
 </template>
   
@@ -91,6 +93,7 @@ import {
 import { PASSED } from "../../models/common";
 import Proposal from "@/components/proposals/Proposal.vue"
 import { ethers } from "ethers";
+import {CONTRACTS} from "@/services/constants";
 
 export default {
   name: "SingleProposal",
@@ -169,12 +172,21 @@ export default {
     ...mapActions({
       vote: "vote",
       getQuorum: "quorum",
-      withdraw: "withdrawProposal"
-    }), 
+      withdraw: "withdrawProposal",
+      simulateProposal: "simulateProposalWillComplete",
+    }),
 
     routeToHome() {
       this.$router.back();
     },
+
+    simulate() {
+      this.simulateProposal({
+        proposalId: this.proposalId,
+        assetId: CONTRACTS.WEAVR,
+        endTimestamp: this.proposal.endTimestamp});
+    },
+
 
     setTimeRemainingCountdown() {
       clearInterval(this.countdownRef);
