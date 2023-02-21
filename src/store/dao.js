@@ -271,6 +271,11 @@ const actions = {
     return status;
   },
 
+  async simulateProposalWillComplete(context, props) {
+    const {proposalId, assetId, endTimestamp } = props;
+    return dao.simulateWillProposalComplete(proposalId, assetId, endTimestamp);
+  },
+
   async createThreadProposal(context, props) {
     const toast = params.$toast || createToaster({});
 
@@ -295,7 +300,7 @@ const actions = {
       position: "bottom",
     });
 
-    const status = await dao.createThreadProposal(
+    const status = dao.createThreadProposal(
       assetId,
       blobVersion,
       name,
