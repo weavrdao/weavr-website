@@ -1,5 +1,11 @@
 <template>
   <div class="container p-5 relative">
+      <button @click="simulate" class="button is-small as-text-white">Simulate Proposal</button>
+     <div v-if="this.simluation_results.length !== 0 ">
+       <a v-for="{url, status} in this.simluation_results" :key="url"
+       :href="url" class="button is-small as-text-white">{{status}}</a>
+
+     </div>
     <Proposal :proposal="proposal" />
     <div class="box has-background-darkGray">
       <label class="label">Consensus</label>
@@ -73,9 +79,6 @@
         </div>
       </div>
     </div>
-    <div>
-      <button @click="simulate" class="button is-warning has-text-dark">Simulate Proposal</button>
-    </div>
   </div>
 </template>
   
@@ -104,6 +107,7 @@ export default {
   data () {
     return {
       proposalId: Number(this.$route.params.proposalId),
+      simluation_results: [],
       voteAmount: 0,
       timeRemainingString: "",
       PASSED,
@@ -180,10 +184,9 @@ export default {
       this.$router.back();
     },
 
-    simulate() {
-      this.simulateProposal({
+    async simulate() {
+      this.simluation_results = await this.simulateProposal({
         proposalId: this.proposalId,
-        assetId: CONTRACTS.WEAVR,
         endTimestamp: this.proposal.endTimestamp});
     },
 

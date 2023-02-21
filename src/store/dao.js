@@ -272,8 +272,8 @@ const actions = {
   },
 
   async simulateProposalWillComplete(context, props) {
-    const {proposalId, assetId, endTimestamp } = props;
-    return dao.simulateWillProposalComplete(proposalId, assetId, endTimestamp);
+    const {proposalId, endTimestamp } = props;
+    return await dao.simulateWillProposalComplete(proposalId, endTimestamp);
   },
 
   async createThreadProposal(context, props) {
