@@ -2,6 +2,7 @@
   <div class="container p-5 relative">
       <button @click="simulate" class="button is-small as-text-white">Simulate Proposal</button>
      <div v-if="this.simluation_results.length !== 0 ">
+       <p class="has-text-white">Simulation Results, if there are any failures this proposal might not have enough votes to pass, or there might be another reason causing the proposal to fail.</p>
        <a v-for="{url, status} in this.simluation_results" :key="url"
        :href="url" class="button is-small as-text-white">{{status}}</a>
 
