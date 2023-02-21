@@ -1,4 +1,13 @@
-import { createRouter, createWebHashHistory, createWebHistory, useRoute } from "vue-router";
+/* eslint-disable max-lines-per-function */
+import { createRouter, createWebHashHistory } from "vue-router";
+import store from "@/store";
+import { GUEST } from "../services/constants";
+import { createToaster } from "@meforma/vue-toaster";
+import { getCookie } from "../whitelist";
+import { USER_COOKIE_KEY } from "../whitelist/constants";
+import { CONTRACTS } from "@/services/constants";
+import { ethers } from "ethers";
+
 import PageNotFound from "@/components/pages/404.vue";
 import Modal from "@/components/views/modal/Modal.vue";
 import Homepage from "@/components/pages/Homepage.vue"
@@ -9,8 +18,12 @@ import Marketplace from "@/components/pages/Marketplace";
 import Dashboard from "@/components/pages/Dashboard";
 import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.vue";
 import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
+import ThreadsMarketplace from "@/components/sections/Threads/ThreadMarketplace.vue";
+import SingleThread from "@/components/sections/Threads/SingleThread.vue";
+import ThreadOverview from "@/components/views/market/ThreadOverview.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue";
+import newParticipantRemovalProposal from "@/components/proposals/newParticipantRemoval.vue";
 import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue";
 import newTokenAction from "@/components/proposals/newTokenAction.vue";
 import newThreadProposal from "@/components/proposals/newThreadProposal.vue";
@@ -22,19 +35,13 @@ import VerifyParticipant from "@/components/proposals/VerifyParticipant";
 import tokenDetails from "@/components/sections/TokenDetails.vue";
 import walletConnect from "@/components/sections/WalletConnect.vue";
 import { WhitelistPage } from "@/whitelist";
-import { CONTRACTS, DAO } from "@/services/constants";
-import store from "@/store";
 import ComingSoon from "@/components/sections/ComingSoon/ComingSoon.vue";
 import SingleComingSoonPage from "@/components/sections/ComingSoon/SingleComingSoonPage.vue";
-import { ethers } from "ethers";
 import SumSub from "@/components/SumSub.vue";
-import { getCookie } from "../whitelist";
-import { USER_COOKIE_KEY } from "../whitelist/constants";
 import Airdrop from "@/components/pages/Airdrop.vue";
-import Login from "@/components/sections/Login.vue"
-import { GUEST } from "../services/constants";
-import { createToaster } from "@meforma/vue-toaster";
 import AirdropClaimModal from "@/components/views/modals/AirdropClaimModal.vue"
+import Login from "@/components/sections/Login.vue"
+
 
 const router = new createRouter({
   history: createWebHashHistory(),
@@ -112,30 +119,101 @@ const router = new createRouter({
       props: { component: Login }
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
+      path: "/dashboard",
+      name: "dashboard",
       component: Dashboard,
       meta: { requiresAuth: true }
     },
     {
       path: "/marketplace",
       name: "marketplace",
+      alisa: "marketplace",
       component: Marketplace,
       children: [
         {
           path: "",
-          component: ComingSoon,
-          meta: { requiresAuth: false }
+          redirect: {name: "comingSoon"}
         },
         {
           path: "needles",
           name: "needle-market",
           component: NeedlesMarketplace,
+          meta: {requiresAuth: true},
+          beforeEnter: async () => {
+
+            store.dispatch("setLoadingState", {isLoading: true, message: "Loading Needles"})
+
+            await store.dispatch("refreshNeedles")
+
+            store.dispatch("setLoadingState", {isLoading: false, message: ""})
+
+            return true
+          }
         },
         {
-          path: "needle/:needleId",
+          path: "needles/:needleId",
           name: "needle",
           component: SingleNeedle,
+          meta: {requiresAuth: true},
+
+          beforeEnter: async () => {
+
+            store.dispatch("setLoadingState", {isLoading: true, message: `Loading data for \n ${"Needle"}`})
+
+            await store.dispatch("refreshNeedles")
+
+            store.dispatch("setLoadingState", {isLoading: false, message: ""})
+
+            return true
+          }
+        },
+        {
+          path: "threads",
+          name: "thread-market",
+          component: ThreadsMarketplace,
+          meta: {requiresAuth: true},
+          beforeEnter: async () => {
+
+            store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
+
+            await store.dispatch("refreshThreads")
+            console.log("BEFORE ENTER: THREADS => ", store.getters.allThreads)
+            store.dispatch("setLoadingState", {isLoading: false, message: ""})
+
+            return true
+          }
+        },
+        {
+          path: "threads/:threadId",
+          name: "thread",
+          component: SingleThread,
+          meta: { requiresAuth: true},
+          beforeEnter: async () => {
+            if(!store.getters.threads){
+              store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
+
+              await store.dispatch("refreshThreads")
+
+              store.dispatch("setLoadingState", {isLoading: false, message: ""})
+            }
+            return true
+          },
+          children: [
+            {
+              path: "",
+              redirect: { name: "overview"}
+            },
+            {
+              path: "overview",
+              name: "overview",
+              component: ThreadOverview
+            },
+            {
+              path: "governance",
+              name: "governance",
+              component: Governance
+            }
+          ]
         },
         {
           path: "coming-soon",
@@ -148,19 +226,32 @@ const router = new createRouter({
           component: SingleComingSoonPage,
         },
       ]
-    },
+    },  
     {
-      path: `/:assetId`,
+      path: "/dao/:assetId", 
       component: Governance,
 
       meta: { requiresAuth: true },
+      beforeEnter: async () => {
+        const prop =  store.getters.proposalsPerAsset;
+        if (prop.length < 1) {
+          store.dispatch("setLoadingState", {isLoading: true, message: "Loading Proposals"})
+          await store.dispatch("refreshProposalsDataForAsset", {
+            assetId: CONTRACTS.WEAVR,
+          });
+          store.dispatch("setLoadingState", {isLoading: false, message: ""})
+        }
+        // clear toast
+        return true;
+      },
       children: [
         {
           path: `${CONTRACTS.WEAVR}`,
-          alias: "weavr",
+          name: "weavr",
         },
         {
           path: "kyc",
+          name: "kyc",
           component: Modal,
           props: { component: SumSub }
         },
@@ -180,6 +271,11 @@ const router = new createRouter({
           props: { component: newParticipantProposal },
         },
         {
+          path: "participantRemovalProposal",
+          component: Modal,
+          props: {component: newParticipantRemovalProposal},
+        },
+        {
           path: "upgradeProposal",
           component: Modal,
           props: { component: newUpgradeProposal },
@@ -192,6 +288,7 @@ const router = new createRouter({
         },
         {
           path: "vouch",
+          name: "vouch",
           component: Modal,
           props: { component: Vouch },
         },
@@ -209,9 +306,9 @@ const router = new createRouter({
           path: "proposal/:proposalId",
           component: Modal,
           props: { component: SingleProposal },
-          beforeEnter: async (to, from) => {
+          beforeEnter: async () => {
             const prop = await store.getters.proposalsPerAsset;
-            if (!prop) {
+            if (prop.length < 1) {
               store.dispatch("refreshProposalsDataForAsset", {
                 assetId: CONTRACTS.WEAVR,
               });
@@ -236,11 +333,8 @@ const router = new createRouter({
   ],
 });
 
-let originalPath = "";
-let hasOriginalPathBeenSet = false;
-let hasRedirectedAfterWhitelisting = false;
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
   /**
    * NOTES
    * Should authorize navigation if:
@@ -250,74 +344,81 @@ router.beforeEach(async (to, from) => {
    * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
    * ON not
    */
-  console.log("HAS_REDIRECTED___", hasRedirectedAfterWhitelisting);
 
   const address = store.getters.userWalletAddress;
   const isConnected = ethers.utils.isAddress(address);
   const isWhitelisted = store.getters.isWhitelisted;
-  const isGuest = store.getters.guestCookie;
-  const cookie = getCookie(USER_COOKIE_KEY)
+  // const isGuest = store.getters.guestCookie;
+  const decoded_cookie = getCookie(USER_COOKIE_KEY)
+  let cookie = {}
+  if(decoded_cookie) {
+    cookie.wallet = decoded_cookie.split("_")[0]
+    cookie.provider = decoded_cookie.split("_")[1]
+  }
   // require auth
-  if (to.meta.locked) {
+  if( to.meta.locked ) {
     const toast = createToaster({});
-    toast.error("The route you are trying to access is currently locked", { position: "top" });
+    toast.error("The route you are trying to access is currently locked", { position: "top"});
     return false
   }
-  if (to.meta.requiresAuth) {
-    console.log("META_AUTH_ TRUE");
+  if( to.meta.requiresAuth ) {
     // not connected
-    if (!isConnected) {
+    if( !isConnected ) {
       // cookie
-      if (ethers.utils.isAddress(cookie)) {
-        if (cookie === GUEST) {
-          console.log("IS GUEST");
+      if (ethers.utils.isAddress(cookie.wallet)) {
+        if (cookie.wallet === GUEST) {
           return true
         }
         // - autoconnect and navigate
-        console.log("autoconnect and navigate");
         const toast = createToaster({})
-        await store.dispatch("syncWallet", { wallet: "metamask", $toast: toast })
+        await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
         await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
           if (!isWhitelisted) {
             // not whitelisted
-            console.log("not whitelisted");
-            return { path: "/whitelist" }
+            return  { name: "whitelist"}
           }
-          else if (isWhitelisted) {
+          else if ( isWhitelisted ) {
             // whitelisted
-            console.log("whitelisted");
-            return true
+            return { path: to.fullPath}
           }
         })
-
+        
       }
       // !cookie
-      else if (!ethers.utils.isAddress(cookie)) {
+      else if (!ethers.utils.isAddress(cookie.wallet) || ((cookie.wallet != address) && !isWhitelisted ) ) {
         // - go to walletconnect
-        console.log("go to whitelist")
-        return { path: "/whitelist" }
+        return {name: "whitelist" }
       }
     }
     // connected
-    if (isConnected) {
-      console.log("navigate to route");
+    if (isConnected && isWhitelisted) {
       // -navigate to route
-
       return true
+    }else if (isConnected && !isWhitelisted) {
+      return { name: "whitelist"}
     }
   }
   // to.whitelist
-  if (to.path === "whitelist") {
+  if( to.path === "whitelist" ) {
     // - navigating to whitelist and set vars
-    console.log("into whitelist");
   }
-
-
+ 
+  
   // from.whitelist
-  if (from.path === "whitelist") {
-    // - navigate path and reset vars
-  }
+  // if (to.fullPath === "/dao/"+CONTRACTS.WEAVR ) {
+  //   // - navigate path and reset vars
+  //   if(cookie.wallet != address) {
+  //     createToaster({position: "top", duration: 4000 }).info(
+  //       "You are visiting the website with a non whitelisted address!! [only read mode]. " +
+  //       "Please switch to your whitelisted wallet " + cookie.wallet)
+  //     setInterval(()=>{
+  //     }, 4000)
+  //   }
+  //   console.log("Navigate to WEAVR____GOV______________\n\n\n");
+  //   return {path: to.fullPath}
+  // }
   // no auth
+  
   // - navigate to path
   console.log("no auth required");
   return true

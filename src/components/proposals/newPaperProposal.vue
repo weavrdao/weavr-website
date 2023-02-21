@@ -28,10 +28,21 @@
   <div v-if="preview">
     <Proposal :proposal="proposal" />
   </div>
-  <div class="is-flex is-justify-content-space-between mt-5">
-    <button @click="publish"  class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
-    <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
+  <div class="block">
+    <div :class="[preview ? 'is-primary ': 'is-secondary ', 'button has-text-white is-size-5 p-3']" @click=togglePreview>
+        <span class="mr-2">
+          <unicon 
+          height="18" 
+          width="18" 
+          fill="white"
+          :name="preview ? 'pen' : 'eye'"></unicon>
+
+        </span>
+      {{ preview ? "Edit" : "Preview" }}</div>
+  </div>
+  <div class="block is-flex is-justify-content-space-between mt-5">
     <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
+    <button @click="publish"  class="button has-background-success has-text-white has-text-weight-bold">Submit Proposal</button>
   </div>
   <!-- End Form -->
 </div>
@@ -39,9 +50,9 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 
-import {CommonProposalType, ProposalTypes} from "@/models/common.js"
+import { ProposalTypes} from "@/models/common.js"
 import Proposal from "@/components/proposals/Proposal.vue"
 
 
@@ -50,7 +61,7 @@ export default {
   components: {
     Proposal
   },
-  emits: ['submited', "proposed"],
+  emits: ["submited", "proposed"],
   computed: {
     assetId() {
       return this.$route.params.assetId
@@ -70,27 +81,26 @@ export default {
   },
   methods: {
     ...mapActions({
-      refresh: "refreshProposalsDataForAsset",
       createPaperProposal: "createPaperProposal",
     }),
+    
     async publish() {
       this.$emit("submited")
       console.dir(this.trigger);
       if (this.title.length < 1 || this.description.length < 1) {
         return;
-      }
-      console.log("___ADDRESS___");
+      }  
       const assetAddr = this.assetId;
-      console.log("ADD:" + assetAddr)
       const title = this.title;
       const description = this.description;
-      const proposalType = this.proposalType
-      const daoResolution = this.daoResolution
-      const proposal = await this.createPaperProposal({assetAddr, proposalType, title, description, daoResolution,  $toast: this.$toast} );
+      const proposalType = this.proposalType;
+      const daoResolution = this.daoResolution;
+      const forumLink = this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/";
+      await this.createPaperProposal({assetAddr, proposalType, title, description, daoResolution, forumLink,  $toast: this.$toast} );
       this.$emit("proposed");
     },
+
     togglePreview(){
-      console.log("preview toggled");
       this.proposal = {
         title: this.title,
         description: this.description,
@@ -107,9 +117,6 @@ export default {
     onCancel() {
       this.$router.back();
     }
-  },
-  mounted() {
-    this.refresh({ assetId: this.assetId, $toast: this.$toast });
   },
 }
 </script>

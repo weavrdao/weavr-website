@@ -3,7 +3,7 @@
     <div @click="routeToHome" class="close-icon">
       <!-- NOTE (bill) Just could not get this icon importing for the life of me -->
       <!-- <unicon name="multiply" fill="white"/> -->
-      <div class="temp-close-dot"/>
+      <unicon name="times-circle" fill="#d85a50" width="24" height="24"></unicon>
     </div>
     <div class="proposal-type" :class="this.typeStylingData.class">
       {{ `${this.typeStylingData.text} Proposal` }}
@@ -11,13 +11,13 @@
     <h2 class="is-size-5 has-text-mediumBlue">
       {{ this.proposal.startDate }}
     </h2>
-    <h3 :class="[this.proposal.state=='Cancelled' || this.proposal.state=='Failed' ? 'has-text-red' : 'has-text-success', 'p-2',]">{{this.proposal.state}}</h3>
+    <h4 :class="[this.proposal.state=='Cancelled' || this.proposal.state=='Failed' ? 'has-text-red' : 'has-text-success']">{{this.proposal.state}}</h4>
     <h1 class="title has-text-white mb-5">{{ this.proposal.title }}</h1>
     <label class="label">Creator</label>
     <Address :value="this.proposal.creator" />
     <p class="mt-2">
       <strong
-          :class="this.proposal.supermajority ? 'has-text-red' : 'has-text-mint'">
+          :class="this.proposal.supermajority ? 'has-text-red' : 'has-text-success'">
         {{ this.proposal.supermajority ? 'Supermajority consensus required' : 'Supermajority consensus not required' }}
       </strong>
     </p>
@@ -136,14 +136,6 @@ export default {
 <style lang="scss" scoped>
 @import "../../styles/weavr-custom.scss";
 @import "../../styles/markdown.scss";
-
-.container {
-  min-width: 80% !important;
-}
-.relative {
-  position: relative;
-}
-
 .label {
   margin-top: 30px;
 }
@@ -158,50 +150,9 @@ export default {
   width: 30px;
   height: 30px;
   border-radius: 1000px;
-  background: rgba(255, 255, 255, 0);
   transition: all 150ms;
   cursor: pointer;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.25);
-  }
-
-  .temp-close-dot {
-    background: red;
-    width: 15px;
-    height: 15px;
-    border-radius: 100px;
-  }
 }
-
-.proposal-type {
-  display: inline-block;
-  font-weight: 400;
-  padding: 5px 10px;
-  border: 2px solid white;
-  border-radius: $tiny-radius;
-  margin-bottom: 20px;
-}
-.paper {
-  border-color: #00EDC4;
-  color: #00EDC4;
-}
-
-.participant {
-  border-color: whitesmoke;
-  color: whitesmoke;
-}
-
-.upgrade {
-  border-color: #D841DE;
-  color: #D841DE;
-}
-
-.thread {
-  border-color: yellow;
-  color: yellow;
-}
-
 .description-container {
   background: transparent !important;
   padding: 25px;
@@ -211,45 +162,5 @@ export default {
     max-width: 56ch;
   }
 }
-.votes-bar {
-  width: 100%;
-  height: 25px;
-  background: $red;
-  overflow: hidden;
-  border: none;
-}
 
-.green-bar {
-  background: $mint;
-  height: 30px;
-}
-
-.outcome-box {
-  color: white;
-  font-weight: 600;
-  border-radius: 0.5rem;
-  padding: 15px 20px;
-}
-
-.slider {
-  margin-bottom: 5px;
-  height: 23px;
-  transition: all 150ms;
-
-  &:hover {
-    filter: contrast(120%);
-  }
-}
-
-.buttons-container {
-  margin-top: 10px;
-  .button {
-    background: $mediumBlue;
-    color: white;
-    width: 3rem;
-    height: 1.5rem;
-    font-size: 12px;
-    font-weight: 600;
-  }
-}
 </style>

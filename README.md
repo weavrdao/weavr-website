@@ -1,4 +1,8 @@
-# Weavr Governance Web Interface
+# Weavr Web
+
+- [production deployment](https://www.weavr.org)
+- [test deployment](https://test.weavr.org)
+
 
 ## Contribution Guidelines
 

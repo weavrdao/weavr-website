@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="is-flex is-justify-content-space-between mt-5">
-      <button @click="publish" class="button has-background-mint has-text-white has-text-weight-bold">Approve</button>
+      <button @click="publish" class="button has-background-success has-text-white has-text-weight-bold">Approve</button>
       <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
     </div>
     <!-- End Form -->
@@ -44,18 +44,12 @@
 <script>
 import { mapActions } from "vuex";
 import { ethers } from 'ethers';
-import { DAO } from "../../services/constants"
 import {ParticipantType} from "@/models/common.js";
 
 export default {
 
   name: "VerifyParticipant",
-  props: {
-    assetId: {
-      type: String,
-      required: true,
-    },
-  },
+ 
   data(){
     return { 
       pTypeList: ParticipantType,
@@ -70,8 +64,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      refresh: "refreshProposalsDataForAsset",
-      syncWallet: "syncWallet",
       verify: "verifyParticipant"
     }),
     async publish() {
@@ -85,14 +77,6 @@ export default {
         this.participant = "";
         return
       }
-      console.log(
-        {
-          ptype: this.pTypeList[this.selectedType], 
-          participant: participant, 
-          kycHash: this.kycHash,
-          nonce: this.nonce
-        }
-      );
       await this.verify({
         pType: this.pTypeList[this.selectedType], 
         participant: participant, 
@@ -103,10 +87,6 @@ export default {
     onCancel() {
       this.$router.back();
     }
-  },
-  mounted() {
-    this.refresh({ assetId: this.assetId });
-    this.syncWallet();
   },
 }
 </script>

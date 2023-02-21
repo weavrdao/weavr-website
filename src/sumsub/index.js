@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = require("axios");
 
 const headers = { 
 }
@@ -13,6 +13,3 @@ export const getAccessToken = async (id) => {
     url: url
   })
 }
-
-// https://api.weavr.org:9000/.netlify/functions/api/dev/404A9Ab87f0C51245FAc908cdcDa9f67F08Df980
-// https://api.weavr.org/.netlify/functions/api/dev/dasdsada

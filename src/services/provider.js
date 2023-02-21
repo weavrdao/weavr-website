@@ -1,6 +1,7 @@
 import Wallet from "./wallet"
 import Market from "./market"
-import DAO from "./dao"
+import DAO from "./dao";
+import Crowdfund from "./crowdfund";
 import Token from "./token";
 import Airdrop from "./airdrop";
 import { Whitelist } from "../whitelist";
@@ -8,6 +9,7 @@ import IPFSStorageNetwork from "../data/network/storage/ipfs/IPFSStorageNetwork"
 import EthereumClient from "../data/network/web3/ethereum/ethereumClient"
 import TheGraphAPIClient from "../data/network/graph/implementation/theGraphAPIClient"
 import TheGraphAPIMapper from "../data/network/graph/implementation/theGraphAPIClientMapper"
+import DEX from "./dex/index,js";
 const graphQLAPIClient = new TheGraphAPIClient(new TheGraphAPIMapper())
 const ethereumClient = new EthereumClient()
 const storageNetwork = new IPFSStorageNetwork()
@@ -46,11 +48,19 @@ class ServiceProvider {
     )
   }
 
+  static dex() {
+    return new DEX(ethereumClient, graphQLAPIClient);
+  }
+
   static token() {
     return new Token(
       ethereumClient,
       graphQLAPIClient
     )
+  }
+
+  static crowdfund() {
+    return new Crowdfund(ethereumClient);
   }
 
   static whitelist() {

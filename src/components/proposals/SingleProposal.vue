@@ -5,7 +5,7 @@
       <label class="label">Consensus</label>
       <div class="votes-container">
         <div class="is-flex is-justify-content-space-between">
-          <span class="has-text-mint has-text-weight-semibold">{{ this.votes.yes.percentage + ' %' }}</span>
+          <span class="has-text-success has-text-weight-semibold">{{ this.votes.yes.percentage + ' %' }}</span>
           <span class="has-text-red has-text-weight-semibold">{{ this.votes.no.percentage + ' %' }}</span>
         </div>
         <div class="votes-bar my-1">
@@ -16,7 +16,7 @@
           }"></div>
         </div>
         <div class="is-flex is-justify-content-space-between">
-          <span class="has-text-mint has-text-weight-medium">{{ this.votes.yes.count + ' votes in favour' }}</span>
+          <span class="has-text-success has-text-weight-medium">{{ this.votes.yes.count + ' votes in favour' }}</span>
           <span class="has-text-red has-text-weight-medium">{{ this.votes.no.count + ' votes against' }}</span>
         </div>
       </div>
@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="is-flex is-justify-content-space-between is-align-items-center mt-5" v-if="!cancelled || !ended">
-          <button @click="submitYesVote" :disabled="!address" class="button has-text-white has-background-mint has-text-weight-semibold">VOTE FOR </button>
+          <button @click="submitYesVote" :disabled="!address" class="button has-text-white has-background-success has-text-weight-semibold">VOTE FOR </button>
           <button @click="submitNoVote" :disabled="!address"  class="button has-text-white has-background-red has-text-weight-semibold">VOTE AGAINST</button>
         </div>
         <div v-if="userIsCreator && !ended" class="is-flex is-justify-content-flex-end mt-5">
@@ -75,290 +75,264 @@
     </div>
     {{assetId}}
   </div>
-  </template>
+</template>
   
-  <script>
-  import { mapGetters, mapActions } from "vuex";
-  import slider from "vue3-slider"
-  import {
-    getProposalTypeStyling,
-    padWithZeroes,
-    dateStringForTimestamp,
-    getVotes,
-    hasEnded,
-    getResult,
-  } from "../../data/helpers";
-  import { PASSED } from "../../models/common";
-  import { DAO } from "../../services/constants"
-  import {CommonProposalType, ProposalTypes} from "@/models/common.js"
-  import Proposal from "@/components/proposals/Proposal.vue"
-  import { ethers } from "ethers";
-  
-  export default {
-    // (bill) TODO: Make this reload data if loaded directly
-    //              with a check to prevent extraneous calls.
-    name: "SingleProposal",
-    components: {
-      slider,
-      Proposal
+<script>
+import { mapGetters, mapActions } from "vuex";
+import slider from "vue3-slider"
+import {
+  getProposalTypeStyling,
+  padWithZeroes,
+  dateStringForTimestamp,
+  getVotes,
+  hasEnded,
+  getResult,
+} from "../../data/helpers";
+import { PASSED } from "../../models/common";
+import Proposal from "@/components/proposals/Proposal.vue"
+import { ethers } from "ethers";
+
+export default {
+  name: "SingleProposal",
+  components: {
+    slider,
+    Proposal
+  },
+  data () {
+    return {
+      proposalId: Number(this.$route.params.proposalId),
+      voteAmount: 0,
+      timeRemainingString: "",
+      PASSED,
+    }
+  },
+  computed: {
+    ...mapGetters({
+      proposals: "assetProposals",
+      address: "userWalletAddress",
+      balance: "userTokenBalance",
+      quorum: "quorum",
+    }),
+    hasReachedQuorum() {
+      console.log(this.quorum, this.participation);
+      return this.quorum < this.participation
     },
-    data () {
-      return {
-        proposalId: Number(this.$route.params.proposalId),
-        voteAmount: 0,
-        timeRemainingString: "",
-        PASSED,
-      }
+    proposal() {
+      return this.proposals
+        .find(p => p.id === this.proposalId);
     },
-    props: {
-      assetId: {
-        type: String,
-        required: true,
-      }
+    typeStylingData() {
+      return getProposalTypeStyling(this.proposal.type);
     },
-    computed: {
-      ...mapGetters({
-        proposals: "assetProposals",
-        address: "userWalletAddress",
-        balance: "userTokenBalance",
-      }),
-      proposal() {
-        return this.proposals
-          .find(p => p.id === this.proposalId);
-      },
-      typeStylingData() {
-        return getProposalTypeStyling(this.proposal.type);
-      },
-      votes() {
-        return getVotes(this.proposal);
-      },
-      ended() {
-        return hasEnded(this.proposal);
-      },
-      passed() {
-        return getResult(this.proposal);
-      },
-      cancelled() {
-        return this.proposal.state === "Cancelled"
-      },
-      startDate() {
-        const startDate = new Date(this.proposal.startTimestamp * 1000);
-        return `${padWithZeroes(startDate.getDate())}/${padWithZeroes(startDate.getMonth() + 1)}`;
-      },
-      startDateString() {
-        return dateStringForTimestamp(this.proposal.startTimestamp);
-      },
-      endDateString() {
-        return dateStringForTimestamp(this.proposal.endTimestamp);
-      },
-      userVote() {
-        if (!this.address) return null;
-        // Select user vote by matching voter address to user address
-        const vote = this.proposal.votes.find(vote => vote.voter.toLowerCase() === this.address.toLowerCase());
-  
-        if(vote) {
-          return {
-            ...vote,
-            count: Number(vote.count).toFixed(1),
-          }
-        } else {
-          return null;
+    votes() {
+      return getVotes(this.proposal);
+    },
+    ended() {
+      return hasEnded(this.proposal);
+    },
+    passed() {
+      return getResult(this.proposal);
+    },
+    cancelled() {
+      return this.proposal.state === "Cancelled"
+    },
+    startDate() {
+      const startDate = new Date(this.proposal.startTimestamp * 1000);
+      return `${padWithZeroes(startDate.getDate())}/${padWithZeroes(startDate.getMonth() + 1)}`;
+    },
+    startDateString() {
+      return dateStringForTimestamp(this.proposal.startTimestamp);
+    },
+    endDateString() {
+      return dateStringForTimestamp(this.proposal.endTimestamp);
+    },
+    userVote() {
+      if (!this.address) return null;
+      // Select user vote by matching voter address to user address
+      const vote = this.proposal.votes.find(vote => vote.voter.toLowerCase() === this.address.toLowerCase());
+
+      if(vote) {
+        return {
+          ...vote,
+          count: Number(vote.count).toFixed(1),
         }
-  
-      },
-      userIsCreator() {
-        return this.address.toLowerCase() === this.proposal.creator.toLowerCase();
+      } else {
+        return null;
       }
+
     },
-    methods: {
-      ...mapActions({
-        vote: "vote",
-        refresh: "refreshProposalsDataForAsset",
-        withdraw: "withdraw",
-      }), // Voting action
-      routeToHome() {
-        this.$router.back();
-      },
-      setTimeRemainingCountdown() {
-        clearInterval(this.countdownRef);
-  
-        this.countdownRef = setInterval(
-          function () {
-            let now = new Date().getTime() / 1000;
-  
-            let t = this.proposal.endTimestamp - now;
-  
-            if (t >= 0) {
-              let days = Math.floor(t / (60 * 60 * 24));
-              let hours = Math.floor((t % (60 * 60 * 24)) / (60 * 60));
-              let mins = Math.floor((t % (60 * 60)) / 60);
-              let secs = Math.floor(t % 60);
-  
-              this.timeRemainingString = `${days}d, ${hours}h, ${mins}m, ${secs}s`;
-            } else {
-              this.timeRemainingString = "Voting period has ended";
-            }
-          }.bind(this),
-          1000
-        );
-      },
-      submitYesVote() {
-        this.vote({
-          assetAddress: this.assetId,
-          proposalId: this.$route.params.proposalId,
-          votes: +this.voteAmount,
-          $toast: this.$toast
-        })
-      },
-      submitNoVote() {
-        this.vote({
-          assetAddress: this.assetId,
-          proposalId: this.$route.params.proposalId,
-          votes: -this.voteAmount,
-          $toast: this.$toast
-        })
-      },
-      formatEther(amount) {
-        return ethers.utils.formatEther(amount);
-      },
-      withdrawProposal() {
-        this.withdraw({
-          assetAddress: this.assetId,
-          proposalId: this.$route.params.proposalId,
-          $toast: this.$toast,
-        });
-      }
+    userIsCreator() {
+      return this.address.toLowerCase() === this.proposal.creator.toLowerCase();
     },
-    mounted() {
-      this.setTimeRemainingCountdown();
-      this.refresh({ assetId: this.assetId, $toast: this.$toast });
-      console.log(this.proposal)
+  },
+  methods: {
+    ...mapActions({
+      vote: "vote",
+      getQuorum: "quorum",
+      withdraw: "withdrawProposal"
+    }), 
+
+    routeToHome() {
+      this.$router.back();
     },
-    created() {
-      if(this.balance) {
-        this.voteAmount = +this.balance;
-      }
+
+    setTimeRemainingCountdown() {
+      clearInterval(this.countdownRef);
+      this.countdownRef = setInterval(
+        function () {
+          let now = new Date().getTime() / 1000;
+          let t = this.proposal.endTimestamp - now;
+          if (t >= 0) {
+            let days = Math.floor(t / (60 * 60 * 24));
+            let hours = Math.floor((t % (60 * 60 * 24)) / (60 * 60));
+            let mins = Math.floor((t % (60 * 60)) / 60);
+            let secs = Math.floor(t % 60);
+            this.timeRemainingString = `${days}d, ${hours}h, ${mins}m, ${secs}s`;
+          } else {
+            this.timeRemainingString = "Voting period has ended";
+          }
+        }.bind(this),
+        1000
+      );
     },
-  }
-  </script>
-  
-  <style lang="scss" scoped>
-  @import "../../styles/weavr-custom.scss";
-  @import "../../styles/markdown.scss";
-  
-  .container {
-    min-width: 80% !important;
-  }
-  .relative {
-    position: relative;
-  }
-  
-  .label {
-    margin-top: 30px;
-  }
-  
-  .close-icon {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 1000px;
-    background: rgba(255, 255, 255, 0);
-    transition: all 150ms;
-    cursor: pointer;
-  
-    &:hover {
-      background: rgba(255, 255, 255, 0.25);
+
+    submitYesVote() {
+      this.vote({
+        assetAddress: this.assetId,
+        proposalId: this.$route.params.proposalId,
+        votes: +this.voteAmount,
+        $toast: this.$toast
+      })
+    },
+
+    submitNoVote() {
+      this.vote({
+        assetAddress: this.assetId,
+        proposalId: this.$route.params.proposalId,
+        votes: -this.voteAmount,
+        $toast: this.$toast
+      })
+    },
+
+    formatEther(amount) {
+      return ethers.utils.formatEther(amount);
+    },
+
+    withdrawProposal() {
+      this.withdraw({
+        assetAddress: this.assetId,
+        proposalId: this.$route.params.proposalId,
+        $toast: this.$toast,
+      });
     }
-  
-    .temp-close-dot {
-      background: red;
-      width: 15px;
-      height: 15px;
-      border-radius: 100px;
+  },
+
+  mounted() {
+    this.setTimeRemainingCountdown();
+    this.getQuorum({assetId: this.$route.params.assetId})
+  },
+
+  created() {
+    if(this.balance) {
+      this.voteAmount = +this.balance;
     }
-  }
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+@import "../../styles/weavr-custom.scss";
+@import "../../styles/markdown.scss";
+
+.container {
+  min-width: 80% !important;
+}
+.relative {
+  position: relative;
+}
+
+.label {
+  margin-top: 30px;
+}
+
+
+
+.proposal-type {
+  display: inline-block;
+  font-weight: 400;
+  padding: 5px 10px;
+  border: 2px solid white;
+  border-radius: $tiny-radius;
+  margin-bottom: 20px;
+}
+.paper {
+  border-color: #00EDC4;
+  color: #00EDC4;
+}
+
+.participant {
+  border-color: whitesmoke;
+  color: whitesmoke;
+}
+
+.upgrade {
+  border-color: #D841DE;
+  color: #D841DE;
+}
+
+.thread {
+  border-color: yellow;
+  color: yellow;
+}
+
+.description-container {
+  background: transparent !important;
+  padding: 25px;
+  border-radius: $tiny-radius;
   
-  .proposal-type {
-    display: inline-block;
-    font-weight: 400;
-    padding: 5px 10px;
-    border: 2px solid white;
-    border-radius: $tiny-radius;
-    margin-bottom: 20px;
+  p {
+    max-width: 56ch;
   }
-  .paper {
-    border-color: #00EDC4;
-    color: #00EDC4;
+}
+.votes-bar {
+  width: 100%;
+  height: 25px;
+  background: $red;
+  overflow: hidden;
+  border: none;
+}
+
+.green-bar {
+  background: $success;
+  height: 30px;
+}
+
+.outcome-box {
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  padding: 15px 20px;
+}
+
+.slider {
+  margin-bottom: 5px;
+  height: 23px;
+  transition: all 150ms;
+
+  &:hover {
+    filter: contrast(120%);
   }
-  
-  .participant {
-    border-color: whitesmoke;
-    color: whitesmoke;
-  }
-  
-  .upgrade {
-    border-color: #D841DE;
-    color: #D841DE;
-  }
-  
-  .thread {
-    border-color: yellow;
-    color: yellow;
-  }
-  
-  .description-container {
-    background: transparent !important;
-    padding: 25px;
-    border-radius: $tiny-radius;
-    
-    p {
-      max-width: 56ch;
-    }
-  }
-  .votes-bar {
-    width: 100%;
-    height: 25px;
-    background: $red;
-    overflow: hidden;
-    border: none;
-  }
-  
-  .green-bar {
-    background: $mint;
-    height: 30px;
-  }
-  
-  .outcome-box {
+}
+
+.buttons-container {
+  margin-top: 10px;
+  .button {
+    background: $mediumBlue;
     color: white;
+    width: 3rem;
+    height: 1.5rem;
+    font-size: 12px;
     font-weight: 600;
-    border-radius: 0.5rem;
-    padding: 15px 20px;
   }
-  
-  .slider {
-    margin-bottom: 5px;
-    height: 23px;
-    transition: all 150ms;
-  
-    &:hover {
-      filter: contrast(120%);
-    }
-  }
-  
-  .buttons-container {
-    margin-top: 10px;
-    .button {
-      background: $mediumBlue;
-      color: white;
-      width: 3rem;
-      height: 1.5rem;
-      font-size: 12px;
-      font-weight: 600;
-    }
-  }
-  </style>
+}
+</style>

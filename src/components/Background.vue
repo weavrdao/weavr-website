@@ -1,5 +1,5 @@
 <template>
-  <div class="app-background bg-purple-black">
+  <div class="app-background has-background-black">
   </div>
 </template>
 

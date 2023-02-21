@@ -1,5 +1,3 @@
-/* global BigInt */
-import EthereumClient from "../ethereum/ethereumClient";
 import contractAbi from "./abi/FrabricERC20";
 
 /**

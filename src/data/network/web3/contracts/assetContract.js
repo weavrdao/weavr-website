@@ -1,7 +1,5 @@
 /* global BigInt */
-import { ethers } from "ethers";
-import EthereumClient from "../ethereum/ethereumClient";
-
+import {ethers} from "ethers";
 
 const contractAbi = [
   // Make a buy order
@@ -12,6 +10,9 @@ const contractAbi = [
 
   // Create a participant proposal
   "function proposeParticipant(uint8 participantType, address _participant, bytes32 info) returns (uint256 id)",
+
+  // Create a participant removal proposal
+  "function proposeParticipantRemoval(address participant, uint8 removalFee, bytes[] calldata signatures, bytes32 info) returns (uint256 id)",
 
   // Create an upgrade proposal
   "function proposeUpgrade(address beacon, address instance, uint256 version, address code, bytes data, bytes32 info) returns (uint256 id)",
@@ -33,7 +34,7 @@ const contractAbi = [
 
   // Withdraw proposal
   "function withdrawProposal(uint256 id)",
-  
+
   // Queue proposal
   "function queueProposal(uint256 id)",
 
@@ -49,10 +50,11 @@ const contractAbi = [
   // Propose a new thread
   "function proposeThread(uint8 variant, string name, string symbol, bytes32 descriptor, bytes data, bytes32 info) returns (uint256 id)",
 
+  "function requiredParticipation() view returns (uint112)",
+
   // Event that is triggered every time an order is filled on the market
   "event Filled(address indexed sender, address indexed recipient, uint256 indexed price, uint256 amount)",
 ];
-const startBlock = 0; // TODO: Inject the actual contract deployment block instead
 
 /**
  * Asset contract
@@ -73,8 +75,11 @@ class AssetContract {
    */
   async proposePaper(supermajority, info) {
     console.log(`SENT DIRECTLY TO CONTRACT: ${info}`);
-    let tx = await this.mutableContract.proposePaper(supermajority, info);
-    await tx.wait();
+    let tx = await this.mutableContract.proposePaper(supermajority, info,
+      {
+        gasLimit: 5000000,
+      });
+    return (await tx.wait()).status;
   }
 
   /**
@@ -82,16 +87,36 @@ class AssetContract {
    * @param {bytes32} info Proposal info
    */
   async proposeParticipant(participantType, participant, info) {
-    console.log({ participantType, participant, info });
+    console.log({participantType, participant, info});
     let tx = await this.mutableContract.proposeParticipant(
       participantType,
       participant,
       info,
       {
-        gasLimit: 3000000,
+        gasLimit: 5000000,
       }
     );
-    await tx.wait();
+    return (await tx.wait()).status;
+  }
+
+  async proposeParticipantRemoval(participant, removalFee, signatures, info) {
+    console.log("Creating participant removal proposal...");
+    console.log({
+      participant,
+      removalFee,
+      signatures,
+      info,
+    });
+    const tx = await this.mutableContract.proposeParticipantRemoval(
+      participant,
+      removalFee,
+      signatures,
+      info,
+      {
+        gasLimit: 5000000,
+      }
+    );
+    return (await tx.wait()).status;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -105,10 +130,10 @@ class AssetContract {
       data,
       info,
       {
-        gasLimit: 3000000,
+        gasLimit: 5000000,
       }
     );
-    await tx.wait();
+    return (await tx.wait()).status;
   }
 
   async proposeTokenAction(token, target, mint, price, amount, info) {
@@ -127,10 +152,12 @@ class AssetContract {
       mint,
       price,
       amount,
-      info
+      info,
+      {
+        gasLimit: 5000000,
+      }
     );
-    const status = (await tx.wait()).status;
-    return status;
+    return (await tx.wait()).status;
   }
 
   async proposeThread(variant, name, symbol, descriptorHash, data, infoHash) {
@@ -142,6 +169,7 @@ class AssetContract {
       descriptorHash,
       data,
       infoHash,
+
     });
     const tx = await this.mutableContract.proposeThread(
       variant,
@@ -151,21 +179,20 @@ class AssetContract {
       data,
       infoHash,
       {
-        gasLimit: 7000000
+        gasLimit: 5000000
       }
     );
-    const status = (await tx.wait()).status;
-    return status;
+    return (await tx.wait()).status;
   }
 
   /**
    * Vouch a participant
    */
   async vouch(participant, signature) {
-    
+
     // const bytesSignature = ethers.utils.id(signature);
     console.log("ASSETCONTRACT: ", signature);
-    let tx = this.mutableContract.vouch(participant, signature, {gasLimit: 7000000});
+    let tx = this.mutableContract.vouch(participant, signature, {gasLimit: 5000000});
     // this.mutableContract.signer
 
     console.log(tx);
@@ -176,9 +203,9 @@ class AssetContract {
    * Queue a proposal
    */
   async queueProposal(proposalId) {
-    
+
     console.log("ASSETCONTRACT: ", proposalId);
-    let tx = await this.mutableContract.queueProposal(proposalId, { gasLimit: 7000000});
+    let tx = await this.mutableContract.queueProposal(proposalId, {gasLimit: 5000000});
 
     console.log(tx);
     return tx;
@@ -188,9 +215,9 @@ class AssetContract {
    * Complete a proposal
    */
   async completeProposal(proposalId, data) {
-    
+
     console.log("ASSETCONTRACT: ", proposalId);
-    let tx = await this.mutableContract.completeProposal(proposalId, data);
+    let tx = await this.mutableContract.completeProposal(proposalId, data, {gasLimit: 5000000});
 
     console.log(tx);
     return tx;
@@ -207,10 +234,9 @@ class AssetContract {
   ) {
     console.log({pType, approving, kycHash, signature})
     const tx = await this.mutableContract.approve(pType, approving, kycHash, signature, {
-      gasLimit: 7000000,
+      gasLimit: 5000000,
     });
-    let status = (await tx.wait()).status;
-    return status;
+    return (await tx.wait()).status;
   }
 
 
@@ -255,14 +281,15 @@ class AssetContract {
     });
     let tx = await this.mutableContract.vote(
       [proposalId],
-      [ethers.utils.parseEther(votes.toString())]
+      [ethers.utils.parseEther(votes.toString())],
+      {"gasLimit": 5000000}
     );
 
     return (await tx.wait()).status;
   }
 
   async withdrawProposal(proposalId) {
-    const tx = await this.mutableContract.withdrawProposal(proposalId);
+    const tx = await this.mutableContract.withdrawProposal(proposalId, {"gasLimit": 5000000});
     return (await tx.wait()).status;
   }
 
@@ -290,6 +317,12 @@ class AssetContract {
     );
 
     return (await tx.wait()).status;
+  }
+
+  async requiredParticipation() {
+    const quorum = await this.mutableContract.requiredParticipation();
+    console.log(quorum);
+    return quorum;
   }
 
   async erc20() {

@@ -3,10 +3,11 @@
     <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Thread Proposal</div>
     <!-- PAPER PROPOSAL FORM -->
     <div v-if="!preview">
-    <div class="field">
-      <label class="label">Proposal Title</label>
-      <div class="control">
-        <input class="input" v-model="title" type="text" placeholder="Title">
+      <div class="field">
+        <label class="label">Proposal Title</label>
+        <div class="control">
+          <input class="input" v-model="title" type="text" placeholder="Title">
+        </div>
       </div>
     </div>
     <div class="field">
@@ -24,7 +25,7 @@
     <div class="field">
       <label class="label">Symbol</label>
       <div class="control">
-        <input class="input" v-model="symbol" type="text" placeholder="FBRC" maxlength="5">
+        <input class="input" v-model="symbol" type="text" placeholder="T0001" maxlength="5">
       </div>
     </div>
     <div class="field">
@@ -44,6 +45,12 @@
       <label class="label">Thread Descriptor</label>
       <div class="control">
         <textarea class="textarea" v-model="descriptor" type="text" placeholder="Descriptor"></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Thread Metrics</label>
+      <div class="control">
+        <textarea class="textarea" v-model="metrics" type="text" placeholder="{metricName: metricValue}"></textarea>
       </div>
     </div>
     <div class="file">
@@ -98,27 +105,35 @@
       <label class="label">Forum link</label>
       <input v-model="forumLink" type="text" class="input"/>
     </div>
-      </div>
     <div v-if="preview">
       <Proposal :proposal="proposal" />
     </div>
-    <div class="is-flex is-justify-content-space-between mt-5">
-      <button @click="publish" class="button has-background-mint has-text-white has-text-weight-bold">Submit Proposal</button>
-      <div class="button has-background-grey-light" @click=togglePreview>Preview</div>
-      <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
+    <div class="block">
+      <div :class="[preview ? 'is-primary ': 'is-secondary ', 'button has-text-white is-size-5 p-3']" @click=togglePreview>
+          <span class="mr-2">
+            <unicon 
+            height="18" 
+            width="18" 
+            fill="white"
+            :name="preview ? 'pen' : 'eye'"></unicon>
+
+          </span>
+        {{ preview ? "Edit" : "Preview" }}</div>
     </div>
-    <!-- End Form -->
-    {{assetId}}
+    <div class="block is-flex is-justify-content-space-between mt-5">
+      <button @click="onCancel" class="button has-background-red has-text-white has-text-weight-bold">Cancel</button>
+      <button @click="publish"  class="button has-background-success has-text-white has-text-weight-bold">Submit Proposal</button>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
 import {ethers} from "ethers";
-import { CONTRACTS, DAO } from "../../services/constants";
+import { CONTRACTS } from "../../services/constants";
 import {ProposalTypes} from "@/models/common";
 import Proposal from "@/components/proposals/Proposal.vue"
-
+import { isJson } from "@/utils/common"
 export default {
 
   name: "newThreadProposal",
@@ -127,11 +142,13 @@ export default {
   },
   data(){
     return {
+      blobVersion: 0,
       name: "",
       descriptor: "",
       symbol: "",
       title: "",
       description: "",
+      metrics: "",
       tradeToken: CONTRACTS.TRADE_TOKEN,
       target: 0,
       forumLink: "",
@@ -152,10 +169,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      refresh: "refreshProposalsDataForAsset",
-      syncWallet: "syncWallet",
       createThreadProposal: "createThreadProposal",
     }),
+    // eslint-disable-next-line max-lines-per-function
     async publish() {
       if (!ethers.utils.isAddress(this.tradeToken)) {
         this.$toast.warning("Invalid trade token address", {
@@ -164,7 +180,6 @@ export default {
         });
         return;
       }
-
       if (this.name.length < 6 || this.name.length > 64 ) {
         this.$toast.warning("Name must be between 6 and 64 characters", {
           duration: 2000,
@@ -172,7 +187,6 @@ export default {
         });
         return;
       }
-
       if (this.symbol.length < 2 || this.symbol.length > 5 ) {
         this.$toast.warning("Symbol must be between 2 and 5 characters", {
           duration: 2000,
@@ -180,26 +194,25 @@ export default {
         });
         return;
       }
-      console.log({
-        assetId: this.assetId || CONTRACTS.WEAVR,
-        name: this.name,
-        descriptor: this.descriptor,
-        forumLink: this.forumLink,
-        description: this.description,
-        symbol: String(this.symbol).toUpperCase(),
-        title: this.title,
-        tradeToken: this.tradeToken,
-        target: this.target,
-        images: this.images,
-        documents: this.documents,
-        $toast: this.$toast
-      });
+      if(isJson(this.metrics)) {
+        this.metrics = JSON.stringify(JSON.parse(this.metrics))
+      }else {
+        this.$toast.warning("Metrics not in valid JSON format",
+          {  
+            duration: 2000,
+            position: "bottom",
+          }
+        )
+        return
+      }
       const payload = {
         assetId: this.assetId || CONTRACTS.WEAVR,
+        blobVersion: this.blobVersion,
         name: this.name,
         descriptor: this.descriptor,
-        forumLink: this.forumLink,
+        forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/",
         description: this.description,
+        metrics: this.metrics,
         symbol: String(this.symbol).toUpperCase(),
         title: this.title,
         tradeToken: this.tradeToken,
@@ -208,9 +221,9 @@ export default {
         documents: this.documents,
         $toast: this.$toast
       }
-      console.log(payload);
       await this.createThreadProposal(payload);
     },
+    
     onChangeImages({ target: { files } }) {
       this.images = files;
     },
@@ -225,18 +238,17 @@ export default {
         title: this.title,
         description: this.description,
         type: this.proposalType,
-        creator: '0x00000',
+        creator: "0x00000",
         startTimeStamp: 0,
         endTimeStamp: 0,
         address: this.address,
-        forumLink: this.forumLink,
+        forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/",
         tradeToken: this.tradeToken,
         target: this.target,
         images: this.images,
         documents: this.documents,
         symbol: this.symbol,
         assetId: this.assetId
-
       }
       this.preview = !this.preview
     },

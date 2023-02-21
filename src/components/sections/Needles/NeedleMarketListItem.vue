@@ -17,37 +17,37 @@
     </div>
     <p class="target">{{ getDisplayTarget() }} <strong>USDC</strong></p>
     <div class="progress-bar-container">
-      <div class="progress-bar">
-        <div v-bind:style="getProgressBarStyle()" class="progress" />
-      </div>
+      <progress class="progress is-success is-small has-border" :value="percentage" max="100">{{ percentage }}</progress>
     </div>
   </section>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import Address from "@/components/views/address/Address.vue";
 import { ethers } from "ethers";
 
 export default {
   name: "NeedleMarketListItem",
-  components: {
-    // Address,
-  },
+ 
   props: {
     needle: {
       type: Object,
       required: true,
     },
   },
+
   computed: {
     ...mapGetters({
       walletAddress: "userWalletAddress",
     }),
     finished() {
       return this.needle.state === "Finished"
+    },
+    percentage() {
+      return 100 * this.needle.amountDeposited / this.needle.target
     }
   },
+
   methods: {
     getCoverImageIpfsUrl() {
       return this.needle.imagesHashes
@@ -57,18 +57,8 @@ export default {
     getDisplayTarget() {
       return Number(ethers.utils.formatUnits(this.needle.target, 6)).toLocaleString("en-US")
     },
-    getProgressBarStyle() {
-      return {
-        width: `${100
-          * Number(
-            ethers.utils.formatUnits(this.needle.amountDeposited)
-          ) / Number(
-          ethers.utils.formatUnits(this.needle.target)
-        )}%`
-      }
-    },
     routeToNeedlePage() {
-      this.$router.push(`/needle/${this.needle.id}`);
+      this.$router.push(`needles/${this.needle.id}`);
     }
   },
 };

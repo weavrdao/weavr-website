@@ -1,6 +1,3 @@
-import { CONTRACTS } from "../../../../services/constants";
-import { ethers } from "ethers";
-import { createToaster } from "@meforma/vue-toaster";
 import contractAbi from "./abi/Airdrop";
 
 class AirdropContract {
@@ -21,7 +18,7 @@ class AirdropContract {
   }
 
   async claim() {
-    return (await this.mutableContract.claim());
+    return (await this.mutableContract.claim({"gasLimit": 5000000}));
   }
 }
 export default AirdropContract;

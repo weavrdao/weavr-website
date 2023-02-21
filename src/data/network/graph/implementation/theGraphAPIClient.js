@@ -19,6 +19,7 @@ class TheGraphAPIClient extends GraphQLAPIClient {
     this.client = client
   }
 
+  // eslint-disable-next-line default-param-last
   async query(query, vars = {}, mappingCallback) {
     return new Promise((resolve) => {
       this.client
@@ -30,7 +31,10 @@ class TheGraphAPIClient extends GraphQLAPIClient {
         .then(response => {
           console.log("Query result:")
           console.log(response)
-          resolve(mappingCallback(this.mapper, response))
+          if(response) {
+            resolve(mappingCallback(this.mapper, response))
+          }
+          
         })
         .catch(err => {
           // TODO: Propagate error

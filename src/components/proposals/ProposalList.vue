@@ -1,24 +1,31 @@
 <template>
-  <div class="proposal-list column py-3 px-5">
-    <h3 class="title is-size-3 my-4">{{ proposalStatus }}</h3>
+  <div class="py-3 px-5">
+
     <div v-if="this.proposals.length !== 0">
-      <div class="is-flex is-justify-content-center mb-4 overflow-hidden filter-button-container" :class="filterMenuIsOpen && 'container-open'">
-          <div
+      <div class="card m-0 p-0  filter-button-container"
+           :class="filterMenuIsOpen && 'container-open'">
+        <div
             v-for="{key, class: styles, text, selected} in filterButtons"
             @click="toggleFilter(key)"
             class="button filter-button"
             :class="[styles, !selected && 'unselected']"
             :key="key">
-            {{ text }}
-          </div>
-      </div> 
-      <div v-for="proposal in this.filteredProposals" v-bind:key="proposal.id">
+          {{ text }}
+        </div>
+      </div>
+      <div class="columns is-multiline">
+        <div class="column is-one-third" v-for="proposal in this.filteredProposals" v-bind:key="proposal.id">
+          <div >
         <ProposalListItem :proposal="proposal" :assetId="assetId"/>
+      </div>
+        </div>
       </div>
     </div>
     <div v-else class="is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-      <img class="no-proposals-image my-5" src="../../assets/common/no-proposals.svg"/>
-      <p>No proposals right now</p>
+      <figure>
+        <img class="no-proposals-image my-5" src="../../assets/common/no-proposals.svg"/>
+      </figure>
+      <div class="label is-size-4">No {{ proposalStatus.toLowerCase() }} right now</div>
     </div>
   </div>
 </template>
@@ -27,6 +34,7 @@
 import ProposalListItem from "../views/voting/ProposalListItem.vue";
 import { ProposalTypes } from "../../models/common";
 import { getProposalTypeStyling } from "@/data/helpers";
+import { mapActions } from 'vuex';
 
 export default {
   name: "ProposalList",
@@ -35,8 +43,8 @@ export default {
       filterMenuIsOpen: false,
       // Create object with shape { [proposalType]: true }
       proposalTypesFilter: Object.fromEntries(
-        Object.values(ProposalTypes)
-          .map(v => [v, true])
+          Object.values(ProposalTypes)
+              .map(v => [v, true])
       ),
     }
   },
@@ -61,18 +69,22 @@ export default {
     filteredProposals() {
       return this.proposals
         .filter(proposal => this.proposalTypesFilter[proposal.type])
-        .filter(proposal => proposal.state !== 'Cancelled')
+        .filter(proposal => proposal.state !== "Cancelled")
         .sort((p1, p2) => p1.endTimestamp < p2.endTimestamp);
     },
     filterButtons() {
       return Object.values(ProposalTypes).map(proposal => ({
         key: proposal,
         selected: this.proposalTypesFilter[proposal],
-        ...getProposalTypeStyling(proposal)}
+        ...getProposalTypeStyling(proposal)
+      }
       ));
     },
   },
   methods: {
+    ...mapActions({
+      refresh: "refreshProposalsDataForAsset",
+    }),
     // Switch a given filter on or off
     toggleFilter(proposalType) {
       this.proposalTypesFilter = {
@@ -87,28 +99,13 @@ export default {
 <style lang="scss" scoped>
 @import "../../styles/weavr-custom.scss";
 
-.proposal-list {
-  border: 1px solid #575757;
-  border-radius: 10px;
-
-  h3 {
-    color: white;
-    font-size: 2rem;
-  }
-}
-
-.no-proposals-image {
-  height: 20rem;
-  width: 20rem;
-  transform: translateX(-1.5rem);
-}
 
 .filter-menu-toggler {
   border-radius: $tiny-radius;
   transition: 150ms all ease-in-out;
   display: inline-flex;
   align-items: center;
-  background: rgba(255,255,255, 0);
+  background: rgba(255, 255, 255, 0);
   padding: 8px 5px;
   height: 25px;
   margin-bottom: 10px;
@@ -133,10 +130,15 @@ export default {
     height: 25px;
     font-stretch: expanded;
   }
-  
+
   &:hover {
-    background: rgba(255,255,255, 0.45);
+    background: rgba(255, 255, 255, 0.45);
   }
+}
+
+.no-proposals-image {
+  height: 20rem;
+  transform: translateX(-1.5rem);
 }
 
 .filter-button-container {
@@ -167,37 +169,6 @@ export default {
   &:hover {
     color: white;
   }
-}
-
-.paper {
-  border-color: #00EDC4;
-  background: #00EDC4;
-}
-
-.participant {
-  border-color: whitesmoke;
-  color: black;
-  background: whitesmoke;
-
-  &:hover {
-    color: black;
-  }
-}
-
-.upgrade {
-  border-color: #D841DE;
-  background: #D841DE;
-}
-
-.token-action {
-  border-color: $red;
-
-  background: $red;
-}
-
-.unselected {
-  color: white;
-  background: none !important;
 }
 
 </style>

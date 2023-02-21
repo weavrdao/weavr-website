@@ -1,10 +1,7 @@
-import EthereumClient from "../ethereum/ethereumClient"
-
 const contractAddress = "0x0" // TODO: ADD CONTRACT ADDRESS
 const contractAbi = [
   
 ]
-const startBlock = 0 // TODO: ADD CONTRACT DEPLOYMENT BLOCK TO AVOID QUERYING EXTRA HISTORY
 
 /**
  * Platform contract

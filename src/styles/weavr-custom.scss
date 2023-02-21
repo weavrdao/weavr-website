@@ -23,7 +23,7 @@ $family-sans-serif: "Poppins Sans", sans-serif;
 
 // COLORS\
 $dimmedBlue: rgb(31, 28, 47 );
-$darkBlue: #000044;
+$darkBlue: #161528;
 $mediumBlue: #5A50D8;
 $lightBlue: #968EFF;
 $darkGray: #1D1B22;
@@ -33,9 +33,10 @@ $lightGray: #CACACA;
 $white: #FFFFFF;
 $black: #13111A;
 $magenta: #D841DE;
-$mint: #00EDC4;
-$red: #e2004f;
-$cyan: #00BDFF;
+$green: #5ed88e;
+$mint: #5ed88e;
+$red: #d85a50;
+$cyan: #5aafd8;
 $lightNavy: #2F2C38;
 $boxGray: #16171A;
 $gold: #e6c300;
@@ -58,8 +59,8 @@ $text: $lightGray;
 
 $primary: $mediumBlue;
 $primary-invert: findColorInvert($primary);
-$danger: $lightBlue;
-
+$danger: $red;
+$success: $mint;
 $transparent: rgba(0, 0, 0, 0);
 
 // Setup the new serif family
@@ -77,7 +78,32 @@ $tiny-radius: 5px;
 $small-radius: 10px;
 
 
+$tabs-link-color: $mediumGray;
+$tabs-toggle-link-active-background-color: $primary;
+$tabs-toggle-link-active-border-color: $primary;
+$tabs-toggle-link-border-color: $mediumGray;
+/*************************
+  DROPDOWN
+*************************/ 
+$dropdown-menu-min-width: 8rem;
+$dropdown-content-background-color: $darkGray;
+$dropdown-content-offset: 15px;
+$dropdown-content-padding-bottom: 0.5rem;
+$dropdown-content-padding-top: 0.5rem;
+$dropdown-content-radius: $small-radius;
+$dropdown-content-z: 20;
+$dropdown-item-color: $lightBlue;
+$dropdown-item-hover-color: hsl(0, 0%, 100%);
+$dropdown-item-hover-background-color: $primary;
+$dropdown-item-active-color: #fff;
+$dropdown-item-active-background-color: hsl(229, 53%,  53%);
+$dropdown-divider-background-color: hsl(229, 53%,  53%);
+
+// Modal
 $modal-content-width: min(100%, 1000px);
+// Progress Bar
+$progress-bar-background-color: $mediumDarkGray;
+
 html {
   font-family: $family-primary;
 }
@@ -102,7 +128,9 @@ input {
 .has-border-bottom {
   border-bottom: $white 1px solid !important;
 }
-
+.has-gray-border {
+  border: 1px gray solid;
+}
 .has-full-borders {
   border: $white 1px solid !important;
 }
@@ -152,7 +180,8 @@ $colors: map-merge($colors, $addColors);
 // Explicit Bulma class overrides
 
 .label {
-  color: white;
+  color: gray;
+  font-size: large;
 }
 
 .textarea {
@@ -169,7 +198,7 @@ $colors: map-merge($colors, $addColors);
 .button {
   border: none;
   transition: all 150ms;
-
+  
   &:hover {
     filter: contrast(140%);
   }
@@ -196,7 +225,272 @@ $colors: map-merge($colors, $addColors);
   }
 }
 
+.border-lightGray {
+  border: 1px solid #575757;
+  border-radius: 10px;
+
+  h3 {
+    color: white;
+    font-size: 2rem;
+  }
+}
+
 .brand {
   font-family: "Poppins", sans, sans-serif !important;
 }
 @import "./markdown.scss";
+
+:export {
+  primaryColor: $primary
+}
+
+.proposal-type {
+  display: inline-block;
+  font-weight: 400;
+  padding: 5px 10px;
+  border: 0px solid white;
+  border-radius: $tiny-radius;
+  margin-bottom: 20px;
+}
+.paper {
+  border-color: #00EDC4;
+  color: #00EDC4;
+}
+
+.participant {
+  border-color: whitesmoke;
+  color: whitesmoke;
+}
+
+.upgrade {
+  border-color: #D841DE;
+  color: #D841DE;
+}
+
+.thread {
+  border-color: yellow;
+  color: yellow;
+}
+
+
+//From Marketplace
+
+.carousel__prev,
+  .carousel__next {
+    // border: 5px solid white;
+    // background-color: red;
+  }
+  
+  .property-title {
+    font-size: 2rem !important;
+  }
+  
+  .tag {
+    padding: 5px 20px !important;
+  }
+  
+  .information-container {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+  }
+  
+  .dark-card {
+    border-radius: 8px;
+    border: 1px solid $darkGray;
+    padding: 20px 30px;
+    background: $boxGray;
+  }
+  
+  .cover-image {
+      position: relative;
+      height: 500px;
+      overflow: hidden;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      border-radius: 12px;
+      border: 1px solid $darkGray;
+  
+      @media screen and (max-width: 500px) {
+        height: 250px;
+      }
+  }
+  
+  .weavr-icon-container {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 45px;
+      width: 45px;
+      background: white;
+      border-radius: 1000px;
+      border: 2px solid $mediumBlue;
+      margin: 0 auto;
+  
+      img {
+        height: 28px;
+        width: 28px;
+      }
+    }
+  
+  .carousel-container {
+      width: 66%;
+      background: transparent;
+      padding: 10px;
+      border-radius: 12px;
+  }
+  
+  //vue-carousel overrides
+  
+  .carousel__icon {
+    fill: white !important;
+  }
+  
+  .carousel__slide--sliding {
+    transition: 1s;
+    animation-timing-function: ease;
+  }
+  
+  .carousel__pagination-button::after {
+    background-color: white;
+  }
+  
+  .carousel {
+    color: white !important;
+  }
+  
+  .container {
+      h3 {
+          font-size: 2.2rem;
+          font-weight: 600;
+      }
+  }
+  
+  .image-container {
+    height: 100%;
+  }
+  
+  .slide-image-container {
+      height: 400px;
+  
+      img {
+          object-fit: cover;
+          height: 100%;
+          border-radius: 12px;
+      }
+  }
+  
+  .progress-bar-container {
+    margin: 24px 0;
+    .progress-bar {
+      width: 100%;
+      background: $lightGray;
+      height: 18px;
+      border-radius: 12px;
+      overflow: hidden;
+  
+      .progress {
+        background: $mediumBlue;
+        height: 19px;
+        border-radius: 0px;
+        margin: 10px 0;
+      }
+    }
+  }
+  
+  .target-text {
+    font-size: 1rem !important;
+    color: $mediumGray;
+    margin: 5px 0;
+  
+    strong {
+      color: $mediumBlue;
+    }
+  }
+  
+  // .button {
+  //   margin-top: 20px;
+  //   width: 100% !important;
+  // }
+  
+  input {
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+  
+  input[type=number] {
+      -moz-appearance:textfield;
+  }
+  
+  .redeem-container {
+    gap: 2rem;
+  }
+  
+  .celebration {
+    font-size: 3rem;
+  }
+  
+  @keyframes move {
+    0%  { left: 0; opacity: 0.05; }
+    5% {opacity: 0.1}
+    48% {opacity: 0.4}
+    80% {opacity: 0.01}
+    100% { left: 100%}
+  }
+  
+  .shiny-button {
+    max-width: 8rem;
+    overflow: hidden;
+  
+    &:hover {
+      strong {
+        transition: all 150ms;
+        text-shadow: #000 0px 0px 2px,   #000 0px 0px 2px,   #000 0px 0px 2px,
+          #000 0px 0px 2px,   #000 0px 0px 2px,   #000 0px 0px 2px;
+      }
+    }
+  
+    i {
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      left: 0;
+      background: linear-gradient(to right,  rgba(255,255,255,0) 0%,rgba(255,255,255,0.03) 1%,rgba(255,255,255,0.6) 30%,rgba(255,255,255,0.95) 50%,rgba(255,255,255,0.85) 70%,rgba(255,255,255,0.95) 71%,rgba(255,255,255,0) 100%);
+      width: 15%;
+      height: 100%;
+      transform: skew(-10deg,0deg);
+      animation: move 2s;
+      animation-iteration-count: infinite;
+      animation-delay: 2s;
+    }
+  }
+  
+  .ipfs-document-link {
+    display: inline-block;
+    max-width: 45ch;
+    margin: 15px 0;
+    padding: 10px 20px;
+    background: rgba(255,255,255, 0.03);
+    transition: all 150ms linear;
+    border-radius: 8px;
+    border-left: 8px solid $mediumBlue;
+    color: $mediumBlue;
+    overflow: hidden;
+    &:hover {
+      background-color: $mediumDarkGray;
+      transform: translateY(-3px);
+      border-left: 8px solid $mint;
+      color: $mint;
+    }
+  }

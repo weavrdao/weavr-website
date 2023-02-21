@@ -1,11 +1,13 @@
-import { getIpfsHashFromBytes32 } from "../../../storage/ipfs/common"
-import { ProposalTypes } from "../../../../../models/common"
-import { Vote } from "../../../../../models/vote"
-import { PaperProposal } from "../../../../../models/proposals/paperProposal";
-import { UpgradeProposal } from "../../../../../models/proposals/upgradeProposal";
-import { ParticipantProposal } from "../../../../../models/proposals/participantProposal";
-import { TokenActionProposal } from "../../../../../models/proposals/tokenActionProposal";
-import { ThreadProposal } from "../../../../../models/proposals/threadProposal"
+import {getIpfsHashFromBytes32} from "../../../storage/ipfs/common"
+import {ProposalTypes} from "../../../../../models/common"
+import {Vote} from "../../../../../models/vote"
+import {PaperProposal} from "../../../../../models/proposals/paperProposal";
+import {UpgradeProposal} from "../../../../../models/proposals/upgradeProposal";
+import {ParticipantProposal} from "../../../../../models/proposals/participantProposal";
+import {TokenActionProposal} from "../../../../../models/proposals/tokenActionProposal";
+import {ThreadProposal} from "../../../../../models/proposals/threadProposal"
+import {ParticipantRemovalProposal} from "../../../../../models/proposals/participantRemovalProposal";
+
 // Map raw vote array to array of vue-mc models 
 export function mapVotes(rawVotes) {
   return rawVotes.map(({
@@ -20,8 +22,6 @@ export function mapVotes(rawVotes) {
     count,
   }));
 }
-
-
 
 
 // Map raw paper proposals to array of vue-mc models 
@@ -110,6 +110,48 @@ export function mapUpgradeProposals(rawUpgradeProposals) {
     console.error(e);
   }
   return upgradeProposals;
+}
+
+export function mapParticipantRemovalProposals(rawParticipantRemovalProposals) {
+  let participantRemovalProposals = [];
+  try {
+    participantRemovalProposals = rawParticipantRemovalProposals.map(({
+      participant,
+      removalFee,
+      baseProposal: {
+        id,
+        creator,
+        endTimestamp,
+        info,
+        startTimestamp,
+        state,
+        supermajority,
+        votes,
+      }
+    }) => {
+      const mappedVotes = mapVotes(votes);
+      const ifpsPath = getIpfsHashFromBytes32(info);
+      return new ParticipantRemovalProposal(
+        parseInt(id, 16),
+        null, // thread
+        null, // frabric
+        creator,
+        ProposalTypes.ParticipantRemoval,
+        state,
+        mappedVotes,
+        supermajority,
+        startTimestamp,
+        endTimestamp,
+        ifpsPath,
+        removalFee,
+        participant,
+      )
+    })
+  } catch (e) {
+    console.log("Issue parsing participant removal proposals");
+    console.error(e);
+  }
+  return participantRemovalProposals;
 }
 
 // Map raw participant proposals to array of vue-mc models 
@@ -204,7 +246,9 @@ export function mapTokenActionProposals(rawTokenActionProposals) {
   }
   return tokenActionProposals;
 }
+
 export function mapThreadProposals(rawThreadProposals) {
+  console.log("THREAD-PROPOSAL-RAW______", rawThreadProposals);
   let threadProposals = [];
   try {
     threadProposals = rawThreadProposals.map(({
@@ -231,7 +275,7 @@ export function mapThreadProposals(rawThreadProposals) {
         null, // thread
         null, // frabric
         creator,
-        ProposalTypes.TokenAction,
+        ProposalTypes.Thread,
         state,
         mappedVotes,
         supermajority,
@@ -248,5 +292,6 @@ export function mapThreadProposals(rawThreadProposals) {
     console.log("Issue parsing thread proposals");
     console.error(e);
   }
+  console.log("THREAD-PROPOSAL______", threadProposals)
   return threadProposals;
 }

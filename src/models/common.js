@@ -38,7 +38,7 @@ module.exports = {
     Participant: 0,
     BondRemoval: 1,
     Thread: 2,
-    ThreadProposal: 3
+    ThreadProposal: 3,
   },
 
   ParticipantType: {
@@ -74,6 +74,7 @@ module.exports = {
   ProposalTypes: {
     Upgrade: "upgrade",
     Participant: "participant",
+    ParticipantRemoval: "participantRemoval",
     TokenAction: "token",
     Paper: "paper",
     Thread: "thread",

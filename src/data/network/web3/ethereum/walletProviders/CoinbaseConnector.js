@@ -1,3 +1,4 @@
+/* eslint-disable no-invalid-this */
 const { ethers } = require("ethers");
 
 export class CoinbaseConnector {
@@ -16,7 +17,9 @@ export class CoinbaseConnector {
           console.log(`User's address is ${accounts[0]}`);
           return accounts[0];
         });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   getChainId = async () => {

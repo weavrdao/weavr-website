@@ -1,78 +1,55 @@
 <template>
-  <section @click="openProposal" class="proposal has-radius-md mb-5" aria-labelledby="proposal">
-    <span class="proposal-type" :class="this.typeStylingData.class">
-      {{ this.typeStylingData.text }}
-    </span>
-    <div @click="routeToProposal" class="is-flex is-flex-direction-column is-justify-content-space-between mb-2 mt-2 pt-4 pb-0 px-4">
-      <div>
+    <section @click="openProposal" class="card p-4 proposal has-background-darkGray has-radius-lg mb-1 h-100" aria-labelledby="proposal">
+      <div :class="this.typeStylingData.class">
+        {{ this.typeStylingData.text }}
+      </div>
+      <div :class="[proposal.state=='Cancelled' || proposal.state=='Failed' ? 'has-text-red' : 'has-text-success']">{{proposal.state}}</div>
+      <div class="proposal-date">
         <h2 class="is-size-5 has-text-mediumBlue">
-          {{ this.startDate }}
+            {{ this.startDate }}
         </h2>
-        <h1 :class="[proposal.state=='Cancelled' || proposal.state=='Failed' ? 'has-text-red' : 'has-text-success', 'p-2', 'is-title']">{{proposal.state}}</h1>
-        <h2 id="proposal-title" class="is-size-5 has-text-white mb-4">
-          {{ proposal.title }}
-        </h2>
-        <div class="description-container p-3">
-          <vue-markdown  class="content markdown-body" :options="{html: true }"  :source="proposal.description" />
+      </div>
+      <div class="card-content px-0 py-1">
+        <div class=" py-0">
+          <div class="py-0">
+            <div id="proposal-title" class="proposal-title is-size-5 has-text-white mb-4">
+              {{ proposal.title }}
+            </div>    
+          </div>
+          <Address class="has-text-white" :value="proposal.creator"/>
+          <div v-if="!ended" class="is-flex is-justify-content-flex-end">
+          </div>
+          <div v-else class="is-flex is-justify-content-flex-end">
+            <div class="tag is-medium bottom-right-corner is-success" v-if="this.passed == this.PASSED.Yes">PASSED</div>
+            <div class="tag is-medium bottom-right-corner has-backgorund-red" v-else-if="this.passed == this.PASSED.No">FAILED</div>
+            <div class="tag is-medium bottom-right-corner is-warning" v-else>TIE</div>
+          </div>
         </div>
       </div>
-      <dl class="mt-5 mb-0 pb-0">
-        <dt class="mt-2 mb-1 help">Creator:</dt>
-        <dd class="mb-3">
-          <Address :value="proposal.creator" />
-        </dd>
-      </dl>
-    </div>
-    <div v-if="!ended" class="is-flex is-justify-content-flex-end">
-      <Button
-        v-if="!embedded"
-        label="Details"
-        extraClasses="p-5 is-mediumBlue m-2"
-        @click="openProposal"
-      />
-    </div>
-    <div v-else class="is-flex is-justify-content-flex-end">
-      <div class="outcome-box bottom-right-corner passed" v-if="this.passed == this.PASSED.Yes">PASSED</div>
-      <div class="outcome-box bottom-right-corner failed" v-else-if="this.passed == this.PASSED.No">FAILED</div>
-      <div class="outcome-box bottom-right-corner tie" v-else>TIE</div>
-    </div>
-  </section>
+    </section>
 </template>
-
+  
 <script>
 import Address from "../address/Address.vue";
-import Button from "../common/Button.vue";
-import VueMarkdown from "vue-markdown-render"
+
 import {
   getProposalTypeStyling,
   padWithZeroes,
-  dateStringForTimestamp,
-  getVotes,
   getResult,
   hasEnded,
 } from "@/data/helpers";
 import { PASSED } from "@/models/common";
-import { DAO } from '../../../services/constants';
+import { DAO } from "../../../services/constants";
 
 export default {
   name: "ProposalListItem",
   components: {
     Address,
-    Button,
-    VueMarkdown
   },
   props: {
-    assetId: {
-      type: String,
-      required: true,
-    },
     proposal: {
       type: Object,
       required: true,
-    },
-    embedded: {
-      type: Boolean,
-      required: false,
     },
   },
   data() {
@@ -83,21 +60,9 @@ export default {
   },
   computed: {
 
-    votes() {
-      return getVotes(this.proposal);
-    },
-
     startDate() {
       const startDate = new Date(this.proposal.startTimestamp * 1000);
       return `${padWithZeroes(startDate.getDate())}/${padWithZeroes(startDate.getMonth() + 1)}`;
-    },
-
-    startDateString() {
-      return dateStringForTimestamp(this.proposal.startTimestamp);
-    },
-
-    endDateString() {
-      return dateStringForTimestamp(this.proposal.endTimestamp);
     },
 
     ended() {
@@ -136,7 +101,6 @@ export default {
         1000
       );
     },
-
     openProposal() {
       this.$router.push(this.$route.path+`/proposal/${this.proposal.id}`);
     },
@@ -147,7 +111,6 @@ export default {
   },
 
   routeToProposal() {
-    console.log("opening proposal")
     this.$router.push(`/${DAO}/proposal/${this.proposal.id}`);
   },
 };
@@ -159,9 +122,10 @@ export default {
 @import "../../../styles/markdown.scss";
 
 .proposal {
-  background-color: $darkGray;
+  
   position: relative;
-  min-width: 320px;
+  height: 12rem;
+  
   cursor: pointer;
   transition: all 150ms;
   &:hover {
@@ -169,28 +133,23 @@ export default {
   }
 }
 
-.proposal-type {
+.proposal-type, .proposal-status {
+  display: block;
+  font-size: 1rem;
+}
+
+.proposal-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.proposal-date {
   font-weight: 400;
   padding: 5px 10px;
-  border: 2px solid white;
   position: absolute;
   top: 0;
   right: 0;
-  border-radius: 0 0.5rem 0 0 !important;
-}
-.paper {
-  border-color: #00EDC4;
-  color: #00EDC4;
-}
-
-.participant {
-  border-color: whitesmoke;
-  color: whitesmoke;
-}
-
-.upgrade {
-  border-color: #D841DE;
-  color: #D841DE;
 }
 
 .outcome-box {
@@ -211,29 +170,25 @@ export default {
   text-overflow: ellipsis;
 }
 
-
-
-
 .markdown-body {
   background: transparent;
   max-height: 15ch;
-   max-width: min(56ch, 100ch);
+    max-width: min(56ch, 100ch);
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-
-	@media (max-width: 767px) {
-		.markdown-body {
-			padding: 15px;
-		}
-	}
+@media (max-width: 767px) {
+    .markdown-body {
+        padding: 15px;
+    }
+}
 
 .bottom-right-corner {
   position: absolute;
   bottom: 0;
   right: 0;
-  border-radius: 0 0 0.5rem 0;
+  border-radius: 0.5rem 0 !important;
 }
 
 .passed {

@@ -4,6 +4,9 @@ import {
   PARTICIPANTS_PER_DAO,
   VOUCHES_PER_PARTICIPANT,
   ALL_PROPOSALS,
+  ALL_NEEDLES_QUERY,
+  ALL_THREADS_QUERY,
+  THREAD_DEX_ORDERS_QUERY
 } from "./queries"
 
 /**
@@ -30,6 +33,7 @@ class GraphQLAPIClient {
    * @param {Array} vars Query variables
    * @param {mappingCallback} mappingCallback Model mapping callback
    */
+  // eslint-disable-next-line
   async query(query, vars = {}, mappingCallback = {}) { }
 }
 
@@ -40,4 +44,7 @@ export {
   VOUCHES_PER_PARTICIPANT,
   THREAD_PROPOSAL_QUERY,
   ALL_PROPOSALS,
+  ALL_NEEDLES_QUERY,
+  ALL_THREADS_QUERY,
+  THREAD_DEX_ORDERS_QUERY
 }
