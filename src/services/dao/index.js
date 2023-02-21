@@ -8,9 +8,9 @@ import {
   ALL_PROPOSALS,
   VOUCHES_PER_PARTICIPANT,
 } from "../../data/network/graph/graphQLAPIClient";
-import {CONTRACTS} from "../constants";
+import {CONTRACTS, NETWORK} from "../constants";
 import AssetContract from "../../data/network/web3/contracts/assetContract";
-import { callSimulateFunc} from "@/proxy/index"
+import { callSimulateFunc} from "@/proxy"
 import {ethers} from "ethers";
 import {createToaster} from "@meforma/vue-toaster";
 /**
@@ -92,14 +92,28 @@ class DAO {
     return proposals;
   }
 
-  async simulateWillProposalComplete(proposalId, assetId, timeToQueueTimestamp) {
+  async simulateWillProposalComplete(proposalId, timeToQueueTimestamp) {
+    const assetId = CONTRACTS.WEAVR;
+    const networkId  = NETWORK.id
     const toast = createToaster({});
     const timeToCompleteTimestamp = timeToQueueTimestamp + 172800;
 
     toast.info("Simulating Transaction Stack...");
-    const response = callSimulateFunc(proposalId, assetId, timeToQueueTimestamp, timeToCompleteTimestamp);
+    console.log("simluation start, payload: ", proposalId, assetId, networkId, timeToQueueTimestamp, timeToCompleteTimestamp)
+    const response = await callSimulateFunc(proposalId, assetId, networkId, timeToQueueTimestamp, timeToCompleteTimestamp);
+    let result = []
+    console.log(response)
+    for(let i = 0; i < response.data.simulation_results.length; i++) {
+      const simulation = response.data.simulation_results[i].simulation
+      if("error_message" in simulation) {
+        result.push({status: "fail", url: `https://dashboard.tenderly.co/zeryx/project/simulator/${simulation.id}`})
+      } else {
+        result.push({status: "success", url: `https://dashboard.tenderly.co/zeryx/project/simulator/${simulation.id}`})
+      }
+    }
+    console.log(result)
     toast.clear();
-    return response
+    return result
   }
 
 

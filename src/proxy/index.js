@@ -12,17 +12,14 @@ export const getAccessToken = async (id) => {
   });
 }
 
-export const callSimulateFunc = async (proposalId, assetId, queueTimestamp, completeTimestamp) => {
+export const callSimulateFunc = async (proposalId, assetId, networkId, queueTimestamp, completeTimestamp) => {
   const url = `https://api.weavr.org/${netlify}/simulate-proposal`
-  const data = {
-    proposalId: proposalId,
-    assetId: assetId,
-    queueTimestamp: queueTimestamp,
-    completeTimestamp: completeTimestamp
-  }
-  return axios ({
-    method: "post",
-    url: url,
-    data: data
-  })
+  const data = new FormData();
+  data.append('proposalId', proposalId);
+  data.append('assetId', assetId);
+  data.append('queueTimestamp', queueTimestamp);
+  data.append('completeTimestamp', completeTimestamp);
+  data.append('networkId', networkId);
+  return await axios.post(url, data, {headers: {'Content-Type': 'multipart/form-data'}})
+
 }
