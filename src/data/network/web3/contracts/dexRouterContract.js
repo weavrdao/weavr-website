@@ -20,7 +20,7 @@ class DexRouterContract {
    * @ Execute a token swap
    * @param {string} token Token address to be purchased
    * @param {string} tradeToken Token address to be sold
-   * @param {BigInt} payment Amount of tradeToken (`tradeToken`) to be sold
+   * @param {number} payment Amount of tradeToken (`tradeToken`) to be sold
    * @param {BigInt} price Purchase price in whole tokens
    * @param {BigInt} minimumAmount Minimum amount of tokens (`token`) received (in whole tokens)
    * @return {BigInt} filled uint256 quantity of succesfully purchased tokens (`token`) 

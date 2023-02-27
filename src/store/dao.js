@@ -117,7 +117,34 @@ const actions = {
       }
     });
   },
-
+  async createParticipantRemovalProposal(context, props) {
+    const toast = params.$toast || createToaster({});
+    const {assetId, participant, removalFee, signatures, title, description, forumLink} = props;
+    toast.show("Confirming transaction...", {
+      duration: 15000,
+      position: "top",
+    });
+    const status = await dao.createParticipantRemovalProposal(
+      assetId,
+      participant,
+      removalFee,
+      signatures,
+      title,
+      description,
+      forumLink
+    );
+    toast.clear();
+    if (status) {
+      toast.success("Transaction confirmed!");
+      context.dispatch("refreshProposalsDataForAsset", {
+        assetId: params.assetId,
+      });
+      // router.push("/" + DAO + "/" + params.assetId);
+    } else {
+      toast.error("Transaction failed. See details in MetaMask.");
+      console.log("Transaction failed. See details in MetaMask.");
+    }
+  },
   async createParticipantProposal(context, props) {
     const toast = params.$toast || createToaster({});
     const {title, assetId, participantType, participant, description, forumLink} = props;
@@ -244,6 +271,11 @@ const actions = {
     return status;
   },
 
+  async simulateProposalWillComplete(context, props) {
+    const {proposalId, endTimestamp } = props;
+    return await dao.simulateWillProposalComplete(proposalId, endTimestamp);
+  },
+
   async createThreadProposal(context, props) {
     const toast = params.$toast || createToaster({});
 
@@ -268,7 +300,7 @@ const actions = {
       position: "bottom",
     });
 
-    const status = await dao.createThreadProposal(
+    const status = dao.createThreadProposal(
       assetId,
       blobVersion,
       name,

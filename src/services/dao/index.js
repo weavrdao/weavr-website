@@ -8,10 +8,13 @@ import {
   ALL_PROPOSALS,
   VOUCHES_PER_PARTICIPANT,
 } from "../../data/network/graph/graphQLAPIClient";
-import {CONTRACTS} from "../constants";
+import {CONTRACTS, NETWORK} from "../constants";
 import AssetContract from "../../data/network/web3/contracts/assetContract";
+import { callSimulateFunc} from "@/proxy"
 import {ethers} from "ethers";
 import {createToaster} from "@meforma/vue-toaster";
+import InfuraEventCacheClient from "@/data/network/web3/events/InfuraEventCacheClient";
+
 
 /**
  * DAO service
@@ -24,6 +27,7 @@ class DAO {
     this.ethereumClient = ethereumClient;
     this.graphQLAPIClient = graphQLAPIClient;
     this.storageNetwork = storageNetwork;
+    this.cacheClient = new InfuraEventCacheClient(NETWORK.id, process.env.VUE_APP_INFURA_API_KEY, NETWORK.startBlock)
   }
 
   /**
@@ -37,9 +41,7 @@ class DAO {
     // Get indexed on-chain data
     const toast = createToaster({});
     toast.info("Fetching off-chain data...");
-    let proposals = await this.graphQLAPIClient.query(ALL_PROPOSALS, {id: assetId}, (mapper, response) => {
-      return mapper.mapProposals(response.data.frabric);
-    });
+    let proposals = await this.cacheClient.syncProposals(assetId, localStorage)
 
     // Fetch and append off-chain data
     try {
@@ -92,6 +94,30 @@ class DAO {
     return proposals;
   }
 
+  async simulateWillProposalComplete(proposalId, timeToQueueTimestamp) {
+    const assetId = CONTRACTS.WEAVR;
+    const networkId  = NETWORK.id
+    const toast = createToaster({});
+    const timeToCompleteTimestamp = timeToQueueTimestamp + 172800;
+
+    toast.info("Simulating Transaction Stack...");
+    console.log("simluation start, payload: ", proposalId, assetId, networkId, timeToQueueTimestamp, timeToCompleteTimestamp)
+    const response = await callSimulateFunc(proposalId, assetId, networkId, timeToQueueTimestamp, timeToCompleteTimestamp);
+    let result = []
+    console.log(response)
+    for(let i = 0; i < response.data.simulation_results.length; i++) {
+      const simulation = response.data.simulation_results[i].simulation
+      if("error_message" in simulation) {
+        result.push({status: "fail", url: `https://dashboard.tenderly.co/zeryx/project/simulator/${simulation.id}`})
+      } else {
+        result.push({status: "success", url: `https://dashboard.tenderly.co/zeryx/project/simulator/${simulation.id}`})
+      }
+    }
+    console.log(result)
+    toast.clear();
+    return result
+  }
+
 
   async getUserVouches(signer) {
     console.log("vouches");
@@ -107,12 +133,13 @@ class DAO {
   }
 
   /**
-   * Create a Paper Proposal
+   * Create a Thread Proposal
+   * @param {String} title Proposal title
+   * @param {String} description Proposal body
    * @param {String} assetId Asset's contract address
    * @param {String} name Chosen name for the thread
    * @param {String} descriptor of the thread
-   * @param {String} title Proposal title
-   * @param {String} description Proposal body
+   * @param {string} blobVersion Version of the blob
    * @param {String} forumLink Link to forum discussion
    * @param {String} tradeToken addess of the token used for the crowdfund
    * @param {Number} target amount to be raised through the crowdfund

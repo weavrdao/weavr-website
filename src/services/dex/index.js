@@ -1,13 +1,12 @@
-import { GraphQLAPIClient } from "../../data/network/graph/graphQLAPIClient";
-import EthereumClient from "../../data/network/web3/ethereum/ethereumClient";
-import DexRouterContract from "../../data/network/web3/contracts/dexRouterContract";
-import FrabricERC20Contract from "../../data/network/web3/contracts/frabricERC20Contract";
+import { GraphQLAPIClient } from "@/data/network/graph/graphQLAPIClient";
+import DexRouterContract from "@/data/network/web3/contracts/dexRouterContract";
+import WeavrERC20Contract from "@/data/network/web3/contracts/weavrERC20Contract";
 import {
   FRABRIC_DEX_ORDERS_QUERY,
   THREAD_DEX_ORDERS_QUERY,
 } from "../../data/network/graph/queries";
 import { NETWORK } from "../constants";
-import AssetContract from "../../data/network/web3/contracts/assetContract";
+import AssetContract from "@/data/network/web3/contracts/assetContract";
 /**
  * DEX service
  * @param {EthereumClient} ethereumClient Ethereum client
@@ -54,10 +53,10 @@ class DEX {
       this.ethereumClient,
       process.env.VUE_APP_DEX_ROUTER
     );
-    const status = await dexRouterContract.buy(
+    const status = dexRouterContract.buy(
       erc20,
-      NETWORK.TRADE_TOKEN_ADDRESS,
-      BigInt(price * minimumAmount),
+      NETWORK.TRADE_TOKEN,
+      price * minimumAmount,
       price,
       minimumAmount
     );
@@ -69,7 +68,7 @@ class DEX {
 
     const erc20 = await daoContract.erc20();
 
-    const frabricTokenContract = new FrabricERC20Contract(
+    const frabricTokenContract = new WeavrERC20Contract(
       this.ethereumClient,
       erc20
     );
