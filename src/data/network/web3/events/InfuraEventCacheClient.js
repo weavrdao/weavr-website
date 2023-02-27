@@ -1,5 +1,5 @@
 import {ethers } from 'ethers';
-import WEAVR from "../contracts/abi/Frabric.json"
+import WEAVR from "../contracts/abi/Weavr.json"
 import {PaperProposal} from "@/data/network/web3/events/proposals/PaperProposal";
 import {TokenActionProposal} from "@/data/network/web3/events/proposals/TokenActionProposal";
 import {ParticipantProposal} from "@/data/network/web3/events/proposals/ParticipantProposal";

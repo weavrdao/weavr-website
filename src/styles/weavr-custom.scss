@@ -49,6 +49,7 @@ $mediumGray-invert: findColorInvert($mediumGray);
 $lightGray-invert: findColorInvert($lightGray);
 $magenta-invert: findColorInvert($magenta);
 $mint-invert: findColorInvert($mint);
+$gold-invert: findColorInvert($gold);
 $red-invert: findColorInver($red);
 $cyan-invert: findColorInver($cyan);
 $dimmedBlue-invert:  findColorInver($dimmedBlue);
@@ -169,7 +170,8 @@ $addColors: (
   "cyan": ($cyan, $cyan-invert),
   "red": ($red, $red-invert),
   "magenta": ($magenta, $magenta-invert),
-  "mint": ($mint, $mint-invert)
+  "mint": ($mint, $mint-invert),
+  "gold": ($gold, $gold-invert)
 );
 $colors: map-merge($colors, $addColors);
 
