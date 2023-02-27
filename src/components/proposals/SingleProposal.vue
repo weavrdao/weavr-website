@@ -1,12 +1,23 @@
 <template>
   <div class="container p-5 relative">
-      <button @click="simulate" class="button is-small as-text-white">Simulate Proposal</button>
-     <div v-if="this.simluation_results.length !== 0 ">
-       <p class="has-text-white">Simulation Results, if there are any failures this proposal might not have enough votes to pass, or there might be another reason causing the proposal to fail.</p>
-       <a v-for="{url, status} in this.simluation_results" :key="url"
-       :href="url" class="button is-small as-text-white">{{status}}</a>
-
-     </div>
+    <div class="block p-0 has-background-darkGray">
+      <div @click="simulate" v-if="this.simluation_results.length == 0 && !ended" class=" mt-5 is-pulled-right button is-small is-rounded has-text-mediumGray is-dark">
+        <i><unicon name="cog" fill="#8D8D8D" :width="16" :heigth="16"/></i>
+        <span class="ml-1 is-text-7">Simulate Proposal</span>
+      </div>
+      <div v-if="this.simluation_results.length !== 0" class="has-radius-lg mt-5 is-pulled-right">
+        <!-- <span class="has-background-darkGray is-size-7 ">
+            <p v-if="this.simluation_results[this.simluation_results.length-1].status=='fail'" class="has-text-white">Simulation Results, if there are any failures this proposal might not have enough votes to pass, or there might be another reason causing the proposal to fail.</p>
+            <p v-else class="has-text-white">Simulation Sucessful, click here to navigate to the results.</p>
+        </span> -->
+        <a class="py-1"  v-for="{url, status} in this.simluation_results" :key="url"
+          :href="url" target="_blank">
+          <div :class="['tag  is-small has-text-white', status == 'fail' ? 'is-danger':'is-success']">
+            {{status}}
+          </div>
+        </a>
+      </div>
+    </div>
     <Proposal :proposal="proposal" />
     <div class="box has-background-darkGray">
       <label class="label">Consensus</label>
