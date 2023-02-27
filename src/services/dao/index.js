@@ -13,6 +13,9 @@ import AssetContract from "../../data/network/web3/contracts/assetContract";
 import { callSimulateFunc} from "@/proxy"
 import {ethers} from "ethers";
 import {createToaster} from "@meforma/vue-toaster";
+import InfuraEventCacheClient from "@/data/network/web3/events/InfuraEventCacheClient";
+
+
 /**
  * DAO service
  * @param {EthereumClient} ethereumClient Ethereum client
@@ -24,6 +27,7 @@ class DAO {
     this.ethereumClient = ethereumClient;
     this.graphQLAPIClient = graphQLAPIClient;
     this.storageNetwork = storageNetwork;
+    this.cacheClient = new InfuraEventCacheClient(NETWORK.id, process.env.VUE_APP_INFURA_API_KEY, NETWORK.startBlock)
   }
 
   /**
@@ -37,9 +41,7 @@ class DAO {
     // Get indexed on-chain data
     const toast = createToaster({});
     toast.info("Fetching off-chain data...");
-    let proposals = await this.graphQLAPIClient.query(ALL_PROPOSALS, {id: assetId}, (mapper, response) => {
-      return mapper.mapProposals(response.data.frabric);
-    });
+    let proposals = await this.cacheClient.syncProposals(assetId, localStorage)
 
     // Fetch and append off-chain data
     try {
@@ -217,7 +219,6 @@ class DAO {
    * @param {string} title Proposal title
    * @param {string} description Proposal body
    * @param {string} forumLink Link to forum discussion
-   * @param daoResolution {Boolean} Whether the proposal is a DAO resolution
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
    */
   async createPaperProposal(asset, title, description, forumLink, daoResolution) {
