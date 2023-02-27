@@ -14,13 +14,13 @@ startBlock = 42161
     TRADE_TOKEN = "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"
     AIRDROP = "0x560ea772dbb194fa471ce9a5573daddc3e632f26"
 
-[arbitrum_testnet]
+[arbitrum_goerli]
 name ="Arbitrum Goerli Testnet"
 id = 421613
 graph = "https://api.thegraph.com/subgraphs/name/abstrucked/weavr-goerli-test"
 explorer = "https://goerli.arbiscan.io"
 startBlock = 4407135
-    [arbitrum_testnet.contracts]
+    [arbitrum_goerli.contracts]
     AUCTION = "0xd25dDF457c643b6aC43d7673685E2A4dc71A1828"
     TOKEN_ADDRESS = "0x022E82b234b8b7E2E1F994bC153C05554B189D82"
     BEACON_ADDRESS = "0xcd73A7673EF7a6954D9c02C56d268bd002B54c2a"
