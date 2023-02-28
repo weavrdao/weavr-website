@@ -96,13 +96,14 @@ class DAO {
 
   async simulateWillProposalComplete(proposalId, timeToQueueTimestamp) {
     const assetId = CONTRACTS.WEAVR;
-    const networkId  = NETWORK.id
+    const networkId  =  NETWORK.id;
     const toast = createToaster({});
     const timeToCompleteTimestamp = timeToQueueTimestamp + 60 * 60 * 24 * 2;
+    const blockNumber = await this.cacheClient.provider.getBlockNumber()
 
     toast.info("Simulating Transaction Stack...");
-    console.log("simluation start, payload: ", proposalId, assetId, networkId, timeToQueueTimestamp, timeToCompleteTimestamp)
-    const response = await callSimulateFunc(proposalId, assetId, networkId, timeToQueueTimestamp, timeToCompleteTimestamp);
+    console.log("simluation start, payload: ", proposalId, assetId, networkId, blockNumber, timeToQueueTimestamp, timeToCompleteTimestamp)
+    const response = await callSimulateFunc(proposalId, assetId, networkId, blockNumber, timeToQueueTimestamp, timeToCompleteTimestamp);
     let result = []
     console.log(response)
     for(let i = 0; i < response.data.simulation_results.length; i++) {
