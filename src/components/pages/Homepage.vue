@@ -11,9 +11,9 @@
         <div class="columns is-3-desktop">
           <div class="column">
             <a
-              class="button is-primary is-fullwidth is-size-4"
-              href="https://weavr-dao.gitbook.io/weavr-dao/"
-              target="_blank"
+                class="button is-primary is-fullwidth is-size-4"
+                href="https://weavr-dao.gitbook.io/weavr-dao/"
+                target="_blank"
             >
               Learn more
             </a>
@@ -56,14 +56,14 @@
       <div class="column is-half">
         <div class="subtitle is-size-3 has-text-primary"><b>For Buyers</b></div>
         <div
-          class="has-radius-md mb-3 has-background-darkGray py-3 px-0"
-          v-for="text in forBuyers"
-          :key="text"
+            class="has-radius-md mb-3 has-background-darkGray py-3 px-0"
+            v-for="text in forBuyers"
+            :key="text"
         >
           <span class="has-radius-md p-3 has-background-primary">◉</span>
           <span class="has-radius-md has-text-white p-3 is-size-7 is-size-6-desktop">{{
-            text
-          }}</span>
+              text
+            }}</span>
         </div>
       </div>
     </div>
@@ -74,14 +74,14 @@
           <b>For Dreamers</b>
         </div>
         <div
-          class="has-radius-md mb-3 has-background-darkGray py-3 px-0"
-          v-for="text in forDreamers"
-          :key="text"
+            class="has-radius-md mb-3 has-background-darkGray py-3 px-0"
+            v-for="text in forDreamers"
+            :key="text"
         >
           <span class="has-radius-md p-3 has-background-primary">◉</span>
           <span
-            class="has-radius-md has-text-white p-3 is-size-7 is-size-6-desktop"
-            >{{ text }}</span
+              class="has-radius-md has-text-white p-3 is-size-7 is-size-6-desktop"
+          >{{ text }}</span
           >
         </div>
       </div>
@@ -94,14 +94,14 @@
     <div class="has-radius-lg p-3">
       <div class="is-vcentered is-one-fifth px-6 is-3">
         <div class="title is-1 is-size-3-mobile mt-3">What makes us Unique?</div>
-       </div>
+      </div>
       <div class=" columns  mt-0 is-6 ">
         <div class="column is-full p-5 is-centered">
           <div class="columns is-multiline is-desktop">
             <div
-              class="column is-one-third has-radius-lg has-background-darkGray mt-4"
-              v-for="point in uniquePoints"
-              :key="point.id"
+                class="column is-one-third has-radius-lg has-background-darkGray mt-4"
+                v-for="point in uniquePoints"
+                :key="point.id"
             >
               <div class="block bullet-point"></div>
               <div class="subtitle">{{ point.heading }}</div>
@@ -114,7 +114,7 @@
       </div>
     </div>
 
-    
+
     <div class="box columns has-text-white p-5 is-5">
       <div class="column is-half is-5">
         <div class="image has-radius-lg has-full-borders-primary p-5">
@@ -128,16 +128,16 @@
           transactions, while relying on the Ethereum mainnet for security.
         </div>
         <a
-          class="button is-primary mt-4"
-          href="https://arbitrum.io/"
-          target="_blank"
-          >Learn more</a
+            class="button is-primary mt-4"
+            href="https://arbitrum.io/"
+            target="_blank"
+        >Learn more</a
         >
       </div>
     </div>
 
     <div
-      class="box columns has-background-white has-text-darkGray columns p-5 m-3"
+        class="box columns has-background-white has-text-darkGray columns p-5 m-3"
     >
       <div class="column is-three-quarters p-3">
         <div class="w-75">
@@ -148,9 +148,9 @@
           </p>
         </div>
         <a
-          class="button is-primary"
-          href="https://3a567f7a.sibforms.com/serve/MUIEAAkS53zR0h7rhxExKB1X1JotCHaM4o7FBy9qRH3V7h92zXfDojr8PpuqQVRtRIYoeLgWddoOz_IVgW3DofxtESXPIwfentMntmPtVWwU_sTQTpYSt6ESaeVmSheGFH20mDIsMgM1UbzffXQ9ghnsJl8wKxqmH0Lxs7_Ppe1Kd6CVHsywoa4e0jFJBCru4UTyeIdV_z53X2yd"
-          >Subscribe
+            class="button is-primary"
+            href="https://3a567f7a.sibforms.com/serve/MUIEAAkS53zR0h7rhxExKB1X1JotCHaM4o7FBy9qRH3V7h92zXfDojr8PpuqQVRtRIYoeLgWddoOz_IVgW3DofxtESXPIwfentMntmPtVWwU_sTQTpYSt6ESaeVmSheGFH20mDIsMgM1UbzffXQ9ghnsJl8wKxqmH0Lxs7_Ppe1Kd6CVHsywoa4e0jFJBCru4UTyeIdV_z53X2yd"
+        >Subscribe
         </a>
       </div>
       <div class="column p-5">
