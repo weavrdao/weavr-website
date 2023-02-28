@@ -49,7 +49,7 @@ class DAO {
       for (let i = 0; i < proposals.length; i++) {
         if (offChainData[i].value) {
           proposals[i].title = offChainData[i].value.title || "Untitled";
-          proposals[i].description = offChainData[i].value.description || "No description";
+          proposals[i].description = offChainData[i].value.description || "See Forum Link for Details";
           proposals[i].daoResolution = offChainData[i].value.daoResolution || false;
           proposals[i].forumLink = offChainData[i].value.forumLink || "https://forum.weavr.org";
         } else {
@@ -98,7 +98,7 @@ class DAO {
     const assetId = CONTRACTS.WEAVR;
     const networkId  = NETWORK.id
     const toast = createToaster({});
-    const timeToCompleteTimestamp = timeToQueueTimestamp + 172800;
+    const timeToCompleteTimestamp = timeToQueueTimestamp + 60 * 60 * 24 * 2;
 
     toast.info("Simulating Transaction Stack...");
     console.log("simluation start, payload: ", proposalId, assetId, networkId, timeToQueueTimestamp, timeToCompleteTimestamp)

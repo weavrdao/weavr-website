@@ -22,7 +22,7 @@
       </strong>
     </p>
     <a :href="this.proposal.forumLink" target="_blank" rel="noopener" class="button has-background-mediumBlue has-text-white mt-3">Forum link</a>
-    <!-- Upgrade Proposal Information -->
+    <!-- Upgrade Proposal -->
     <div v-if="this.proposal.code">
       <label class="label">New Code Address</label>
       <Address :value="this.proposal.code" />
@@ -35,18 +35,22 @@
       <label class="label">Proposed Version</label>
       <p><strong>{{this.proposal.version}}</strong></p>
     </div>
-    <!-- End Upgrade Proposal Information -->
+    <!-- End Upgrade Proposal -->
 
-    <!-- Participant Proposal Upgrade -->
+    <!-- Participant Proposal -->
     <div v-if="this.proposal.participant">
       <label class="label">Participant Address</label>
       <Address :value="this.proposal.participant" />
     </div>
     <div v-if="this.proposal.participantType">
       <label class="label">Participant Type</label>
-      <p><strong>{{this.proposal.participantType}}</strong></p>
+      <p><strong>{{ParticipantType()[this.proposal.participantType]}}</strong></p>
     </div>
-    <!-- End Participant Proposal Upgrade -->
+    <div v-if="this.proposal.selectedType">
+      <label class="label">Participant Type</label>
+      <p><strong>{{ParticipantType()[this.proposal.selectedType]}}</strong></p>
+    </div>
+    <!-- End Participant Proposal -->
 
     <!-- Token Action Proposal -->
     <div v-if="this.proposal.token">
@@ -104,7 +108,7 @@ export default {
   name: "Proposal",
   components: {
     Address,
-    VueMarkdown
+    VueMarkdown,
   },
   props: ["proposal"],
   data() {
@@ -128,6 +132,18 @@ export default {
     },
     endDateString() {
       return dateStringForTimestamp(this.proposal.endTimestamp);
+    },
+    ParticipantType() {
+      return {
+        0: "Null",
+        1: "removed",
+        2: "Genesis",
+        3: "Verifier",
+        4: "Governor",
+        5: "Voucher",
+        6: "Individual",
+        7: "Corporation",
+      }
     },
   }
 }
