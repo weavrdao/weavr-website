@@ -67,7 +67,14 @@ module.exports = {
         }
       })
       .end()
-
+    // in your loaders:
+    config.module
+      .rule('toml')
+      .test(/\.toml$/)
+      .use('@lcdev/toml-loader')
+        .loader('@lcdev/toml-loader')
+        .end()
+    
     config.merge({
       devServer: {
         proxy: {

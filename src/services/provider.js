@@ -9,7 +9,7 @@ import IPFSStorageNetwork from "../data/network/storage/ipfs/IPFSStorageNetwork"
 import EthereumClient from "../data/network/web3/ethereum/ethereumClient"
 import TheGraphAPIClient from "../data/network/graph/implementation/theGraphAPIClient"
 import TheGraphAPIMapper from "../data/network/graph/implementation/theGraphAPIClientMapper"
-import DEX from "./dex/index,js";
+import DEX from "./dex";
 const graphQLAPIClient = new TheGraphAPIClient(new TheGraphAPIMapper())
 const ethereumClient = new EthereumClient()
 const storageNetwork = new IPFSStorageNetwork()
@@ -44,7 +44,7 @@ class ServiceProvider {
     return new DAO(
       ethereumClient,
       graphQLAPIClient,
-      storageNetwork
+      storageNetwork,
     )
   }
 
