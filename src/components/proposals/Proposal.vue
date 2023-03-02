@@ -87,11 +87,11 @@
             </div>
           </div>
           <div class="box has-background-darkGray">
-            <div class=" image-container">
+            <div v-if="showImage"  class=" image-container">
               <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
                 <Slide v-for="imageHash in this.proposal.imageHashes" v-bind:key="imageHash">
                   <div class="slide-image-container">
-                    <img v-bind:src="getIpfsUrl(imageHash)" alt="">
+                    <a :href="getIpfsUrl(imageHash)"><img v-bind:src="getIpfsUrl(imageHash)" /></a>
                   </div>
                 </Slide>
                 <template #addons>
@@ -190,6 +190,9 @@ export default {
   props: ["proposal"],
   data() {
     return {
+      showImage: false,
+      retryCount: 0,
+      maxRetry: 10,
       typeStylingData: getProposalTypeStyling(this.proposal.proposalType)
     }
   },
@@ -227,6 +230,12 @@ export default {
         ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${path}`
         : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
     },
+  },
+  mounted() {
+    console.log("mounting image")
+    setTimeout(() => {
+      this.showImage = true;
+    }, 2000);
   },
 }
 </script>

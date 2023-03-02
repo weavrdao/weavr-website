@@ -8,7 +8,7 @@ export class TokenActionProposal extends PaperProposal {
     this.token = token
     this.target = target
   this.mint = mint
-  this.price = price
+  this.price = price.toNumber()
   this.amount = amount
   }
 
