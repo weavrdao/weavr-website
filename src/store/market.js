@@ -115,7 +115,7 @@ const actions = {
   
   async refreshNeedles(context) {
     const needles = await market.getNeedles();
-    console.log(needles);
+    console.log("STORE:::::", needles);
     context.commit("setNeedles", needles);
   },
   

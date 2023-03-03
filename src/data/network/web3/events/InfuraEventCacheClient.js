@@ -1,5 +1,11 @@
 import {ethers } from 'ethers';
 import WEAVR from "../contracts/abi/Frabric.json"
+import {CONTRACTS} from "@/services/constants"
+import ThreadDeployer from "../contracts/abi/ThreadDeployer.json"
+import Crowdfund from "../contracts/abi/Crowdfund.json"
+import * as ThreadJson from "../contracts/abi/Thread.json"
+import Needle from "@/models/marketplace/needle"
+import Thread from "@/models/marketplace/thread"
 import {PaperProposal} from "@/data/network/web3/events/proposals/PaperProposal";
 import {TokenActionProposal} from "@/data/network/web3/events/proposals/TokenActionProposal";
 import {ParticipantProposal} from "@/data/network/web3/events/proposals/ParticipantProposal";
@@ -7,9 +13,8 @@ import {ThreadProposal} from "@/data/network/web3/events/proposals/ThreadProposa
 import {UpgradeProposal} from "@/data/network/web3/events/proposals/UpgradeProposal";
 import {ParticipantRemovalProposal} from "@/data/network/web3/events/proposals/ParticipantRemovalProposal";
 import {Vote} from "@/models/vote";
-import {ProposalState, ProposalTypes} from "@/models/common";
+import {ProposalState, ProposalTypes, CrowdfundState} from "@/models/common";
 import {getIpfsHashFromBytes32} from "@/data/network/storage/ipfs/common";
-
 class InfuraEventCacheClient {
   constructor(ProviderNetwork, ProviderApiKey, startBlockNumber) {
     this.provider = new ethers.providers.InfuraProvider(ProviderNetwork, ProviderApiKey);
@@ -30,7 +35,7 @@ class InfuraEventCacheClient {
     const syncBlockNumber = parseInt(localCache.getItem("syncBlockNumber"));
     let proposals = localCache.getItem("proposals") ? JSON.parse(localCache.getItem("proposals")) : {}
     const currentBlockNumber = await this.provider.getBlockNumber();
-// Listen for all events emitted by the contract, starting from the specified block number
+// Listen for all events emitted by the co@/services/cntract, starting from the specified block number
     if(syncBlockNumber !== null) {
       blockNumber = syncBlockNumber;
     } else {
@@ -124,6 +129,78 @@ class InfuraEventCacheClient {
       }
     })
   }
+
+  async fetchNeedles() {
+    const threadDeployer = new ethers.Contract(CONTRACTS.THREAD_DEPLOYER, ThreadDeployer.abi, this.provider)
+    const crowdfundEvents = (await threadDeployer.queryFilter(threadDeployer.filters.CrowdfundedThread()))
+    let crfMap = []
+    console.log("CROWDFUNDED NEEDLES:::::", crowdfundEvents);
+    const NEEDLES = crowdfundEvents.map( async (crf) => {
+      const {crowdfund, target, thread, token} = crf.args
+      const crowdfundSC = new ethers.Contract(crowdfund, Crowdfund.abi, this.provider)
+      const stateEvent = await crowdfundSC.queryFilter(crowdfundSC.filters.StateChange())
+      const state = stateEvent[stateEvent.length-1].args['state']
+      
+      const depositEvent = await crowdfundSC.queryFilter(crowdfundSC.filters.Deposit())
+      let deposited = ethers.BigNumber.from("0")
+      const deposits = depositEvent.map( dep => {
+        const amount = dep.args['amount'].toString()
+        const id = `${dep.args['depositor']}_${dep.args['amount']}`
+        deposited = deposited.add(dep.args['amount'])
+        return new Deposit(id, dep.args['depositor'], dep.args['amount'])
+      })
+
+      const withdrawalsEvent = await crowdfundSC.queryFilter(crowdfundSC.filters.Withdraw())
+      let withdrew = ethers.BigNumber.from("0")
+      const withdrawals = withdrawalsEvent.map( dep => {
+        const amount = dep.args['amount'].toString()
+        const id = `${dep.args['depositor']}_${dep.args['amount']}`
+        withdrew = withdrew.add(dep.args['amount'])
+        return new Deposit(id, dep.args['depositor'], dep.args['amount'])
+      })
+
+      const DistributionEvent = await crowdfundSC.queryFilter(crowdfundSC.filters.Distribution())
+      
+      const distributions = DistributionEvent.map( dep => {
+        const id = `${dep.args['depositor']}_${dep.args['amount']}`
+        return new Deposit(id, dep.args['depositor'], dep.args['amount'])
+      })
+      // deposited = deposited.sub(withdrew)
+
+      const threadSC = new ethers.Contract(thread, ThreadJson.abi, this.provider)
+      const governor = await threadSC.governor()
+      const erc20 = await threadSC.erc20()
+      const descriptor = await threadSC.descriptor()
+
+      const needle = new Needle(
+        crowdfund,
+        CrowdfundState[state],  
+        deposited,
+        target,
+        new Thread(thread, 1, governor, erc20, descriptor),
+        deposits,
+        withdrawals,
+        distributions,
+        token
+      )
+      crfMap.push(needle)
+      return needle
+    })
+    
+    return Promise.all(NEEDLES).then(res => {
+      console.log(res)
+      return res
+    })
+  }
 }
+
+class Deposit {
+  constructor(id, depositor, amount) {
+    this.id = id
+    this.depositor = depositor
+    this.amount = amount
+  }
+}
+
 
 export default InfuraEventCacheClient;

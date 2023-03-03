@@ -1,11 +1,12 @@
 <template>
 <div class="container py-3">
     <div :style="getCoverStyle()" class="cover-image mb-5">
+      {{ needle }}
       <div class="information-container">
         <div class="tag-container mb-2">
           <span class="tag has-background-mediumBlue has-text-white">Residential</span>
         </div>
-        <h3 class="has-text-white property-title mb-4">{{ needle.name }}</h3>
+        <h3 class="has-text-white property-title mb-4">{{ "name" }}</h3>
         <Address :value="this.needle.id" />
       </div>
         <div class="weavr-icon-container">  
@@ -152,8 +153,11 @@ export default {
     }),
     
     needle() {
-      return this.needles
+      const needle = this.needles
         .find(n => n.id === this.needleId);
+        console.log("NNNNNNNN", needle
+        );
+      return needle
     },
     metrics() {
       if(!isJson(this.needle.metrics)) return {}
@@ -194,7 +198,7 @@ export default {
         : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
     },
     getCoverStyle() {
-      const url = this.needle.imagesHashes
+      const url = this.needle?.imagesHashes
         ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${this.needle.imagesHashes[0]}`
         : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
     
@@ -228,7 +232,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.needle);
+    console.log("SINGLENEEDLE", this.needles);
     this.fetchNeedleTokenData({
       assetId: this.needleId,
     })

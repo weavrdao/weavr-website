@@ -26,32 +26,13 @@ class Thread {
     governor,
     erc20,
     descriptor,
-    address = null,
-    area = null,
-    coverPictureURI = null,
-    currentRent = null,
-    description = null,
-    grossYieldPct = null,
-    marketValue = null,
-    bedroomCount = null,
-    bathroomCount = null,
-    yearBuilt = null
   ) {
     this.id = id
     this.variant = variant
     this.governor = governor
     this.erc20 = erc20
     this.descriptor = descriptor
-    this.address = address
-    this.area = area
-    this.coverPictureURI = coverPictureURI
-    this.currentRent = currentRent
-    this.description = description
-    this.grossYieldPct = grossYieldPct
-    this.marketValue = marketValue
-    this.bedroomCount = bedroomCount
-    this.bathroomCount = bathroomCount
-    this.yearBuilt = yearBuilt
+    
   }
 }
   

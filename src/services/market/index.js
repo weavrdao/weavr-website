@@ -7,12 +7,12 @@ import Asset from "../../models/marketplace/asset"
 import {
   GraphQLAPIClient, // eslint-disable-line no-unused-vars
   ALL_THREADS_QUERY,
-  ALL_NEEDLES_QUERY
+
 } from "../../data/network/graph/graphQLAPIClient" 
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient" // eslint-disable-line no-unused-vars
 import {getIpfsHashFromBytes32} from "../../data/network/storage/ipfs/common";
 import {NETWORK} from "../constants"
-
+import InfuraEventCacheClient from "@/data/network/web3/events/InfuraEventCacheClient"
 /**
  * Market Provider service
  * @param {EthereumClient} ethereumClient Ethereum client
@@ -28,6 +28,7 @@ class Market {
     this.ethereumClient = ethereumClient
     this.graphQLAPIClient = graphQLAPIClient
     this.storageNetwork = storageNetwork
+    this.cacheClient = new InfuraEventCacheClient(NETWORK.id, process.env.VUE_APP_INFURA_API_KEY, NETWORK.startBlock)
   }
 
   /**
@@ -170,25 +171,19 @@ class Market {
   }
 
   async getNeedles() {
-    const needles = await this.graphQLAPIClient
-      .query(
-        ALL_NEEDLES_QUERY,
-        {
-          weavrId: NETWORK.contracts.WEAVR
-        },
-        (mapper, response) => {
-          console.log("RESPONSE:  ", response);
-          const mappedNeedles = mapper.mapRawNeedles(response.data.crowdfunds)
-          return mappedNeedles
-        }
-      )
-    console.log(needles)
+   
+    const needles = await this.cacheClient.fetchNeedles()
+    console.log("NEEDLES________", needles)
+    needles.map( el => {
+      console.log("ELEMENTS",el.id)
+    })
 
     try {
-      const offChainData = await this.storageNetwork.getFiles(
-        needles.map(({thread}) => getIpfsHashFromBytes32(thread.descriptor)),
-        localStorage
-      );
+      const descriptors = needles.map( el => {
+        return getIpfsHashFromBytes32(el.thread.descriptor)
+      })
+      const offChainData = await this.storageNetwork.getFiles(descriptors,localStorage);
+      
       console.log("offChainData", offChainData);
       for (let i = 0; i < needles.length; i++) {
         if (offChainData[i].value) {
@@ -200,9 +195,10 @@ class Market {
         } else {
           needles[i].descriptor = offChainData[i].descriptor;
           needles[i].name = offChainData[i].name;
-          needles[i].imagesHashes = offChainData[i].imagesHashes;
-          needles[i].metrics = offChainData[i].metrics;
+          needles[i].imagesHashes = offChainData[i].imagesHashes || null;
+          needles[i].metrics = offChainData[i].metrics || null;
         }
+        console.log(needles[i]);
       }
     } catch (e) {
       // no-op
