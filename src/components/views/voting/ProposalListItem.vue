@@ -3,7 +3,7 @@
       <div :class="this.typeStylingData.class">
         {{ this.typeStylingData.text }}
       </div>
-      <div :class="[proposal.state=='Cancelled' || proposal.state=='Failed' ? 'has-text-red' : 'has-text-success']">{{proposal.state}}</div>
+      <div :class="[proposal.status=='Cancelled' || proposal.status=='Failed' ? 'has-text-red' : 'has-text-success']">{{proposal.status}}</div>
       <div class="proposal-date">
         <h2 class="is-size-5 has-text-mediumBlue">
             {{ this.startDate }}

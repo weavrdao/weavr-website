@@ -3,7 +3,7 @@ name ="Arbitrum One"
 id = 42161
 graph = "https://api.thegraph.com/subgraphs/name/abstrucked/weavr_goerli"
 explorer = "https://arbiscan.io"
-startBlock = 42161
+startBlock = 26883361
     [arbitrum.contracts]
     TOKEN_ADDRESS = "0x90BE6F8f30931322e60b913ecE49d1724D996054"
     BEACON_ADDRESS = "0x09f78bbefec822c6d81efb7a1474dee5727cc610"
@@ -37,7 +37,7 @@ name ="Arbitrum Goerli Testnet"
 id = 421613
 graph = "https://api.thegraph.com/subgraphs/name/abstrucked/weavr-goerli-test"
 explorer = "https://goerli.arbiscan.io"
-startBlock = 4407135
+startBlock = 7974853
     [arbitrum_goerli.contracts]
     AUCTION = "0xd25dDF457c643b6aC43d7673685E2A4dc71A1828"
     TOKEN_ADDRESS = "0x022E82b234b8b7E2E1F994bC153C05554B189D82"
