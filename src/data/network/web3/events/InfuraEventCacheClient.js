@@ -1,6 +1,6 @@
 import {ethers } from 'ethers';
 import WEAVR from "../contracts/abi/Frabric.json"
-import {PaperProposal} from "@/data/network/web3/events/proposals/PaperProposal";
+import {BaseProposal} from "@/data/network/web3/events/proposals/BaseProposal";
 import {TokenActionProposal} from "@/data/network/web3/events/proposals/TokenActionProposal";
 import {ParticipantProposal} from "@/data/network/web3/events/proposals/ParticipantProposal";
 import {ThreadProposal} from "@/data/network/web3/events/proposals/ThreadProposal";
@@ -22,31 +22,26 @@ class InfuraEventCacheClient {
       "ParticipantProposal": {cls: ParticipantProposal, type: ProposalTypes.Participant},
       "ParticipantRemovalProposal": {cls: ParticipantRemovalProposal, type: ProposalTypes.ParticipantRemoval}
     }
+    this.proposals = null
   }
 
   // Gets all proposals, and ensures that current proposals are updated
-  async syncProposals(assetId, localCache) {
+  async syncProposals(assetId) {
     let blockNumber;
-    const syncBlockNumber = parseInt(localCache.getItem("syncBlockNumber"));
-    let proposals = localCache.getItem("proposals") ? JSON.parse(localCache.getItem("proposals")) : {}
     const currentBlockNumber = await this.provider.getBlockNumber();
 // Listen for all events emitted by the contract, starting from the specified block number
-    if(syncBlockNumber !== null) {
-      blockNumber = syncBlockNumber;
-    } else {
-      blockNumber = this.startBlockNumber;
-    }
-    console.log(proposals)
+    blockNumber = this.startBlockNumber;
     console.log(blockNumber)
     console.log(currentBlockNumber)
-    await this.getProposals(assetId, proposals, blockNumber, currentBlockNumber)
-    await this.processProposalTypeData(assetId, proposals, blockNumber, currentBlockNumber)
-    await this.updateProposalsWithVotes(assetId, proposals, blockNumber, currentBlockNumber)
-    await this.processProposalStateChanges(assetId, proposals, blockNumber, currentBlockNumber)
-    await this.finalizeProposals(proposals)
-    localCache.setItem("proposals", JSON.stringify(proposals))
-    localCache.setItem("syncBlockNumber", currentBlockNumber)
-    return Object.values(proposals)
+    if (this.proposals === null) {
+      this.proposals = {}
+      await this.getProposals(assetId, this.proposals, blockNumber, currentBlockNumber)
+      await this.processProposalTypeData(assetId, this.proposals, blockNumber, currentBlockNumber)
+      await this.updateProposalsWithVotes(assetId, this.proposals, blockNumber, currentBlockNumber)
+      await this.processProposalStatusChanges(assetId, this.proposals, blockNumber, currentBlockNumber)
+      await this.finalizeProposals(this.proposals)
+    }
+    return Object.values(this.proposals)
   }
 
   async getProposals(assetId, proposals, blockNumber, currentBlockNumber) {
@@ -57,7 +52,7 @@ class InfuraEventCacheClient {
       for (const raw_event of raw_events) {
         const event = weavr_iface.decodeEventLog("Proposal", raw_event.data, raw_event.topics)
         const block = await this.provider.getBlock(raw_event.blockNumber)
-        const proposal = new PaperProposal(event.id.toNumber(), event.creator, event.info, event.supermajority, block.timestamp)
+        const proposal = new BaseProposal(event.id.toNumber(), event.creator, event.info, event.supermajority, block.timestamp)
         proposals[proposal.id] = proposal
       }
       // Filter out only the events that are important to you
@@ -85,22 +80,22 @@ class InfuraEventCacheClient {
           const event = weavr_iface.decodeEventLog(proposalTypeName, raw_event.data, raw_event.topics)
           if (event.id in proposals) {
             const prop = proposals[event.id]
-            const state = {votes: prop.votes, type: this.proposalTypeSwitch[proposalTypeName].type, status: prop.status}
-            proposals[event.id] = new this.proposalTypeSwitch[proposalTypeName].cls(proposals[event.id], event, state)
+            prop.type = this.proposalTypeSwitch[proposalTypeName].type
+            proposals[event.id] = new this.proposalTypeSwitch[proposalTypeName].cls(prop, event)
           }
         }
       })
     }
   }
 
-  async processProposalStateChanges(assetId, proposals, syncBlockNumber, currentBlockNumber) {
+  async processProposalStatusChanges(assetId, proposals, syncBlockNumber, currentBlockNumber) {
     const weavr_contract = new ethers.Contract(assetId, this.weavr_abi, this.provider);
     const weavr_iface = new ethers.utils.Interface(this.weavr_abi);
     await weavr_contract.queryFilter("ProposalStateChange", syncBlockNumber, currentBlockNumber).then(async (raw_events) => {
       for (const raw_event of raw_events) {
         const event = weavr_iface.decodeEventLog("ProposalStateChange", raw_event.data, raw_event.topics)
         if (event.id in proposals) {
-          proposals[event.id].state = ProposalState[event.state]
+          proposals[event.id].status = ProposalState[event.state]
         } else {
           throw new Error(`Got ProposalStateChange for proposal ${event.id} but no proposal exists with that id`);
         }

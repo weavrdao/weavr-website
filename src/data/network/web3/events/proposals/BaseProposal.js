@@ -1,29 +1,30 @@
 import {ProposalState, ProposalTypes} from "@/models/common";
 import {VoteType} from "@/models/vote";
 
-export class PaperProposal {
-  constructor (id, creator, info, superMajority, startTimestamp, state = {}) {
+export class BaseProposal {
+  constructor (id, creator, info, superMajority, startTimestamp,
+    status, type, votes) {
     this.id = id;
     this.creator = creator;
     this.info = info;
     this.superMajority = superMajority;
     this.startTimestamp = startTimestamp
-    if ("votes" in state) {
-      this.votes = state.votes
-    } else {
-      this.votes = []
-    }
-    if ("status" in state) {
-      this.status = state.status
-
-    } else {
+    if(!status) {
       this.status = ProposalState.Active
-    }
-    if ("type" in state) {
-      this.type = state.type
     } else {
-      this.type = ProposalTypes.Paper;
+        this.status = status
     }
+    if(!type) {
+        this.type = ProposalTypes.Paper
+    } else {
+        this.type = type
+    }
+    if(!votes) {
+        this.votes = []
+    } else {
+        this.votes = votes
+    }
+
   }
 
   addVote(vote) {
