@@ -180,7 +180,7 @@ class Market {
 
     try {
       const descriptors = needles.map( el => {
-        return getIpfsHashFromBytes32(el.thread.descriptor)
+        return getIpfsHashFromBytes32(el.descriptor)
       })
       const offChainData = await this.storageNetwork.getFiles(descriptors,localStorage);
       

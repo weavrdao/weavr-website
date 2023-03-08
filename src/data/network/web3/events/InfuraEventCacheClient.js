@@ -3,9 +3,7 @@ import WEAVR from "../contracts/abi/Frabric.json"
 import {CONTRACTS} from "@/services/constants"
 import ThreadDeployer from "../contracts/abi/ThreadDeployer.json"
 import Crowdfund from "../contracts/abi/Crowdfund.json"
-import * as ThreadJson from "../contracts/abi/Thread.json"
-import Needle from "@/models/marketplace/needle"
-import Thread from "@/models/marketplace/thread"
+import {Needle, Thread} from "./marketplace/Asset"
 import {BaseProposal} from "@/data/network/web3/events/proposals/BaseProposal";
 import {TokenActionProposal} from "@/data/network/web3/events/proposals/TokenActionProposal";
 import {ParticipantProposal} from "@/data/network/web3/events/proposals/ParticipantProposal";
@@ -54,10 +52,8 @@ class InfuraEventCacheClient {
     const weavr_iface = new ethers.utils.Interface(this.weavr_abi);
 
     await weavr_contract.queryFilter("Proposal").then(async (raw_events) => {
-      console.log("RAW EVENTS :: ", raw_events);
       for (const raw_event of raw_events) {
         const event = weavr_iface.decodeEventLog("Proposal", raw_event.data, raw_event.topics)
-        console.log(event);
         const block = await this.provider.getBlock(raw_event.blockNumber)
         const proposal = new BaseProposal(event.id.toNumber(), event.creator, event.info, event.supermajority, block.timestamp)
         proposals[proposal.id] = proposal
@@ -129,7 +125,20 @@ class InfuraEventCacheClient {
 
   async fetchNeedles() {
     const threadDeployer = new ethers.Contract(CONTRACTS.THREAD_DEPLOYER, ThreadDeployer.abi, this.provider)
+    /**
+       * Fetch Thread specific data
+       */
+    let threadMap = new Map();
+    await threadDeployer.queryFilter(threadDeployer.filters.Thread()).then( (rawThreads) => {
+      rawThreads.map( t => {
+        threadMap.set(t.args.thread, { thread: t.args.thread, governor: t.args.governor, variant: t.args.variant, descriptor: t.args.descriptor })
+      })
+    })
+    console.log("ARGS", threadMap);
     const crowdfundEvents = (await threadDeployer.queryFilter(threadDeployer.filters.CrowdfundedThread()))
+    /**
+     * fetch Crowdfund specific data
+     */
     let crfMap = []
     console.log("CROWDFUNDED NEEDLES:::::", crowdfundEvents);
     const NEEDLES = crowdfundEvents.map( async (crf) => {
@@ -164,22 +173,26 @@ class InfuraEventCacheClient {
       })
       // deposited = deposited.sub(withdrew)
 
-      const threadSC = new ethers.Contract(thread, ThreadJson.abi, this.provider)
-      const governor = await threadSC.governor()
-      const erc20 = await threadSC.erc20()
-      const descriptor = await threadSC.descriptor()
 
+      
+      // console.log(threadEvents);
+      // console.log(threadEvents[0].args.thread);
+      // const t = threadEvents.find( t => {t.args.thread == thread})
+      // console.log("t____", t);
+      console.log(threadMap.get(thread).descriptor);
       const needle = new Needle(
         crowdfund,
         CrowdfundState[state],  
+        threadMap.get(thread).descriptor,
+        threadMap.get(thread).descriptor,
         deposited,
         target,
-        new Thread(thread, 1, governor, erc20, descriptor),
         deposits,
         withdrawals,
         distributions,
         token
       )
+      console.log(needle);
       crfMap.push(needle)
       return needle
     })

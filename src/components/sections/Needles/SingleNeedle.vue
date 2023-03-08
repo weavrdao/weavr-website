@@ -1,12 +1,11 @@
 <template>
 <div class="container py-3">
     <div :style="getCoverStyle()" class="cover-image mb-5">
-      {{ needle }}
       <div class="information-container">
         <div class="tag-container mb-2">
           <span class="tag has-background-mediumBlue has-text-white">Residential</span>
         </div>
-        <h3 class="has-text-white property-title mb-4">{{ "name" }}</h3>
+        <h3 class="has-text-white property-title mb-4">{{ needle.name }}</h3>
         <Address :value="this.needle.id" />
       </div>
         <div class="weavr-icon-container">  
@@ -153,8 +152,10 @@ export default {
     }),
     
     needle() {
+      console.log("NEEDLES: ", this.needles.map( n => { return n.id}));
+      console.log("NEEDLE_ID: ", this.needleId);
       const needle = this.needles
-        .find(n => n.id === this.needleId);
+        .find(n => n.id.toLowerCase() === this.needleId);
         console.log("NNNNNNNN", needle
         );
       return needle
