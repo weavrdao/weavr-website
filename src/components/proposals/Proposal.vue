@@ -23,10 +23,9 @@
     </p>
     <a :href="this.proposal.forumLink" target="_blank" rel="noopener" class="button has-background-mediumBlue has-text-white mt-3">Forum link</a>
     <!-- Upgrade Proposal -->
-    <div v-if="this.proposal.code">
+    <div v-if="this.proposal.type === ProposalTypes.Upgrade">
       <label class="label">New Code Address</label>
       <Address :value="this.proposal.code" />
-    </div>
     <div v-if="this.proposal.instance">
       <label class="label">Instance Address</label>
       <Address :value="this.proposal.instance" />
@@ -35,13 +34,13 @@
       <label class="label">Proposed Version</label>
       <p><strong>{{this.proposal.version}}</strong></p>
     </div>
+    </div>
     <!-- End Upgrade Proposal -->
 
     <!-- Participant Proposal -->
-    <div v-if="this.proposal.participant">
+    <div v-if="this.proposal.type === ProposalTypes.Participant">
       <label class="label">Participant Address</label>
       <Address :value="this.proposal.participant" />
-    </div>
     <div v-if="this.proposal.participantType">
       <label class="label">Participant Type</label>
       <p><strong>{{ParticipantType()[this.proposal.participantType]}}</strong></p>
@@ -50,13 +49,13 @@
       <label class="label">Participant Type</label>
       <p><strong>{{ParticipantType()[this.proposal.selectedType]}}</strong></p>
     </div>
+    </div>
     <!-- End Participant Proposal -->
 
     <!-- Token Action Proposal -->
-    <div v-if="this.proposal.token">
+    <div v-if="this.proposal.type === ProposalTypes.TokenAction">
       <label class="label">Token Address</label>
       <Address :value="this.proposal.token" />
-    </div>
     <div v-if="this.proposal.target">
       <label class="label">Target Address</label>
       <Address :value="this.proposal.target" />
@@ -73,7 +72,64 @@
       <label class="label">Amount</label>
       <p><strong>{{formatEther(this.proposal.amount)}}</strong></p>
     </div>
+    </div>
     <!-- End Token Action Proposal -->
+
+    <!-- Thread Proposal -->
+
+    <div v-if="this.proposal.type === ProposalTypes.Thread">
+      <div class="columns">
+        <div class="column is-two-thirds mb-5">
+          <div class="p-3">
+<!--            <div class="box has-background-darkGray">-->
+<!--              <div class="label">Thread Address:</div>-->
+<!--              <Address :value="this.proposal.token"></Address>-->
+<!--            </div>-->
+          </div>
+          <div class="box has-background-darkGray">
+            <div  class=" image-container">
+              <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="false">
+                <div v-for="imageHash in this.proposal.descriptor.imagesHashes" v-bind:key="imageHash">
+<!--                  <div class="slide-image-container">-->
+                    <img :src="getIpfsUrl(imageHash)" />
+                  <a :href="getIpfsUrl(imageHash)"> {{imageHash}} </a>
+<!--                  </div>-->
+                </div>
+                <template #addons>
+                  <Navigation />
+                  <Pagination />
+                </template>
+              </Carousel>
+            </div>
+          </div>
+          <div class="box has-background-darkGray">
+            <p class="label mt-5 mb-5">Property Description</p>
+            <vue-markdown class="content markdown-body"  :source="this.proposal.descriptor.descriptor"/>
+          </div>
+          <div class="box has-background-darkGray">
+            <p class="label mb-3">Documents</p>
+            <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in this.proposal.descriptor.documentHashes" v-bind:key="document">
+              <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="column is-one-third">
+          <div class="box has-background-darkGray has-radius-lg border-lightGray">
+            <p class="subtitle mb-3">Metrics</p>
+            <div class="columns mb-0" v-for="metric in this.proposal.descriptor.metrics" :key="metric">
+              <div class="column is-half">
+                <div class="label">{{ metric.label}}:</div>
+              </div>
+              <div class="column">{{ metric.value}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <!-- End Thread Proposal -->
+
+
 
     <div class="box has-background-darkGray">
       <label class="label">Description</label>
@@ -93,7 +149,6 @@
         </div>
       </div>
     </div>
-    {{assetId}}
   </div>
 
 </template>
@@ -103,16 +158,42 @@ import Address from "../views/address/Address.vue";
 import VueMarkdown from "vue-markdown-render";
 import {ethers} from "ethers";
 import {dateStringForTimestamp, getProposalTypeStyling, padWithZeroes} from "@/data/helpers";
+import {Carousel, Navigation, Pagination, Slide} from "vue3-carousel";
+import {ProposalTypes} from "@/models/common";
+import {isJson} from "@/utils/common";
 
 export default {
   name: "Proposal",
+  computed: {
+    ProposalTypes() {
+      return ProposalTypes
+    },
+    metrics() {
+      if(!isJson(this.proposal?.metrics)) return {}
+      const obj = JSON.parse(this.proposal.metrics);
+      const keys = Object.keys(obj);
+      const values = Object.values(obj);
+      const metrics = []
+      for(let i=0; i<keys.length; i++) {
+        metrics.push({label: keys[i], value: values[i]})
+      }
+      return metrics
+    }
+  },
   components: {
     Address,
     VueMarkdown,
+    Carousel,
+    // Slide,
+    Pagination,
+    Navigation,
   },
   props: ["proposal"],
   data() {
     return {
+      showImage: false,
+      retryCount: 0,
+      maxRetry: 10,
       typeStylingData: getProposalTypeStyling(this.proposal.type)
     }
   },
@@ -145,16 +226,25 @@ export default {
         7: "Corporation",
       }
     },
-  }
+    getIpfsUrl(path) {
+      return path
+        ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${path}`
+        : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
+    },
+  },
+  mounted() {
+    console.log("mounting image")
+    setTimeout(() => {
+      this.showImage = true;
+    }, 2000);
+  },
 }
 </script>
 
 <style lang="scss" scoped>
 @import "../../styles/weavr-custom.scss";
 @import "../../styles/markdown.scss";
-.label {
-  margin-top: 30px;
-}
+
 
 .close-icon {
   position: absolute;

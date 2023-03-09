@@ -1,9 +1,11 @@
-import {PaperProposal} from "@/data/network/web3/events/proposals/PaperProposal";
+import {BaseProposal} from "@/data/network/web3/events/proposals/BaseProposal";
 import {VoteType} from "@/models/vote";
+import {BigNumber} from "ethers";
 
-export class TokenActionProposal extends PaperProposal {
-  constructor(baseProposal, payload, state) {
-    super(baseProposal.id, baseProposal.creator, baseProposal.info, baseProposal.superMajority, baseProposal.startTimestamp, state)
+export class TokenActionProposal extends BaseProposal {
+  constructor(baseProposal, payload) {
+    super(baseProposal.id, baseProposal.creator, baseProposal.info, baseProposal.superMajority,
+      baseProposal.startTimestamp, baseProposal.status, baseProposal.type, baseProposal.votes)
     const {token, target, mint, price, amount} = payload
     this.token = token
     this.target = target

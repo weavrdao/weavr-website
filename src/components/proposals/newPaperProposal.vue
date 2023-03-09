@@ -105,7 +105,7 @@ export default {
         title: this.title,
         description: this.description,
         daoResolution: this.daoResolution,
-        type: this.proposalType,
+        proposalType: this.proposalType,
         creator: "0x00000",
         startTimeStamp: 0,
         endTimeStamp: 0,
