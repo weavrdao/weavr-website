@@ -28,21 +28,15 @@ class IPFSStorageNetwork extends StorageNetwork {
     });
   }
 
-  async addFile(file) {
-    let jsonString = JSON.stringify(file, null, 2);
+  async addJson(payload) {
+    let jsonString = JSON.stringify(payload, null, 2);
     console.log("JSON: ", jsonString);
-    const test = await this.ipfsInfuraAPIClient.add(jsonString, {pin: true});
-    return test;
-  }
-
-
-  async addImage(imageFile) {
-    const image = await this.ipfsInfuraAPIClient.add(imageFile, {pin: true});
-    return image;
+    return await this.ipfsInfuraAPIClient.add(jsonString, {pin: true});
   }
 
   async addArbitraryFile(file) {
     const filesHash = await this.ipfsInfuraAPIClient.add(file, {pin: true})
+    await this.ipfsCollabAPIClient.pin.add(filesHash.path);
     return filesHash.path
   }
 
@@ -86,9 +80,9 @@ class IPFSStorageNetwork extends StorageNetwork {
     });
   }
 
-  async uploadAndGetPathAsBytes(file) {
+  async uploadAndGetPathAsBytes(payload) {
     try {
-      const cid = await this.addFile(file);
+      const cid = await this.addJson(payload);
       // eslint-disable-next-line no-unused-vars
       const _ = await this.ipfsCollabAPIClient.pin.add(cid.path);
       return getBytes32FromIpfsHash(cid.path);

@@ -41,7 +41,7 @@ class DAO {
     // Get indexed on-chain data
     const toast = createToaster({});
     toast.info("Fetching off-chain data...");
-    let proposals = await this.cacheClient.syncProposals(assetId, localStorage)
+    let proposals = await this.cacheClient.syncProposals(assetId)
 
     // Fetch and append off-chain data
     try {
@@ -143,7 +143,7 @@ class DAO {
    * @param {string} blobVersion Version of the blob
    * @param {String} forumLink Link to forum discussion
    * @param {String} tradeToken addess of the token used for the crowdfund
-   * @param {Number} target amount to be raised through the crowdfund
+   * @param {Number} funding_target amount to be raised through the crowdfund
    * @param {String} images of the property
    * @param {String} documents of the property
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
@@ -159,16 +159,16 @@ class DAO {
     forumLink,
     symbol,
     tradeToken,
-    target,
+    funding_target,
     images,
     documents,
   ) {
     const assetContract = new AssetContract(this.ethereumClient, assetId);
 
-    let imagesHashes;
+    let imageHashes;
     try {
-      imagesHashes = await Promise.all(Array.from(images).map(
-        async (image) => (await this.storageNetwork.addArbitraryFile(image.name))
+      imageHashes = await Promise.all(Array.from(images).map(
+        async (image) => (await this.storageNetwork.addArbitraryFile(image))
       ));
     } catch (e) {
       console.log("Error uploading images", e);
@@ -177,7 +177,7 @@ class DAO {
     let documentHashes;
     try {
       documentHashes = await Promise.all(Array.from(documents).map(
-        async (document) => (await this.storageNetwork.addArbitraryFile(document.name))
+        async (document) => (await this.storageNetwork.addArbitraryFile(document))
       ));
     } catch (e) {
       console.log("Error uploading documents", e);
@@ -188,13 +188,13 @@ class DAO {
 
     const descriptorHash = await this.storageNetwork.uploadAndGetPathAsBytes({
       blobVersion,
-      descriptor, name, imagesHashes, documentHashes,
+      descriptor, name, imagesHashes: imageHashes, documentHashes,
       metrics
     });
 
     const data = new ethers.utils.AbiCoder().encode(
       ["address", "uint112"],
-      [tradeToken, ethers.utils.parseUnits(String(target), 6).toString()]
+      [tradeToken, ethers.utils.parseUnits(String(funding_target), 6).toString()]
     );
 
     if (!infoHash) return;

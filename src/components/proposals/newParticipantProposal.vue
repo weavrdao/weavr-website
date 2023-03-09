@@ -94,7 +94,7 @@ export default {
       this.proposal = {
         title: this.title,
         description: this.description,
-        type: this.proposalType,
+        proposalType: this.proposalType,
         creator: "0x00000",
         startTimeStamp: 0,
         endTimeStamp: 0,
