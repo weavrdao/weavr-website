@@ -31,3 +31,21 @@ startBlock = 7974853
     FRABRIC_CODE = "0x847eeef92D4290A51dc7613609471DAcB75751d1"
     TRADE_TOKEN = "0xaa72fbFa8120Bb295A126C34348bb3d018c70efD"
     AIRDROP =     "0x00"
+
+[arbitrum_testnet]
+name ="Arbitrum Goerli Testnet"
+id = 421613
+graph = "https://api.thegraph.com/subgraphs/name/abstrucked/weavr-goerli-test"
+explorer = "https://goerli.arbiscan.io"
+startBlock = 4407135
+    [arbitrum_testnet.contracts]
+    AUCTION = ""
+    TOKEN_ADDRESS = "0x386575974C05E558D82FE6Cc965cD69503969125"
+    BEACON_ADDRESS = "0x12C1389c43Af590EF1170E222E163f88f269699A"
+    WEAVR = "0x70732A738cB59Ffdc5647608DFaAfae35Cae85A1"
+    THREAD_DEPLOYER = "0xb0a230d7A56dec2524e3afAeB0D0cA8e0Bc45924"
+    DEX_ROUTER = "0x4c9087d3Fb8771a8CDb8702b4BBF928E153b8324"
+    BOND = "0x4f995659824E51B3461397C922E48ca0C2752007"
+    FRABRIC_CODE = "0xdDdbfb95e5514086E88B1Cc69aa7AA75c13a2853"
+    TRADE_TOKEN = "0xaa72fbFa8120Bb295A126C34348bb3d018c70efD"
+    AIRDROP =     "0x00"

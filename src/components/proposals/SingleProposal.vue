@@ -18,7 +18,9 @@
         </a>
       </div>
     </div>
-    <Proposal :proposal="proposal" />
+    <div class="box">
+      <Proposal :proposal="proposal" />
+    </div>
     <div class="box has-background-darkGray">
       <label class="label">Consensus</label>
       <div class="votes-container">

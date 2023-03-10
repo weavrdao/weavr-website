@@ -1,4 +1,4 @@
-import {ethers } from 'ethers';
+import {ethers } from "ethers";
 import WEAVR from "../contracts/abi/Frabric.json"
 import {BaseProposal} from "@/data/network/web3/events/proposals/BaseProposal";
 import {TokenActionProposal} from "@/data/network/web3/events/proposals/TokenActionProposal";
@@ -39,7 +39,7 @@ class InfuraEventCacheClient {
       await this.processProposalTypeData(assetId, this.proposals, blockNumber, currentBlockNumber)
       await this.updateProposalsWithVotes(assetId, this.proposals, blockNumber, currentBlockNumber)
       await this.processProposalStatusChanges(assetId, this.proposals, blockNumber, currentBlockNumber)
-      await this.finalizeProposals(this.proposals)
+      await this.finalizeProposals(assetId, this.proposals)
     }
     return Object.values(this.proposals)
   }
@@ -47,7 +47,6 @@ class InfuraEventCacheClient {
   async getProposals(assetId, proposals, blockNumber, currentBlockNumber) {
     const weavr_contract = new ethers.Contract(assetId, this.weavr_abi, this.provider);
     const weavr_iface = new ethers.utils.Interface(this.weavr_abi);
-
     await weavr_contract.queryFilter("Proposal", blockNumber, currentBlockNumber).then(async (raw_events) => {
       for (const raw_event of raw_events) {
         const event = weavr_iface.decodeEventLog("Proposal", raw_event.data, raw_event.topics)
@@ -59,10 +58,13 @@ class InfuraEventCacheClient {
     })
   }
 
-  async finalizeProposals(proposals) {
+  async finalizeProposals(assetId, proposals) {
+    const weavr_contract = new ethers.Contract(assetId, this.weavr_abi, this.provider);
+    const votingPeriod = await weavr_contract.votingPeriod()
+    const vp = votingPeriod.toNumber()
     for (const id of Object.keys(proposals)) {
       if (!("endTimestamp" in proposals[id])) {
-        proposals[id].endTimestamp = proposals[id].startTimestamp + 60 * 60 * 24 * 7
+        proposals[id].endTimestamp = proposals[id].startTimestamp + vp
         proposals[id].info = getIpfsHashFromBytes32(proposals[id].info)
         if (proposals[id].type === ProposalTypes.Thread) {
           proposals[id].descriptor = getIpfsHashFromBytes32(proposals[id].descriptor)
