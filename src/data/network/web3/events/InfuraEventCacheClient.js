@@ -63,7 +63,6 @@ class InfuraEventCacheClient {
     const votingPeriod = await weavr_contract.votingPeriod()
     const vp = votingPeriod.toNumber()
     for (const id of Object.keys(proposals)) {
-      console.log("PROPOSAL", proposals[id]);
       if (!("endTimestamp" in proposals[id])) {
         proposals[id].endTimestamp = proposals[id].startTimestamp + vp
         proposals[id].info = getIpfsHashFromBytes32(proposals[id].info)
