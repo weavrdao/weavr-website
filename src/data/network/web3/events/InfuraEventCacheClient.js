@@ -123,68 +123,87 @@ class InfuraEventCacheClient {
     })
   }
 
-  async fetchNeedles() {
+  /**
+   * 
+   * @param {bool} asThreads sets the map key with the thread address instead of the needle one
+   * @default false returns asset map with crowdfund address as map key
+   * @returns Map of the generic asset data, used to complete both needles and threads
+   */
+  async fetchAssets(asThreads) {
     const threadDeployer = new ethers.Contract(CONTRACTS.THREAD_DEPLOYER, ThreadDeployer.abi, this.provider)
-    /**
-       * Fetch Thread specific data
-       */
-    let threadMap = new Map();
+    let threads = new Map();
     await threadDeployer.queryFilter(threadDeployer.filters.Thread()).then( (rawThreads) => {
       rawThreads.map( t => {
-        threadMap.set(t.args.thread, { thread: t.args.thread, governor: t.args.governor, variant: t.args.variant, descriptor: t.args.descriptor })
+        threads.set(t.args.thread, { governor: t.args.governor, descriptor: t.args.descriptor })
       })
     })
-    console.log("ARGS", threadMap);
+
+    let assets = [];
+    await threadDeployer.queryFilter(threadDeployer.filters.CrowdfundedThread()).then(
+      rawCrowdfund => {
+        rawCrowdfund.map( async ( c ) => {
+          const crowdfundSC = new ethers.Contract(c.args.crowdfund, Crowdfund.abi, this.provider)
+          const stateEvents = await crowdfundSC.queryFilter(crowdfundSC.filters.StateChange())
+         const state = stateEvents[stateEvents.length-1].args.state
+          console.log("STATE: ", CrowdfundState[state]);
+          const id = asThreads ? c.args.thread : c.args.crowdfund
+          assets.push(
+            
+            { 
+              id, 
+              thread: c.args.thread, 
+              crowdfund: c.args.crowdfund,
+              state: CrowdfundState[state], 
+              governor: threads.get(c.args.thread).governor, 
+              descriptor: threads.get(c.args.thread).descriptor
+            }
+          )
+        })
+      }
+    )
+    
+    return assets;
+  }
+  async fetchNeedles() {
+    let crowdfunds = [];
+    const assets = await this.fetchAssets()
+
+    const threadDeployer = new ethers.Contract(CONTRACTS.THREAD_DEPLOYER, ThreadDeployer.abi, this.provider)
     const crowdfundEvents = (await threadDeployer.queryFilter(threadDeployer.filters.CrowdfundedThread()))
-    /**
-     * fetch Crowdfund specific data
-     */
-    let crfMap = []
-    console.log("CROWDFUNDED NEEDLES:::::", crowdfundEvents);
+    
     const NEEDLES = crowdfundEvents.map( async (crf) => {
-      const {crowdfund, target, thread, token} = crf.args
+      const {crowdfund, target, token} = crf.args
       const crowdfundSC = new ethers.Contract(crowdfund, Crowdfund.abi, this.provider)
-      const stateEvent = await crowdfundSC.queryFilter(crowdfundSC.filters.StateChange())
-      const state = stateEvent[stateEvent.length-1].args['state']
-      
+    
       const depositEvent = await crowdfundSC.queryFilter(crowdfundSC.filters.Deposit())
       let deposited = ethers.BigNumber.from("0")
       const deposits = depositEvent.map( dep => {
-        const amount = dep.args['amount'].toString()
-        const id = `${dep.args['depositor']}_${dep.args['amount']}`
-        deposited = deposited.add(dep.args['amount'])
-        return new Deposit(id, dep.args['depositor'], dep.args['amount'])
+        const id = `${dep.args.depositor}_${dep.args.amount}`
+        deposited = deposited.add(dep.args.amount)
+        return new Deposit(id, dep.args.depositor, dep.args.amount)
       })
 
       const withdrawalsEvent = await crowdfundSC.queryFilter(crowdfundSC.filters.Withdraw())
       let withdrew = ethers.BigNumber.from("0")
       const withdrawals = withdrawalsEvent.map( dep => {
-        const amount = dep.args['amount'].toString()
-        const id = `${dep.args['depositor']}_${dep.args['amount']}`
-        withdrew = withdrew.add(dep.args['amount'])
-        return new Deposit(id, dep.args['depositor'], dep.args['amount'])
+        const id = `${dep.args.depositor}_${dep.args.amount}`
+        withdrew = withdrew.add(dep.args.amount)
+        return new Deposit(id, dep.args.depositor, dep.args.amount)
       })
 
       const DistributionEvent = await crowdfundSC.queryFilter(crowdfundSC.filters.Distribution())
       
       const distributions = DistributionEvent.map( dep => {
-        const id = `${dep.args['depositor']}_${dep.args['amount']}`
-        return new Deposit(id, dep.args['depositor'], dep.args['amount'])
+        const id = `${dep.args.depositor}_${dep.args.amount}`
+        return new Deposit(id, dep.args.depositor, dep.args.amount)
       })
       // deposited = deposited.sub(withdrew)
 
-
-      
-      // console.log(threadEvents);
-      // console.log(threadEvents[0].args.thread);
-      // const t = threadEvents.find( t => {t.args.thread == thread})
-      // console.log("t____", t);
-      console.log(threadMap.get(thread).descriptor);
       const needle = new Needle(
         crowdfund,
-        CrowdfundState[state],  
-        threadMap.get(thread).descriptor,
-        threadMap.get(thread).descriptor,
+        assets.get(crowdfund).state,  
+        assets.get(crowdfund).governor,
+        assets.get(crowdfund).descriptor,
         deposited,
         target,
         deposits,
@@ -192,12 +211,47 @@ class InfuraEventCacheClient {
         distributions,
         token
       )
-      console.log(needle);
-      crfMap.push(needle)
+      crowdfunds.push(needle)
       return needle
     })
     
     return Promise.all(NEEDLES).then(res => {
+      console.log(res)
+      return res
+    })
+  }
+  
+  async fetchThreads() {
+    let threads = [];
+    const assets = await this.fetchAssets(true)
+    console.log(assets);
+    const threadDeployer = new ethers.Contract(CONTRACTS.THREAD_DEPLOYER, ThreadDeployer.abi, this.provider)
+    const threadEvents = await threadDeployer.queryFilter(threadDeployer.filters.Thread())
+    console.log(threadEvents);
+    const states = new Map()
+    assets.map( a => {
+      states.set(a.thread, a.state)
+    })
+    const descriptors = new Map()
+    assets.map( a => {
+      descriptors.set(a.thread, a.descriptor)
+    })
+    const THREADS = threadEvents.map( async (trd) => {
+      const {thread, governor, descriptor, variant, erc20} = trd.args
+      
+      const _thread = new Thread(
+        thread,
+        states.get(thread),  
+        governor,
+        descriptor,
+        variant,
+        erc20
+      )
+      threads.push(_thread)
+      return _thread
+    })
+    
+    return Promise.all(THREADS).then(res => {
       console.log(res)
       return res
     })

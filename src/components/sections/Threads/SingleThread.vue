@@ -45,8 +45,9 @@ export default {
 
     }),
     thread() {
+      console.log(this.threads)
       return this.threads
-        .find(n => n.id === this.threadId);
+        .find(t => t.id.toLowerCase() === this.threadId);
     },
   },
   methods: {

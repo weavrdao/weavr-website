@@ -188,7 +188,7 @@ const router = new createRouter({
           component: SingleThread,
           meta: { requiresAuth: true},
           beforeEnter: async () => {
-            if(!store.getters.threads){
+            if(!store.getters.allThreads){
               store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
 
               await store.dispatch("refreshThreads")

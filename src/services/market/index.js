@@ -31,120 +31,27 @@ class Market {
     this.cacheClient = new InfuraEventCacheClient(NETWORK.id, process.env.VUE_APP_INFURA_API_KEY, NETWORK.startBlock)
   }
 
-  /**
-   * Get assets that are currently trading on the market.
-   * @param {number} limit
-   * @param {number} offset
-   * @param {Object} idsArray ids to return; everything is returned if null
-   * @param {string} sort accepted format is [field_name]:[asc|desc]
-   * @param {number} minBlockNumber The min block number
-   * @returns {Object} {Array of asset objects}
-   * @example
-   * await getAssetsOnTheMarket()
-   * await getAssetsOnTheMarket(100, 0, [1,2,3,4,5])
-   */
-  async getAssetsOnTheMarket( ) {
-    // Get indexed on-chain data
-
-    var assets = await this.graphQLAPIClient
-      .query(
-        ALL_THREADS_QUERY,
-        {
-          weavrId: NETWORK.contracts.WEAVR
-        },
-        (mapper, response) => {
-          return mapper.mapThreads(response.data)
-        }
-      )
-
-    console.log("Mapped assets:")
-    console.log(assets)
-
-    // TODO: CONSIDER DISCONTINUED/DEACTIVATED ASSETS
-
-    // Fetch and append off-chain data
-
-    const assetDataURIArray = assets
-      .map(asset => asset.dataURI)
-    let assetOffchainDataArray = (
-      await this.storageNetwork
-        .getFiles(assetDataURIArray.map(uri => CommonUtils.pathFromURL(uri)), localStorage)
-    )
-      .map(obj => obj.world.property)
-
-    console.log("Off-chain data:")
-    console.log(assetOffchainDataArray)
-
-    if (assetOffchainDataArray.length != assets.length) {
-      throw("Off-chain data count doesn't match the on-chain data")
-    }
-
-    for (var i = 0; i < assets.length; i++) {
-      let asset = assets[i]
-      let data = assetOffchainDataArray[i]
-
-      let completeAsset = new Asset(
-        asset.id,
-        asset.dataURI,
-        asset.contractAddress,
-        asset.symbol,
-        asset.numOfShares,
-        asset.owners,
-        asset.marketOrders,
-        asset.proposals,
-        data.address,
-        data.area,
-        data.coverImage,
-        data.currentRent,
-        data.description,
-        data.grossYieldPct,
-        data.marketValue,
-        data.rooms.bdCount,
-        data.rooms.baCount,
-        data.yearBuilt
-      )
-
-      assets[i] = completeAsset
-    }
-
-    return assets
-  }
-
-
   async getThreads() {
     // Get indexed on-chain data
-
-    const threads = await this.graphQLAPIClient
-      .query(
-        ALL_THREADS_QUERY,
-        {
-          weavrId: NETWORK.contracts.WEAVR
-        },
-        (mapper, response) => {
-          console.log(response.data.crowdfunds)
-          const mappedThreads = mapper.mapRawThreads(response.data.crowdfunds)
-          console.log(mappedThreads)
-          return mappedThreads
-        }
-      )
+    console.log(await this.cacheClient.fetchThreads())
+    let threads = await this.cacheClient.fetchThreads()
 
     console.log("Mapped assets:")
     console.log(threads)
-
+    
+    
     // TODO: CONSIDER DISCONTINUED/DEACTIVATED ASSETS
 
     // Fetch and append off-chain data
+    
     try {
-
-      const descriptors = threads.map((thread) => {
-        console.log(thread.descriptor);
-        return getIpfsHashFromBytes32(thread.descriptor)
+      const descriptors = threads.map( el => {
+        console.log(el.descriptor);
+        return getIpfsHashFromBytes32(el.descriptor)
       })
-      console.log(descriptors);
-      const offChainData = await this.storageNetwork.getFiles(
-        descriptors,
-        localStorage
-      );
+      console.log("desc", descriptors);
+      const offChainData = await this.storageNetwork.getFiles(threads.map(t => getIpfsHashFromBytes32(t.descriptor)) ,localStorage);
+    
 
       for (let i = 0; i < threads.length; i++) {
         console.log(offChainData[i].value.descriptor)
