@@ -42,7 +42,7 @@ class DAO {
     const toast = createToaster({});
     toast.info("Fetching off-chain data...");
     let proposals = await this.cacheClient.syncProposals(assetId)
-
+    console.log(proposals);
     // Fetch and append off-chain data
     try {
       const offChainData = await this.storageNetwork.getFiles(proposals.map((p) => p.info), localStorage);
