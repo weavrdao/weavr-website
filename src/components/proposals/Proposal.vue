@@ -88,18 +88,17 @@
           </div>
           <div class="box has-background-darkGray">
             <div  class=" image-container">
-              <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="false">
-                <div v-for="imageHash in this.proposal.descriptor.imagesHashes" v-bind:key="imageHash">
-<!--                  <div class="slide-image-container">-->
-                    <img :src="getIpfsUrl(imageHash)" />
-                  <a :href="getIpfsUrl(imageHash)"> {{imageHash}} </a>
-<!--                  </div>-->
+              <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
+              <Slide  v-for="imageHash in proposal.descriptor.imagesHashes" v-bind:key="imageHash">
+                <div class="slide-image-container">
+                  <img v-bind:src="getIpfsUrl(imageHash)" alt="">
                 </div>
-                <template #addons>
-                  <Navigation />
-                  <Pagination />
-                </template>
-              </Carousel>
+              </Slide>
+              <template #addons>
+                <Navigation />
+                <Pagination />
+              </template>
+            </Carousel>
             </div>
           </div>
           <div class="box has-background-darkGray">
@@ -116,7 +115,7 @@
         <div class="column is-one-third">
           <div class="box has-background-darkGray has-radius-lg border-lightGray">
             <p class="subtitle mb-3">Metrics</p>
-            <div class="columns mb-0" v-for="metric in this.proposal.descriptor.metrics" :key="metric">
+            <div class="columns mb-0" v-for="metric in this.metrics" :key="metric">
               <div class="column is-half">
                 <div class="label">{{ metric.label}}:</div>
               </div>
@@ -161,7 +160,6 @@ import {dateStringForTimestamp, getProposalTypeStyling, padWithZeroes} from "@/d
 import {Carousel, Navigation, Pagination, Slide} from "vue3-carousel";
 import {ProposalTypes} from "@/models/common";
 import {isJson} from "@/utils/common";
-
 export default {
   name: "Proposal",
   computed: {
@@ -169,8 +167,8 @@ export default {
       return ProposalTypes
     },
     metrics() {
-      if(!isJson(this.proposal?.metrics)) return {}
-      const obj = JSON.parse(this.proposal.metrics);
+      if(!isJson(this.proposal.descriptor.metrics)) return {}
+      const obj = JSON.parse(this.proposal.descriptor.metrics);
       const keys = Object.keys(obj);
       const values = Object.values(obj);
       const metrics = []
@@ -184,7 +182,7 @@ export default {
     Address,
     VueMarkdown,
     Carousel,
-    // Slide,
+    Slide,
     Pagination,
     Navigation,
   },

@@ -19,7 +19,7 @@ name ="Arbitrum Goerli Testnet"
 id = 421613
 graph = "https://api.thegraph.com/subgraphs/name/abstrucked/weavr-goerli-test"
 explorer = "https://goerli.arbiscan.io"
-startBlock = 7715000
+startBlock = 4407135 
     [arbitrum_testnet.contracts]
     AUCTION = ""
     TOKEN_ADDRESS = "0x386575974C05E558D82FE6Cc965cD69503969125"

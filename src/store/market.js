@@ -73,7 +73,7 @@ const getters = {
   },
   
   allNeedles(state) {
-    return state.platform.needles.filter( needle => needle.state != "Finished");
+    return state.platform.needles;
   },
   
   threadById(state) {

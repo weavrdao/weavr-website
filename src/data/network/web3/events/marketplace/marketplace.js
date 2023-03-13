@@ -1,43 +1,50 @@
-import Thread from "@/models/marketplace/thread"
-import {CONTRACTS} from "@/services/constants"
-import {ProposalState} from "@/models/common"
-let THREADS = []
+import {Deposit, Distribution} from "./Asset"
+import {ethers } from "ethers";
 
-// export const fetchThreads = async (provider) => {
-//     const threadDeployer = new ethers.Contract(CONTRACTS.THREAD_DEPLOYER, ThreadDeployer.abi, provider)
-//     const crowdfundEvents = (await threadDeployer.queryFilter(threadDeployer.filters.CrowdfundedThread()))
-// }
-
-export const fetchNeedles = async (provider) => {
-    const threadDeployer = new ethers.Contract(CONTRACTS.THREAD_DEPLOYER, ThreadDeployer.abi, provider)
-    const crowdfundEvents = (await threadDeployer.queryFilter(threadDeployer.filters.CrowdfundedThread()))
-    const crfMap = []
-    console.log("CROWDFUNDED NEEDLES:::::", crowdfundEvents);
-    crowdfundEvents.forEach( async (crf) => {
-      const {crowdfund, target, thread, token} = crf.args
-      
-      const crowdfundSC = new ethers.Contract(crowdfund, Crowdfund.abi, this.provider)
-      const stateEvent = await crowdfundSC.queryFilter(crowdfundSC.filters.StateChange())
-      const state = stateEvent[stateEvent.length-1].args['state']
-      const depositEvent = await crowdfundSC.queryFilter(crowdfundSC.filters.Deposit())
-      console.log(depositEvent);
-      const deposits = depositEvent.map( dep => {
-        
-         new Map(dep.args['depositor'], dep.args['amount'])
+const getNeedleDestribuition = async (crowdfundSC) => {
+  const distributionEvents = await crowdfundSC.queryFilter(crowdfundSC.filters.Distribution())
+  return new Promise((res) => {
+    
+    const distributions = distributionEvents.map( dis => {
+        return new Distribution(dis.args.id, dis.args.token, dis.args.amount)
       })
-      console.log("STATE => ", ProposalState[0]);
-      const needle = new Needle(
-        crowdfund,
-        state,  
-        0,
-        target,
-        thread,
-        deposits,
-        [],
-        []
-      )
-      crfMap.push(needle)
+    res(distributions)
+  }) 
+}
+const getNeedleDeposits = async (crowdfundSC) => {
+  const depositEvent = await crowdfundSC.queryFilter(crowdfundSC.filters.Deposit())
+  return new Promise((res) => {
+    let deposited = ethers.BigNumber.from("0")
+    const deposits = depositEvent.map( dep => {
+      const id = `${dep.args.depositor}_${dep.args.amount}`
+      deposited = deposited.add(dep.args.amount)
+      return new Deposit(id, dep.args.depositor, dep.args.amount)
     })
-    console.log(crfMap);
-    return crfMap
-  }
+    res({deposits, deposited})
+  }) 
+}
+const getNeedleWithdrawals = async(crowdfundSC) => {
+  const withdrawalEvent = await crowdfundSC.queryFilter(crowdfundSC.filters.Withdraw())
+  return new Promise((res) => {
+    let withdrew = ethers.BigNumber.from("0")
+    let withdawals = []
+    withdrawalEvent.map( w => {
+      const id = `${w.args.depositor}_${w.args.amount}`
+      withdrew = withdrew.add(w.args.amount)
+       withdawals.push(new Deposit(id, w.args.depositor, w.args.amount))
+    })
+    res({withdawals, withdrew})
+  }) 
+}
+const getNeedleState = async (crowdfundSC) => {
+  const stateEvents = crowdfundSC.queryFilter(crowdfundSC.filters.StateChange())
+  return new Promise((res) => {
+    stateEvents.then(
+      response => {
+        res(response[response.length -1 ].args.state)
+      }
+    )
+  })
+}
+
+export const Marketplace = { getNeedleDeposits, getNeedleDestribuition, getNeedleWithdrawals ,getNeedleState}
