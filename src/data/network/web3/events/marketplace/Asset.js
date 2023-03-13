@@ -24,6 +24,7 @@ export class Thread extends Asset {
     super(id, state, governor, descriptor);
     this.variant = variant;
     this.erc20 = erc20;
+    this.proposals = []
   }
 }
 
