@@ -3,6 +3,7 @@ import WEAVR from "../contracts/abi/Frabric.json"
 import {CONTRACTS} from "@/services/constants"
 import ThreadDeployer from "../contracts/abi/ThreadDeployer.json"
 import Crowdfund from "../contracts/abi/Crowdfund.json"
+import FrabricERC20 from "../contracts/abi/FrabricERC20.json"
 import {Needle, Thread} from "./marketplace/Asset"
 import {Marketplace} from "./marketplace/marketplace"
 import {BaseProposal} from "@/data/network/web3/events/proposals/BaseProposal";
@@ -26,7 +27,14 @@ class InfuraEventCacheClient {
       "ParticipantProposal": {cls: ParticipantProposal, type: ProposalTypes.Participant},
       "ParticipantRemovalProposal": {cls: ParticipantRemovalProposal, type: ProposalTypes.ParticipantRemoval}
     }
-    this.proposals = null
+    this.proposals = null;
+    /** 
+     * 
+     * @dev assets : Map()
+     * basic asset list with minimal attributus used to build neddles and threads upon
+     * 
+     * */ 
+    this.assets = null 
   }
 
   // Gets all proposals, and ensures that current proposals are updated
@@ -139,10 +147,9 @@ class InfuraEventCacheClient {
     let threads = new Map();
     await threadDeployer.queryFilter(threadDeployer.filters.Thread()).then( (rawThreads) => {
       rawThreads.map( t => {
-        threads.set(t.args.thread, { id: t.args.thread, governor: t.args.governor, descriptor: t.args.descriptor })
+        threads.set(t.args.thread, { id: t.args.thread, governor: t.args.governor, descriptor: t.args.descriptor, erc20: t.args.erc20 })
       })
     })
-
     let assets = [];
     let crowdfunds = new Map()
     const cfEvents = await threadDeployer.queryFilter(threadDeployer.filters.CrowdfundedThread()).then(
@@ -164,9 +171,11 @@ class InfuraEventCacheClient {
         id: asThreads ? asset.thread.id : asset.id,
         state: asset.state,
         governor: asset.thread.governor,
-        descriptor: asset.thread.descriptor
+        descriptor: asset.thread.descriptor,
+        erc20: asset.thread.erc20
       }
     })
+    this.assets = assets
     return assets
   }
 
@@ -175,18 +184,13 @@ class InfuraEventCacheClient {
     this.needles = await this.getAssets()
     const threadDeployer = new ethers.Contract(CONTRACTS.THREAD_DEPLOYER, ThreadDeployer.abi, this.provider)
     const crowdfundEvents = (await threadDeployer.queryFilter(threadDeployer.filters.CrowdfundedThread()))
-    
- 
     const NEEDLES = crowdfundEvents.map( async (crf) => {
       const {crowdfund, target, token} = crf.args
       const crowdfundSC = new ethers.Contract(crowdfund, Crowdfund.abi, this.provider)
-    
       const {deposits, deposited} = await Marketplace.getNeedleDeposits(crowdfundSC)
       const {withdrawals, withdrew} = await Marketplace.getNeedleWithdrawals(crowdfundSC)
       const distributions = await Marketplace.getNeedleDestribuition(crowdfundSC)
-     
       const actualDeposits = deposited.sub(withdrew)
-     
       const asset = this.needles.find(a => a.id==crowdfund)
       const needle = new Needle(
         crowdfund,
@@ -203,7 +207,6 @@ class InfuraEventCacheClient {
       crowdfunds.push(needle)
       return needle
     })
-    console.log("CROWDFUNDS__________________________", crowdfunds);
     return Promise.all(NEEDLES).then(res => {
       console.log(res)
       return res
@@ -213,8 +216,11 @@ class InfuraEventCacheClient {
   async fetchThreads() {
     let threads = [];
     const assets = await this.getAssets(true)
+    const transfersMap = await this.mapHoldersForAllThreads(this.assets)
+    console.log(transfersMap);
     const threadDeployer = new ethers.Contract(CONTRACTS.THREAD_DEPLOYER, ThreadDeployer.abi, this.provider)
     const threadEvents = await threadDeployer.queryFilter(threadDeployer.filters.Thread())
+
     threadEvents.map( async (trd) => {
       const {thread, governor, descriptor, variant, erc20} = trd.args
       const state = assets.find( a => a.id == thread).state
@@ -224,16 +230,62 @@ class InfuraEventCacheClient {
         governor,
         descriptor,
         variant,
-        erc20
+        { id: erc20, holders:transfersMap.get(thread)}
       )
       threads.push(_thread)
     })
     return threads
   }
-  
+  async mapHoldersForAllThreads(assets) {
+    let transfersMap = new Map()
+    for(let asset of assets) {
+      const erc20Holders = await this.fetchFerc20(asset.erc20)
+      transfersMap.set(asset.id, erc20Holders)
+    }
+    return transfersMap
+  }
+  async fetchFerc20(erc20) {
+    const ferc20_contract = new ethers.Contract(erc20, FrabricERC20.abi, this.provider);
+    const ferc20_iface = new ethers.utils.Interface(FrabricERC20.abi);
+    const ferc20TxEvents = await ferc20_contract.queryFilter(ferc20_contract.filters.Transfer())
+    const to = new Set()
+    const from =  new Set()
+    ferc20TxEvents.map( event => {
+      const data = ferc20_iface.decodeEventLog("Transfer", event.data, event.topics)
+      to.add(data.to)
+      from.add(data.from)
+    })
+    const holdersMap = new Map()
+    ferc20TxEvents.map( event => {
+      const tx = ferc20_iface.decodeEventLog("Transfer", event.data, event.topics)
+      for(let holderAddress of to.values()){
+        let holder = new Holder(holderAddress)
+        tx.to == holderAddress ? holder.to.push(new ERC20_TX(tx.to, tx.from, tx.value, event.transactionHash)) : null
+        tx.from == holderAddress ? holder.from.push(new ERC20_TX(tx.to, tx.from, tx.value, event.transactionHash)) : null
+        holdersMap.set(holderAddress, holder)
+      }
+    })
+    return holdersMap
+  }
+
 }
-
-
+class Holder {
+  
+  constructor(address) {
+    this.id = address
+    this.to = []
+    this.from = []
+  }
+}
+class ERC20_TX {
+  constructor(to, from, value, transactionHash ) {
+    this.id = `${to}_${from}_${transactionHash}`
+    this.to = to;
+    this.from = from
+    this.value = value
+    this.transactionHash = transactionHash
+  }
+}
 
 
 export default InfuraEventCacheClient;
