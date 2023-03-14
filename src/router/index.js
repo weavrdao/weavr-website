@@ -334,94 +334,94 @@ const router = new createRouter({
 });
 
 
-// router.beforeEach(async (to) => {
-//   /**
-//    * NOTES
-//    * Should authorize navigation if:
-//    * ( isConnected + isWhitelisted || isConnected + isGuest )
-//    *
-//    * ON not connected and COOKIE should AUTOCONNECT
-//    * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
-//    * ON not
-//    */
-//
-//   const address = store.getters.userWalletAddress;
-//   const isConnected = ethers.utils.isAddress(address);
-//   const isWhitelisted = store.getters.isWhitelisted;
-//   // const isGuest = store.getters.guestCookie;
-//   const decoded_cookie = getCookie(USER_COOKIE_KEY)
-//   let cookie = {}
-//   if(decoded_cookie) {
-//     cookie.wallet = decoded_cookie.split("_")[0]
-//     cookie.provider = decoded_cookie.split("_")[1]
-//   }
-//   // require auth
-//   if( to.meta.locked ) {
-//     const toast = createToaster({});
-//     toast.error("The route you are trying to access is currently locked", { position: "top"});
-//     return false
-//   }
-//   if( to.meta.requiresAuth ) {
-//     // not connected
-//     if( !isConnected ) {
-//       // cookie
-//       if (ethers.utils.isAddress(cookie.wallet)) {
-//         if (cookie.wallet === GUEST) {
-//           return true
-//         }
-//         // - autoconnect and navigate
-//         const toast = createToaster({})
-//         await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
-//         await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
-//           if (!isWhitelisted) {
-//             // not whitelisted
-//             return  { name: "whitelist"}
-//           }
-//           else if ( isWhitelisted ) {
-//             // whitelisted
-//             return { path: to.fullPath}
-//           }
-//         })
-//
-//       }
-//       // !cookie
-//       else if (!ethers.utils.isAddress(cookie.wallet) || ((cookie.wallet != address) && !isWhitelisted ) ) {
-//         // - go to walletconnect
-//         return {name: "whitelist" }
-//       }
-//     }
-//     // connected
-//     if (isConnected && isWhitelisted) {
-//       // -navigate to route
-//       return true
-//     }else if (isConnected && !isWhitelisted) {
-//       return { name: "whitelist"}
-//     }
-//   }
-//   // to.whitelist
-//   if( to.path === "whitelist" ) {
-//     // - navigating to whitelist and set vars
-//   }
-//
-//
-//   // from.whitelist
-//   // if (to.fullPath === "/dao/"+CONTRACTS.WEAVR ) {
-//   //   // - navigate path and reset vars
-//   //   if(cookie.wallet != address) {
-//   //     createToaster({position: "top", duration: 4000 }).info(
-//   //       "You are visiting the website with a non whitelisted address!! [only read mode]. " +
-//   //       "Please switch to your whitelisted wallet " + cookie.wallet)
-//   //     setInterval(()=>{
-//   //     }, 4000)
-//   //   }
-//   //   console.log("Navigate to WEAVR____GOV______________\n\n\n");
-//   //   return {path: to.fullPath}
-//   // }
-//   // no auth
-//
-//   // - navigate to path
-//   console.log("no auth required");
-//   return true
-// })
+router.beforeEach(async (to) => {
+  /**
+   * NOTES
+   * Should authorize navigation if:
+   * ( isConnected + isWhitelisted || isConnected + isGuest )
+   *
+   * ON not connected and COOKIE should AUTOCONNECT
+   * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
+   * ON not
+   */
+
+  const address = store.getters.userWalletAddress;
+  const isConnected = ethers.utils.isAddress(address);
+  const isWhitelisted = store.getters.isWhitelisted;
+  // const isGuest = store.getters.guestCookie;
+  const decoded_cookie = getCookie(USER_COOKIE_KEY)
+  let cookie = {}
+  if(decoded_cookie) {
+    cookie.wallet = decoded_cookie.split("_")[0]
+    cookie.provider = decoded_cookie.split("_")[1]
+  }
+  // require auth
+  if( to.meta.locked ) {
+    const toast = createToaster({});
+    toast.error("The route you are trying to access is currently locked", { position: "top"});
+    return false
+  }
+  if( to.meta.requiresAuth ) {
+    // not connected
+    if( !isConnected ) {
+      // cookie
+      if (ethers.utils.isAddress(cookie.wallet)) {
+        if (cookie.wallet === GUEST) {
+          return true
+        }
+        // - autoconnect and navigate
+        const toast = createToaster({})
+        await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
+        await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
+          if (!isWhitelisted) {
+            // not whitelisted
+            return  { name: "whitelist"}
+          }
+          else if ( isWhitelisted ) {
+            // whitelisted
+            return { path: to.fullPath}
+          }
+        })
+
+      }
+      // !cookie
+      else if (!ethers.utils.isAddress(cookie.wallet) || ((cookie.wallet != address) && !isWhitelisted ) ) {
+        // - go to walletconnect
+        return {name: "whitelist" }
+      }
+    }
+    // connected
+    if (isConnected && isWhitelisted) {
+      // -navigate to route
+      return true
+    }else if (isConnected && !isWhitelisted) {
+      return { name: "whitelist"}
+    }
+  }
+  // to.whitelist
+  if( to.path === "whitelist" ) {
+    // - navigating to whitelist and set vars
+  }
+
+
+  // from.whitelist
+  // if (to.fullPath === "/dao/"+CONTRACTS.WEAVR ) {
+  //   // - navigate path and reset vars
+  //   if(cookie.wallet != address) {
+  //     createToaster({position: "top", duration: 4000 }).info(
+  //       "You are visiting the website with a non whitelisted address!! [only read mode]. " +
+  //       "Please switch to your whitelisted wallet " + cookie.wallet)
+  //     setInterval(()=>{
+  //     }, 4000)
+  //   }
+  //   console.log("Navigate to WEAVR____GOV______________\n\n\n");
+  //   return {path: to.fullPath}
+  // }
+  // no auth
+
+  // - navigate to path
+  console.log("no auth required");
+  return true
+})
 
 export default router;
