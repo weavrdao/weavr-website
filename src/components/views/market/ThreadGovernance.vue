@@ -21,6 +21,7 @@
         <div class="column">
             <ProposalList :proposals="[]" :proposalStatus="showPastProposals? 'Past Proposals':'Active Proposals'" :assetId="thread.id"/>
         </div>
+        <router-view></router-view>
     </div>
     
     

@@ -34,13 +34,14 @@ export default {
   name: "SingleThread",
   data() {
     return {
+      threadId: this.$route.params.threadId.toLowerCase(),
       purchaseAmount: 0,
       withdrawAmount: 0,
     }
   },
   computed: {
     ...mapGetters({
-      threads: "threadById",
+      threads: "allThreads",
 
     }),
     thread() {
