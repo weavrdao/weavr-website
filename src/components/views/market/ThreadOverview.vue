@@ -3,14 +3,6 @@
     <div class="columns">
       <div class="column is-two-thirds mb-5">  
         <div class="p-3">
-          <!-- <div class="card">
-            <div class="is-flex is-justify-content-end	">
-              <span class="label is-medium mr-2">Holders:</span>
-              <div class="has-text-white tag is-primary is-medium">
-                <span class="mr-1">{{holders.length}}</span> 
-              </div>
-            </div>
-          </div> -->
           <div class="card mb-5">
             <div class="columns">
               <div class="column">

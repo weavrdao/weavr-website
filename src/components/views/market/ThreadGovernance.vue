@@ -3,6 +3,9 @@
     <div class="block">
         <Address :value="threadId"/>
     </div>
+    <div class="block">
+      <NewProposalSelector :isThread="true"/>
+    </div>
     <div class="columns">
         <div class="column is-one-fifth">
             <aside class="menu">
@@ -30,10 +33,12 @@ import { mapActions, mapGetters } from "vuex";
 import ProposalList from "@/components/proposals/ProposalList.vue";
 import Address from "../address/Address.vue";
 import { useRoute } from 'vue-router';
+import NewProposalSelector from '../../sections/NewProposalSelector.vue';
 export default {
   name: "ThreadGovernance",
   components: {
     ProposalList,
+    NewProposalSelector,
     Address,
   }, 
   data() {
