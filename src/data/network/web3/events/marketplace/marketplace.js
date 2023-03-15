@@ -1,4 +1,4 @@
-import {Deposit, Distribution} from "./Asset"
+import {Deposit, Distribution} from "./Assets"
 import {ethers } from "ethers";
 
 const getNeedleDestribuition = async (crowdfundSC) => {

@@ -7,10 +7,9 @@ import Airdrop from "./airdrop";
 import { Whitelist } from "../whitelist";
 import IPFSStorageNetwork from "../data/network/storage/ipfs/IPFSStorageNetwork"
 import EthereumClient from "../data/network/web3/ethereum/ethereumClient"
-import TheGraphAPIClient from "../data/network/graph/implementation/theGraphAPIClient"
-import TheGraphAPIMapper from "../data/network/graph/implementation/theGraphAPIClientMapper"
+
 import DEX from "./dex";
-const graphQLAPIClient = new TheGraphAPIClient(new TheGraphAPIMapper())
+
 const ethereumClient = new EthereumClient()
 const storageNetwork = new IPFSStorageNetwork()
 
@@ -32,7 +31,6 @@ class ServiceProvider {
   static market() {
     return new Market(
       ethereumClient,
-      graphQLAPIClient,
       storageNetwork
     )
   }
@@ -43,19 +41,17 @@ class ServiceProvider {
   static dao() {
     return new DAO(
       ethereumClient,
-      graphQLAPIClient,
       storageNetwork,
     )
   }
 
   static dex() {
-    return new DEX(ethereumClient, graphQLAPIClient);
+    return new DEX(ethereumClient);
   }
 
   static token() {
     return new Token(
-      ethereumClient,
-      graphQLAPIClient
+      ethereumClient
     )
   }
 
@@ -65,15 +61,13 @@ class ServiceProvider {
 
   static whitelist() {
     return new Whitelist(
-      ethereumClient,
-      graphQLAPIClient
+      ethereumClient
     )
   }
 
   static airdrop() {
     return new Airdrop(
       ethereumClient,
-      graphQLAPIClient,
       storageNetwork
     )
   }

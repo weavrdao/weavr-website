@@ -2,12 +2,7 @@
 
 // import {Proposal} from "@/models/proposals/proposal";
 // import {VoteType} from "../../models/vote"; 
-import {
-  // eslint-disable-next-line no-unused-vars
-  GraphQLAPIClient,
-  ALL_PROPOSALS,
-  VOUCHES_PER_PARTICIPANT,
-} from "../../data/network/graph/graphQLAPIClient";
+
 import {CONTRACTS, NETWORK} from "../constants";
 import AssetContract from "../../data/network/web3/contracts/assetContract";
 import { callSimulateFunc} from "@/proxy"
@@ -25,7 +20,6 @@ import InfuraEventCacheClient from "@/data/network/web3/events/InfuraEventCacheC
 class DAO {
   constructor(ethereumClient, graphQLAPIClient, storageNetwork) {
     this.ethereumClient = ethereumClient;
-    this.graphQLAPIClient = graphQLAPIClient;
     this.storageNetwork = storageNetwork;
     this.cacheClient = new InfuraEventCacheClient(NETWORK.id, process.env.VUE_APP_INFURA_API_KEY, NETWORK.startBlock)
   }
@@ -122,15 +116,15 @@ class DAO {
 
   async getUserVouches(signer) {
     console.log("vouches");
-    let vouches = await this.graphQLAPIClient.query(VOUCHES_PER_PARTICIPANT, {
-      id: process.env.INITIALFRABRIC,
-      signer: signer
-    }, (mapper, response) => {
-      return mapper.mapVouchers(response.data);
-    });
+    // let vouches = await this.graphQLAPIClient.query(VOUCHES_PER_PARTICIPANT, {
+    //   id: process.env.INITIALFRABRIC,
+    //   signer: signer
+    // }, (mapper, response) => {
+    //   return mapper.mapVouchers(response.data);
+    // });
 
-    console.log(vouches);
-    return vouches;
+    // console.log(vouches);
+    // return vouches;
   }
 
   /**

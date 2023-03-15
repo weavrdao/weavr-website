@@ -1,20 +1,21 @@
 import {ethers } from "ethers";
-import WEAVR from "../contracts/abi/Frabric.json"
 import {CONTRACTS} from "@/services/constants"
-import ThreadDeployer from "../contracts/abi/ThreadDeployer.json"
-import Crowdfund from "../contracts/abi/Crowdfund.json"
-import FrabricERC20 from "../contracts/abi/FrabricERC20.json"
-import {Needle, Thread} from "./marketplace/Asset"
+import {getIpfsHashFromBytes32} from "@/data/network/storage/ipfs/common";
+import {Needle, Thread} from "./marketplace/Assets"
 import {Marketplace} from "./marketplace/marketplace"
-import {BaseProposal} from "@/data/network/web3/events/proposals/BaseProposal";
-import {TokenActionProposal} from "@/data/network/web3/events/proposals/TokenActionProposal";
-import {ParticipantProposal} from "@/data/network/web3/events/proposals/ParticipantProposal";
-import {ThreadProposal} from "@/data/network/web3/events/proposals/ThreadProposal";
-import {UpgradeProposal} from "@/data/network/web3/events/proposals/UpgradeProposal";
-import {ParticipantRemovalProposal} from "@/data/network/web3/events/proposals/ParticipantRemovalProposal";
 import {Vote} from "@/models/vote";
 import {ProposalState, ProposalTypes, CrowdfundState} from "@/models/common";
-import {getIpfsHashFromBytes32} from "@/data/network/storage/ipfs/common";
+
+import {Crowdfund, ThreadDeployer, FrabricERC20, WEAVR} from "../contracts/abi"
+import {
+  BaseProposal, 
+  TokenActionProposal, 
+  ParticipantProposal, 
+  ParticipantRemovalProposal, 
+  ThreadProposal, 
+  UpgradeProposal
+} from "@/models/proposals";
+
 class InfuraEventCacheClient {
   constructor(ProviderNetwork, ProviderApiKey, startBlockNumber) {
     this.provider = new ethers.providers.InfuraProvider(ProviderNetwork, ProviderApiKey);

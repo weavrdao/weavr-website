@@ -1,14 +1,6 @@
 /* eslint-disable max-lines-per-function */
-
-import * as CommonUtils from "../../utils/common"
 import AssetContract from "../../data/network/web3/contracts/assetContract"
 import StorageNetwork from "../../data/network/storage/storageNetwork" // eslint-disable-line no-unused-vars
-import Asset from "../../models/marketplace/asset"
-import {
-  GraphQLAPIClient, // eslint-disable-line no-unused-vars
-  ALL_THREADS_QUERY,
-
-} from "../../data/network/graph/graphQLAPIClient"
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient" // eslint-disable-line no-unused-vars
 import { getIpfsHashFromBytes32 } from "../../data/network/storage/ipfs/common";
 import { NETWORK } from "../constants"
@@ -16,17 +8,14 @@ import InfuraEventCacheClient from "@/data/network/web3/events/InfuraEventCacheC
 /**
  * Market Provider service
  * @param {EthereumClient} ethereumClient Ethereum client
- * @param {GraphQLAPIClient} graphQLAPIClient GraphQL API Client
  * @param {StorageNetwork} storageNetwork Storage network to use
  */
 class Market {
   constructor(
     ethereumClient,
-    graphQLAPIClient,
     storageNetwork,
   ) {
     this.ethereumClient = ethereumClient
-    this.graphQLAPIClient = graphQLAPIClient
     this.storageNetwork = storageNetwork
     this.cacheClient = new InfuraEventCacheClient(NETWORK.id, process.env.VUE_APP_INFURA_API_KEY, NETWORK.startBlock)
   }

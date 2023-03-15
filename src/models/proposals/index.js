@@ -1,15 +1,8 @@
-import { PaperProposal } from "./paperProposal";
-import { ParticipantProposal } from "./participantProposal";
-import { UpgradeProposal } from "./upgradeProposal";
-import { ThreadProposal } from "./threadProposal";
-import { TokenActionProposal } from "./tokenActionProposal";
-import { ParticipantRemovalProposal } from "./participantRemovalProposal";
+import {BaseProposal} from "./BaseProposal"
+import {ParticipantProposal} from "./ParticipantProposal"
+import {ParticipantRemovalProposal} from "./ParticipantRemovalProposal"
+import {ThreadProposal} from "./ThreadProposal"
+import {TokenActionProposal} from "./TokenActionProposal"
+import {UpgradeProposal} from "./UpgradeProposal"
 
-export {
-  PaperProposal,
-  ParticipantProposal,
-  UpgradeProposal,
-  ThreadProposal,
-  TokenActionProposal,
-  ParticipantRemovalProposal,
-}
+export { BaseProposal, ParticipantProposal, ParticipantRemovalProposal, ThreadProposal, TokenActionProposal, UpgradeProposal }
