@@ -44,7 +44,9 @@ export default {
 
     }),
     thread() {
-      return this.threads.get(this.$route.params.threadId)
+      console.log(this.threads)
+      return this.threads
+        .find(t => t.id.toLowerCase() === this.threadId);
     },
   },
   methods: {

@@ -50,6 +50,8 @@
 //     }
 //   }
 class Needle {
+  imagesHashes
+  name
   constructor(
     id,
     state,
@@ -58,7 +60,8 @@ class Needle {
     thread,
     deposits,
     withdrawals,
-    distributions
+    distributions,
+    tradeToken
   ) {
     this.id = id
     this.state = state
@@ -68,6 +71,8 @@ class Needle {
     this.deposits = deposits
     this.withdrawals = withdrawals || null
     this.distribution = distributions || null
+    this.tradeToken = tradeToken
+    this.name = ""
     // this.coverPictureURI = coverPictureURI
     // this.currentRent = currentRent
     // this.description = description

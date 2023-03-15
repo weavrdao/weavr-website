@@ -3,17 +3,19 @@
     <div class="columns">
       <div class="column is-two-thirds mb-5">  
         <div class="p-3">
-          <div class="card">
-            <div class="is-flex is-justify-content-end	">
-              <div class="has-text-white tag is-primary is-medium">
-                <span class="mr-1">{{holders.length}}</span> 
-                <span>Holders</span>
+          <div class="card mb-5">
+            <div class="columns">
+              <div class="column">
+                <div class="label">Thread Address:</div>
+                <Address :value="threadId"></Address>
+              </div>
+              <div class="column is-flex is-justify-content-end	">
+                <div class="block is-pulled-right">
+                  <div class="label">Holders:</div>
+                  <div class="has-text-white tag is-primary is-medium">{{holders.length}}</div> 
+                </div>
               </div>
             </div>
-          </div>
-          <div class="card mb-5">
-            <div class="label">Thread Address:</div>
-            <Address :value="threadId"></Address>
           </div>
         </div>
         <div class="card mt-5">
@@ -54,9 +56,9 @@
         </div>
         <div class="card p-3 mt-5 has-radius-lg border-lightGray">
           <p class="subtitle mb-3">Holders</p>
-          <div class="columns mb-0 is-GAP-1" v-for="holder in holders" :key="holder.holder.id">
+          <div class="columns mb-0 is-GAP-1" v-for="holder in holders" :key="holder">
             <div class="column" v-on:click="copy">
-              <Address :value="holder.holder.id"></Address>
+              <Address :value="holder"></Address>
             </div>
           </div>
         </div>
@@ -105,8 +107,8 @@ export default {
       }
     },
     holders() {
-      
-      return this.thread.erc20.balances
+      console.log("HOLDERSSSSSSSS::: ", Array.from(this.thread.erc20.holders.keys()));
+      return Array.from(this.thread.erc20.holders.keys())
     },
     metrics() {
       if(!isJson(this.thread?.metrics)) return {}

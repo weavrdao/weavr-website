@@ -147,7 +147,6 @@ const router = new createRouter({
             store.dispatch("setLoadingState", {isLoading: true, message: "Loading Needles"})
 
             await store.dispatch("refreshNeedles")
-
             store.dispatch("setLoadingState", {isLoading: false, message: ""})
 
             return true
@@ -192,7 +191,7 @@ const router = new createRouter({
           component: SingleThread,
           meta: { requiresAuth: true},
           beforeEnter: async () => {
-            if(!store.getters.threads){
+            if(!store.getters.allThreads){
               store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
 
               await store.dispatch("refreshThreads")

@@ -50,6 +50,7 @@
 import { mapActions} from "vuex";
 import {ethers} from "ethers";
 import Proposal from "@/components/proposals/Proposal.vue"
+import {ProposalTypes} from "@/models/common";
 
 export default {
 
@@ -68,6 +69,7 @@ export default {
       forumLink: "",
       proposal: null,
       preview: false,
+      proposalType: ProposalTypes.ParticipantRemoval
     }
   },
   computed: {
@@ -93,6 +95,7 @@ export default {
         address: this.address,
         removalFee: this.removalFee,
         signatures: this.signatures,
+        proposalType: this.proposalType,
         forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/"
       }
       this.preview = !this.preview

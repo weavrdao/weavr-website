@@ -1,10 +1,10 @@
-import contractAbi from "./abi/FrabricERC20";
+import contractAbi from "./abi/WeavrERC20";
 
 /**
  * Frabric ERC20 contract
  * @param {EthereumClient} ethereumClient Ethereum client
  */
-class FrabricERC20Contract {
+class WeavrERC20Contract {
   constructor(ethereumClient, contractAddress) {
     this.contract = ethereumClient.getContract(contractAddress, contractAbi);
     this.mutableContract = ethereumClient.getMutableContract(this.contract);
@@ -279,4 +279,4 @@ class FrabricERC20Contract {
   }
 }
 
-export default FrabricERC20Contract;
+export default WeavrERC20Contract;

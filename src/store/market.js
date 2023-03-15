@@ -78,7 +78,7 @@ const getters = {
   },
   
   allNeedles(state) {
-    return state.platform.needles.filter( needle => needle.state != "Finished");
+    return state.platform.needles;
   },
   
   threadById(state) {
@@ -120,7 +120,7 @@ const actions = {
   
   async refreshNeedles(context) {
     const needles = await market.getNeedles();
-    console.log(needles);
+    console.log("STORE:::::", needles);
     context.commit("setNeedles", needles);
   },
   

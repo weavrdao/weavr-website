@@ -14,11 +14,11 @@ module.exports = {
   },
 
   ProposalState: {
-    Null: 0,
-    Active: 1,
-    Queued: 2,
-    Executed: 3,
-    Cancelled: 4
+    0: "Null",
+    1: "Active",
+    2: "Queued",
+    3: "Executed",
+    4: "Cancelled",
   },
 
   VoteDirection: {
@@ -85,4 +85,11 @@ module.exports = {
     No: 1,
     Tie: 2,
   },
+
+  CrowdfundState: {
+    0:  "Active",
+    1:  "Executing",
+    2:  "Refunding",
+    3:  "Finished"
+  }
 } 

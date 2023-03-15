@@ -1,56 +1,77 @@
 <template>
-  <div>
-    
-    <NewProposalSelector :isThread="true"></NewProposalSelector>
-   <div class="tabs is-toggle is-toggle-rounded is-centered  ">
-      <ul>
-        <li :class="[ isActiveProposals ? 'is-active' : '' ]">
-          <a v-on:click="isActiveProposals=true">Active Proposals</a>
-        </li>
-        <li :class="[ !isActiveProposals ? 'is-active' : '' ]">
-          <a disabled="true" aria-disabled="true" v-on:click="isActiveProposals=false">Past Proposals</a>
-        </li>
-      </ul>
+   <div class="">
+    <div class="block">
+        <Address :value="threadId"/>
     </div>
-
+    <div class="block">
+      <NewProposalSelector :isThread="true"/>
+    </div>
+    <div class="columns">
+        <div class="column is-one-fifth">
+            <aside class="menu">
+                <p class="menu-label">
+                    Proposals
+                </p>
+                <ul class="menu-list">
+                    <li><a @click="show(false)">Active</a></li>
+                    <li><a @click="show(true)">Past</a></li>
+                </ul>
+            </aside>
+        </div>
+        <div class="column">
+            <ProposalList :proposals="[]" :proposalStatus="showPastProposals? 'Past Proposals':'Active Proposals'" :assetId="thread.id"/>
+        </div>
+    </div>
     
-      <ProposalList
-          v-if="isActiveProposals"
-          :proposals="activeProposals"
-          :assetId="assetId"
-          :proposalStatus="`Active Proposals`"/>
-      <ProposalList
-          v-else
-          :proposals="pastProposals"
-          :assetId="assetId"
-          :proposalStatus="`Past Proposals`"/>
-    <router-view></router-view>
-  </div>
-</template> 
+    
+    
+   </div>    
+</template>
 
 <script>
-// import ProposalList from "@/components/proposals/ProposalList"
-import NewProposalSelector from "@/components/sections/NewProposalSelector"
-import { mapGetters } from "vuex"
+import { mapActions, mapGetters } from "vuex";
+import ProposalList from "@/components/proposals/ProposalList.vue";
+import Address from "../address/Address.vue";
+import { useRoute } from 'vue-router';
+import NewProposalSelector from '../../sections/NewProposalSelector.vue';
 export default {
   name: "ThreadGovernance",
   components: {
-    // ProposalList
+    ProposalList,
     NewProposalSelector,
-  },
+    Address,
+  }, 
   data() {
     return {
-      isActiveProposals: true
-    }
+      threadId: useRoute().params.threadId,
+      showPastProposals: false
+    }  
   },
   computed: {
     ...mapGetters({
       threads: "threadById",
-
     }),
     thread() {
-      return this.threads.get(this.$route.params.threadId)
-    },
+      return this.threads.get(this.$route.params['threadId'])
+    }
   },
+  methods: {
+    ...mapActions({
+      fetchThreads: "refreshThreads",
+    }),
+    show(list) {
+        this.showPastProposals = list ? true : false
+    }
+  },
+  mounted() {
+    console.log(this.thread);
+  }
 }
 </script>
+
+<style lang="scss">
+@import "@/styles/weavr-custom.scss";
+@import "@/styles/markdown.scss";
+
+
+</style>>

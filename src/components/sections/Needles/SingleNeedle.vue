@@ -152,8 +152,13 @@ export default {
     }),
     
     needle() {
-      return this.needles
-        .find(n => n.id === this.needleId);
+      console.log("NEEDLES: ", this.needles.map( n => { return n.id}));
+      console.log("NEEDLE_ID: ", this.needleId);
+      const needle = this.needles
+        .find(n => n.id.toLowerCase() === this.needleId);
+        console.log("NNNNNNNN", needle
+        );
+      return needle
     },
     metrics() {
       if(!isJson(this.needle.metrics)) return {}
@@ -194,7 +199,7 @@ export default {
         : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
     },
     getCoverStyle() {
-      const url = this.needle.imagesHashes
+      const url = this.needle?.imagesHashes
         ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${this.needle.imagesHashes[0]}`
         : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
     
@@ -228,7 +233,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.needle);
+    console.log("SINGLENEEDLE", this.needles);
     this.fetchNeedleTokenData({
       assetId: this.needleId,
     })

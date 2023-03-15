@@ -4,7 +4,7 @@ class StorageNetwork {
   constructor() {
   }
 
-  async addFile(file) {
+  async addJson(file) {
   }
 
   async getFile(name) {
