@@ -1,150 +1,31 @@
 /* eslint-disable max-lines-per-function */
-
-import * as CommonUtils from "../../utils/common"
-import AssetContract from "../../data/network/web3/contracts/assetContract" 
+import AssetContract from "../../data/network/web3/contracts/assetContract"
 import StorageNetwork from "../../data/network/storage/storageNetwork" // eslint-disable-line no-unused-vars
-import Asset from "../../models/marketplace/asset"
-import {
-  GraphQLAPIClient, // eslint-disable-line no-unused-vars
-  ALL_THREADS_QUERY,
-  ALL_NEEDLES_QUERY
-} from "../../data/network/graph/graphQLAPIClient" 
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient" // eslint-disable-line no-unused-vars
-import {getIpfsHashFromBytes32} from "../../data/network/storage/ipfs/common";
-import {NETWORK} from "../constants"
-
+import { getIpfsHashFromBytes32 } from "../../data/network/storage/ipfs/common";
+import { NETWORK } from "../constants"
+import InfuraEventCacheClient from "@/data/network/web3/events/InfuraEventCacheClient"
 /**
  * Market Provider service
  * @param {EthereumClient} ethereumClient Ethereum client
- * @param {GraphQLAPIClient} graphQLAPIClient GraphQL API Client
  * @param {StorageNetwork} storageNetwork Storage network to use
  */
 class Market {
   constructor(
     ethereumClient,
-    graphQLAPIClient,
     storageNetwork,
   ) {
     this.ethereumClient = ethereumClient
-    this.graphQLAPIClient = graphQLAPIClient
     this.storageNetwork = storageNetwork
+    this.cacheClient = new InfuraEventCacheClient(NETWORK.id, process.env.VUE_APP_INFURA_API_KEY, NETWORK.startBlock)
   }
-
-  /**
-   * Get assets that are currently trading on the market.
-   * @param {number} limit
-   * @param {number} offset
-   * @param {Object} idsArray ids to return; everything is returned if null
-   * @param {string} sort accepted format is [field_name]:[asc|desc]
-   * @param {number} minBlockNumber The min block number
-   * @returns {Object} {Array of asset objects}
-   * @example
-   * await getAssetsOnTheMarket()
-   * await getAssetsOnTheMarket(100, 0, [1,2,3,4,5])
-   */
-  async getAssetsOnTheMarket( ) {
-    // Get indexed on-chain data
-
-    var assets = await this.graphQLAPIClient
-      .query(
-        ALL_THREADS_QUERY,
-        {
-          weavrId: NETWORK.contracts.WEAVR
-        },
-        (mapper, response) => {
-          return mapper.mapThreads(response.data)
-        }
-      )
-
-    console.log("Mapped assets:")
-    console.log(assets)
-
-    // TODO: CONSIDER DISCONTINUED/DEACTIVATED ASSETS
-
-    // Fetch and append off-chain data
-
-    const assetDataURIArray = assets
-      .map(asset => asset.dataURI)
-    let assetOffchainDataArray = (
-      await this.storageNetwork
-        .getFiles(assetDataURIArray.map(uri => CommonUtils.pathFromURL(uri)), localStorage)
-    )
-      .map(obj => obj.world.property)
-
-    console.log("Off-chain data:")
-    console.log(assetOffchainDataArray)
-
-    if (assetOffchainDataArray.length != assets.length) {
-      throw("Off-chain data count doesn't match the on-chain data")
-    }
-
-    for (var i = 0; i < assets.length; i++) {
-      let asset = assets[i]
-      let data = assetOffchainDataArray[i]
-
-      let completeAsset = new Asset(
-        asset.id,
-        asset.dataURI,
-        asset.contractAddress,
-        asset.symbol,
-        asset.numOfShares,
-        asset.owners,
-        asset.marketOrders,
-        asset.proposals,
-        data.address,
-        data.area,
-        data.coverImage,
-        data.currentRent,
-        data.description,
-        data.grossYieldPct,
-        data.marketValue,
-        data.rooms.bdCount,
-        data.rooms.baCount,
-        data.yearBuilt
-      )
-
-      assets[i] = completeAsset
-    }
-
-    return assets
-  }
-
 
   async getThreads() {
-    // Get indexed on-chain data
-
-    const threads = await this.graphQLAPIClient
-      .query(
-        ALL_THREADS_QUERY,
-        {
-          weavrId: NETWORK.contracts.WEAVR
-        },
-        (mapper, response) => {
-          console.log(response.data.crowdfunds)
-          const mappedThreads = mapper.mapRawThreads(response.data.crowdfunds)
-          console.log(mappedThreads)
-          return mappedThreads
-        }
-      )
-
-    console.log("Mapped assets:")
-    console.log(threads)
-
-    // TODO: CONSIDER DISCONTINUED/DEACTIVATED ASSETS
-
-    // Fetch and append off-chain data
+    const assetList = await this.cacheClient.fetchThreads()
+    let threads = []
+    assetList.forEach(t => { if (t.state == "Finished") { console.log(t); threads.push(t) } })
     try {
-
-      const descriptors = threads.map((thread) => {
-        console.log(thread.descriptor);
-        return getIpfsHashFromBytes32(thread.descriptor)
-      })
-      console.log(descriptors);
-      const offChainData = await this.storageNetwork.getFiles(
-        descriptors,
-        localStorage
-      );
-
+      const offChainData = await this.storageNetwork.getFiles(threads.map(t => getIpfsHashFromBytes32(t.descriptor)), localStorage);
       for (let i = 0; i < threads.length; i++) {
         console.log(offChainData[i].value.descriptor)
         if (offChainData[i].value) {
@@ -165,31 +46,18 @@ class Market {
       // no-op
       console.log(e);
     }
-    console.log("FINAL THREADS: ", threads);
     return threads
   }
 
   async getNeedles() {
-    const needles = await this.graphQLAPIClient
-      .query(
-        ALL_NEEDLES_QUERY,
-        {
-          weavrId: NETWORK.contracts.WEAVR
-        },
-        (mapper, response) => {
-          console.log("RESPONSE:  ", response);
-          const mappedNeedles = mapper.mapRawNeedles(response.data.crowdfunds)
-          return mappedNeedles
-        }
-      )
-    console.log(needles)
-
+    const assetList = await this.cacheClient.fetchNeedles()
+    let needles = []
+    assetList.forEach( n => { if( n.state != "Finished") { needles.push(n)}})
     try {
-      const offChainData = await this.storageNetwork.getFiles(
-        needles.map(({thread}) => getIpfsHashFromBytes32(thread.descriptor)),
-        localStorage
-      );
-      console.log("offChainData", offChainData);
+      const descriptors = needles.map(el => {
+        return getIpfsHashFromBytes32(el.descriptor)
+      })
+      const offChainData = await this.storageNetwork.getFiles(descriptors, localStorage);
       for (let i = 0; i < needles.length; i++) {
         if (offChainData[i].value) {
           needles[i].descriptor = offChainData[i].value.descriptor;
@@ -200,9 +68,10 @@ class Market {
         } else {
           needles[i].descriptor = offChainData[i].descriptor;
           needles[i].name = offChainData[i].name;
-          needles[i].imagesHashes = offChainData[i].imagesHashes;
-          needles[i].metrics = offChainData[i].metrics;
+          needles[i].imagesHashes = offChainData[i].imagesHashes || null;
+          needles[i].metrics = offChainData[i].metrics || null;
         }
+        console.log(needles[i]);
       }
     } catch (e) {
       // no-op

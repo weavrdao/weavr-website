@@ -17,7 +17,7 @@
 import { mapActions, mapGetters } from "vuex";
 import OrderPlacer from "../views/dex/OrderPlacer.vue";
 import OrderBook from "../views/dex/OrderBook.vue";
-import { CONTRACTS } from '../../services/constants';
+import { CONTRACTS } from "../../services/constants";
 
 export default {
   name: "DEX",

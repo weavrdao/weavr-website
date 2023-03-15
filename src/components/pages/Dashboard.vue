@@ -111,7 +111,7 @@ h3 {
 <script>
 // import { toFixedNumber } from "../../utils/common";
 import { mapGetters, mapActions } from "vuex";
-import Address from '../views/address/Address.vue';
+import Address from "../views/address/Address.vue";
 import properties from "../sections/ComingSoon/properties";
 import Accordion from "../utils/Accordion.vue";
 // import { CONTRACTS, DAO, GUEST, NETWORK } from "@/services/constants";

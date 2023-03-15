@@ -85,4 +85,11 @@ module.exports = {
     No: 1,
     Tie: 2,
   },
+
+  CrowdfundState: {
+    0:  "Active",
+    1:  "Executing",
+    2:  "Refunding",
+    3:  "Finished"
+  }
 } 

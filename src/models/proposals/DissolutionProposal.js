@@ -1,14 +1,13 @@
 import {BaseProposal} from "@/data/network/web3/events/proposals/BaseProposal";
 import {VoteType} from "@/models/vote";
 
-export class ParticipantProposal extends BaseProposal {
+export class DissolutionProposal extends BaseProposal {
   constructor(baseProposal, data) {
     super(baseProposal.id, baseProposal.creator, baseProposal.info, baseProposal.superMajority,
       baseProposal.startTimestamp, baseProposal.status, baseProposal.type, baseProposal.votes)
     const {participantType, proposer, participant} = data
-    this.participantType = participantType
-    this.proposer = proposer
-    this.participant = participant
+    this.token = token
+    this.price = price
   }
 
   addVote(vote) {

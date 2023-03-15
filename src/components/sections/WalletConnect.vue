@@ -35,7 +35,6 @@
 <script>
 // import {mapActions}
 import { mapActions, mapGetters } from "vuex"
-import { DAO } from "@/services/constants.js"
 import { NETWORK } from "../../services/constants"
 export default {
   name: "WalletConnect",
@@ -88,7 +87,7 @@ export default {
         });
     },
     routeToHome() {
-        this.$router.back();
+      this.$router.back();
     },
   }    
 }

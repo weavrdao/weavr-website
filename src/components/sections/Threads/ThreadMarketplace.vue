@@ -34,7 +34,7 @@
 import { mapGetters, mapActions } from "vuex";
 import ThreadMarketListItem from "./ThreadMarketListItem.vue"
 import Loading from "../../views/loading/Loading.vue";
-import styles from "@/styles/weavr-custom.scss"
+
 export default {
   name: "ThreadMarketplace",
   components: {
@@ -45,7 +45,7 @@ export default {
     return { 
       searchStr: "",
       threads: []
-     }
+    }
   },
   computed: {
     ...mapGetters({
@@ -67,12 +67,12 @@ export default {
         this.threads = this.threadsMap
       } else {
         this.threads.forEach( (asset) => {
-        for(let prop in asset) {
-          if(asset[prop].includes(this.searchStr)) {
-            return new Map().set(asset.id, asset)
+          for(let prop in asset) {
+            if(asset[prop].includes(this.searchStr)) {
+              return new Map().set(asset.id, asset)
+            }
           }
-        }
-      })
+        })
       }
     }
   },

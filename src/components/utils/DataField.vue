@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  emits: ['metaData'],
+  emits: ["metaData"],
   name: "DataField",
   
   data() {

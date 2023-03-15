@@ -70,10 +70,10 @@
 </template>
 
 <script>
-import SignerAddress from '../../views/address/SignerAddress.vue'
+import SignerAddress from "../../views/address/SignerAddress.vue"
 import { useRoute } from "vue-router"
 import { mapGetters, mapActions } from "vuex"
-import { CONTRACTS } from '../../../services/constants'
+import { CONTRACTS } from "../../../services/constants"
 export default {
   name: "HeaderHavigationBar",
   components: {

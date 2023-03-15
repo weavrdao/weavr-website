@@ -21,12 +21,15 @@ import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
 import ThreadsMarketplace from "@/components/sections/Threads/ThreadMarketplace.vue";
 import SingleThread from "@/components/sections/Threads/SingleThread.vue";
 import ThreadOverview from "@/components/views/market/ThreadOverview.vue";
+import ThreadGovernance from "@/components/views/market/ThreadGovernance.vue";
 import newPaperProposal from "@/components/proposals/newPaperProposal.vue";
 import newParticipantProposal from "@/components/proposals/newParticipantProposal.vue";
 import newParticipantRemovalProposal from "@/components/proposals/newParticipantRemoval.vue";
 import newUpgradeProposal from "@/components/proposals/newUpgradeProposal.vue";
 import newTokenAction from "@/components/proposals/newTokenAction.vue";
 import newThreadProposal from "@/components/proposals/newThreadProposal.vue";
+import newDescriptorChange from "@/components/proposals/newDescriptorChange.vue";
+import newDissolutionProposal from "@/components/proposals/newDissolutionProposal.vue";
 import SingleProposal from "@/components/proposals/SingleProposal.vue";
 import Vouch from "@/components/proposals/Vouch";
 import Queue from "@/components/proposals/Queue"
@@ -144,7 +147,6 @@ const router = new createRouter({
             store.dispatch("setLoadingState", {isLoading: true, message: "Loading Needles"})
 
             await store.dispatch("refreshNeedles")
-
             store.dispatch("setLoadingState", {isLoading: false, message: ""})
 
             return true
@@ -189,7 +191,7 @@ const router = new createRouter({
           component: SingleThread,
           meta: { requiresAuth: true},
           beforeEnter: async () => {
-            if(!store.getters.threads){
+            if(!store.getters.allThreads){
               store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
 
               await store.dispatch("refreshThreads")
@@ -211,7 +213,40 @@ const router = new createRouter({
             {
               path: "governance",
               name: "governance",
-              component: Governance
+              component: ThreadGovernance,
+              children: [
+                {
+                  path: "paperProposal",
+                  component: Modal,
+                  props: { component: newPaperProposal },
+                },
+                {
+                  path: "descriptorChange",
+                  component: Modal,
+                  props: { component: newDescriptorChange },
+                },
+                {
+                  path: "dissolutionProposal",
+                  component: Modal,
+                  props: { component: newDissolutionProposal },
+                },
+                {
+                  path: "participantRemovalProposal",
+                  component: Modal,
+                  props: {component: newParticipantRemovalProposal},
+                },
+                {
+                  path: "upgradeProposal",
+                  component: Modal,
+                  props: { component: newUpgradeProposal },
+                  meta: { locked: true }
+                },
+                {
+                  path: "tokenProposal",
+                  component: Modal,
+                  props: { component: newTokenAction },
+                },
+              ]
             }
           ]
         },

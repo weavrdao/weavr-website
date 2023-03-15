@@ -11,7 +11,6 @@
 
 <script>
 import "animate.css";
-import { mapActions } from 'vuex';
 
 export default {
   name: "Modal",

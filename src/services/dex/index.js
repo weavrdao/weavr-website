@@ -1,45 +1,39 @@
-import { GraphQLAPIClient } from "@/data/network/graph/graphQLAPIClient";
 import DexRouterContract from "@/data/network/web3/contracts/dexRouterContract";
 import WeavrERC20Contract from "@/data/network/web3/contracts/weavrERC20Contract";
-import {
-  FRABRIC_DEX_ORDERS_QUERY,
-  THREAD_DEX_ORDERS_QUERY,
-} from "../../data/network/graph/queries";
+
 import { NETWORK } from "../constants";
 import AssetContract from "@/data/network/web3/contracts/assetContract";
 /**
  * DEX service
  * @param {EthereumClient} ethereumClient Ethereum client
- * @param {GraphQLAPIClient} graphQLAPIClient GraphQL API Client
  */
 class DEX {
-  constructor(ethereumClient, graphQLAPIClient) {
+  constructor(ethereumClient) {
     this.ethereumClient = ethereumClient;
-    this.graphQLAPIClient = graphQLAPIClient;
   }
 
   async getFrabricOrders(frabricId) {
-    const marketOrders = await this.graphQLAPIClient.query(
-      FRABRIC_DEX_ORDERS_QUERY,
-      { frabricId },
-      (mapper, response) => {
-        return mapper.mapRawMarketOrders(response);
-      }
-    );
-    console.log(marketOrders);
-    return marketOrders;
+    // const marketOrders = await this.graphQLAPIClient.query(
+    //   FRABRIC_DEX_ORDERS_QUERY,
+    //   { frabricId },
+    //   (mapper, response) => {
+    //     return mapper.mapRawMarketOrders(response);
+    //   }
+    // );
+    // console.log(marketOrders);
+    // return marketOrders;
   }
 
   async getThreadOrders(frabricId, threadId) {
-    const marketOrders = await this.graphQLAPIClient.query(
-      THREAD_DEX_ORDERS_QUERY,
-      { frabricId, threadId },
-      (mapper, response) => {
-        return mapper.mapRawMarketOrders(response);
-      }
-    );
+    // const marketOrders = await this.graphQLAPIClient.query(
+    //   THREAD_DEX_ORDERS_QUERY,
+    //   { frabricId, threadId },
+    //   (mapper, response) => {
+    //     return mapper.mapRawMarketOrders(response);
+    //   }
+    // );
 
-    return marketOrders.length > 0 ? marketOrders : [];
+    // return marketOrders.length > 0 ? marketOrders : [];
   }
 
   async createBuyOrder(frabricAddress, price, minimumAmount) {

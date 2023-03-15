@@ -50,7 +50,7 @@ export default {
     StackNavigationBar,
     ProposalList,
     NewProposalSelector,
-},
+  },
   computed: {
     ...mapGetters({
       assetMap: "assetsById",
