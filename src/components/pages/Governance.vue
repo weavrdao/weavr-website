@@ -3,16 +3,15 @@
       <!-- <div class="my-5"><RefreshButton  @refreshed="() => {}" :assetId="assetId"/></div>
       <div class="button is-primary" @click="refresh">Refresh</div> -->
     <StackNavigationBar @onBack="goBack" :address="assetId" />
+    <div v-if="walletAddress">
     <div class="is-flex is-justify-content-end">
-      <button 
-        :class="[showSelector? 'is-danger' : 'is-primary', ' button']" 
-        v-on:click="toggleSelector"
-      >
+      <button  :class="[showSelector? 'is-danger' : 'is-primary', ' button']" v-on:click="toggleSelector">
         {{ showSelector ? "X": "New Proposal" }}
       </button>
     </div>
     <div class="mb-5">
       <NewProposalSelector v-if="showSelector"/>
+    </div>
     </div>
     <div class="tabs is-toggle is-toggle-rounded is-centered  ">
       <ul>
