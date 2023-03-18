@@ -183,7 +183,7 @@ export default {
 
     },
     userIsCreator() {
-      if(this.address === null) return false;
+      if(!this.address) return false;
       return this.address.toLowerCase() === this.proposal.creator.toLowerCase();
     },
   },
