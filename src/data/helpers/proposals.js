@@ -64,14 +64,15 @@ export function dateStringForTimestamp(timestamp) {
 }
 
 export function getVotes(proposal) {
-  const yesVoteShares = proposal.votes.reduce((total, vote) => {
+  const votes = Array.from(proposal.votes.values())
+  const yesVoteShares = votes.reduce((total, vote) => {
     return vote.voteDirection === VoteType.Yes ? total + Number(vote.count) : total;
   }, 0);
 
-  const noVoteShares = proposal.votes.reduce((total, vote) => {
+  const noVoteShares = votes.reduce((total, vote) => {
     return vote.voteDirection === VoteType.No ? total + Number(vote.count) : total;
   }, 0);
-
+  console.log("YES: ", yesVoteShares, "NO: ", noVoteShares);
   return {
     yes: {
       count: Number(yesVoteShares).toFixed(0),
