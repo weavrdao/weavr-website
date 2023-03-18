@@ -72,7 +72,6 @@ export function getVotes(proposal) {
   const noVoteShares = votes.reduce((total, vote) => {
     return vote.voteDirection === VoteType.No ? total + Number(vote.count) : total;
   }, 0);
-  console.log("YES: ", yesVoteShares, "NO: ", noVoteShares);
   return {
     yes: {
       count: Number(yesVoteShares).toFixed(0),
