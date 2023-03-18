@@ -170,8 +170,7 @@ export default {
     userVote() {
       if (!this.address) return null;
       // Select user vote by matching voter address to user address
-      const vote = this.proposal.votes.find(vote => vote.voter.toLowerCase() === this.address.toLowerCase());
-
+      const vote = this.proposal.votes.get(this.address)
       if(vote) {
         return {
           ...vote,

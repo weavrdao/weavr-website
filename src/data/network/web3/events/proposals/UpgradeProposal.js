@@ -1,6 +1,4 @@
 import {BaseProposal} from "@/data/network/web3/events/proposals/BaseProposal";
-import {VoteType} from "@/models/vote";
-import {BigNumber} from "ethers";
 
 export class UpgradeProposal extends BaseProposal {
   constructor(baseProposal, _data) {
@@ -12,16 +10,5 @@ export class UpgradeProposal extends BaseProposal {
     this.version = version
     this.code = code
     this.data = data
-  }
-
-  addVote(vote) {
-    if(vote.voteDirection === 0) {
-      vote.voteDirection = VoteType.Abstain
-    } else if (vote.voteDirection === 1) {
-      vote.voteDirection = VoteType.Yes
-    } else  {
-      vote.voteDirection = VoteType.No
-    }
-    this.votes.push(vote)
   }
 }

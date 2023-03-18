@@ -9,20 +9,21 @@ export class BaseProposal {
     this.info = info;
     this.superMajority = superMajority;
     this.startTimestamp = startTimestamp
+    this.votes = new Map()
     if(!status) {
       this.status = ProposalState.Active
     } else {
-        this.status = status
+      this.status = status
     }
     if(!type) {
-        this.type = ProposalTypes.Paper
+      this.type = ProposalTypes.Paper
     } else {
-        this.type = type
+      this.type = type
     }
     if(!votes) {
-        this.votes = []
+      this.votes = new Map()
     } else {
-        this.votes = votes
+      this.votes = votes
     }
 
   }
@@ -33,11 +34,9 @@ export class BaseProposal {
     } else if (vote.voteDirection === 1) {
       vote.voteDirection = VoteType.Yes
     } else  {
-        vote.voteDirection = VoteType.No
+      vote.voteDirection = VoteType.No
     }
-    this.votes.push(vote)
+    this.votes.set(vote.voter, vote)
   }
 
 }
-
-// export default BasicProposal
