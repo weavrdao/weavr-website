@@ -43,3 +43,21 @@ export class Distribution {
     this.amount = amount
   }
 }
+
+export class Holder {
+  constructor(address) {
+    this.id = address
+    this.to = []
+    this.from = []
+  }
+}
+
+export class ERC20_TX {
+  constructor(to, from, value, transactionHash ) {
+    this.id = `${to}_${from}_${transactionHash}`
+    this.to = to;
+    this.from = from
+    this.value = value
+    this.transactionHash = transactionHash
+  }
+}

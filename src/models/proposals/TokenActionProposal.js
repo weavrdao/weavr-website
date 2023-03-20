@@ -1,5 +1,4 @@
 import {BaseProposal} from "./BaseProposal";
-import {VoteType} from "@/models/vote";
 
 export class TokenActionProposal extends BaseProposal {
   constructor(baseProposal, payload) {
@@ -13,14 +12,4 @@ export class TokenActionProposal extends BaseProposal {
   this.amount = amount
   }
 
-  addVote(vote) {
-    if(vote.voteDirection === 0) {
-      vote.voteDirection = VoteType.Abstain
-    } else if (vote.voteDirection === 1) {
-      vote.voteDirection = VoteType.Yes
-    } else  {
-      vote.voteDirection = VoteType.No
-    }
-    this.votes.push(vote)
-  }
 }

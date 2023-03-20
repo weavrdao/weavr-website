@@ -13,16 +13,4 @@ export class ThreadProposal extends BaseProposal {
     this.descriptor = descriptor
     this.data = data
   }
-
-  addVote(vote) {
-    if(vote.voteDirection === 0) {
-      vote.voteDirection = VoteType.Abstain
-    } else if (vote.voteDirection === 1) {
-      vote.voteDirection = VoteType.Yes
-    } else  {
-      vote.voteDirection = VoteType.No
-    }
-    this.votes.push(vote)
-  }
-
 }
