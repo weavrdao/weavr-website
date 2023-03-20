@@ -18,7 +18,9 @@
         </a>
       </div>
     </div>
-    <Proposal :proposal="proposal" />
+    <div class="box">
+      <Proposal :proposal="proposal" />
+    </div>
     <div class="box has-background-darkGray">
       <label class="label">Consensus</label>
       <div class="votes-container">
@@ -168,8 +170,7 @@ export default {
     userVote() {
       if (!this.address) return null;
       // Select user vote by matching voter address to user address
-      const vote = this.proposal.votes.find(vote => vote.voter.toLowerCase() === this.address.toLowerCase());
-
+      const vote = this.proposal.votes.get(this.address)
       if(vote) {
         return {
           ...vote,
@@ -181,6 +182,7 @@ export default {
 
     },
     userIsCreator() {
+      if(!this.address) return false;
       return this.address.toLowerCase() === this.proposal.creator.toLowerCase();
     },
   },

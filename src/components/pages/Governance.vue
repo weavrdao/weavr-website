@@ -108,9 +108,8 @@ export default {
     },
     createProposal() {
       this.$router.push(`/dao/${this.assetId}/paperProposal`);
-    }
+    },
   },
-
   data() {
     return {
       showSelector: false,

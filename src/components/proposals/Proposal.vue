@@ -22,6 +22,14 @@
       </strong>
     </p>
     <a :href="this.proposal.forumLink" target="_blank" rel="noopener" class="button has-background-mediumBlue has-text-white mt-3">Forum link</a>
+
+    <div class="box has-background-darkGray">
+      <label class="label">Description</label>
+      <div class="description-container p-0">
+        <vue-markdown class="content markdown-body" :options="{html: true}"  :source="this.proposal.description" />
+      </div>
+    </div>
+
     <!-- Upgrade Proposal -->
     <div v-if="this.proposal.type === ProposalTypes.Upgrade">
       <label class="label">New Code Address</label>
@@ -130,12 +138,6 @@
 
 
 
-    <div class="box has-background-darkGray">
-      <label class="label">Description</label>
-      <div class="description-container p-0">
-        <vue-markdown class="content markdown-body" :options="{html: true}"  :source="this.proposal.description" />
-      </div>
-    </div>
     <div class="box has-background-darkGray">
       <label class="label">DAO Resolution</label>
       <div  :class="['p-0'].concat(this.proposal.daoResolution ? ['has-text-warning'] : ['has-text-success'])">

@@ -66,7 +66,7 @@ export default {
     filteredProposals() {
       return this.proposals
         .filter(proposal => this.proposalTypesFilter[proposal.type])
-        .filter(proposal => proposal.state !== "Cancelled")
+        .filter(proposal => proposal.status !== "Cancelled")
         .sort((p1, p2) => p1.endTimestamp < p2.endTimestamp);
     },
     filterButtons() {
