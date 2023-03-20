@@ -2,28 +2,14 @@
 <footer class="container is-centered">
     <hr/>
     <div class="columns">
-        <!-- <div class="column is-third">
-            <h3>Pages</h3>
-            <ul>
-                <li>
-                    <a href="">My Assets</a>
-                </li>
-                <li>
-                    <a href="">Threads</a>
-                </li>
-                <li>
-                    <a href="">Needles</a>
-                </li>
-            </ul>
-        </div> -->
         <div class="column is-half">
             <h3>Explore</h3>
             <ul>
+              <li>
+                <a href="https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics">FAQ</a>
+              </li>
                 <li>
-                    <a href="https://weavr-dao.gitbook.io/weavr-dao/">Documentation</a>
-                </li>
-                <li>
-                    <a href="https://weavr-dao.gitbook.io/weavr-dao/faq/the-basics">FAQ</a>
+                  <a href="https://blog.weavr.org/">Blog</a>
                 </li>
                 <li>
                   <a @click="() => { this.$router.push('/privacy') }">Privacy Policy</a>
@@ -34,17 +20,17 @@
             </ul>
         </div>
         <div class="column is-half">
-            <h3>Governance</h3>
+            <h3>Impact</h3>
             <ul>
                 <li>
                     <a href="https://forum.weavr.org/">Forum</a>
                 </li>
                 <li>
-                    <a @click="() => { this.$router.push('/weavr') }">Vote</a>
-                </li>
-                <li>
                     <a href="https://resolutions.weavr.org">Resolutions</a>
                 </li>
+              <li>
+                <a href="https://weavr-dao.gitbook.io/weavr-dao/">Documentation</a>
+              </li>
                 <li>
                     <a href="https://discord.gg/ehEfjrcapk">Discord</a>
                 </li>
