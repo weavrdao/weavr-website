@@ -1,11 +1,10 @@
 import {ethers } from "ethers";
 import {CONTRACTS} from "@/services/constants"
 import {getIpfsHashFromBytes32} from "@/data/network/storage/ipfs/common";
-import {Needle, Thread} from "./marketplace/Assets"
+import {Needle, Thread, ERC20_TX, Holder} from "@/models/Assets"
 import {Marketplace} from "./marketplace/marketplace"
 import {Vote} from "@/models/vote";
 import {ProposalState, ProposalTypes, CrowdfundState} from "@/models/common";
-
 import {Crowdfund, ThreadDeployer, FrabricERC20, WEAVR} from "../contracts/abi"
 import {
   BaseProposal, 
@@ -237,6 +236,7 @@ class InfuraEventCacheClient {
     })
     return threads
   }
+
   async mapHoldersForAllThreads(assets) {
     let transfersMap = new Map()
     for(let asset of assets) {
@@ -268,25 +268,10 @@ class InfuraEventCacheClient {
     })
     return holdersMap
   }
+}
 
-}
-class Holder {
-  
-  constructor(address) {
-    this.id = address
-    this.to = []
-    this.from = []
-  }
-}
-class ERC20_TX {
-  constructor(to, from, value, transactionHash ) {
-    this.id = `${to}_${from}_${transactionHash}`
-    this.to = to;
-    this.from = from
-    this.value = value
-    this.transactionHash = transactionHash
-  }
-}
+
+
 
 
 export default InfuraEventCacheClient;

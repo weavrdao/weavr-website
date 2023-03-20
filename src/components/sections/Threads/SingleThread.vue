@@ -5,9 +5,9 @@
         <li :class="[ isTabActive('overview') ? 'is-active' : '' ]">
           <a v-on:click="navigateTo('overview')">Overview</a>
         </li>
-        <li :class="[ isTabActive('governance') ? 'is-active' : '' ]">
+        <!-- <li :class="[ isTabActive('governance') ? 'is-active' : '' ]">
           <a disabled="true" aria-disabled="true" v-on:click="navigateTo('governance')">Governance</a>
-        </li>
+        </li> -->
       </ul>
     </div>
     <div :style="getCoverStyle()" class="cover-image mb-5">

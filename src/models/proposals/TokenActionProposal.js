@@ -1,5 +1,4 @@
 import {BaseProposal} from "./BaseProposal";
-import {VoteType} from "@/models/vote";
 
 export class TokenActionProposal extends BaseProposal {
   constructor(baseProposal, payload) {

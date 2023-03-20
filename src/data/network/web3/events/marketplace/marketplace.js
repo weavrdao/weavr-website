@@ -1,4 +1,4 @@
-import {Deposit, Distribution} from "./Assets"
+import {Deposit, Distribution} from "../../../../../models/Assets"
 import {ethers } from "ethers";
 
 const getNeedleDestribuition = async (crowdfundSC) => {
