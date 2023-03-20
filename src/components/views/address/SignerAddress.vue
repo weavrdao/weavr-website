@@ -79,13 +79,13 @@
       @click="onClick"
       :aria-disabled="true"
     >
-      
       <div 
         :class="[isGuest? 'is-warning has-text-darkGray': 'is-primary has-text-white', ' button']">
         {{ isGuest ? "GUEST" : "Connect"}}
       </div>
+      <p class="is-size-7 is-primary has-text-white">View Only Mode</p>
     </div>
-    <div id="toeknModal"></div>
+    <div id="tokenModal"></div>
   </div>
 </template>
 

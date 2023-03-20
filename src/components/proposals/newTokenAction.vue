@@ -23,14 +23,14 @@
       </select>
     </div>
     <div class="field">
-      <label class="label">Price</label>
+      <label class="label">Price (in wei)</label>
       <div class="control">
         <input class="input" v-model="price" type="number">
       </div>
       <p class="has-text-mediumBlue" v-if="price !== 0">Token actions with a price will target the DAO contract</p>
     </div>
     <div class="field">
-      <label class="label">Amount</label>
+      <label class="label">Amount (in wei)</label>
       <div class="control">
         <input class="input" v-model="amount" type="number">
       </div>
@@ -152,6 +152,7 @@ export default {
         creator: "0x00000",
         startTimeStamp: 0,
         endTimeStamp: 0,
+        proposalType: this.proposalType,
         forumLink: this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/",
         mint: this.mintTypes[this.mintType],
         target: this.price === 0 ? this.targetAddress : this.assetId,

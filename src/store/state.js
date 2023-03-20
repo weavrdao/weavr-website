@@ -72,7 +72,11 @@ const getters = {
   },
 
   userTokenBalance(state) {
-    return state.user.wallet.tokenBalance;
+    if(state.user.wallet === undefined) {
+      return 0
+    } else {
+      return state.user.wallet.tokenBalance;
+      }
   },
 
   assetTokenSymbol(state) {

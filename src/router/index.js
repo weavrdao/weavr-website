@@ -86,7 +86,7 @@ const router = new createRouter({
       path: "/airdrop/:airdropAddress",
       name: "airdrop",
       component: Airdrop,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: false },
       children: [
         {
           path: `${CONTRACTS.AIRDROP}`,
@@ -122,7 +122,7 @@ const router = new createRouter({
       path: "/dashboard",
       name: "dashboard",
       component: Dashboard,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: false }
     },
     {
       path: "/marketplace",
@@ -138,7 +138,7 @@ const router = new createRouter({
           path: "needles",
           name: "needle-market",
           component: NeedlesMarketplace,
-          meta: {requiresAuth: true},
+          meta: {requiresAuth: false},
           beforeEnter: async () => {
 
             store.dispatch("setLoadingState", {isLoading: true, message: "Loading Needles"})
@@ -154,7 +154,7 @@ const router = new createRouter({
           path: "needles/:needleId",
           name: "needle",
           component: SingleNeedle,
-          meta: {requiresAuth: true},
+          meta: {requiresAuth: false},
 
           beforeEnter: async () => {
 
@@ -171,7 +171,7 @@ const router = new createRouter({
           path: "threads",
           name: "thread-market",
           component: ThreadsMarketplace,
-          meta: {requiresAuth: true},
+          meta: {requiresAuth: false},
           beforeEnter: async () => {
 
             store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
@@ -187,7 +187,7 @@ const router = new createRouter({
           path: "threads/:threadId",
           name: "thread",
           component: SingleThread,
-          meta: { requiresAuth: true},
+          meta: { requiresAuth: false},
           beforeEnter: async () => {
             if(!store.getters.threads){
               store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
@@ -231,7 +231,7 @@ const router = new createRouter({
       path: "/dao/:assetId", 
       component: Governance,
 
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: false },
       beforeEnter: async () => {
         const prop =  store.getters.proposalsPerAsset;
         if (prop.length < 1) {
@@ -339,7 +339,7 @@ router.beforeEach(async (to) => {
    * NOTES
    * Should authorize navigation if:
    * ( isConnected + isWhitelisted || isConnected + isGuest )
-   * 
+   *
    * ON not connected and COOKIE should AUTOCONNECT
    * ON not connected and NO_COOKIE should send to whitelist to choose how to connect
    * ON not
@@ -382,7 +382,7 @@ router.beforeEach(async (to) => {
             return { path: to.fullPath}
           }
         })
-        
+
       }
       // !cookie
       else if (!ethers.utils.isAddress(cookie.wallet) || ((cookie.wallet != address) && !isWhitelisted ) ) {
@@ -402,8 +402,8 @@ router.beforeEach(async (to) => {
   if( to.path === "whitelist" ) {
     // - navigating to whitelist and set vars
   }
- 
-  
+
+
   // from.whitelist
   // if (to.fullPath === "/dao/"+CONTRACTS.WEAVR ) {
   //   // - navigate path and reset vars
@@ -418,7 +418,7 @@ router.beforeEach(async (to) => {
   //   return {path: to.fullPath}
   // }
   // no auth
-  
+
   // - navigate to path
   console.log("no auth required");
   return true

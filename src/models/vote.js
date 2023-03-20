@@ -9,12 +9,12 @@ import { ethers } from "ethers";
  */
 
 export class Vote {
-  constructor({
+  constructor(
     id,
     voter,
     voteDirection,
     count,
-  }) {
+  ) {
     this.id = id;
     this.voter = voter;
     this.voteDirection = voteDirection;

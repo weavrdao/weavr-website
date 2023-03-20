@@ -49,9 +49,10 @@ $mediumGray-invert: findColorInvert($mediumGray);
 $lightGray-invert: findColorInvert($lightGray);
 $magenta-invert: findColorInvert($magenta);
 $mint-invert: findColorInvert($mint);
-$red-invert: findColorInvert($red);
-$cyan-invert: findColorInvert($cyan);
-$dimmedBlue-invert:  findColorInvert($dimmedBlue);
+$gold-invert: findColorInvert($gold);
+$red-invert: findColorInver($red);
+$cyan-invert: findColorInver($cyan);
+$dimmedBlue-invert:  findColorInver($dimmedBlue);
 // SCHEME SETUP
 $scheme-main: $black;
 $scheme-color: $lightGray;
@@ -169,7 +170,8 @@ $addColors: (
   "cyan": ($cyan, $cyan-invert),
   "red": ($red, $red-invert),
   "magenta": ($magenta, $magenta-invert),
-  "mint": ($mint, $mint-invert)
+  "mint": ($mint, $mint-invert),
+  "gold": ($gold, $gold-invert)
 );
 $colors: map-merge($colors, $addColors);
 
@@ -218,7 +220,7 @@ $colors: map-merge($colors, $addColors);
 
 .title {
   color: $lightGray;
-  font-family: "Poppins", sans, sans-serif !important;
+  font-family: "Poppins", sans !important;
 
   &.is-extra-large {
     font-size: 4rem;
@@ -236,7 +238,7 @@ $colors: map-merge($colors, $addColors);
 }
 
 .brand {
-  font-family: "Poppins", sans, sans-serif !important;
+ font-family: "Poppins", sans !important;
 }
 @import "./markdown.scss";
 

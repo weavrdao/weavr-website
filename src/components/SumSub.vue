@@ -18,7 +18,7 @@
 
 <script>
 import snsWebSdk from "@sumsub/websdk";
-import { getAccessToken } from "../sumsub";
+import { getAccessToken } from "../proxy";
 import { mapGetters } from "vuex";
 
 export default {
