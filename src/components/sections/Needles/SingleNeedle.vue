@@ -29,51 +29,6 @@
             <span class="tag has-background-mediumBlue has-text-white">...</span>
           </div>
         </div>
-        <div class="columns p-3 mb-6">
-          <div class="column is-half">
-            <div class="card py-5">
-              <p class="label mb-3">Deposit</p>
-              <div class="is-flex is-justify-content-space-between">
-                <p class="has-text-white">Available:</p>
-                <p class="has-text-white">{{ tradeTokenBalance }} <span class="has-text-mediumBlue">USDC</span></p>
-              </div>
-              <input v-model="purchaseAmount" class="input my-2" type="number"/>
-              <div class="is-flex is-justify-content-space-between" v-if="crowdfundTokenBalance > 0">
-                <p class="has-text-white">Shares:</p>
-                <p class="has-text-white">{{ crowdfundTokenBalance }} <span class="has-text-mediumBlue">CROWDFUND</span></p>
-              </div>
-              <div class="mt-2">
-                <button v-if="!allowance" class="button has-background-mediumBlue has-text-white">...</button>
-                <button v-else-if="Number(allowance) === 0" @click="approve" class="button has-background-success has-text-white">Approve</button>
-                <button v-else @click="purchase" :disabled="crowdfundState.key !== 0" class="button has-background-success has-text-white">Deposit</button>
-              </div>
-            </div>
-          </div>
-          <div class="column is-half">
-            <div class="card mt-5">
-              <p class="label mb-3">Withdraw</p>
-              <div class="is-flex is-justify-content-space-between">
-                <p class="has-text-white">Available:</p>
-                <p class="has-text-white">{{ crowdfundTokenBalance }} <span class="has-text-mediumBlue">CROWDFUND</span></p>
-              </div>
-              <input v-model="withdrawAmount" class="input my-2" type="number" />
-              <div class="mt-2">
-                <button v-if="!allowance" class="button has-background-danger has-text-white">...</button>
-                <button v-else @click="withdrawFunds" :disabled="crowdfundState.key !== 0" class="button has-background-danger has-text-white">Withdraw</button>
-              </div>
-            </div>
-          </div>
-          <div v-if="shouldShowRedeem" class="card redeem-container is-flex is-align-items-center mb-5">
-            <span class="celebration">🥳</span>
-            <div>
-              <h4>This needle has been executed</h4>
-              <h4>Please redeem your thread tokens</h4>
-            </div>
-            <div class="is-flex-grow-1 is-flex is-justify-content-flex-end">
-              <button @click="redeemThreadTokens" class="has-text-white button shiny-button has-background-gold mt-0"><i></i><strong>Redeem</strong></button>
-            </div>
-          </div>  
-        </div>
       </div>
       <div class="card">
         <div class=" image-container">
@@ -103,13 +58,61 @@
       </div>
       </div>
       <div class="column is-one-third">
-        <div class="card mt-6 p-3 has-gray-border">
+        <div class="columns p-3 mt-6">
+           <div class="column is-flex is-justify-content-space-between" v-if="crowdfundTokenBalance > 0">
+          <p class="label is-size-4">Owned:</p>
+          <p class="has-text-white is-size-4">{{ toFixedDigits(crowdfundTokenBalance,2) }} <span class="has-text-mediumBlue">CRFD</span></p>
+        </div>
+       </div>
+        <div class="card p-3 has-gray-border">
           <div class="columns" v-for="metric in metrics" :key="metric">
             <div class="column is-half">
               <div class="label">{{ metric.label}}:</div>
             </div>
             <div class="column">{{ metric.value}}</div>
           </div>
+        </div>
+       
+        <div class="columns p-3 mb-6">
+          <div class="column is-half">
+            <div class="card py-5">
+              <p class="label mb-3">Deposit</p>
+              <div class="is-flex is-justify-content-space-between">
+                <p class="has-text-white">Available:</p>
+                <p class="has-text-white">{{ toFixedDigits(tradeTokenBalance,2) }} <span class="has-text-mediumBlue">USDC</span></p>
+              </div>
+              <input v-model="purchaseAmount" class="input my-2" type="number"/>
+              <div class="mt-2">
+                <button v-if="!allowance" class="button has-background-mediumBlue has-text-white">...</button>
+                <button v-else-if="Number(allowance) === 0" @click="approve" class="button has-background-success has-text-white">Approve</button>
+                <button v-else @click="purchase" :disabled="crowdfundState.key !== 0" class="button has-background-success has-text-white">Deposit</button>
+              </div>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="card mt-5">
+              <p class="label mb-3">Withdraw</p>
+              <div class="is-flex is-justify-content-space-between">
+                <p class="has-text-white">Available:</p>
+                <p class="has-text-white">{{ toFixedDigits(crowdfundTokenBalance,2) }} <span class="has-text-mediumBlue">CRFD</span></p>
+              </div>
+              <input v-model="withdrawAmount" class="input my-2" type="number" />
+              <div class="mt-2">
+                <button v-if="!allowance" class="button has-background-danger has-text-white">...</button>
+                <button v-else @click="withdrawFunds" :disabled="crowdfundState.key !== 0" class="button has-background-danger has-text-white">Withdraw</button>
+              </div>
+            </div>
+          </div>
+          <div v-if="shouldShowRedeem" class="card redeem-container is-flex is-align-items-center mb-5">
+            <span class="celebration">🥳</span>
+            <div>
+              <h4>This needle has been executed</h4>
+              <h4>Please redeem your thread tokens</h4>
+            </div>
+            <div class="is-flex-grow-1 is-flex is-justify-content-flex-end">
+              <button @click="redeemThreadTokens" class="has-text-white button shiny-button has-background-gold mt-0"><i></i><strong>Redeem</strong></button>
+            </div>
+          </div>  
         </div>
       </div>
     </div>
@@ -150,7 +153,6 @@ export default {
       crowdfundTokenBalance: "userCrowdfundTokenAllowance",
       crowdfundState: "crowdfundState",
     }),
-    
     needle() {
       console.log("NEEDLES: ", this.needles.map( n => { return n.id}));
       console.log("NEEDLE_ID: ", this.needleId);
@@ -193,6 +195,9 @@ export default {
       fetchNeedleTokenData: "fetchNeedleTokenData",
       redeem: "redeem",
     }),
+    toFixedDigits(bal, digits = 2) {
+      return Number(bal).toFixed(digits)
+    },
     getIpfsUrl(path) {
       return path
         ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${path}`
