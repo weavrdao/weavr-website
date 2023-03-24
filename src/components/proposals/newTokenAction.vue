@@ -109,6 +109,9 @@ export default {
       userWalletAddress: "userWalletAddress"
     }),
     assetId() {
+      if(this.$route.params.threadId) {
+        return this.$route.params.threadId
+      }
       return this.$route.params.assetId
     },
     isTargetingSelf() {
@@ -130,7 +133,7 @@ export default {
         return;
       }
       await this.createTokenActionProposal({
-        assetId: this.assetId || CONTRACTS.WEAVR,
+        assetId: this.assetId,
         mint: this.mintTypes[this.mintType],
         target: this.price === 0 ? this.targetAddress : this.assetId,
         price: this.price,

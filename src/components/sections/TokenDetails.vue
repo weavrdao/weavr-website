@@ -13,8 +13,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import slider from "vue3-slider"
-import { DAO, CONTRACTS } from "@/services/constants.js"
+import { CONTRACTS } from "@/services/constants.js"
 ;
 export default {
   // (bill) TODO: Make this reload data if loaded directly
@@ -42,7 +41,7 @@ export default {
   },
   methods: {
     ...mapActions({
-     tokenInfo: "fetchTokenInfo"
+      tokenInfo: "fetchTokenInfo"
     }), // Voting action
     routeToHome() {
       this.$router.back();

@@ -25,6 +25,19 @@
       <input type="checkbox" class="checkbox" v-model="daoResolution"/><span class="ml-1 has-text-mediumGray is-italic"> - check this if the proposal will make changes to the DAO</span>
     </div>
   </div>
+  <div class="field">
+      <label class="label">Token</label>
+      <div class="control">
+        <input class="input" v-model="token" type="number">
+      </div>
+      <p class="has-text-mediumBlue" v-if="price !== 0">Token actions with a price will target the DAO contract</p>
+    </div>
+    <div class="field">
+      <label class="label">Price</label>
+      <div class="control">
+        <input class="input" v-model="price" type="number">
+      </div>
+    </div>
   <div v-if="preview">
     <Proposal :proposal="proposal" />
   </div>
@@ -50,19 +63,22 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 import { ProposalTypes} from "@/models/common.js"
 import Proposal from "@/components/proposals/Proposal.vue"
 
 
 export default {
-  name: "newPaperProposal",
+  name: "newDissolutionProposal",
   components: {
     Proposal
   },
   emits: ["submited", "proposed"],
   computed: {
+    ...mapGetters({
+      userAddress: "userWalletAddress"
+    }),
     assetId() {
       if(this.$route.params.threadId) {
         return this.$route.params.threadId
@@ -75,6 +91,8 @@ export default {
       title: "",
       description: "",
       daoResolution: false,
+      token: "",
+      price: 0,
       proposalType: ProposalTypes.Paper,
       preview: false,
       markdownSource: null,
@@ -84,7 +102,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      createPaperProposal: "createPaperProposal",
+      createPaperProposal: "createDissolutionProposal",
     }),
     
     async publish() {
@@ -108,8 +126,8 @@ export default {
         title: this.title,
         description: this.description,
         daoResolution: this.daoResolution,
-        proposalType: this.proposalType,
-        creator: "0x00000",
+        type: this.proposalType,
+        creator: this.userAddress,
         startTimeStamp: 0,
         endTimeStamp: 0,
         forumLink: this.forumLink

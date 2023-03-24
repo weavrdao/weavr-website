@@ -2,12 +2,7 @@
 
 // import {Proposal} from "@/models/proposals/proposal";
 // import {VoteType} from "../../models/vote"; 
-import {
-  // eslint-disable-next-line no-unused-vars
-  GraphQLAPIClient,
-  ALL_PROPOSALS,
-  VOUCHES_PER_PARTICIPANT,
-} from "../../data/network/graph/graphQLAPIClient";
+
 import {CONTRACTS, NETWORK} from "../constants";
 import AssetContract from "../../data/network/web3/contracts/assetContract";
 import { callSimulateFunc} from "@/proxy"
@@ -25,7 +20,6 @@ import InfuraEventCacheClient from "@/data/network/web3/events/InfuraEventCacheC
 class DAO {
   constructor(ethereumClient, graphQLAPIClient, storageNetwork) {
     this.ethereumClient = ethereumClient;
-    this.graphQLAPIClient = graphQLAPIClient;
     this.storageNetwork = storageNetwork;
     this.cacheClient = new InfuraEventCacheClient(NETWORK.id, process.env.VUE_APP_INFURA_API_KEY, NETWORK.startBlock)
   }
@@ -122,18 +116,19 @@ class DAO {
 
   async getUserVouches(signer) {
     console.log("vouches");
-    let vouches = await this.graphQLAPIClient.query(VOUCHES_PER_PARTICIPANT, {
-      id: process.env.INITIALFRABRIC,
-      signer: signer
-    }, (mapper, response) => {
-      return mapper.mapVouchers(response.data);
-    });
+    // let vouches = await this.graphQLAPIClient.query(VOUCHES_PER_PARTICIPANT, {
+    //   id: process.env.INITIALFRABRIC,
+    //   signer: signer
+    // }, (mapper, response) => {
+    //   return mapper.mapVouchers(response.data);
+    // });
 
-    console.log(vouches);
-    return vouches;
+    // console.log(vouches);
+    // return vouches;
   }
 
   /**
+   * Create a Thread Proposal
    * Create a Thread Proposal
    * @param {String} title Proposal title
    * @param {String} description Proposal body
@@ -223,6 +218,7 @@ class DAO {
    * @returns {Boolean} Transaction status (true — mined; false - reverted)
    */
   async createPaperProposal(asset, title, description, forumLink, daoResolution) {
+    console.log("ASSET::", asset);
     const assetContract = new AssetContract(this.ethereumClient, asset);
 
     const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
@@ -234,6 +230,48 @@ class DAO {
     return status;
   }
 
+  /**
+   * Create a DescriptorChange Proposal
+   * @param {String} asset Asset's contract address
+   * @param {string} title Proposal title
+   * @param {string} description Proposal body
+   * @param {string} forumLink Link to forum discussion
+   * @param {string} descriptor New thread descriptor 
+   * @returns {Boolean} Transaction status (true — mined; false - reverted)
+   */
+  async createDescriptorChangeProposal(asset, title, description, forumLink, blobVersion, documents, images, metrics, descriptor) {
+    console.log("ASSET::", asset);
+    const assetContract = new AssetContract(this.ethereumClient, asset);
+    let imagesHashes;
+    try {
+      imagesHashes = await Promise.all(Array.from(images).map(
+        async (image) => (await this.storageNetwork.addArbitraryFile(image.name))
+      ));
+    } catch (e) {
+      console.log("Error uploading images", e);
+    }
+
+    let documentHashes;
+    try {
+      documentHashes = await Promise.all(Array.from(documents).map(
+        async (document) => (await this.storageNetwork.addArbitraryFile(document.name))
+      ));
+    } catch (e) {
+      console.log("Error uploading documents", e);
+    }
+    const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
+      title, description, forumLink,
+    });
+
+    const descriptorHash = await this.storageNetwork.uploadAndGetPathAsBytes({
+      blobVersion,
+      descriptor, name, imagesHashes, documentHashes,
+      metrics
+    });
+
+    const status = await assetContract.proposeDescriptorChange(descriptorHash, infoHash);
+    return status;
+  }
   /**
    * Create a Participant Proposal
    * @param assetId

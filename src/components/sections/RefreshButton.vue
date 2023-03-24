@@ -23,7 +23,7 @@ import { mapActions } from "vuex";
 
 export default {
   name: "RefreshButton",
-  emits: ['refreshed'],
+  emits: ["refreshed"],
   props: {
     assetId: {
       type: String,

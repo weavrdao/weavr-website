@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { CONTRACTS, NETWORK } from '../../../services/constants';
+import { NETWORK } from "../../../services/constants";
 
 export default {
   name: "Address",
@@ -43,12 +43,12 @@ export default {
    * and CopyAddress functionality
   */
   copy() {
-      navigator.clipboard.writeText(this.address).then(function() {
-        console.log('Async: Copying to clipboard was successful!');
-      }, function(err) {
-        console.error('Async: Could not copy text: ', err);
-      });
-    },
+    navigator.clipboard.writeText(this.address).then(function() {
+      console.log("Async: Copying to clipboard was successful!");
+    }, function(err) {
+      console.error("Async: Could not copy text: ", err);
+    });
+  },
 };
 </script>
 

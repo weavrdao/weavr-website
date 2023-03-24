@@ -74,6 +74,9 @@ export default {
   },
   computed: {
     assetId() {
+      if(this.$route.params.threadId) {
+        return this.$route.params.threadId
+      }
       return this.$route.params.assetId
     }
   },

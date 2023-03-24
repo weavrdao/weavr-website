@@ -19,10 +19,8 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router';
 import { mapActions, mapGetters } from "vuex";
-import { ORIGINAL_PATH } from "../../router";
-import { CONTRACTS } from '../../services/constants';
+import { CONTRACTS } from "../../services/constants";
 
 export default {
   name: "Whitelist",

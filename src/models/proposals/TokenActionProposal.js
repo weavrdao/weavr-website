@@ -1,4 +1,4 @@
-import {BaseProposal} from "@/data/network/web3/events/proposals/BaseProposal";
+import {BaseProposal} from "./BaseProposal";
 
 export class TokenActionProposal extends BaseProposal {
   constructor(baseProposal, payload) {
@@ -7,8 +7,9 @@ export class TokenActionProposal extends BaseProposal {
     const {token, target, mint, price, amount} = payload
     this.token = token
     this.target = target
-    this.mint = mint
-    this.price = price
-    this.amount = amount
+  this.mint = mint
+  this.price = price
+  this.amount = amount
   }
+
 }

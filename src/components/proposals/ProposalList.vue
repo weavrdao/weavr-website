@@ -1,6 +1,5 @@
 <template>
   <div class="py-3 px-5">
-
     <div v-if="this.proposals.length !== 0">
       <div class="card m-0 p-0  filter-button-container"
            :class="filterMenuIsOpen && 'container-open'">
@@ -15,15 +14,13 @@
       </div>
       <div class="columns is-multiline">
         <div class="column is-one-third" v-for="proposal in this.filteredProposals" v-bind:key="proposal.id">
-          <div >
-        <ProposalListItem :proposal="proposal" :assetId="assetId"/>
-      </div>
+          <ProposalListItem :proposal="proposal" :assetId="assetId"/>
         </div>
       </div>
     </div>
     <div v-else class="is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
       <figure>
-        <img class="no-proposals-image my-5" src="../../assets/common/no-proposals.svg"/>
+        <img class="no-proposals-image my-5" src="@/assets/common/no-proposals.svg"/>
       </figure>
       <div class="label is-size-4">No {{ proposalStatus.toLowerCase() }} right now</div>
     </div>
@@ -34,7 +31,7 @@
 import ProposalListItem from "../views/voting/ProposalListItem.vue";
 import { ProposalTypes } from "../../models/common";
 import { getProposalTypeStyling } from "@/data/helpers";
-import { mapActions } from 'vuex';
+import { mapActions } from "vuex";
 
 export default {
   name: "ProposalList",
@@ -43,8 +40,8 @@ export default {
       filterMenuIsOpen: false,
       // Create object with shape { [proposalType]: true }
       proposalTypesFilter: Object.fromEntries(
-          Object.values(ProposalTypes)
-              .map(v => [v, true])
+        Object.values(ProposalTypes)
+          .map(v => [v, true])
       ),
     }
   },

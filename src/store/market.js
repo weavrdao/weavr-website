@@ -69,11 +69,16 @@ const getters = {
   },
 
   allThreads(state) {
-    return state.platform.threads;
+    // let threadsMap = new Map();
+    // state.platform.threads.forEach(thread => {
+    //   threadsMap.set(thread.id, thread)
+    // })
+    // return threadsMap;
+    return state.platform.threads
   },
   
   allNeedles(state) {
-    return state.platform.needles.filter( needle => needle.state != "Finished");
+    return state.platform.needles;
   },
   
   threadById(state) {
@@ -115,7 +120,7 @@ const actions = {
   
   async refreshNeedles(context) {
     const needles = await market.getNeedles();
-    console.log(needles);
+    console.log("STORE:::::", needles);
     context.commit("setNeedles", needles);
   },
   

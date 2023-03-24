@@ -1,4 +1,5 @@
-import {BaseProposal} from "@/data/network/web3/events/proposals/BaseProposal";
+import {BaseProposal} from "./BaseProposal";
+import {VoteType} from "@/models/vote";
 
 export class UpgradeProposal extends BaseProposal {
   constructor(baseProposal, _data) {
