@@ -3,7 +3,7 @@
     <div :style="getCoverStyle()" class="cover-image mb-5">
       <div class="information-container">
         <div class="tag-container mb-2">
-          <span class="tag has-background-mediumBlue has-text-white">Residential</span>
+          <span class="tag has-background-mediumBlue has-text-white">Physical Asset</span>
         </div>
         <h3 class="has-text-white property-title mb-4">{{ needle.name }}</h3>
         <Address :value="this.needle.id" />
