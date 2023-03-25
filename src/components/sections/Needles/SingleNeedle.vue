@@ -73,7 +73,7 @@
           </div>
         </div>
        
-        <div class="columns p-3 mb-6">
+        <div class="columns p-3 mb-6" v-if="isConnected">
           <div class="column is-half">
             <div class="card py-5">
               <p class="label mb-3">Deposit</p>
@@ -152,14 +152,13 @@ export default {
       tradeTokenBalance: "userTradeTokenBalance",
       crowdfundTokenBalance: "userCrowdfundTokenAllowance",
       crowdfundState: "crowdfundState",
+      isConnected: "isConnected"
     }),
     needle() {
       console.log("NEEDLES: ", this.needles.map( n => { return n.id}));
       console.log("NEEDLE_ID: ", this.needleId);
       const needle = this.needles
         .find(n => n.id.toLowerCase() === this.needleId);
-        console.log("NNNNNNNN", needle
-        );
       return needle
     },
     metrics() {

@@ -20,10 +20,11 @@ export class Needle extends Asset {
 }
 
 export class Thread extends Asset {
-  constructor(id, state, governor, descriptor, variant, erc20) {
+  constructor(id, state, governor, descriptor, variant, erc20, crowdfund) {
     super(id, state, governor, descriptor);
     this.variant = variant;
     this.erc20 = erc20;
+    this.crowdfund = crowdfund;
     this.proposals = []
   }
 }

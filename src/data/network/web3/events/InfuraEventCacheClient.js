@@ -172,7 +172,9 @@ class InfuraEventCacheClient {
         state: asset.state,
         governor: asset.thread.governor,
         descriptor: asset.thread.descriptor,
-        erc20: asset.thread.erc20
+        erc20: asset.thread.erc20,
+        thread: asset.thread.id,
+        crowdfund: asset.id
       }
     })
     this.assets = assets
@@ -230,7 +232,8 @@ class InfuraEventCacheClient {
         governor,
         descriptor,
         variant,
-        { id: erc20, holders:transfersMap.get(thread)}
+        { id: erc20, holders:transfersMap.get(thread)},
+        assets.find( a => a.id == thread).crowdfund
       )
       threads.push(_thread)
     })

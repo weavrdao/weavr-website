@@ -1,8 +1,37 @@
 <template>
    <div class="">
+    <div class="notification is-primary is-clickable has-radius-lg subtitle" v-if="shouldShowRedeem" @click="redeemThreadTokens">
+      <p>You have {{crowdfundTokenBalance}} thread tokens to redeem!</p>
+    </div>
     <div class="columns">
       <div class="column is-two-thirds mb-5">  
         <div class="p-3">
+          <!-- <div class="columns">
+            <div 
+              class="field has-addons" 
+              @click="redeemThreadTokens" 
+              v-if="true"
+            >
+              <p class="control">
+                <button class="button is-full is-primary">
+                  <span>Redeem</span>
+                  <span class="icon is-small">
+                    {{crowdfundTokenBalance}}
+                  </span>
+                </button>
+              </p>
+            </div>
+          </div> -->
+          <div 
+            class="level p-3 border-lightGray is-clickable " 
+            @click="redeemThreadTokens" 
+            v-if="shouldShowRedeem"
+          >
+            <div class="button is-secondary has-text-white">
+              Redeem
+            </div>
+            <div class="tag is-primary has-text-white">{{crowdfundTokenBalance}}</div>
+          </div>
           <div class="card mb-5">
             <div class="columns">
               <div class="column">
@@ -95,7 +124,13 @@ export default {
   computed: {
     ...mapGetters({
       threads: "threadById",
+      crowdfundTokenBalance: "userCrowdfundTokenAllowance",
+      isConnected: "isConnected"
     }),
+    shouldShowRedeem() {
+      if(!this.isConnected) return false;
+      return Number(this.crowdfundTokenBalance) > 0;
+    },
     thread() {
       return this.threads.get(this.$route.params.threadId)
     },
@@ -125,7 +160,15 @@ export default {
   methods: {
     ...mapActions({
       fetchThreads: "refreshThreads",
+      redeem: "redeem",
+      fetchNeedleTokenData: "fetchThreadTokenData"
+
     }),
+    redeemThreadTokens() {
+      this.redeem({
+        crowdfundAddress: this.thread.crowdfund
+      });
+    },
     copy() {
       navigator.clipboard.writeText(this.threadId).then(function() {
         console.log("Async: Copying to clipboard was successful!");
@@ -141,6 +184,9 @@ export default {
   },
   mounted() {
     console.log(this.thread);
+    this.fetchNeedleTokenData({
+      assetId: this.thread.crowdfund,
+    })
   }
 }
 </script>
