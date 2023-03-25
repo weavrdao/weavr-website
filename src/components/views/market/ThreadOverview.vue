@@ -3,6 +3,14 @@
     <div class="columns">
       <div class="column is-two-thirds mb-5">  
         <div class="p-3">
+           <div class="block" v-if="shouldShowRedeem">
+                <div 
+                  class="button is-success has-text-white" 
+                  @click="redeemThreadTokens"
+                >
+                  Redeem Tokens
+                </div>
+              </div>
           <div class="card mb-5">
             <div class="columns">
               <div class="column">
@@ -95,7 +103,13 @@ export default {
   computed: {
     ...mapGetters({
       threads: "threadById",
+      crowdfundTokenBalance: "userCrowdfundTokenAllowance",
+      isConnected: "isConnected"
     }),
+    shouldShowRedeem() {
+      if(!this.isConnected) return false;
+      return Number(this.crowdfundTokenBalance) > 0;
+    },
     thread() {
       return this.threads.get(this.$route.params.threadId)
     },
@@ -125,7 +139,14 @@ export default {
   methods: {
     ...mapActions({
       fetchThreads: "refreshThreads",
+      redeem: "redeem",
+
     }),
+    redeemThreadTokens() {
+      this.redeem({
+        crowdfundAddress: this.thread.crowdfund
+      });
+    },
     copy() {
       navigator.clipboard.writeText(this.threadId).then(function() {
         console.log("Async: Copying to clipboard was successful!");

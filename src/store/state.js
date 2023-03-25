@@ -62,7 +62,7 @@ const getters = {
   userWalletAddress(state) {
     return state.user.wallet.address;
   },
-
+  
   connectedNetwork() {
     return wallet.getChainId()
   },
