@@ -1,16 +1,37 @@
 <template>
    <div class="">
+    <div class="notification is-primary is-clickable has-radius-lg subtitle" v-if="shouldShowRedeem" @click="redeemThreadTokens">
+      <p>You have {{crowdfundTokenBalance}} thread tokens to redeem!</p>
+    </div>
     <div class="columns">
       <div class="column is-two-thirds mb-5">  
         <div class="p-3">
-           <div class="block" v-if="shouldShowRedeem">
-                <div 
-                  class="button is-success has-text-white" 
-                  @click="redeemThreadTokens"
-                >
-                  Redeem Tokens
-                </div>
-              </div>
+          <!-- <div class="columns">
+            <div 
+              class="field has-addons" 
+              @click="redeemThreadTokens" 
+              v-if="true"
+            >
+              <p class="control">
+                <button class="button is-full is-primary">
+                  <span>Redeem</span>
+                  <span class="icon is-small">
+                    {{crowdfundTokenBalance}}
+                  </span>
+                </button>
+              </p>
+            </div>
+          </div> -->
+          <div 
+            class="level p-3 border-lightGray is-clickable " 
+            @click="redeemThreadTokens" 
+            v-if="shouldShowRedeem"
+          >
+            <div class="button is-secondary has-text-white">
+              Redeem
+            </div>
+            <div class="tag is-primary has-text-white">{{crowdfundTokenBalance}}</div>
+          </div>
           <div class="card mb-5">
             <div class="columns">
               <div class="column">
@@ -140,6 +161,7 @@ export default {
     ...mapActions({
       fetchThreads: "refreshThreads",
       redeem: "redeem",
+      fetchNeedleTokenData: "fetchThreadTokenData"
 
     }),
     redeemThreadTokens() {
@@ -162,6 +184,9 @@ export default {
   },
   mounted() {
     console.log(this.thread);
+    this.fetchNeedleTokenData({
+      assetId: this.thread.crowdfund,
+    })
   }
 }
 </script>
