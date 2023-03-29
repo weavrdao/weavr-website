@@ -96,15 +96,9 @@ export default {
     openProposal() {
       this.$router.push(this.$route.path+`/proposal/${this.proposal.id}`);
     },
-    // routeToProposal() {
-    //   this.$router.push(`/${DAO}/proposal/${this.proposal.id}`);
-    // },
   },
   created() {
     this.setTimeRemainingCountdown();
-  },
-  mounted() {
-    console.log(this.proposal)
   }
 };
 </script>

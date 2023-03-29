@@ -44,7 +44,6 @@ class IPFSStorageNetwork extends StorageNetwork {
     const maxTries = 5;
     return Promise.allSettled(
       names.map(async (name) => {
-        
         if (localStorage.getItem(name) === null || localStorage.getItem(name) === undefined) {
           let file;
           try {
@@ -69,7 +68,6 @@ class IPFSStorageNetwork extends StorageNetwork {
     for await (const chunk of stream) {  
       data.push(String.fromCharCode.apply(null, chunk))
     }
-    console.log(data);
     return data[0]
   }
 

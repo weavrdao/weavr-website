@@ -89,9 +89,6 @@ export default {
         [proposalType]: !this.proposalTypesFilter[proposalType],
       }
     }
-  },
-  mounted() {
-    console.log(this.proposals)
   }
 }
 </script>
