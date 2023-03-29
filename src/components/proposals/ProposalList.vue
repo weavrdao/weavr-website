@@ -89,7 +89,7 @@ export default {
         [proposalType]: !this.proposalTypesFilter[proposalType],
       }
     }
-  },
+  }
 }
 </script>
 
