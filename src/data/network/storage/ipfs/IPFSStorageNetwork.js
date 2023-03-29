@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 const network = require("../../../../utils/network");
 const {create} = require("ipfs-http-client");
 
@@ -41,15 +40,21 @@ class IPFSStorageNetwork extends StorageNetwork {
   }
 
 
-  // eslint-disable-next-line class-methods-use-this
   async getFiles(names, localStorage) {
+    const maxTries = 5;
     return Promise.allSettled(
       names.map(async (name) => {
-        if (localStorage.getItem(name) === null) {
-          let file = await this.getFile(name);
-          console.log(`cache miss, pushing ${name} to local storage`);
-          localStorage.setItem(name, JSON.stringify(file))
-          return file
+        
+        if (localStorage.getItem(name) === null || localStorage.getItem(name) === undefined) {
+          let file;
+          try {
+            file = await this.getFile(name)
+            console.log(`cache miss, pushing ${name} to local storage`);
+            localStorage.setItem(name, file)
+            return JSON.parse(file)
+          }catch (e) {
+            console.log("ERROR: ", e)
+          }
         } else {
           console.log("cache hit")
           return JSON.parse(localStorage.getItem(name));
@@ -58,26 +63,14 @@ class IPFSStorageNetwork extends StorageNetwork {
     )
   }
 
-  getFile(cid) {
-
-    const requestURL = `${baseInfuraURL}/cat`;
-
-    let headers = {
-      Authorization: getInfuraAuthHeader(),
-    };
-    let params = {arg: cid}
-    console.log("Requesting file from IPFS");
-    return new Promise((resolve) => {
-      network
-        .postRequest(requestURL, params, headers, {})
-        .then((res) => {
-          resolve(res || null);
-        })
-        .catch((err) => {
-          console.log("Request failed", err);
-          resolve(null);
-        });
-    });
+  async getFile(cid) {
+    const stream = await this.ipfsInfuraAPIClient.cat(cid)
+    let data = []
+    for await (const chunk of stream) {  
+      data.push(String.fromCharCode.apply(null, chunk))
+    }
+    console.log(data);
+    return data[0]
   }
 
   async uploadAndGetPathAsBytes(payload) {

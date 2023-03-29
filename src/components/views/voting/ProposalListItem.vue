@@ -59,20 +59,16 @@ export default {
     };
   },
   computed: {
-
     startDate() {
       const startDate = new Date(this.proposal.startTimestamp * 1000);
       return `${padWithZeroes(startDate.getDate())}/${padWithZeroes(startDate.getMonth() + 1)}`;
     },
-
     ended() {
       return hasEnded(this.proposal);
     },
-
     passed() {
       return getResult(this.proposal);
     },
-
     typeStylingData() {
       return getProposalTypeStyling(this.proposal.type);
     },
@@ -80,19 +76,15 @@ export default {
   methods: {
     setTimeRemainingCountdown() {
       clearInterval(this.countdownRef);
-
       this.countdownRef = setInterval(
         function () {
           let now = new Date().getTime() / 1000;
-
           let t = this.proposal.endTimestamp - now;
-
           if (t >= 0) {
             let days = Math.floor(t / (60 * 60 * 24));
             let hours = Math.floor((t % (60 * 60 * 24)) / (60 * 60));
             let mins = Math.floor((t % (60 * 60)) / 60);
             let secs = Math.floor(t % 60);
-
             this.timeRemainingString = `${days}d, ${hours}h, ${mins}m, ${secs}s`;
           } else {
             this.timeRemainingString = "The voting is over";
@@ -104,15 +96,16 @@ export default {
     openProposal() {
       this.$router.push(this.$route.path+`/proposal/${this.proposal.id}`);
     },
+    // routeToProposal() {
+    //   this.$router.push(`/${DAO}/proposal/${this.proposal.id}`);
+    // },
   },
-
   created() {
     this.setTimeRemainingCountdown();
   },
-
-  routeToProposal() {
-    this.$router.push(`/${DAO}/proposal/${this.proposal.id}`);
-  },
+  mounted() {
+    console.log(this.proposal)
+  }
 };
 </script>
 

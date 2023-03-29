@@ -18,7 +18,7 @@ import InfuraEventCacheClient from "@/data/network/web3/events/InfuraEventCacheC
  * @param {StorageNetwork} storageNetwork Storage network to use
  */
 class DAO {
-  constructor(ethereumClient, graphQLAPIClient, storageNetwork) {
+  constructor(ethereumClient, storageNetwork) {
     this.ethereumClient = ethereumClient;
     this.storageNetwork = storageNetwork;
     this.cacheClient = new InfuraEventCacheClient(NETWORK.id, process.env.VUE_APP_INFURA_API_KEY, NETWORK.startBlock)
@@ -26,19 +26,18 @@ class DAO {
 
   /**
    * Get proposals that from this asset"s DAO.
-   * @param {string} assetId Asset's contract address
-   * @param {Storage} localStorage Local storage
-   * @returns {Proposal[]} Array of proposals
+   * @param { string } assetId Asset's contract address
+   * @param { Storage } localStorage Local storage
+   * @returns { Proposal[] } Array of proposals
    */
-  // eslint-disable-next-line max-lines-per-function
   async getProposalsForAsset(assetId, localStorage) {
-    // Get indexed on-chain data
+  
     const toast = createToaster({});
     toast.info("Fetching off-chain data...");
     let proposals = await this.cacheClient.syncProposals(assetId)
-    console.log(proposals);
-    // Fetch and append off-chain data
+  
     try {
+      console.log("STORAGE NETWORK::", this.storageNetwork);
       const offChainData = await this.storageNetwork.getFiles(proposals.map((p) => p.info), localStorage);
       for (let i = 0; i < proposals.length; i++) {
         if (offChainData[i].value) {
@@ -54,6 +53,7 @@ class DAO {
         }
       }
       toast.clear();
+      console.log("PROPOSALS::::", proposals)
     } catch (e) {
       console.log(e);
     }
