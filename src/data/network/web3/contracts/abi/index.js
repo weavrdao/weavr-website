@@ -1,5 +1,6 @@
-import Crowdfund from "./Crowdfund.json"
-import ThreadDeployer from "./ThreadDeployer.json"
-import FrabricERC20 from "./FrabricERC20.json"
-import WEAVR from "./Frabric.json"
-export { Crowdfund, ThreadDeployer, FrabricERC20, WEAVR }
+import * as CrowdfundJSON from "./Crowdfund.json"
+import * as ThreadDeployerJSON from "./ThreadDeployer.json"
+import * as ThreadJSON from "./Thread.json"
+import * as FrabricERC20JSON from "./FrabricERC20.json"
+import * as WEAVRJSON from "./Frabric.json"
+export { CrowdfundJSON, ThreadDeployerJSON, ThreadJSON, FrabricERC20JSON, WEAVRJSON }
