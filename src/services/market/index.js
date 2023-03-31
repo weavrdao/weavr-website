@@ -41,6 +41,8 @@ class Market {
           threads[i].documentHashes = offChainData[i].documentHashes;
           threads[i].metrics = offChainData[i].value.metrics;
         }
+        const proposals = await this.cacheClient.syncProposals(threads[i].id, true)
+        threads[i].setProposals(proposals)
       }
     } catch (e) {
       // no-op

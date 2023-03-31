@@ -13,13 +13,13 @@
                     Proposals
                 </p>
                 <ul class="menu-list">
-                    <li><a @click="show(false)">Active</a></li>
-                    <li><a @click="show(true)">Past</a></li>
+                    <li><a :class="showPastProposals? '' : 'has-text-primary'" @click="show(false)">Active</a></li>
+                    <li><a :class="showPastProposals? 'has-text-primary' : ''" @click="show(true)">Past</a></li>
                 </ul>
             </aside>
         </div>
         <div class="column">
-            <ProposalList :proposals="[]" :proposalStatus="showPastProposals? 'Past Proposals':'Active Proposals'" :assetId="thread.id"/>
+            <ProposalList :proposals="thread.proposals" :proposalStatus="showPastProposals? 'Past Proposals':'Active Proposals'" :assetId="thread.id"/>
         </div>
         <router-view></router-view>
     </div>

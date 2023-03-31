@@ -26,7 +26,8 @@ function state() {
 
   return {
     platform: {
-      assets: [],
+      threads: [],
+      needles: [],
       proposals: [], // new Map()
     },
     exchange: {
