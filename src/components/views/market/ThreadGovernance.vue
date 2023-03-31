@@ -19,7 +19,7 @@
             </aside>
         </div>
         <div class="column">
-            <ProposalList :proposals="thread.proposals" :proposalStatus="showPastProposals? 'Past Proposals':'Active Proposals'" :assetId="thread.id"/>
+            <ProposalList :proposals="showPastProposals? this.pastProposals : this.activeProposals" :proposalStatus="showPastProposals? 'Past Proposals':'Active Proposals'" :assetId="thread.id"/>
         </div>
         <router-view></router-view>
     </div>
@@ -54,6 +54,28 @@ export default {
     }),
     thread() {
       return this.threads.get(this.$route.params['threadId'])
+    },
+    activeProposals() {
+      return this.thread.proposals.filter((proposal) => {
+        const endTime = new Date(proposal.endTimestamp * 1000);
+        const currentTime = new Date();
+        return (currentTime < endTime) && proposal.state != "Cancelled";
+      });
+    },
+
+    pastProposals() {
+      return this.thread.proposals.filter((proposal) => {
+        const endTime = new Date(proposal.endTimestamp * 1000);
+        const currentTime = new Date();
+        return (currentTime > endTime );
+      });
+    },
+    cancelledProposals() {
+      return this.thread.proposals.filter((proposal) => {
+        console.log(proposal.state)
+        return proposal.state == "Cancelled";
+      });
+
     }
   },
   methods: {
