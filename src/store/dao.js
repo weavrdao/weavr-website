@@ -84,7 +84,8 @@ const actions = {
     if (context.getters.assetProposals.length > 1 && !params.forceRefresh)
       return false;
     let assetId = params.assetId.toLowerCase();
-    let assetProposals = await dao.getProposalsForAsset(assetId, localStorage);
+    const {isThread} = params;
+    let assetProposals = await dao.getProposalsForAsset(assetId, isThread, localStorage);
     console.log(context.getters.assetProposals)
     context.commit("setProposalsForAsset", {
       assetId: assetId.toLowerCase(),

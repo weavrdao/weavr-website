@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHashHistory, useRoute } from "vue-router";
 import store from "@/store";
 import { GUEST } from "../services/constants";
 import { createToaster } from "@meforma/vue-toaster";
@@ -245,6 +245,17 @@ const router = new createRouter({
                   path: "tokenProposal",
                   component: Modal,
                   props: { component: newTokenAction },
+                },
+                {
+                  path: "proposal/:proposalId",
+                  component: Modal,
+                  props: { component: SingleProposal },
+                  // beforeEnter: async () => {
+                  //   const prop = await store.getters.threads;
+                   
+                  //   // clear toast
+                  //   return true;
+                  // }
                 },
               ]
             }

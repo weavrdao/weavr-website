@@ -27,6 +27,9 @@ export class Thread extends Asset {
     this.crowdfund = crowdfund;
     this.proposals = []
   }
+  setProposals(proposals) {
+    this.proposals = proposals
+  }
 }
 
 export class Deposit {

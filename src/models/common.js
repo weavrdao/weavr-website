@@ -78,6 +78,11 @@ module.exports = {
     TokenAction: "token",
     Paper: "paper",
     Thread: "thread",
+    DescriptorChange: "descriptorChange",
+    FrabricChange: "frabricChange",
+    GovernorChange: "governorChange",
+    EcosystemLeaveWithUpgrades: "ecosystemLeaveWithUpgrades",
+    Dissolution: "dissolution"
   },
 
   PASSED: {

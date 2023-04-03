@@ -30,11 +30,11 @@ class DAO {
    * @param { Storage } localStorage Local storage
    * @returns { Proposal[] } Array of proposals
    */
-  async getProposalsForAsset(assetId, localStorage) {
+  async getProposalsForAsset(assetId, isThread, localStorage) {
   
     const toast = createToaster({});
     toast.info("Fetching off-chain data...");
-    let proposals = await this.cacheClient.syncProposals(assetId)
+    let proposals = await this.cacheClient.syncProposals(assetId, isThread)
   
     try {
       console.log("STORAGE NETWORK::", this.storageNetwork);

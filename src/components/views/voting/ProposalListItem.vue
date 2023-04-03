@@ -31,7 +31,7 @@
   
 <script>
 import Address from "../address/Address.vue";
-
+import {mapActions} from "vuex"
 import {
   getProposalTypeStyling,
   padWithZeroes,
@@ -74,6 +74,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      getProposals: "refreshProposalsDataForAsset"
+    }),
     setTimeRemainingCountdown() {
       clearInterval(this.countdownRef);
       this.countdownRef = setInterval(
@@ -93,7 +96,10 @@ export default {
         1000
       );
     },
-    openProposal() {
+    async openProposal() {
+      console.log("___________________________ PROPOSAL ________________________")
+      console.log(this.proposal,  this.$route.params.threadId);
+      await this.getProposals({assetId: this.$route.params.threadId, isThread: true})
       this.$router.push(this.$route.path+`/proposal/${this.proposal.id}`);
     },
   },
