@@ -261,12 +261,9 @@ const router = new createRouter({
                   path: "proposal/:proposalId",
                   component: Modal,
                   props: { component: SingleProposal },
-                  // beforeEnter: async () => {
-                  //   const prop = await store.getters.threads;
-                   
-                  //   // clear toast
-                  //   return true;
-                  // }
+                  beforeEnter: async (to) => {
+                    return await threadDataHelper(to, {withProposals: true})
+                  },
                 },
               ]
             }
