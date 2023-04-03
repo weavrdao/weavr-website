@@ -22,7 +22,9 @@
           <img src="../../../assets/logo/new-logo.svg" alt="">
         </div>
     </div>
-    
+    <div class="box" v-if="isConnected">
+      {{getTreadBalance}}
+    </div>
     <router-view></router-view>
    
   </div>
@@ -42,7 +44,6 @@ export default {
   computed: {
     ...mapGetters({
       threads: "allThreads",
-
     }),
     thread() {
       console.log(this.threads)
@@ -53,6 +54,7 @@ export default {
   methods: {
     ...mapActions({
       fetchThreadTokenData: "fetchThreadTokenData",
+      fetchThreadTokenBalance: "fetchThreadTokenBalance",
       refreshProposals: "refreshProposalsDataForAsset",
       setLoadingState: "setLoadingState"
     }),
@@ -79,7 +81,7 @@ export default {
     
       return { "background-image": `linear-gradient(to left, rgba(22, 23, 30, 0), rgba(22, 23, 30, 1)), url(${url})`}
     },
-    
+
   },
 }
 </script>

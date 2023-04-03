@@ -35,8 +35,14 @@
           <div class="card mb-5">
             <div class="columns">
               <div class="column">
-                <div class="label">Thread Address:</div>
+                <div class="block">
+                  <div class="label">Thread Address:</div>
                 <Address :value="threadId"></Address>
+                </div>
+                <div class="block">
+                  <div class="label">Token Address:</div>
+                <Address :value="thread.erc20.id"></Address>
+                </div>
               </div>
               <div class="column is-flex is-justify-content-end	">
                 <div class="block is-pulled-right">
@@ -83,6 +89,7 @@
             <div class="column">{{ metric.value}}</div>
           </div>
         </div>
+        {{getTreadBalance}}
         <div class="card p-3 mt-5 has-radius-lg border-lightGray">
           <p class="subtitle mb-3">Holders</p>
           <div class="columns mb-0 is-GAP-1" v-for="holder in holders" :key="holder">
@@ -125,7 +132,8 @@ export default {
     ...mapGetters({
       threads: "threadById",
       crowdfundTokenBalance: "userCrowdfundTokenAllowance",
-      isConnected: "isConnected"
+      isConnected: "isConnected",
+      userWalletAddress: "userWalletAddress"
     }),
     shouldShowRedeem() {
       if(!this.isConnected) return false;
@@ -140,6 +148,11 @@ export default {
         symbol: this.thread.erc20.symbol,
         supply: this.thread.erc20.supply,
       }
+    },
+    getTreadBalance() {
+      const to = this.thread.erc20.holders
+      console.log("HOLDER", this.userWalletAddress, to.get(this.userWalletAddress));
+      return null
     },
     holders() {
       console.log("HOLDERSSSSSSSS::: ", Array.from(this.thread.erc20.holders.keys()));

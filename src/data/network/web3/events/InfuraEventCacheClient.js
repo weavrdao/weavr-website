@@ -278,7 +278,7 @@ class InfuraEventCacheClient {
         let holder = new Holder(holderAddress)
         tx.to == holderAddress ? holder.to.push(new ERC20_TX(tx.to, tx.from, tx.value, event.transactionHash)) : null
         tx.from == holderAddress ? holder.from.push(new ERC20_TX(tx.to, tx.from, tx.value, event.transactionHash)) : null
-        holdersMap.set(holderAddress, holder)
+        holdersMap.set(holderAddress.toLowerCase(), holder)
       }
     })
     return holdersMap

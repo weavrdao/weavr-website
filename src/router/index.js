@@ -135,7 +135,7 @@ const router = new createRouter({
       children: [
         {
           path: "",
-          redirect: {name: "comingSoon"}
+          redirect: {name: "thread-market"}
         },
         {
           path: "needles",
