@@ -45,6 +45,27 @@ import Airdrop from "@/components/pages/Airdrop.vue";
 import AirdropClaimModal from "@/components/views/modals/AirdropClaimModal.vue"
 import Login from "@/components/sections/Login.vue"
 
+async function threadDataHelper(to, options = {withProposals: false}) {
+  const {withProposals} = options 
+  if(store.getters.allThreads.length == 0){
+    store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
+    console.log("PARAMS: ",to.params);
+    await store.dispatch("refreshThreads")
+    if(withProposals) {
+      store.dispatch("setLoadingState", {isLoading: true, message: "Loading Thread Proposals"})
+      await store.dispatch("refreshProposalsDataForAsset", {assetId: to.params.threadId})
+    }
+    store.dispatch("setLoadingState", {isLoading: false, message: ""})
+    return true
+  }else if(!store.getters.allThreads.find( t => t.id.toLowerCase() === to.params.threadId)) {
+    if(withProposals) {
+      await store.dispatch("refreshProposalsDataForAsset", {assetId: to.params.threadId})
+    }
+    return true
+  }else {
+    return true
+  }
+}
 
 const router = new createRouter({
   history: createWebHashHistory(),
@@ -174,15 +195,8 @@ const router = new createRouter({
           name: "thread-market",
           component: ThreadsMarketplace,
           meta: {requiresAuth: false},
-          beforeEnter: async () => {
-
-            store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
-
-            await store.dispatch("refreshThreads")
-            console.log("BEFORE ENTER: THREADS => ", store.getters.allThreads)
-            store.dispatch("setLoadingState", {isLoading: false, message: ""})
-
-            return true
+          beforeEnter: async (to) => {
+            return await threadDataHelper(to)
           }
         },
         {
@@ -190,16 +204,7 @@ const router = new createRouter({
           name: "thread",
           component: SingleThread,
           meta: { requiresAuth: false},
-          beforeEnter: async () => {
-            if(!store.getters.allThreads){
-              store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
-
-              await store.dispatch("refreshThreads")
-
-              store.dispatch("setLoadingState", {isLoading: false, message: ""})
-            }
-            return true
-          },
+          
           children: [
             {
               path: "",
@@ -208,12 +213,18 @@ const router = new createRouter({
             {
               path: "overview",
               name: "overview",
-              component: ThreadOverview
+              component: ThreadOverview,
+              beforeEnter: async (to) => {
+                return await threadDataHelper(to, {withProposals: true})
+              },
             },
             {
               path: "governance",
               name: "governance",
               component: ThreadGovernance,
+              beforeEnter: async (to) => {
+                return await threadDataHelper(to, {withProposals: true})
+              },
               children: [
                 {
                   path: "paperProposal",
@@ -250,12 +261,9 @@ const router = new createRouter({
                   path: "proposal/:proposalId",
                   component: Modal,
                   props: { component: SingleProposal },
-                  // beforeEnter: async () => {
-                  //   const prop = await store.getters.threads;
-                   
-                  //   // clear toast
-                  //   return true;
-                  // }
+                  beforeEnter: async (to) => {
+                    return await threadDataHelper(to, {withProposals: true})
+                  },
                 },
               ]
             }
@@ -469,5 +477,7 @@ router.beforeEach(async (to) => {
   console.log("no auth required");
   return true
 })
+
+
 
 export default router;
