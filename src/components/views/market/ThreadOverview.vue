@@ -40,7 +40,7 @@
                 <Address :value="threadId"></Address>
                 </div>
                 <div class="block">
-                  <div class="label">FERC20 Address:</div>
+                  <div class="label">Token Address:</div>
                 <Address :value="thread.erc20.id"></Address>
                 </div>
               </div>
