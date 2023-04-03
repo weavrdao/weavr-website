@@ -20,7 +20,7 @@ const dao = ServiceProvider.dao();
 const dex = ServiceProvider.dex();
 const whitelist = ServiceProvider.whitelist();
 const crowdfund = ServiceProvider.crowdfund();
-
+const token = ServiceProvider.token();
 function state() {
   // const walletCookie = getCookie(WALLET_STATE_COOKIE_KEY);
 
@@ -230,6 +230,20 @@ const actions = {
         hexToDecimals(crowdfundTokenBalance, 6)
       );
     }
+  },
+  async fetchThreadTokenBalance(context, params) {
+    const {threadId} = params;
+    const walletState = await wallet.getState();
+
+    const address = context.userWalletAddress || walletState.address;
+
+    if(!address) {
+      console.error("No wallet connected, cannot get trade token allowance");
+      return;
+    }    
+    const balance = await token.getTokenBalance(threadId, address)
+    console.log(balance);
+    return balance 
   },
   async fetchThreadTokenData(context, params) {
     const { assetId } = params;
