@@ -20,17 +20,17 @@ export default {
     return {
       routes: [
         {
-          name: "Coming Soon",
-          route: "/marketplace/coming-soon",
-          id: "coming-soon"
+          name: "Threads",
+          route: "/marketplace/threads"
         },
         {
           name: "Needles",
           route: "/marketplace/needles"
         },
         {
-          name: "Threads",
-          route: "/marketplace/threads"
+          name: "Coming Soon",
+          route: "/marketplace/coming-soon",
+          id: "coming-soon"
         }
       ]
     }
