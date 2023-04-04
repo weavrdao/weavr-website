@@ -57,9 +57,11 @@ async function threadDataHelper(to, options = {withProposals: false}) {
     }
     store.dispatch("setLoadingState", {isLoading: false, message: ""})
     return true
-  }else if(!store.getters.allThreads.find( t => t.id.toLowerCase() === to.params.threadId)) {
-    if(withProposals) {
+  }else if(store.getters.allThreads.find( t => t.id.toLowerCase() === to.params.threadId)) {
+    if(withProposals ) {
+      store.dispatch("setLoadingState", {isLoading: true, message: "Loading Thread Proposals"})
       await store.dispatch("refreshProposalsDataForAsset", {assetId: to.params.threadId})
+      store.dispatch("setLoadingState", {isLoading: false, message: ""})
     }
     return true
   }else {

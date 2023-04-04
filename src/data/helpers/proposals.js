@@ -1,5 +1,6 @@
 import {ProposalTypes, PASSED} from "@/models/common";
 import {VoteType} from "@/models/vote";
+import { ethers } from "ethers";
 
 export function getProposalTypeStyling(proposalType) {
   switch (proposalType) {
@@ -66,6 +67,7 @@ export function dateStringForTimestamp(timestamp) {
 export function getVotes(proposal) {
   const votes = Array.from(proposal.votes.values())
   const yesVoteShares = votes.reduce((total, vote) => {
+    // console.log("VOTE:::", ethers.utils.f(vote.count));
     return vote.voteDirection === VoteType.Yes ? total + Number(vote.count) : total;
   }, 0);
 

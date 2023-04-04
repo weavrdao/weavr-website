@@ -121,6 +121,7 @@ export default {
   data () {
     return {
       proposalId: Number(this.$route.params.proposalId),
+      assetId: this.$route.params.threadId? this.$route.params.threadId : this.$route.params.proposalId,
       simluation_results: [],
       voteAmount: 0,
       timeRemainingString: "",
@@ -226,6 +227,12 @@ export default {
     },
 
     submitYesVote() {
+      console.log({
+        assetAddress: this.assetId,
+        proposalId: this.$route.params.proposalId,
+        votes: +this.voteAmount,
+        $toast: this.$toast
+      });
       this.vote({
         assetAddress: this.assetId,
         proposalId: this.$route.params.proposalId,

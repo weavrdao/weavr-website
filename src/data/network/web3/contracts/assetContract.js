@@ -80,9 +80,7 @@ class AssetContract {
     console.log(`SENT DIRECTLY TO CONTRACT: ${info} :: => ${this.mutableContract.address}`);
 
     let tx = await this.mutableContract.proposePaper(supermajority, info,
-      {
-        gasLimit: 5000000,
-      });
+      );
     return (await tx.wait()).status;
   }
 
