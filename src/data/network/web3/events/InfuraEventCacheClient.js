@@ -1,19 +1,19 @@
-import {ethers } from "ethers";
+import {ethers} from "ethers";
 import {CONTRACTS} from "@/services/constants"
 import {getIpfsHashFromBytes32} from "@/data/network/storage/ipfs/common";
-import {Needle, Thread, ERC20_TX, Holder} from "@/models/Assets"
+import {ERC20_TX, Holder, Needle, Thread} from "@/models/Assets"
 import {Marketplace} from "./marketplace/marketplace"
 import {Vote} from "@/models/vote";
-import {ProposalState, ProposalTypes, CrowdfundState} from "@/models/common";
-import {CrowdfundJSON, ThreadDeployerJSON,  FrabricERC20JSON, WEAVRJSON, ThreadJSON} from "../contracts/abi"
+import {CrowdfundState, ProposalState, ProposalTypes} from "@/models/common";
+import {CrowdfundJSON, FrabricERC20JSON, ThreadDeployerJSON, ThreadJSON, WEAVRJSON} from "../contracts/abi"
 import {
-  BaseProposal, 
-  TokenActionProposal, 
-  ParticipantProposal, 
-  ParticipantRemovalProposal, 
-  ThreadProposal, 
-  UpgradeProposal,
-  DescriptorChangeProposal
+  BaseProposal,
+  DescriptorChangeProposal,
+  ParticipantProposal,
+  ParticipantRemovalProposal,
+  ThreadProposal,
+  TokenActionProposal,
+  UpgradeProposal
 } from "@/models/proposals";
 
 
@@ -35,38 +35,115 @@ class InfuraEventCacheClient {
     const currentBlockNumber = await this.provider.getBlockNumber();
     // Listen for all events emitted by the contract, starting from the specified block number
     blockNumber = this.startBlockNumber;
+    let iface = isThread === true ? new ethers.utils.Interface(ThreadJSON.abi) : new ethers.utils.Interface(WEAVRJSON.abi)
+    let {events, votingPeriod} = await this.getEventsForAsset(assetId, iface, isThread, blockNumber, currentBlockNumber)
+    let proposals = await this.getProposals(events)
+    proposals = this.processProposalTypeData(events, proposals)
+    proposals = this.updateProposalsWithVotes( events, proposals)
+    proposals = this.processProposalStatusChanges(events, proposals)
+    proposals = this.finalizeProposals(proposals, votingPeriod)
       
-    await this.getProposals(assetId, isThread, blockNumber, currentBlockNumber)
-    await this.processProposalTypeData(blockNumber, currentBlockNumber)
-    await this.updateProposalsWithVotes( blockNumber, currentBlockNumber)
-    await this.processProposalStatusChanges(blockNumber, currentBlockNumber)
-    await this.finalizeProposals()
-      
-    return Array.from(this.proposals.values())
+    return Array.from(Object.values(proposals))
   }
 
-  async getProposals(assetId, isThread, blockNumber, currentBlockNumber) {
+  async getEventsForAsset(assetId, iface, isThread, blockNumber, currentBlockNumber) {
     this.selectAssetTypeContract(assetId, isThread)
-    await this.contract.queryFilter("Proposal",blockNumber, currentBlockNumber).then(async (raw_events) => {
-      for (const raw_event of raw_events) {
-        const event = this.iface.decodeEventLog("Proposal", raw_event.data, raw_event.topics)
-        const block = await this.provider.getBlock(raw_event.blockNumber)
-        const proposal = new BaseProposal(event.id.toNumber(), event.creator, event.info, event.supermajority, block.timestamp)
-        this.proposals.set(proposal.id, proposal)
+    let eventNames = [
+      ...Object.keys(this.proposalTypeSwitch),
+      "Proposal",
+      "Vote",
+      "ProposalStateChange",
+    ]
+    let events = eventNames.map((eventName) => {
+      return this.contract.queryFilter(eventName, blockNumber, currentBlockNumber).then(async (raw_events) => {
+        const eventSignature = iface.getEventTopic(eventName);
+        let this_events = []
+        for (const raw_event of raw_events) {
+          for (let i = 0; i < raw_event.topics.length; i++) {
+            if (raw_event.topics[i] === eventSignature) {
+              const event = iface.decodeEventLog(eventName, raw_event.data, raw_event.topics)
+              let timestamp;
+              if( eventName === "Proposal") {
+                timestamp = (await this.provider.getBlock(raw_event.blockNumber)).timestamp
+              } else {
+                timestamp = null;
+              }
+              this_events.push({event, timestamp})
+            }
+          }
+        }
+        return this_events
+      })
+    })
+    let awaited_events = await Promise.all(events)
+    let votingPeriod = await this.contract.votingPeriod()
+    let output = {}
+    for (let i = 0; i < eventNames.length; i++) {
+      output[eventNames[i]] = awaited_events[i]
+    }
+    return {output, votingPeriod}
+  }
+
+  async getProposals(events) {
+    let proposals = {}
+    events["Proposal"].forEach(obj => {
+      const {event, timestamp} = obj
+      const id = event.id.toNumber()
+      proposals[id] =  new BaseProposal(event.id.toNumber(), event.creator, event.info, event.supermajority, timestamp)
+    })
+    console.log(proposals)
+    return proposals
+  }
+
+  processProposalTypeData(events, proposals) {
+
+    for (const proposalTypeName of Object.keys(this.proposalTypeSwitch)) {
+      let proposal_events = events[proposalTypeName]
+      proposal_events.forEach(obj => {
+        const {event, timestamp} = obj
+        const id = event.id.toNumber()
+        if (id in proposals) {
+          const prop = proposals[id]
+          prop.type = this.proposalTypeSwitch[proposalTypeName].type
+          proposals[id] = new this.proposalTypeSwitch[proposalTypeName].cls(prop, event)
+        }
+      })
+    }
+    return proposals
+  }
+
+  processProposalStatusChanges(events, proposals) {
+    events["ProposalStateChange"].forEach(obj => {
+      const {event, timestamp} = obj
+      const id = event.id.toNumber()
+      if (id in proposals) {
+        proposals[id].status = ProposalState[event.state]
       }
-      // Filter out only the events that are important to you
+    })
+    return proposals
+  }
+
+  updateProposalsWithVotes(events, proposals) {
+    events["Vote"].forEach(obj => {
+      const {event, timestamp} = obj
+      const id = event.id.toNumber()
+      if(id in proposals) {
+        const vote = new Vote(id, event.voter, event.direction, event.votes)
+        proposals[id].addVote(vote)
+      }
     })
   }
 
-  async finalizeProposals() {
-    const votingPeriod = await this.contract.votingPeriod()
+
+  finalizeProposals(proposals, votingPeriod) {
     const vp = votingPeriod.toNumber()
-    for (const id of Array.from(this.proposals.keys())) {
-      if (!("endTimestamp" in this.proposals.get(id))) {
-        this.proposals.get(id).endTimestamp = this.proposals.get(id).startTimestamp + vp
-        this.proposals.get(id).info = getIpfsHashFromBytes32(this.proposals.get(id).info)
-        if (this.proposals.get(id).type === ProposalTypes.Thread) {
-          this.proposals.get(id).descriptor = getIpfsHashFromBytes32(this.proposals.get(id).descriptor)
+    for (const id of Array.from(Object.keys(proposals))) {
+      if (!("endTimestamp" in proposals[id])) {
+        console.log(proposals[id])
+        proposals[id].endTimestamp = this.proposals[id].startTimestamp + vp
+        proposals[id].info = getIpfsHashFromBytes32(proposals[id].info)
+        if (proposals[id].type === ProposalTypes.Thread) {
+          proposals[id].descriptor = getIpfsHashFromBytes32(proposals[id].descriptor)
         }
       }
 
@@ -94,53 +171,6 @@ class InfuraEventCacheClient {
         "ParticipantProposal": {cls: ParticipantProposal, type: ProposalTypes.Participant},
         "ParticipantRemovalProposal": {cls: ParticipantRemovalProposal, type: ProposalTypes.ParticipantRemoval},
       }
-  }
-
-  async processProposalTypeData(syncBlockNumber, currentBlockNumber) {
-    
-    for (const proposalTypeName of Object.keys(this.proposalTypeSwitch)) {
-      await this.contract.queryFilter(proposalTypeName, syncBlockNumber, currentBlockNumber).then(async (raw_events) => {
-        for (const raw_event of raw_events) {
-          const event = this.iface.decodeEventLog(proposalTypeName, raw_event.data, raw_event.topics)
-          if (event.id in this.proposals) {
-            const prop = this.proposals[event.id]
-            prop.type = this.proposalTypeSwitch[proposalTypeName].type
-            this.proposals.set(event.id, new this.proposalTypeSwitch[proposalTypeName].cls(prop, event))
-            
-          }
-        }
-      })
-    }
-    
-  }
-
-  async processProposalStatusChanges(syncBlockNumber, currentBlockNumber) {
-    await this.contract.queryFilter("ProposalStateChange", syncBlockNumber, currentBlockNumber).then(async (raw_events) => {
-      for (const raw_event of raw_events) {
-        const event = this.iface.decodeEventLog("ProposalStateChange", raw_event.data, raw_event.topics)
-        if (event.id.toNumber() in Array.from(this.proposals.keys())) {
-          this.proposals.get(event.id.toNumber()).status = ProposalState[event.state]
-        } else {
-          throw new Error(`Got ProposalStateChange for proposal ${event.id} but no proposal exists with that id`);
-        }
-      }
-      // Filter out only the events that are important to you
-    })
-  }
-
-  async updateProposalsWithVotes(syncBlockNumber, currentBlockNumber) {
-    await this.contract.queryFilter("Vote", syncBlockNumber, currentBlockNumber).then(async (events) => {
-      for (const event_data of events) {
-        const event = this.iface.decodeEventLog("Vote", event_data.data, event_data.topics)
-        if (event.id.toNumber() in Array.from(this.proposals.keys())) {
-          const vote = new Vote(event.id, event.voter, event.direction, event.votes)
-          const id = event.id.toNumber()
-          this.proposals.get(id).addVote(vote)
-        } else {
-          throw new Error(`Got Vote for proposal ${event.id} but no proposal exists with that id`);
-        }
-      }
-    })
   }
 
   /**
