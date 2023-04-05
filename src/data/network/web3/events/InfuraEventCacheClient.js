@@ -36,13 +36,13 @@ class InfuraEventCacheClient {
     // Listen for all events emitted by the contract, starting from the specified block number
     blockNumber = this.startBlockNumber;
     let iface = isThread === true ? new ethers.utils.Interface(ThreadJSON.abi) : new ethers.utils.Interface(WEAVRJSON.abi)
-    let {events, votingPeriod} = await this.getEventsForAsset(assetId, iface, isThread, blockNumber, currentBlockNumber)
-    let proposals = await this.getProposals(events)
+    let events = await this.getEventsForAsset(assetId, iface, isThread, blockNumber, currentBlockNumber)
+    let votingPeriod = await this.contract.votingPeriod()
+    let proposals = this.getProposals(events)
     proposals = this.processProposalTypeData(events, proposals)
     proposals = this.updateProposalsWithVotes( events, proposals)
     proposals = this.processProposalStatusChanges(events, proposals)
     proposals = this.finalizeProposals(proposals, votingPeriod)
-      
     return Array.from(Object.values(proposals))
   }
 
@@ -76,22 +76,20 @@ class InfuraEventCacheClient {
       })
     })
     let awaited_events = await Promise.all(events)
-    let votingPeriod = await this.contract.votingPeriod()
     let output = {}
     for (let i = 0; i < eventNames.length; i++) {
       output[eventNames[i]] = awaited_events[i]
     }
-    return {output, votingPeriod}
+    return output
   }
 
-  async getProposals(events) {
+  getProposals(events) {
     let proposals = {}
     events["Proposal"].forEach(obj => {
       const {event, timestamp} = obj
       const id = event.id.toNumber()
-      proposals[id] =  new BaseProposal(event.id.toNumber(), event.creator, event.info, event.supermajority, timestamp)
+      proposals[id] =  new BaseProposal(id, event.creator, event.info, event.supermajority, timestamp)
     })
-    console.log(proposals)
     return proposals
   }
 
@@ -102,11 +100,9 @@ class InfuraEventCacheClient {
       proposal_events.forEach(obj => {
         const {event, timestamp} = obj
         const id = event.id.toNumber()
-        if (id in proposals) {
-          const prop = proposals[id]
-          prop.type = this.proposalTypeSwitch[proposalTypeName].type
-          proposals[id] = new this.proposalTypeSwitch[proposalTypeName].cls(prop, event)
-        }
+        const prop = proposals[id]
+        prop.type = this.proposalTypeSwitch[proposalTypeName].type
+        proposals[id] = new this.proposalTypeSwitch[proposalTypeName].cls(prop, event)
       })
     }
     return proposals
@@ -132,6 +128,7 @@ class InfuraEventCacheClient {
         proposals[id].addVote(vote)
       }
     })
+    return proposals
   }
 
 
@@ -139,8 +136,7 @@ class InfuraEventCacheClient {
     const vp = votingPeriod.toNumber()
     for (const id of Array.from(Object.keys(proposals))) {
       if (!("endTimestamp" in proposals[id])) {
-        console.log(proposals[id])
-        proposals[id].endTimestamp = this.proposals[id].startTimestamp + vp
+        proposals[id].endTimestamp = proposals[id].startTimestamp + vp
         proposals[id].info = getIpfsHashFromBytes32(proposals[id].info)
         if (proposals[id].type === ProposalTypes.Thread) {
           proposals[id].descriptor = getIpfsHashFromBytes32(proposals[id].descriptor)
@@ -148,6 +144,7 @@ class InfuraEventCacheClient {
       }
 
     }
+    return proposals
   }
 
 
