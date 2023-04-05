@@ -68,7 +68,8 @@
     "md5": "^2.3.0",
     "postcss": "^7.0.36",
     "string-crypto": "^2.0.2",
-    "vue-loader": "^15.9.7"
+    "vue-loader": "^15.9.7",
+    "vuex-plugin-persistedstate": "^1.0.6"
   },
   "browserslist": [
     "> 1%",
