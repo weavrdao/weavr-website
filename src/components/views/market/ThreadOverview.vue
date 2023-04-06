@@ -102,7 +102,11 @@
             <div class="column">{{ metric.value}}</div>
           </div>
         </div>
-        {{getTreadBalance}}
+        <!-- <div class="card p-3 mt-5 has-radius-lg border-lightGray">
+          <p class="subtitle mb-3">Thread Token balance:</p>
+          {{getTreadBalance}}
+        </div> -->
+        
         <div class="card p-3 mt-5 has-radius-lg border-lightGray">
           <p class="subtitle mb-3">Holders</p>
           <div class="columns mb-0 is-GAP-1" v-for="holder in holders" :key="holder">

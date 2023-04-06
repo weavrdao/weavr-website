@@ -1,12 +1,12 @@
 import { createStore } from "vuex"
-import createPersistedState from "vuex-plugin-persistedstate";
+// import createPersistedState from "vuex-plugin-persistedstate";
 import state from "./state"
 import daoState from "./dao"
 import marketState from "./market"
 
-const walletState = createPersistedState({
-  paths: ["wallet"]
-})
+// const walletState = createPersistedState({
+//   paths: ["wallet"]
+// })
 
 const store = createStore({
   modules: {

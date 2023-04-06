@@ -419,55 +419,22 @@ router.beforeEach(async (to) => {
   }
   
     // not connected
-
-      // cookie
-      if (!isConnected && ethers.utils.isAddress(cookie.wallet)) {
-        console.log("____________________________ AUTOCONNECT__________________");
-        // - autoconnect and navigate
-        const toast = createToaster({})
-        await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
-        await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
+    // cookie
+    if (!isConnected && ethers.utils.isAddress(cookie.wallet)) {
+      console.log("____________________________ AUTOCONNECT__________________");
+      // - autoconnect and navigate
+      const toast = createToaster({})
+      await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
+      await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
+      
+          // whitelisted
+          return { path: to.fullPath}
         
-            // whitelisted
-            return { path: to.fullPath}
-          
-        })
+      })
 
-      }
-      // // !cookie
-      // else if (!ethers.utils.isAddress(cookie.wallet) || ((cookie.wallet != address) && !isWhitelisted ) ) {
-      //   // - go to walletconnect
-      //   return {name: "whitelist" }
-      // }
-    
-    // connected
-    // if (isConnected && isWhitelisted) {
-    //   // -navigate to route
-    //   return true
-    // }  
-  // to.whitelist
-  // if( to.path === "whitelist" ) {
-  //   // - navigating to whitelist and set vars
-  // }
-
-
-  // from.whitelist
-  // if (to.fullPath === "/dao/"+CONTRACTS.WEAVR ) {
-  //   // - navigate path and reset vars
-  //   if(cookie.wallet != address) {
-  //     createToaster({position: "top", duration: 4000 }).info(
-  //       "You are visiting the website with a non whitelisted address!! [only read mode]. " +
-  //       "Please switch to your whitelisted wallet " + cookie.wallet)
-  //     setInterval(()=>{
-  //     }, 4000)
-  //   }
-  //   console.log("Navigate to WEAVR____GOV______________\n\n\n");
-  //   return {path: to.fullPath}
-  // }
-  // no auth
-
-  // - navigate to path
-  console.log("no auth required");
+    }
+     
+  console.log("no wallet sync!");
   return true
 })
 

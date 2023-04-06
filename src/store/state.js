@@ -105,7 +105,7 @@ const actions = {
   },
   async fetchTokenInfoForAddress(context, params) {
     return {
-      ...(await this.fetchTokenInfo(context, params)),
+      // ...(await this.fetchTokenInfo(params)),
       bal: await token.getTokenBalance(params.tokenAddress, params.userAddress)
     }
   },
@@ -119,6 +119,31 @@ const actions = {
     };
   },
 
+  async updateWalletToken(context, params) {
+    const {tokenAddress} = params;
+    const address = context.getters.userWalletAddress;
+    console.log("_________________________________________________", tokenAddress, address);
+    const symbol = await token.getTokenSymbol(tokenAddress);
+    const balance = await token.getTokenBalance(
+      tokenAddress,
+      address
+    );
+    Promise.allSettled([symbol, balance]).then( res => {
+      console.log("DATA TOKEN ::::: ", res)
+      const {symbol, balance} = res;
+      const walletState = new WalletState(
+        address, 
+        0, 
+       Number( ethers.utils.formatEther(res[1].value)).toFixed(6), 
+        res[0].value, 
+        null, 
+        wallet.getChainId()
+      )
+      context.commit("setWallet", walletState);
+      console.log(walletState);
+    })
+  },
+
   async syncWallet(context, params) {
     let {$toast} = params !== undefined ? params : {};
     let walletState = await wallet.getState(params.wallet);
@@ -129,12 +154,10 @@ const actions = {
     );
 
     Promise.all([walletState, symbol, balance])
-
     const isWhitelisted = await whitelist.checkWhitelistedStatus(
       CONTRACTS.WEAVR,
       walletState.address
     );
-
     context.commit("setWhitelisted", isWhitelisted);
     isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address + "_" + params.wallet, 100)
     await token.getTokenBalance(

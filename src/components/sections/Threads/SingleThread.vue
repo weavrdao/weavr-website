@@ -10,9 +10,7 @@
         </li>
       </ul>
     </div>
-    <div class="box" v-if="isConnected">
-      {{fetchThreadTokenBalance}}
-    </div>
+    
     <router-view></router-view>
    
   </div>
@@ -20,6 +18,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import "vue3-carousel/dist/carousel.css"
+
 export default {
   name: "SingleThread",
   data() {
@@ -32,6 +31,7 @@ export default {
   computed: {
     ...mapGetters({
       threads: "allThreads",
+      userWalletAddress:"userWalletAddress"
     }),
     thread() {
       console.log(this.threads)
@@ -43,6 +43,7 @@ export default {
     ...mapActions({
       fetchThreadTokenData: "fetchThreadTokenData",
       fetchThreadTokenBalance: "fetchThreadTokenBalance",
+      updateWalletToken: "updateWalletToken",
       refreshProposals: "refreshProposalsDataForAsset",
       setLoadingState: "setLoadingState"
     }),
@@ -70,6 +71,11 @@ export default {
       return { "background-image": `linear-gradient(to left, rgba(22, 23, 30, 0), rgba(22, 23, 30, 1)), url(${url})`}
     },
 
+  },
+  mounted() {
+    const _token = this.thread.erc20.id;
+    console.log("TOKEN TO UPDATE: ", _token);
+    this.updateWalletToken({tokenAddress: _token})
   },
 }
 </script>
