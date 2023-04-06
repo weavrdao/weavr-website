@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       orderBookMode: "buy",
-      assetId: this.$route.query.assetId || CONTRACTS.WEAVR,
+      assetId: this.$route.query.threadId || CONTRACTS.WEAVR,
     }
   },
   computed: {

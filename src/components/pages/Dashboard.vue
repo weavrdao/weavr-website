@@ -187,7 +187,6 @@ export default {
       orderFromValue: "",
       orderToValue: "",
       proposalsList: this.proposals,
-      x: "",
       properties
     };
   },
