@@ -14,7 +14,7 @@ const store = createStore({
     daoState,
     marketState
   },
-  plugins: [walletState]
+  // plugins: [walletState]
 })
 
 export default store;

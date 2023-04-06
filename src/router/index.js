@@ -417,47 +417,38 @@ router.beforeEach(async (to) => {
     toast.error("The route you are trying to access is currently locked", { position: "top"});
     return false
   }
-  if( to.meta.requiresAuth ) {
+  
     // not connected
-    if( !isConnected ) {
+
       // cookie
-      if (ethers.utils.isAddress(cookie.wallet)) {
-        if (cookie.wallet === GUEST) {
-          return true
-        }
+      if (!isConnected && ethers.utils.isAddress(cookie.wallet)) {
+        console.log("____________________________ AUTOCONNECT__________________");
         // - autoconnect and navigate
         const toast = createToaster({})
         await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
         await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
-          if (!isWhitelisted) {
-            // not whitelisted
-            return  { name: "whitelist"}
-          }
-          else if ( isWhitelisted ) {
+        
             // whitelisted
             return { path: to.fullPath}
-          }
+          
         })
 
       }
-      // !cookie
-      else if (!ethers.utils.isAddress(cookie.wallet) || ((cookie.wallet != address) && !isWhitelisted ) ) {
-        // - go to walletconnect
-        return {name: "whitelist" }
-      }
-    }
+      // // !cookie
+      // else if (!ethers.utils.isAddress(cookie.wallet) || ((cookie.wallet != address) && !isWhitelisted ) ) {
+      //   // - go to walletconnect
+      //   return {name: "whitelist" }
+      // }
+    
     // connected
-    if (isConnected && isWhitelisted) {
-      // -navigate to route
-      return true
-    }else if (isConnected && !isWhitelisted) {
-      return { name: "whitelist"}
-    }
-  }
+    // if (isConnected && isWhitelisted) {
+    //   // -navigate to route
+    //   return true
+    // }  
   // to.whitelist
-  if( to.path === "whitelist" ) {
-    // - navigating to whitelist and set vars
-  }
+  // if( to.path === "whitelist" ) {
+  //   // - navigating to whitelist and set vars
+  // }
 
 
   // from.whitelist
