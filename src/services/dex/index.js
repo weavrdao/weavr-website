@@ -1,7 +1,9 @@
+import { ethers } from "ethers";
 import DexRouterContract from "@/data/network/web3/contracts/dexRouterContract";
 import WeavrERC20Contract from "@/data/network/web3/contracts/weavrERC20Contract";
+import InfuraEventCacheClient from "@/data/network/web3/events/InfuraEventCacheClient"
 
-import { NETWORK } from "../constants";
+import { CONTRACTS, NETWORK } from "../constants";
 import AssetContract from "@/data/network/web3/contracts/assetContract";
 /**
  * DEX service
@@ -10,55 +12,61 @@ import AssetContract from "@/data/network/web3/contracts/assetContract";
 class DEX {
   constructor(ethereumClient) {
     this.ethereumClient = ethereumClient;
+    this.cacheClient = new InfuraEventCacheClient(NETWORK.id, process.env.VUE_APP_INFURA_API_KEY, NETWORK.startBlock)
   }
 
-  async getFrabricOrders(frabricId) {
-    // const marketOrders = await this.graphQLAPIClient.query(
-    //   FRABRIC_DEX_ORDERS_QUERY,
-    //   { frabricId },
-    //   (mapper, response) => {
-    //     return mapper.mapRawMarketOrders(response);
-    //   }
-    // );
-    // console.log(marketOrders);
-    // return marketOrders;
-  }
-
-  async getThreadOrders(frabricId, threadId) {
-    // const marketOrders = await this.graphQLAPIClient.query(
-    //   THREAD_DEX_ORDERS_QUERY,
-    //   { frabricId, threadId },
-    //   (mapper, response) => {
-    //     return mapper.mapRawMarketOrders(response);
-    //   }
-    // );
-
-    // return marketOrders.length > 0 ? marketOrders : [];
-  }
-
-  async createBuyOrder(frabricAddress, price, minimumAmount) {
-    const daoContract = new AssetContract(this.ethereumClient, frabricAddress);
+  async createBuyOrder(assetId, price, minimumAmount) {
+    const daoContract = new AssetContract(this.ethereumClient, assetId);
 
     const erc20 = await daoContract.erc20();
-
-    console.log(`ERC20: ${erc20}`);
+    const frabricTokenContract = new WeavrERC20Contract(this.ethereumClient, erc20);
+    const decimals = await frabricTokenContract.decimals();
 
     const dexRouterContract = new DexRouterContract(
       this.ethereumClient,
-      process.env.VUE_APP_DEX_ROUTER
+      CONTRACTS.DEX_ROUTER
     );
-    const status = dexRouterContract.buy(
+
+    const amountToSend = ethers.utils.parseUnits(String(price * minimumAmount), decimals);
+    const minAmountReceive = ethers.utils.parseUnits(String(minimumAmount), decimals);
+    
+    console.log({
+      dexRouterContract,
       erc20,
-      NETWORK.TRADE_TOKEN,
-      price * minimumAmount,
+      tradeToken: CONTRACTS.TRADE_TOKEN,
+      amountToSend,
       price,
       minimumAmount
+    })
+
+    const status = dexRouterContract.buy(
+      erc20,
+      CONTRACTS.TRADE_TOKEN,
+      amountToSend,
+      price,
+      minAmountReceive
     );
     return status;
   }
 
-  async createSellOrder(frabricAddress, price, amount) {
-    const daoContract = new AssetContract(this.ethereumClient, frabricAddress);
+  async approveDexRouterTradeToken() {
+    const erc20Contract = new WeavrERC20Contract(this.ethereumClient, CONTRACTS.TRADE_TOKEN);
+    const status = await erc20Contract.approve(CONTRACTS.DEX_ROUTER);
+
+    return status;
+  }
+
+  async approveDexRouterThreadToken(assetId) {
+    const daoContract = new AssetContract(this.ethereumClient, assetId);
+    const erc20 = await daoContract.erc20();
+    const erc20Contract = new WeavrERC20Contract(this.ethereumClient, erc20);
+    const status = await erc20Contract.approve(CONTRACTS.DEX_ROUTER);
+
+    return status;
+  }
+
+  async createSellOrder(assetId, price, amount) {
+    const daoContract = new AssetContract(this.ethereumClient, assetId);
 
     const erc20 = await daoContract.erc20();
 

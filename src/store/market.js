@@ -124,29 +124,21 @@ const actions = {
     console.log("STORE:::::", needles);
     context.commit("setNeedles", needles);
   },
-  
-
-  async fetchOrders(context, params) {
-    let orders = await dex.getFrabricOrders(params.assetId.toLowerCase());
-    context.commit("setOrders", orders);
-  },
-
-  // Ignore, rewrite
-  async fetchDexOrders(context, params) {
-    const FRABRIC_ID = "0";
-    let orders = await dex.getAssetOrders(
-      FRABRIC_ID,
-      params.assetId.toString()
-    );
-    const tokenAddress = await dao.getTokenAddress();
-    context.commit("setTokenAddress", tokenAddress);
-    context.commit("setOrders", orders);
-  },
 
   async createBuyOrder(_, params) {
     const { assetId, price, amount } = params;
 
     await dex.createBuyOrder(assetId, price, amount);
+  },
+
+  async approveDexRouterTradeToken() { 
+    await dex.approveDexRouterTradeToken();
+  },
+
+  async approveDexRouterThreadToken(_, params) {
+    const { assetId } = params;
+
+    await dex.approveDexRouterThreadToken(assetId);
   },
 
   async createSellOrder(_, params) {

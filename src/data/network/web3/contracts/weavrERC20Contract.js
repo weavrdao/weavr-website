@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import contractAbi from "./abi/WeavrERC20";
 
 /**
@@ -275,6 +276,16 @@ class WeavrERC20Contract {
       return await this.contract.orderAmount(price, i);
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  async approve(spender) {
+    try {
+      const tx = await this.mutableContract.approve(spender, ethers.constants.MaxUint256);
+      return tx.wait().status;
+    } catch (e) {
+      console.log(e);
+      return 0;
     }
   }
 }

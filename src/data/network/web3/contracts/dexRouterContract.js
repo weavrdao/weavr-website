@@ -1,7 +1,4 @@
-const contractAbi = [
-  // Make a buy order
-  "function buy(address token, address tradeToken, uint256 payment, uint256 price, uint256 minimumAmount)", 
-]
+import { RouterJSON } from "../contracts/abi";
 
 /**
  * Dexrouter contract
@@ -12,7 +9,7 @@ class DexRouterContract {
     ethereumClient,
     contractAddress
   ) {
-    this.contract = ethereumClient.getContract(contractAddress, contractAbi)
+    this.contract = ethereumClient.getContract(contractAddress, RouterJSON.abi)
     this.mutableContract = ethereumClient.getMutableContract(this.contract)
   }
 
@@ -32,6 +29,7 @@ class DexRouterContract {
     price,
     minimumAmount,
   ) {
+    console.log(this.mutableContract);
     console.dir({
       token,
       tradeToken,

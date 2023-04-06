@@ -15,7 +15,7 @@ import {
   TokenActionProposal,
   UpgradeProposal
 } from "@/models/proposals";
-
+import { processAllRawOrderEvents } from "../../../../utils/dexOrderProcessing";
 
 class InfuraEventCacheClient {
   constructor(ProviderNetwork, ProviderApiKey, startBlockNumber) {
@@ -44,6 +44,22 @@ class InfuraEventCacheClient {
     proposals = this.processProposalStatusChanges(events, proposals)
     proposals = this.finalizeProposals(proposals, votingPeriod)
     return Array.from(Object.values(proposals))
+  }
+
+  async syncOrders(assetId, isThread = false) {
+    let blockNumber;
+    const currentBlockNumber = await this.provider.getBlockNumber();
+    // Listen for all events emitted by the contract, starting from the specified block number
+    blockNumber = this.startBlockNumber;
+    const contract = new ethers.Contract(assetId, isThread ? ThreadJSON.abi : WEAVRJSON.abi, this.provider);
+    const erc20 = await contract.erc20();
+    console.log(`FETCHING ORDERS FOR ${erc20}`);
+    let events = await this.getEventsForILODEX(erc20, blockNumber, currentBlockNumber)
+
+    const orders = processAllRawOrderEvents(events)
+    console.log("PROCESSED ORDERS");
+    console.log(orders);
+    return orders;
   }
 
   async getEventsForAsset(assetId, iface, isThread, blockNumber, currentBlockNumber) {
@@ -83,9 +99,45 @@ class InfuraEventCacheClient {
     return output
   }
 
+  async getEventsForILODEX(erc20, blockNumber, currentBlockNumber) {
+
+    const ferc20_contract = new ethers.Contract(erc20, FrabricERC20JSON.abi, this.provider);
+    const testInterface = new ethers.utils.Interface(FrabricERC20JSON.abi);
+    const eventNames = [
+      "Order",
+      "OrderIncrease",
+      "OrderFill",
+      "OrderCancelling",
+      "OrderCancellation",
+    ];
+    const events = eventNames.map(async eventName => {
+      return ferc20_contract.queryFilter(eventName, blockNumber, currentBlockNumber).then(async (raw_events) => {
+        const eventSignature = testInterface.getEventTopic(eventName);
+        let orderEvents = []
+        for (const raw_event of raw_events) {
+          for (let i = 0; i < raw_event.topics.length; i++) {
+            if (raw_event.topics[i] === eventSignature) {
+              const event = testInterface.decodeEventLog(eventName, raw_event.data, raw_event.topics);
+              orderEvents.push(event);
+            }
+          }
+        }
+        console.log(`ORDER EVENTS FOR ${erc20}`)
+        console.log(orderEvents);
+        return orderEvents;
+      });
+    });
+    const awaitedEvents = await Promise.all(events);
+    const output = {};
+    for (let i = 0; i < eventNames.length; i++) {
+      output[eventNames[i]] = awaitedEvents[i];
+    }
+    return output;
+  }
+
   getProposals(events) {
     let proposals = {}
-    events["Proposal"].forEach(obj => {
+    events.Proposal.forEach(obj => {
       const {event, timestamp} = obj
       const id = event.id.toNumber()
       proposals[id] =  new BaseProposal(id, event.creator, event.info, event.supermajority, timestamp)
@@ -109,7 +161,7 @@ class InfuraEventCacheClient {
   }
 
   processProposalStatusChanges(events, proposals) {
-    events["ProposalStateChange"].forEach(obj => {
+    events.ProposalStateChange.forEach(obj => {
       const {event, timestamp} = obj
       const id = event.id.toNumber()
       if (id in proposals) {
@@ -120,7 +172,7 @@ class InfuraEventCacheClient {
   }
 
   updateProposalsWithVotes(events, proposals) {
-    events["Vote"].forEach(obj => {
+    events.Vote.forEach(obj => {
       const {event, timestamp} = obj
       const id = event.id.toNumber()
       if(id in proposals) {
@@ -160,7 +212,7 @@ class InfuraEventCacheClient {
         // "ParticipantRemovalProposal": {cls: ParticipantRemovalProposal, type: ProposalTypes.ParticipantRemoval},
         "DescriptorChange": {cls: DescriptorChangeProposal, type: ProposalTypes.descriptorChange}
       } 
-    : 
+      : 
       {
         "TokenActionProposal": {cls: TokenActionProposal, type: ProposalTypes.TokenAction},
         "UpgradeProposal": {cls: UpgradeProposal, type: ProposalTypes.Upgrade},
@@ -193,8 +245,8 @@ class InfuraEventCacheClient {
           const event = td_iface.decodeEventLog("CrowdfundedThread", rawEvent.data, rawEvent.topics)
           crowdfunds.set(event.crowdfund, {id: event.crowdfund, thread: threads.get(event.thread)})    
         }
-      )
-    })
+        )
+      })
     for(let needle of crowdfunds.keys()){
       const crowdfundSC = new ethers.Contract(needle, CrowdfundJSON.abi, this.provider)
       const state = await Marketplace.getNeedleState(crowdfundSC)
@@ -287,6 +339,7 @@ class InfuraEventCacheClient {
     }
     return transfersMap
   }
+
   async fetchFerc20(erc20) {
     const ferc20_contract = new ethers.Contract(erc20, FrabricERC20JSON.abi, this.provider);
     const ferc20_iface = new ethers.utils.Interface(FrabricERC20JSON.abi);

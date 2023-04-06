@@ -1,7 +1,7 @@
 <template>
 <div class="columns is-flex-mobile is-align-items-center">
     <div class="column">
-        {{ order.totalAmount }} FBRC
+        {{ formatEther(order.amount) }} FBRC
     </div>
     <div class="column">
         {{ Number(order.price).toFixed(2) }} USD
@@ -12,8 +12,8 @@
     <div class="column is-justify-content-flex-end">
         <div
             class="purchase-type"
-            v-bind:class="order.type === 'Buy' ? 'is-buy' : 'is-sell'">
-            {{ order.type === 'Buy' ? 'BUY' : 'SELL' }}
+            v-bind:class="order.orderType === 'BUY' ? 'is-buy' : 'is-sell'">
+            {{ order.orderType === 'BUY' ? 'BUY' : 'SELL' }}
         </div>
     </div>
 </div>
@@ -32,7 +32,7 @@ export default {
   methods: {
     formatEther: (amount) => Number(ethers.utils.formatEther(amount)).toFixed(2),
     getTotalAmount: (order) => {
-      return (Number(order.totalAmount) * Number(order.price)).toFixed(2);
+      return (ethers.utils.formatEther(order.amount.mul(ethers.BigNumber.from(order.price))).toString());
     }
   }
 }

@@ -3,9 +3,6 @@
     <h3>{{buy ? "Buy Orders" : "Sell Orders"}}</h3>
     <div class="columns is-flex-mobile headers">
       <div class="column is-one-quarter">
-        Amount
-      </div>
-      <div class="column is-one-quarter">
         Rate (1 FBRC)
       </div>
       <div class="column is-one-quarter is-flex">
@@ -38,6 +35,10 @@ export default {
     orders: {
       type: Array,
     }
+  },
+  mounted() {
+    console.log("ORDERBOOK ORDERS");
+    console.log(this.orders);
   }
 }
 </script>

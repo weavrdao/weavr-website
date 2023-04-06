@@ -36,10 +36,22 @@
       Buy
     </button>
     <button
+      @click="approveDexRouterTradeToken"
+      class="_button order-button buy-button"
+      v-if="this.orderType === this.orderTypes.BUY">
+      Approve
+    </button>
+    <button
       @click="newSellOrder"
       class="_button order-button sell-button"
       v-else>
       Sell
+    </button>
+    <button
+      @click="approveDexRouterThreadToken"
+      class="_button order-button buy-button"
+      v-if="this.orderType === this.orderTypes.SELL">
+      Approve
     </button>
 </div>
 </template>
@@ -65,13 +77,14 @@ export default {
       orderType: orderTypes.buy,
       price: 0,
       quantity: 0,
-      assetId: this.$route.query.assetId || CONTRACTS.WEAVR
     }
   },
   methods: {
     ...mapActions({
       createBuyOrder: "createBuyOrder",
       createSellOrder: "createSellOrder",
+      approveDexRouterTradeToken: "approveDexRouterTradeToken",
+      approveDexRouterThreadToken: "approveDexRouterThreadToken",
     }),
     setOrderType(type) {
       this.orderType = type;
@@ -90,16 +103,23 @@ export default {
     },
     newBuyOrder: function() {
       this.createBuyOrder({
-        assetId: this.assetId,
+        assetId: this.$route.params.threadId,
         price: this.price,
         amount: this.quantity,
       })
     },
     newSellOrder: function() {
       this.createSellOrder({
-        assetId: this.assetId,
+        assetId: this.$route.params.threadId,
         price: this.price,
         amount: this.quantity,
+      })
+    },
+    approveDexRouter: function() {
+      console.log(`THREADID: ${this.$route.params.threadId}`);
+      console.dir(this.$route);
+      this.approveDexRouterTradeToken({
+        assetId: this.$route.params.threadId,
       })
     },
   },

@@ -43,6 +43,10 @@ class Market {
         }
         const proposals = await this.cacheClient.syncProposals(threads[i].id, true)
         threads[i].setProposals(proposals)
+
+        const orders = await this.cacheClient.syncOrders(threads[i].id);
+        console.log("ORDERS: ", orders);
+        threads[i].setOrders(orders);
       }
     } catch (e) {
       // no-op

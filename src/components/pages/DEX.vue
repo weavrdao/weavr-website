@@ -2,8 +2,8 @@
 <div class="container">
     <div class="columns reverse-columns">
         <div class="column is-three-fifths">
-          <OrderBook :assetId="assetId" :orders="getBuyOrders(orders)" :buy="true"/>
-          <OrderBook :assetId="assetId" :orders="getSellOrders(orders)" :buy="false"/>
+          <OrderBook :assetId="assetId" :orders="getBuyOrders(thread.orders)" :buy="true"/>
+          <OrderBook :assetId="assetId" :orders="getSellOrders(thread.orders)" :buy="false"/>
         </div>
         <div class="column">
             <OrderPlacer :orders="orders"/>
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import OrderPlacer from "../views/dex/OrderPlacer.vue";
 import OrderBook from "../views/dex/OrderBook.vue";
 import { CONTRACTS } from "../../services/constants";
@@ -28,36 +28,47 @@ export default {
   data() {
     return {
       orderBookMode: "buy",
-      assetId: this.$route.query.assetId || CONTRACTS.WEAVR,
+      assetId: this.$route.query.threadId || CONTRACTS.WEAVR,
     }
   },
   computed: {
     ...mapGetters({
-      orders: "assetMarketOrders"
+      threads: "threadById",
     }),
+    thread() {
+      console.log(this.threads);
+      console.log(this.threads.get(this.$route.params.threadId));
+      return this.threads.get(this.$route.params.threadId);
+    },
   },
   methods: {
-    ...mapActions({
-      fetchOrders: "fetchOrders",
-    }),
-    getBuyOrders: (orders) => (orders 
-      ? orders
-        .filter(o => o.type === "Buy")
-        .sort((o1, o2) => o1.price > o2.price)
-        .slice(0, 9)
-      : []),
-    getSellOrders: (orders) => (orders 
-      ? orders
-        .filter(o => o.type === "Sell")
-        .sort((o1, o2) => o1.price < o2.price)
-        .slice(0, 9)
-      : []),
+    getBuyOrders: (orders) => {
+      console.log("ORDERS IN ORDER METHOD")
+      console.log(orders);
+      const tempBuyOrders = (orders 
+        ? orders
+          .filter(o => o.orderType === "BUY")
+          .sort((o1, o2) => Number(o1.price) > Number(o2.price))
+          .slice(0, 9)
+        : [])
+
+      console.log(tempBuyOrders);
+
+      return tempBuyOrders;
+    },
+    getSellOrders: (orders) => {
+      const tempSellOrders = (orders 
+        ? orders
+          .filter(o => o.orderType === "SELL")
+          .sort((o1, o2) => Number(o1.price) < Number(o2.price))
+          .slice(0, 9)
+        : []);
+
+      console.log(tempSellOrders) ;
+
+      return tempSellOrders;
+    },
   },
-  mounted() {
-    this.fetchOrders({
-      assetId: this.assetId,
-    });
-  }
 }
 </script>
 
