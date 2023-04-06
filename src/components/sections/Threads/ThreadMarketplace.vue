@@ -1,8 +1,8 @@
 <template>
   <div class="has-text-white has-radius-lg">
-    <div class="cover-image-container">
-      <h3>Threads</h3>
-    </div>
+<!--    <div class="cover-image-container">-->
+<!--      <h3>Threads</h3>-->
+<!--    </div>-->
    <!-- <div class="columns p-6">
       <div class="column is-one-third">
         <div class="field">

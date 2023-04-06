@@ -10,20 +10,8 @@
         </li>
       </ul>
     </div>
-    <div :style="getCoverStyle()" class="cover-image mb-5">
-      <div class="information-container">
-        <div class="tag-container mb-2">
-          <span class="tag has-background-mediumBlue has-text-white">Residential</span>
-        </div>
-        <h3 class="has-text-white property-title mb-4">{{ thread.name }}</h3>
-        <Address :value="this.thread.id" />
-      </div>
-        <div class="weavr-icon-container">  
-          <img src="../../../assets/logo/new-logo.svg" alt="">
-        </div>
-    </div>
     <div class="box" v-if="isConnected">
-      {{getTreadBalance}}
+      {{fetchThreadTokenBalance}}
     </div>
     <router-view></router-view>
    
@@ -78,7 +66,7 @@ export default {
       const url = this.thread.imagesHashes
         ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${this.thread.imagesHashes[0]}`
         : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
-    
+
       return { "background-image": `linear-gradient(to left, rgba(22, 23, 30, 0), rgba(22, 23, 30, 1)), url(${url})`}
     },
 
