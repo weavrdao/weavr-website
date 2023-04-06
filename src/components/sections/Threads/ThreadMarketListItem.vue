@@ -3,9 +3,9 @@
     <div class="image-container is-rounded-lg">
       <img v-bind:src="getCoverImageIpfsUrl()" alt="">
     </div>
-    <div class="tag-container mb-2">
-      <span class="tag has-background-mediumBlue has-text-white">Residential</span>
-    </div>
+<!--    <div class="tag-container mb-2">-->
+<!--      <span class="tag has-background-mediumBlue has-text-white">Residential</span>-->
+<!--    </div>-->
     <div class="is-flex is-justify-content-space-between">
       <h3>{{ thread.name || 'Unnamed' }}</h3>
       <div class="ml-2 is-flex is-align-items-center">

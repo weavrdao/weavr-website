@@ -1,8 +1,8 @@
 <template>
   <div class="has-text-white has-radius-lg">
-    <div class="cover-image-container">
-      <h3>Needles</h3>
-    </div>
+<!--    <div class="cover-image-container">-->
+<!--      <h3>Needles</h3>-->
+<!--    </div>-->
     <div v-if="loading" class="is-flex is-justify-content-center" >
       <Loading :message="`Loading needles`" />
     </div>
