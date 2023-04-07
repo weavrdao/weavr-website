@@ -130,7 +130,7 @@ const actions = {
     );
     Promise.allSettled([symbol, balance]).then( res => {
       console.log("DATA TOKEN ::::: ", res)
-      const {symbol, balance} = res;
+      
       const walletState = new WalletState(
         address, 
         0, 

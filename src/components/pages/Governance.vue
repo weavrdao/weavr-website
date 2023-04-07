@@ -16,6 +16,14 @@
       </ul>
     </div>
 
+    <div class="my-3 is-flex is-justify-content-flex-end">
+      <div class="button is-primary" @click="refresh">
+        <span class="icon">
+           <unicon width="15" height="15" name="sync" fill="white"></unicon>
+        </span>
+        <span>Refresh</span>     
+      </div>
+    </div>
     
       <ProposalList
           v-if="isActiveProposals"
@@ -37,6 +45,7 @@ import { mapGetters, mapActions } from "vuex";
 import StackNavigationBar from "../layout/navigation/StackNavigationBar.vue";
 import ProposalList from "../proposals/ProposalList.vue";
 import NewProposalSelector from "../sections/NewProposalSelector.vue";
+import {CONTRACTS }from "@/services/constants"
 // import RefreshButton from "../sections/RefreshButton.vue";
 
 export default {
@@ -47,13 +56,11 @@ export default {
     NewProposalSelector,
     // RefreshButton
   },
+  
   computed: {
     ...mapGetters({
-      assetMap: "assetsById",
-      assetProposalMap: "assetProposals",
-      ethBalance: "userEthBalance",
+      proposalsPerAsset: "proposalsPerAsset",
       walletAddress: "userWalletAddress",
-      assetPrices: "bestAssetPrices",
     }),
 
     assetId() {
@@ -62,11 +69,11 @@ export default {
     },
 
     proposals() {
-      return this.assetProposalMap;
+      return this.proposalsPerAsset.get(this.assetId.toLowerCase());
     },
 
     activeProposals() {
-      return this.assetProposalMap.filter((proposal) => {
+      return this.proposals.filter((proposal) => {
         const endTime = new Date(proposal.endTimestamp * 1000);
         const currentTime = new Date();
         return (currentTime < endTime) && proposal.state != "Cancelled";
@@ -74,14 +81,14 @@ export default {
     },
 
     pastProposals() {
-      return this.assetProposalMap.filter((proposal) => {
+      return this.proposals.filter((proposal) => {
         const endTime = new Date(proposal.endTimestamp * 1000);
         const currentTime = new Date();
         return (currentTime > endTime );
       });
     },
     cancelledProposals() {
-      return this.assetProposalMap.filter((proposal) => {
+      return this.proposals.filter((proposal) => {
         console.log(proposal.state)
         return proposal.state == "Cancelled";
       });
@@ -106,9 +113,6 @@ export default {
     isTabActive(tabName) {
       return this.$route.fullPath.includes(tabName)
     },
-    createProposal() {
-      this.$router.push(`/dao/${this.assetId}/paperProposal`);
-    },
   },
   data() {
     return {
@@ -116,5 +120,7 @@ export default {
       isActiveProposals: true
     };
   },
+ 
+  
 };
 </script>

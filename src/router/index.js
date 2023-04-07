@@ -56,17 +56,21 @@ async function threadDataHelper(to, options = {withProposals: false}) {
       await store.dispatch("refreshProposalsDataForAsset", {assetId: to.params.threadId})
     }
     store.dispatch("setLoadingState", {isLoading: false, message: ""})
-    return true
+    
   }else if(store.getters.allThreads.find( t => t.id.toLowerCase() === to.params.threadId)) {
     if(withProposals ) {
       store.dispatch("setLoadingState", {isLoading: true, message: "Loading Thread Proposals"})
       await store.dispatch("refreshProposalsDataForAsset", {assetId: to.params.threadId})
       store.dispatch("setLoadingState", {isLoading: false, message: ""})
     }
-    return true
-  }else {
-    return true
+    
   }
+  if(to.params.threadId && store.getters.isConnected){
+    const _token = store.getters.allThreads.find( t => t.id == to.params.threadId).erc20.id
+    await store.dispatch("updateWalletToken", {tokenAddress: _token})
+  }
+  return true
+  
 }
 
 const router = new createRouter({
@@ -290,15 +294,20 @@ const router = new createRouter({
       meta: { requiresAuth: false },
       beforeEnter: async () => {
         const prop =  store.getters.proposalsPerAsset;
-        if (prop.length < 1) {
+        // if (prop.length < 1) {
           store.dispatch("setLoadingState", {isLoading: true, message: "Loading Proposals"})
           await store.dispatch("refreshProposalsDataForAsset", {
             assetId: CONTRACTS.WEAVR,
           });
           store.dispatch("setLoadingState", {isLoading: false, message: ""})
-        }
+        // }
         // clear toast
-        return true;
+        if(store.getters.isConnected) {
+          await store.dispatch("updateWalletToken", {tokenAddress: CONTRACTS.TOKEN_ADDRESS}).then( () => {
+            return true;
+          })
+        }
+        
       },
       children: [
         {
@@ -362,14 +371,15 @@ const router = new createRouter({
           path: "proposal/:proposalId",
           component: Modal,
           props: { component: SingleProposal },
-          beforeEnter: async () => {
+          beforeEnter: async (from) => {
             const prop = await store.getters.proposalsPerAsset;
-            if (prop.length < 1) {
+            // if (prop.length < 1 || ) {
               store.dispatch("refreshProposalsDataForAsset", {
                 assetId: CONTRACTS.WEAVR,
               });
-            }
+            // }
             // clear toast
+            store.getters.isConnected ? store.dispatch("updateWalletToken", {tokenAddress: CONTRACTS.TOKEN_ADDRESS}): null
             return true;
           }
         },
@@ -389,6 +399,18 @@ const router = new createRouter({
   ],
 });
 
+
+
+// router.afterEach(async (to) => {
+//   const token = to.params.threadId ? 
+//     (store.getters.allThreads.find( t => t.id.toLowerCase() === to.params.threadId)).erc20.id :
+//     CONTRACTS.WEAVR
+//     console.log("=============================================", store.getters.allThreads.find( t => t.id.toLowerCase() === to.params.threadId))
+//   if(store.getters.isConnected && (to.params.assetId || to.params.threadId)) {
+//     await store.dispatch("updateWalletToken", {tokenAddress: token})
+//   }
+//   return true
+// })
 
 router.beforeEach(async (to) => {
   /**

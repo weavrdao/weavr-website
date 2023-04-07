@@ -18,9 +18,10 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import "vue3-carousel/dist/carousel.css"
-
+import store from "@/store";
 export default {
   name: "SingleThread",
+  
   data() {
     return {
       threadId: this.$route.params.threadId.toLowerCase(),
@@ -31,7 +32,8 @@ export default {
   computed: {
     ...mapGetters({
       threads: "allThreads",
-      userWalletAddress:"userWalletAddress"
+      userWalletAddress:"userWalletAddress",
+      isConnected: "isConnected"
     }),
     thread() {
       console.log(this.threads)
@@ -71,11 +73,6 @@ export default {
       return { "background-image": `linear-gradient(to left, rgba(22, 23, 30, 0), rgba(22, 23, 30, 1)), url(${url})`}
     },
 
-  },
-  mounted() {
-    const _token = this.thread.erc20.id;
-    console.log("TOKEN TO UPDATE: ", _token);
-    this.updateWalletToken({tokenAddress: _token})
   },
 }
 </script>
