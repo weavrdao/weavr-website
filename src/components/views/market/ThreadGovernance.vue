@@ -66,7 +66,7 @@ export default {
       return this.proposalsPerAsset.get(this.$route.params['threadId'].toLowerCase())
     },
     activeProposals() {
-      return this.proposals.filter((proposal) => {
+      return this.proposalsPerAsset.get(this.$route.params['threadId'].toLowerCase()).filter((proposal) => {
         const endTime = new Date(proposal.endTimestamp * 1000);
         const currentTime = new Date();
         return (currentTime < endTime) && proposal.state != "Cancelled";
@@ -74,7 +74,7 @@ export default {
     },
 
     pastProposals() {
-      return this.proposals.filter((proposal) => {
+      return this.proposalsPerAsset.get(this.$route.params['threadId'].toLowerCase()).filter((proposal) => {
         const endTime = new Date(proposal.endTimestamp * 1000);
         const currentTime = new Date();
         return (currentTime > endTime );
@@ -99,9 +99,6 @@ export default {
     show(list) {
         this.showPastProposals = list ? true : false
     }
-  },
-  mounted() {
-    console.log(this.thread);
   }
 }
 </script>

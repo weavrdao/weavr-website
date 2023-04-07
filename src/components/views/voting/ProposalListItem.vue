@@ -99,7 +99,8 @@ export default {
     async openProposal() {
       console.log("___________________________ PROPOSAL ________________________")
       console.log(this.proposal,  this.$route.params.threadId);
-      await this.getProposals({assetId: this.$route.params.threadId, isThread: true})
+      const assetId = this.$route.params.threadId? this.$route.params.threadId : this.$route.params.assetId
+      await this.getProposals({assetId: assetId, isThread: true})
       this.$router.push(this.$route.path+`/proposal/${this.proposal.id}`);
     },
   },

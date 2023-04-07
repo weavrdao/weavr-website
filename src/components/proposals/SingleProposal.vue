@@ -121,7 +121,7 @@ export default {
   data () {
     return {
       proposalId: Number(this.$route.params.proposalId),
-      assetId: this.$route.params.threadId? this.$route.params.threadId : this.$route.params.proposalId,
+      assetId: this.$route.params.threadId? this.$route.params.threadId : this.$route.params.assetId,
       simluation_results: [],
       voteAmount: 0,
       timeRemainingString: "",
@@ -130,7 +130,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      proposals: "assetProposals",
+      proposals: "proposalsPerAsset",
       address: "userWalletAddress",
       balance: "userTokenBalance",
       quorum: "quorum",
@@ -140,8 +140,10 @@ export default {
       return this.quorum < this.participation
     },
     proposal() {
+      console.log(this.assetId, this.$route.params.assetId);
+      console.log(this.proposals);
       return this.proposals
-        .find(p => p.id === this.proposalId);
+        .get(this.assetId.toLowerCase()).find(p => p.id == this.proposalId);
     },
     typeStylingData() {
       return getProposalTypeStyling(this.proposal.type);
