@@ -64,8 +64,8 @@ export default {
     }),
 
     assetId() {
-      this.$route.fullPath.includes("marketplace") ? this.$route.params.threadId : console.log("WEAVR")
-      return this.$route.params.assetId != "marketplace" ? this.$route.params.assetId : this.$route.params.threadId
+      this.$route.params.threadId ? this.$route.params.threadId : console.log("WEAVR")
+      return this.$route.params.assetId? this.$route.params.assetId : this.$route.params.threadId
     },
 
     proposals() {
@@ -102,7 +102,7 @@ export default {
       
     }),
     refresh() {
-      this.refreshProposals({ assetId: this.assetId, forceRefresh: true });    
+      this.refreshProposals({ assetId: this.$route, forceRefresh: true });    
     },
     goBack() {
       this.$router.back();

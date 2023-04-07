@@ -72,8 +72,13 @@ export default {
 
       return { "background-image": `linear-gradient(to left, rgba(22, 23, 30, 0), rgba(22, 23, 30, 1)), url(${url})`}
     },
-
   },
+  mounted() {
+    this.setLoadingState({isLoading: true, message: "Loading Thread Proposals"})
+    this.refreshProposals({assetId: this.threadId, forceRefresh: true}).then( () => {
+      this.setLoadingState({isLoading: false, message: ""})
+    })
+  }
 }
 </script>
   <style scoped lang="scss">

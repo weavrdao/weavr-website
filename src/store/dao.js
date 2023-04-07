@@ -112,6 +112,7 @@ const actions = {
     Promise.resolve([status]).then((status) => {
       if (status) {
         toast.success("Transaction confirmed!");
+        this.refreshProposalsDataForAsset({assetId: assetAddr, forceRefresh: true})
       } else {
         toast.error("Transaction failed. See details in MetaMask.");
         console.log("Transaction failed. See details in MetaMask.");
