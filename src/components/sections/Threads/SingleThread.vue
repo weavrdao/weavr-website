@@ -10,9 +10,7 @@
         </li>
       </ul>
     </div>
-    <div class="box" v-if="isConnected">
-      {{fetchThreadTokenBalance}}
-    </div>
+    
     <router-view></router-view>
    
   </div>
@@ -20,8 +18,10 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import "vue3-carousel/dist/carousel.css"
+import store from "@/store";
 export default {
   name: "SingleThread",
+  
   data() {
     return {
       threadId: this.$route.params.threadId.toLowerCase(),
@@ -32,6 +32,8 @@ export default {
   computed: {
     ...mapGetters({
       threads: "allThreads",
+      userWalletAddress:"userWalletAddress",
+      isConnected: "isConnected"
     }),
     thread() {
       console.log(this.threads)
@@ -43,6 +45,7 @@ export default {
     ...mapActions({
       fetchThreadTokenData: "fetchThreadTokenData",
       fetchThreadTokenBalance: "fetchThreadTokenBalance",
+      updateWalletToken: "updateWalletToken",
       refreshProposals: "refreshProposalsDataForAsset",
       setLoadingState: "setLoadingState"
     }),
@@ -69,8 +72,13 @@ export default {
 
       return { "background-image": `linear-gradient(to left, rgba(22, 23, 30, 0), rgba(22, 23, 30, 1)), url(${url})`}
     },
-
   },
+  mounted() {
+    this.setLoadingState({isLoading: true, message: "Loading Thread Proposals"})
+    this.refreshProposals({assetId: this.threadId, forceRefresh: true}).then( () => {
+      this.setLoadingState({isLoading: false, message: ""})
+    })
+  }
 }
 </script>
   <style scoped lang="scss">

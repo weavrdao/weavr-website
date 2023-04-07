@@ -85,7 +85,7 @@ class InfuraEventCacheClient {
 
   getProposals(events) {
     let proposals = {}
-    events["Proposal"].forEach(obj => {
+    events["Proposal"].map(obj => {
       const {event, timestamp} = obj
       const id = event.id.toNumber()
       proposals[id] =  new BaseProposal(id, event.creator, event.info, event.supermajority, timestamp)
@@ -97,19 +97,21 @@ class InfuraEventCacheClient {
 
     for (const proposalTypeName of Object.keys(this.proposalTypeSwitch)) {
       let proposal_events = events[proposalTypeName]
-      proposal_events.forEach(obj => {
-        const {event, timestamp} = obj
-        const id = event.id.toNumber()
-        const prop = proposals[id]
-        prop.type = this.proposalTypeSwitch[proposalTypeName].type
-        proposals[id] = new this.proposalTypeSwitch[proposalTypeName].cls(prop, event)
-      })
+      if(proposal_events){
+        proposal_events.forEach(obj => {
+          const {event, timestamp} = obj
+          const id = event.id.toNumber()
+          const prop = proposals[id]
+          prop.type = this.proposalTypeSwitch[proposalTypeName].type
+          proposals[id] = new this.proposalTypeSwitch[proposalTypeName].cls(prop, event)
+        })
+      }
     }
     return proposals
   }
 
   processProposalStatusChanges(events, proposals) {
-    events["ProposalStateChange"].forEach(obj => {
+    events["ProposalStateChange"].map(obj => {
       const {event, timestamp} = obj
       const id = event.id.toNumber()
       if (id in proposals) {

@@ -105,6 +105,9 @@ export default {
       vouches: "vouchesPerSigner",
       guestCookie: "guestCookie"
     }),
+    formatBalance(digits) {
+      return new Number(this.balance).toFixed(digits)
+    },
     isConnected() {
       return ethers.utils.isAddress(this.address)
     },

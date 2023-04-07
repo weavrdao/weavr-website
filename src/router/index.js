@@ -53,18 +53,26 @@ async function threadDataHelper(to, options = {withProposals: false}) {
     await store.dispatch("refreshThreads")
     if(withProposals) {
       store.dispatch("setLoadingState", {isLoading: true, message: "Loading Thread Proposals"})
-      await store.dispatch("refreshProposalsDataForAsset", {assetId: to.params.threadId})
+      await store.dispatch("refreshProposalsDataForAsset", {assetId: to.params.threadId, forceRefresh: true})
     }
     store.dispatch("setLoadingState", {isLoading: false, message: ""})
-    return true
-  }else if(!store.getters.allThreads.find( t => t.id.toLowerCase() === to.params.threadId)) {
-    if(withProposals) {
-      await store.dispatch("refreshProposalsDataForAsset", {assetId: to.params.threadId})
+    
+  }else if(store.getters.allThreads.find( t => t.id.toLowerCase() === to.params.threadId)) {
+    if(withProposals ) {
+      store.dispatch("setLoadingState", {isLoading: true, message: "Loading Thread Proposals"})
+      await store.dispatch("refreshProposalsDataForAsset", {assetId: to.params.threadId, forceRefresh: true}).then( () => {
+        store.dispatch("setLoadingState", {isLoading: false, message: ""})
+      })
+      
     }
-    return true
-  }else {
-    return true
+    
   }
+  if(to.params.threadId && store.getters.isConnected){
+    const _token = store.getters.allThreads.find( t => t.id == to.params.threadId).erc20.id
+    await store.dispatch("updateWalletToken", {tokenAddress: _token})
+  }
+  return true
+  
 }
 
 const router = new createRouter({
@@ -288,15 +296,20 @@ const router = new createRouter({
       meta: { requiresAuth: false },
       beforeEnter: async () => {
         const prop =  store.getters.proposalsPerAsset;
-        if (prop.length < 1) {
+        // if (prop.length < 1) {
           store.dispatch("setLoadingState", {isLoading: true, message: "Loading Proposals"})
           await store.dispatch("refreshProposalsDataForAsset", {
             assetId: CONTRACTS.WEAVR,
           });
           store.dispatch("setLoadingState", {isLoading: false, message: ""})
-        }
+        // }
         // clear toast
-        return true;
+        if(store.getters.isConnected) {
+          await store.dispatch("updateWalletToken", {tokenAddress: CONTRACTS.TOKEN_ADDRESS}).then( () => {
+            return true;
+          })
+        }
+        
       },
       children: [
         {
@@ -360,14 +373,15 @@ const router = new createRouter({
           path: "proposal/:proposalId",
           component: Modal,
           props: { component: SingleProposal },
-          beforeEnter: async () => {
+          beforeEnter: async (from) => {
             const prop = await store.getters.proposalsPerAsset;
-            if (prop.length < 1) {
+            // if (prop.length < 1 || ) {
               store.dispatch("refreshProposalsDataForAsset", {
                 assetId: CONTRACTS.WEAVR,
               });
-            }
+            // }
             // clear toast
+            store.getters.isConnected ? store.dispatch("updateWalletToken", {tokenAddress: CONTRACTS.TOKEN_ADDRESS}): null
             return true;
           }
         },
@@ -387,6 +401,18 @@ const router = new createRouter({
   ],
 });
 
+
+
+// router.afterEach(async (to) => {
+//   const token = to.params.threadId ? 
+//     (store.getters.allThreads.find( t => t.id.toLowerCase() === to.params.threadId)).erc20.id :
+//     CONTRACTS.WEAVR
+//     console.log("=============================================", store.getters.allThreads.find( t => t.id.toLowerCase() === to.params.threadId))
+//   if(store.getters.isConnected && (to.params.assetId || to.params.threadId)) {
+//     await store.dispatch("updateWalletToken", {tokenAddress: token})
+//   }
+//   return true
+// })
 
 router.beforeEach(async (to) => {
   /**
@@ -415,66 +441,24 @@ router.beforeEach(async (to) => {
     toast.error("The route you are trying to access is currently locked", { position: "top"});
     return false
   }
-  if( to.meta.requiresAuth ) {
+  
     // not connected
-    if( !isConnected ) {
-      // cookie
-      if (ethers.utils.isAddress(cookie.wallet)) {
-        if (cookie.wallet === GUEST) {
-          return true
-        }
-        // - autoconnect and navigate
-        const toast = createToaster({})
-        await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
-        await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
-          if (!isWhitelisted) {
-            // not whitelisted
-            return  { name: "whitelist"}
-          }
-          else if ( isWhitelisted ) {
-            // whitelisted
-            return { path: to.fullPath}
-          }
-        })
+    // cookie
+    if (!isConnected && ethers.utils.isAddress(cookie.wallet)) {
+      console.log("____________________________ AUTOCONNECT__________________");
+      // - autoconnect and navigate
+      const toast = createToaster({})
+      await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
+      await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
+      
+          // whitelisted
+          return { path: to.fullPath}
+        
+      })
 
-      }
-      // !cookie
-      else if (!ethers.utils.isAddress(cookie.wallet) || ((cookie.wallet != address) && !isWhitelisted ) ) {
-        // - go to walletconnect
-        return {name: "whitelist" }
-      }
     }
-    // connected
-    if (isConnected && isWhitelisted) {
-      // -navigate to route
-      return true
-    }else if (isConnected && !isWhitelisted) {
-      return { name: "whitelist"}
-    }
-  }
-  // to.whitelist
-  if( to.path === "whitelist" ) {
-    // - navigating to whitelist and set vars
-  }
-
-
-  // from.whitelist
-  // if (to.fullPath === "/dao/"+CONTRACTS.WEAVR ) {
-  //   // - navigate path and reset vars
-  //   if(cookie.wallet != address) {
-  //     createToaster({position: "top", duration: 4000 }).info(
-  //       "You are visiting the website with a non whitelisted address!! [only read mode]. " +
-  //       "Please switch to your whitelisted wallet " + cookie.wallet)
-  //     setInterval(()=>{
-  //     }, 4000)
-  //   }
-  //   console.log("Navigate to WEAVR____GOV______________\n\n\n");
-  //   return {path: to.fullPath}
-  // }
-  // no auth
-
-  // - navigate to path
-  console.log("no auth required");
+     
+  console.log("no wallet sync!");
   return true
 })
 

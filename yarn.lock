@@ -11203,6 +11203,11 @@ vue@^3.2.13, vue@^3.2.25:
     "@vue/server-renderer" "3.2.29"
     "@vue/shared" "3.2.29"
 
+vuex-plugin-persistedstate@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/vuex-plugin-persistedstate/-/vuex-plugin-persistedstate-1.0.6.tgz#286628c4e75a9e8c862b128c3a07a80851024802"
+  integrity sha512-LSWiePK4L4JjFi04pAV0kYqQ3DhNLwdy8OU3+9+Mn+NjQY3ZY1guhZn9k4ESRON7JAmDSEEOR1gOU9MpmqxXWg==
+
 vuex-router-sync@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/vuex-router-sync/-/vuex-router-sync-5.0.0.tgz#1a225c17a1dd9e2f74af0a1b2c62072e9492b305"

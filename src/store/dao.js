@@ -16,7 +16,7 @@ function state() {
     platform: {
       assets: [],
       quorum: 0,
-      proposals: [], // new Map()
+      proposals: new Map()
     },
   };
 }
@@ -52,14 +52,14 @@ const getters = {
   },
 
 
-  assetProposals(state) {
-    return state.platform.proposals.filter((proposal) => {
-      const isBlacklisted = blacklist.addresses.some((address) => {
-        return address.toLowerCase() === proposal.creator.toLowerCase();
-      });
-      return !isBlacklisted;
-    });
-  },
+  // assetProposals(state) {
+  //   return state.platform.proposals.filter((proposal) => {
+  //     const isBlacklisted = blacklist.addresses.some((address) => {
+  //       return address.toLowerCase() === proposal.creator.toLowerCase();
+  //     });
+  //     return !isBlacklisted;
+  //   });
+  // },
 
   proposalsById(state) {
     const proposalsMap = new Map();
@@ -81,12 +81,13 @@ const actions = {
 
   async refreshProposalsDataForAsset(context, params) {
     // NOTE (bill) Quick fix to allow loading from child paths, better solutions available
-    if (context.getters.assetProposals.length > 1 && !params.forceRefresh)
-      return false;
     let assetId = params.assetId.toLowerCase();
+    if (context.getters.proposalsPerAsset.get(assetId) && !params.forceRefresh)
+      return false;
+    
     const {isThread} = params;
     let assetProposals = await dao.getProposalsForAsset(assetId, isThread, localStorage);
-    console.log(context.getters.assetProposals)
+    
     context.commit("setProposalsForAsset", {
       assetId: assetId.toLowerCase(),
       proposals: assetProposals,
@@ -111,6 +112,7 @@ const actions = {
     Promise.resolve([status]).then((status) => {
       if (status) {
         toast.success("Transaction confirmed!");
+        this.refreshProposalsDataForAsset({assetId: assetAddr, forceRefresh: true})
       } else {
         toast.error("Transaction failed. See details in MetaMask.");
         console.log("Transaction failed. See details in MetaMask.");
@@ -536,8 +538,8 @@ const mutations = {
     state.platform.assets = assets;
   },
 
-  setProposalsForAsset(state, {proposals}) {
-    state.platform.proposals = proposals;
+  setProposalsForAsset(state, {assetId, proposals}) {
+    state.platform.proposals.set(assetId, proposals);
   },
 
   setThreads(state, assets) {
