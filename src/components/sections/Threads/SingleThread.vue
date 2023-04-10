@@ -8,6 +8,9 @@
         <li :class="[ isTabActive('governance') ? 'is-active' : '' ]">
           <a disabled="true" aria-disabled="true" v-on:click="navigateTo('governance')">Governance</a>
         </li>
+        <li :class="[ isTabActive('exchange') ? 'is-active' : '' ]">
+          <a disabled="true" aria-disabled="true" v-on:click="navigateTo('exchange')">Exchange</a>
+        </li>
       </ul>
     </div>
     

@@ -16,6 +16,7 @@ import TermsPage from "@/components/pages/TermsPage.vue"
 import Governance from "@/components/pages/Governance.vue";
 import Marketplace from "@/components/pages/Marketplace";
 import Dashboard from "@/components/pages/Dashboard";
+import DEX from "@/components/pages/DEX.vue";
 import NeedlesMarketplace from "@/components/sections/Needles/NeedleMarketplace.vue";
 import SingleNeedle from "@/components/sections/Needles/SingleNeedle.vue";
 import ThreadsMarketplace from "@/components/sections/Threads/ThreadMarketplace.vue";
@@ -272,7 +273,12 @@ const router = new createRouter({
                   },
                 },
               ]
-            }
+            },
+            {
+              path: "exchange",
+              name: "exchange",
+              component: DEX,
+            },
           ]
         },
         {

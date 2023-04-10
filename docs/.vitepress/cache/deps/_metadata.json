@@ -1,0 +1,23 @@
+{
+  "hash": "b6eedaf0",
+  "browserHash": "c470724b",
+  "optimized": {
+    "vue": {
+      "src": "../../../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
+      "file": "vue.js",
+      "fileHash": "b5ae9a86",
+      "needsInterop": false
+    },
+    "moment": {
+      "src": "../../../../node_modules/moment/dist/moment.js",
+      "file": "moment.js",
+      "fileHash": "99dc2b94",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "chunk-WC5NP67Y": {
+      "file": "chunk-WC5NP67Y.js"
+    }
+  }
+}
