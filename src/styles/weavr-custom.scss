@@ -3,20 +3,21 @@
 @import "../../node_modules/bulma/sass/utilities/initial-variables.sass";
 @import "../../node_modules/bulma/sass/utilities/functions";
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&family=Space+Grotesk&display=swap');@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&family=Space+Grotesk&display=swap');
 
 $family-sans-serif: "Poppins Sans", sans-serif;
 
 // $family-sans: "Poppins", sans ;
-@font-face {
-  font-family: $family-sans-serif;
+// @font-face {
+//   font-family: $family-sans-serif;
 
-  src: "../assets/Poppins-Regular.ttf" format("truetype");
-}
+//   src: "@/assets/fonts/Poppins-Regular.ttf" format("truetype");
+// }
 
-@font-face {
-  font-family: "Space Grotesk", sans-serif;
-  src: "../assets/SpaceGrotesk-Regular.ttf" format("truetype");
-}
+// @font-face {
+//   font-family: "Space Grotesk", sans-serif;
+//   src: "@/assets/fonts/SpaceGrotesk-Regular.ttf" format("truetype");
+// }
 //####################################
 //#          FRABRIC THEME           #
 //####################################
@@ -225,6 +226,10 @@ $colors: map-merge($colors, $addColors);
   &.is-extra-large {
     font-size: 4rem;
   }
+}
+
+.subtitle {
+  font-size: "Poppins", sans !important;
 }
 
 .border-lightGray {
