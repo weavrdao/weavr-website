@@ -230,6 +230,10 @@ $colors: map-merge($colors, $addColors);
 
 .subtitle {
   font-size: "Poppins", sans !important;
+
+  &.is-3 {
+    font-size: 2rem;
+  }
 }
 
 .border-lightGray {
