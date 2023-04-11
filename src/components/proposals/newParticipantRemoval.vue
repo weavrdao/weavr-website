@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      createProposal: "createParticipantRemovalProposal",
+      createProposal: "createProposal",
     }),
     togglePreview() {
       this.title = `${this.address} to be removed from Weavr DAO`
@@ -110,6 +110,7 @@ export default {
       }
       this.$emit("submited");
       const props = {
+        pType: "ParticipantRemoval",
         assetId: this.assetId,
         participant: this.address,
         removalFee: this.removalFee,

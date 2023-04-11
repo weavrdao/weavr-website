@@ -7,6 +7,41 @@ import {CONTRACTS, NETWORK} from "../services/constants";
 import {ProposalTypes} from "@/models/common";
 import blacklist from "@/blacklist.json";
 
+function recoverSignerFromTypedData(signature, params, from) {
+  console.log("RECOVERY______________", signature, params, from);
+  const domainSeparator = ethers.utils.keccak256(
+    ethers.utils.defaultAbiCoder.encode(
+      ['bytes32', 'bytes32', 'bytes32', 'uint256', 'address'],
+      [
+        ethers.utils.id('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)'),
+        ethers.utils.id(params.domain.name),
+        ethers.utils.id(params.domain.version),
+        params.domain.chainId,
+        params.domain.verifyingContract,
+      ]
+    )
+  );
+
+  const typeHash = ethers.utils.id('Vouch(address participant)');
+  const valueHash = ethers.utils.keccak256(
+    ethers.utils.defaultAbiCoder.encode(
+      ['bytes32', 'address'],
+      [typeHash, params.message.participant]
+    )
+  );
+
+  const digest = ethers.utils.keccak256(
+    ethers.utils.defaultAbiCoder.encode(
+      ['bytes1', 'bytes1', 'bytes32', 'bytes32'],
+      ['0x19', '0x01', domainSeparator, valueHash]
+    )
+  );
+
+  const recoveredAddress = ethers.utils.recoverAddress(digest, signature);
+  console.log('Recovered address:', recoveredAddress);
+  console.log('Signer address:', from);
+  console.log('Addresses match:', recoveredAddress.toLowerCase() === from.toLowerCase());
+}
 
 const wallet = ServiceProvider.wallet();
 const dao = ServiceProvider.dao();
@@ -79,6 +114,7 @@ const getters = {
 
 const actions = {
   async createProposal(context, params) {
+    console.log("PROPOSAL CREATION");
     const {pType} = params
     const typeToFunction = `create${pType}Proposal`
     const toast = params.$toast || createToaster({});
@@ -99,7 +135,6 @@ const actions = {
     });
   },
   async refreshProposalsDataForAsset(context, params) {
-    // NOTE (bill) Quick fix to allow loading from child paths, better solutions available
     let assetId = params.assetId.toLowerCase();
     if (context.getters.proposalsPerAsset.get(assetId) && !params.forceRefresh)
       return false;
@@ -186,7 +221,7 @@ const actions = {
       description,
       forumLink,
     } = props;
-    const tokenAddress = await dao.getTokenAddress(CONTRACTS.WEAVR);
+    const tokenAddress = await dao.getTokenAddress(assetId);
     const atomicAmount = ethers.utils.parseEther(String(amount));
     return dao.createTokenActionProposal(
       assetId,
@@ -241,9 +276,7 @@ const actions = {
 
   async vote(context, props) {
     const toast = params.$toast || createToaster({});
-
     const {assetAddress, proposalId, votes} = props;
-
     const status = dao.vote(
       assetAddress || CONTRACTS.WEAVR,
       proposalId,
@@ -254,10 +287,7 @@ const actions = {
         duration: 2000,
         position: "top",
       });
-      context.dispatch("refreshProposalsDataForAsset", {
-        assetId: params.assetId,
-      });
-      // router.push("/" + DAO + "/" + params.assetId);
+      return true;
     } else {
       toast.error("Transaction failed. See details in MetaMask.");
       console.log("Transaction failed. See details in MetaMask.");
@@ -267,24 +297,21 @@ const actions = {
 
   async withdrawProposal(context, props) {
     const toast = params.$toast || createToaster({});
-
     const {assetAddress, proposalId} = props;
-
     const status = await dao.withdraw(
       assetAddress || CONTRACTS.WEAVR,
       proposalId,
     );
-
     if (status) {
       toast.success("Transaction confirmed...", {
         duration: 2000,
         position: "top",
       });
+      return true;
     } else {
       toast.error("Transaction failed. See details in MetaMask.");
       console.log("Transaction failed. See details in MetaMask.");
     }
-    console.log(status);
   },
 
   async queueProposal(context, props) {
@@ -301,50 +328,55 @@ const actions = {
     console.log(status)
   },
 
-  async vouchParticipant(context, props) {
+  async vouchParticipant(context, params) {
     const toast = params.$toast || createToaster({});
-    const {customDomain, participant} = props;
-
-    const domain = customDomain || {
+    const {participant} = params;
+    const domain = {
       name: "Weavr Protocol",
       version: "1",
       chainId: NETWORK.id,
       verifyingContract: CONTRACTS.WEAVR
     };
     const types = {
+      EIP712Domain: [
+        { name: 'name', type: 'string' },
+        { name: 'version', type: 'string' },
+        { name: 'chainId', type: 'uint256' },
+        { name: 'verifyingContract', type: 'address' },
+      ],
       Vouch: [{type: "address", name: "participant"}],
     };
-    const data = {
+    const message = {
       participant: participant
     };
-
+    const _params = {
+      domain: domain,
+      types: types,
+      primaryType: "Vouch",
+      message: message
+    }
     toast.info("Waiting for signature..", {position: "top"});
-
-    const signatures = await wallet.getSignature(domain, types, data);
-    Promise.all([signatures])
-      .then(() => {
-        // console.log(signature[0]);
-        const expectedSignerAddress = context.state.user.wallet.address;
-        const recoveredAddress = ethers.utils.verifyTypedData(domain, types, data, signatures[0]);
-        console.log("Signer Address CHECK______\n", recoveredAddress, "\n", expectedSignerAddress);
-        console.log(recoveredAddress.toLowerCase() === expectedSignerAddress.toLowerCase());
-      });
-    const signature = signatures[0]
-    console.log(signature);
-    const status = await dao.vouch(participant, signature);
-
+    let fixedSignature = {}
+    const signature = await wallet.getSignature(_params).then((signatures) => {
+      const sig = ethers.utils.splitSignature(signatures[0]);
+      const fixedV = sig.v + (2 * _params.domain.chainId) + 36;
+      fixedSignature = {
+        ...sig,
+        v: fixedV,
+      };
+      return signatures[0]
+    });
+    const status = await dao.vouch(participant, ethers.utils.joinSignature(fixedSignature));
     if (status) {
       toast.success("Transaction confirmed...", {
         duration: 2000,
         position: "top",
       });
-      context.dispatch("refreshProposalsDataForAsset", {
-        assetId: params.assetId,
-      });
-      // router.push("/" + DAO + "/" + params.assetId);
+      return true
     } else {
       toast.error("Transaction failed. See details in MetaMask.");
       console.log("Transaction failed. See details in MetaMask.");
+      return false
     }
   },
 

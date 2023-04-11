@@ -123,7 +123,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      createTokenActionProposal: "createTokenActionProposal",
+      createProposal: "createProposal",
     }),
     async publish() {
       if (!ethers.utils.isAddress(this.targetAddress)) {
@@ -132,7 +132,8 @@ export default {
         });
         return;
       }
-      await this.createTokenActionProposal({
+      await this.createProposal({
+        pType: "TokenAction",
         assetId: this.assetId,
         mint: this.mintTypes[this.mintType],
         target: this.price === 0 ? this.targetAddress : this.assetId,

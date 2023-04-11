@@ -9,33 +9,35 @@
       </button>
     </div>
   <div class="proposal-selector p-5" v-if="showSelector">
-   <div class="columns"> <div class="column is-full is-flex is-justify-content-flex-end	is-full">
-    <div class="is-clickable" @click="toggleSelector">
-      <unicon name="times-circle" fill="#d85a50" width="24" height="24"></unicon>
+    <div class="columns"> 
+    <div class="column is-hidden-mobile is-11">
+      <label class="title is-size-3 p-3" for="proposal-selector">Select a Proposal</label>
     </div>
-      
+    <div class="column is-1 p-0">
+      <div class="is-clickable is-pulled-right p-0" @click="toggleSelector">
+        <unicon name="times-circle" fill="#d85a50" width="24" height="24"></unicon>
+      </div>
     </div>
   </div>
-      <div class="columns is-flex">
-        <div class="column is-half is-three-quaters-widescreen">
-          <!-- <label class="label" for="proposal-selector">Type of Proposal</label> -->
-          <div class="field">
-            <p class="control">
-              <span class="select is-medium is-primary is-hovered has-text-white">
-                <select class=" has-text-white " v-model="selectedAction">
-                <option v-for="option in actionTypes" :value="option.id" v-bind:key="option.id">
-                  {{ option.name }}
-                </option>
-              </select>
-              </span>
-            </p>
-          </div>
+    <div class="columns">
+      <div class="column is-half is-three-quaters-widescreen is-full-mobile">
+        <div class="field">
+          <p class="control">
+            <span class="select is-medium is-primary is-hovered has-text-white">
+              <select class=" has-text-white " v-model="selectedAction">
+              <option v-for="option in actionTypes" :value="option.id" v-bind:key="option.id">
+                {{ option.name }}
+              </option>
+            </select>
+            </span>
+          </p>
         </div>
-        <div class="column is-half is-one-quater-widescreen is-flex button-container">
-          <button class="has-background-mediumBlue button has-text-white p-5  " @click="routeToSelectedPage">Create Proposal
-          </button>
-        </div>  
       </div>
+      <div class="column is-half is-one-quater-widescreen is-full-mobile button-container">
+        <button class="has-background-mediumBlue button has-text-white p-5  is-pulled-right is-flex-desktop-only" @click="routeToSelectedPage">Create Proposal
+        </button>
+      </div>  
+    </div>
   </div>
  </div>
 </template>
@@ -103,7 +105,7 @@ export default {
         {
           id: "governorChange",
           name: "Governor Change Proposal",
-          type: "common",
+          type: "thread",
           thread: true
         },
         {
@@ -120,9 +122,6 @@ export default {
     this.actionTypes = this.setActionTypes() 
     console.log(this.actionTypes)
   },
-  computed: {
-   
-  },
   methods: {
     routeToSelectedPage() {
       console.log(this.$route.path)
@@ -133,9 +132,7 @@ export default {
     },
     setActionTypes() {
       let actions = []
-      console.log("STARTING");
       if(this.isThread) {
-        console.log("IS_THREAD_SET_PROPERLY");
         this.proposalTypes.forEach(element => {
           if( 
             (element.type == "common" || "thread" ) &&
@@ -169,22 +166,13 @@ export default {
   border-radius: 10px;
 }
 
-.select {
-    
-}
-
 .button-container {
   justify-content: flex-end;
 }
-
-
-
 // Bulma can smd
 @media only screen and (max-width: 769px) {
   .button-container {
     justify-content: flex-start;
   }
-
- 
 }
 </style>
