@@ -123,17 +123,13 @@ class EthereumClient {
   async getSignature(params) {    
     console.log(params);
     const fromAddress = await this.getWalletAddress();
-    try {
-      return await this._connector.provider.request({
-        method: "eth_signTypedData_v4",
-        params: [fromAddress, JSON.stringify(params)]
-      }).then( (sig) => {
-        console.log("SIGNATURE: ", sig);
-        return sig
-      })
-    } catch (error) {
-      console.log(error);
-    }
+    return await this._connector.provider.request({
+      method: "eth_signTypedData_v4",
+      params: [fromAddress, JSON.stringify(params)]
+    }).then( (sig) => {
+      console.log("SIGNATURE: ", sig);
+      return sig
+    })
   }
 
   /* --- Contract access --- */
