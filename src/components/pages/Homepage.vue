@@ -40,7 +40,7 @@
 
     <div class="columns mt-0">
       <div class="column is-full has-text-lightGray has-text-centered">
-        <span class="is-size-2 subtitle has-border-bottom primary-border-2">
+        <span class="title is-size-1 has-border-bottom primary-border-2">
           <!-- <unicon name="eye-slash" fill="lightGray"></unicon> -->
           <b>Welcome to the Community</b>
         </span>
@@ -56,12 +56,12 @@
       <div class="column is-half">
         <div class="subtitle is-size-3 has-text-primary"><b>For Buyers</b></div>
         <div
-            class="has-radius-md mb-3 has-background-darkGray py-3 px-0"
+            class="has-radius-md mb-3 is-size-6 has-background-darkGray py-3 px-0"
             v-for="text in forBuyers"
             :key="text"
         >
           <span class="has-radius-md p-3 has-background-primary">◉</span>
-          <span class="has-radius-md has-text-white p-3 is-size-7 is-size-6-desktop">{{
+          <span class="has-radius-md has-text-white p-3 is-size-6-desktop">{{
               text
             }}</span>
         </div>
@@ -74,13 +74,13 @@
           <b>For Dreamers</b>
         </div>
         <div
-            class="has-radius-md mb-3 has-background-darkGray py-3 px-0"
+            class="has-radius-md mb-3 is-size-6 has-background-darkGray py-3 px-0"
             v-for="text in forDreamers"
             :key="text"
         >
           <span class="has-radius-md p-3 has-background-primary">◉</span>
           <span
-              class="has-radius-md has-text-white p-3 is-size-7 is-size-6-desktop"
+              class="has-radius-md has-text-white p-3 is-size-6-desktop"
           >{{ text }}</span
           >
         </div>
@@ -95,11 +95,11 @@
       <div class="is-vcentered is-one-fifth px-6 is-3">
         <div class="title is-1 is-size-3-mobile mt-3">What makes us Unique?</div>
       </div>
-      <div class=" columns  mt-0 is-6 ">
+      <div class=" columns mt-0 is-6">
         <div class="column is-full p-5 is-centered">
           <div class="columns is-multiline is-desktop">
             <div
-                class="column is-one-third has-radius-lg has-background-darkGray mt-4"
+                class="column is-two-fifths is-5 has-radius-lg has-background-darkGray mt-4"
                 v-for="point in uniquePoints"
                 :key="point.id"
             >
