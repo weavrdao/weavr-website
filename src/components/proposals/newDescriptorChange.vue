@@ -116,7 +116,7 @@ import Proposal from "@/components/proposals/Proposal.vue"
 
 
 export default {
-  name: "newPaperProposal",
+  name: "newDescriptorChangeProposal",
   components: {
     Proposal
   },
@@ -158,7 +158,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      createDescriptorChangeProposal: "createDescriptorChangeProposal",
+      createProposal: "createProposal",
     }),
     getIpfsUrl(path) {
       return path
@@ -177,7 +177,7 @@ export default {
       const proposalType = this.proposalType;
       const daoResolution = this.daoResolution;
       const forumLink = this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/";
-      await this.createPaperProposal({assetAddr, proposalType, title, description, daoResolution, forumLink,  $toast: this.$toast} );
+      await this.createProposal({pType:"DescriptorChange", assetAddr, proposalType, title, description, daoResolution, forumLink,  $toast: this.$toast} );
       this.$emit("proposed");
     },
 

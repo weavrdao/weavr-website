@@ -3,6 +3,7 @@ const { ethers } = require("ethers");
 
 export class MetaMaskConnector {
   provider = null;
+  chainId = null;
   constructor(metaMaskProvider) {
     this.provider = metaMaskProvider;
   }
@@ -59,9 +60,30 @@ export class MetaMaskConnector {
       });
   };
 
-  signTypedData = async (domain, types, data) => {
-    await this.provider._signTypedData(domain, types, data)
-  }
+  // signTypedData = async (domain, types, data) => {
+  //   let params = {}
+  //   params.domain = domain
+  //   params.types = types
+  //   params.data = data
+  //   let p = JSON.stringify(params)  
+  //   const address = await this.getAddress()
+  //   console.log(p);
+  //   console.log(address);
+  //   await this.getChainId()
+  //   console.log(this.chainId);
+  //   console.log(this.provider);
+  //   const sig = await this.provider.sendAsync({
+  //     // Metamask sends a notification to sign the message, specifying the
+  //     // configured message object and type schema
+  //      method: "eth_signTypedData_v4",  
+  //      params: [address, p],
+  //      from: address
+  //    })
+     
+
+  //   console.log("SIGSIG", sig);
+  //   return sig
+  // }
   /***********************************************************/
   /* Handle user accounts and accountsChanged (per EIP-1193) */
   /***********************************************************/
