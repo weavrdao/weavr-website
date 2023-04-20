@@ -27,5 +27,9 @@ export default class Token {
     const supply = await tokenContract.getTotalSupply()
     return supply
   }
+
+  getDecimals(tokenAddress) {
+    
+  }
 }
 
