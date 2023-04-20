@@ -34,9 +34,9 @@
       </div>
     </div>
     <div class="field">
-    <label class="label">Crowdfunding target (in wei)</label>
+    <label class="label">Crowdfunding target (in ETH format)</label>
       <div class="control">
-        <input class="input" v-model="funding_target" type="text" placeholder="250000">
+        <input class="input" v-model="funding_target" type="text" placeholder="250000.00">
       </div>
       <p>Denominated in trade token</p>
     </div>
@@ -224,7 +224,9 @@ export default {
         documents: this.documents,
         $toast: this.$toast
       }
-      await this.createThreadProposal(payload);
+      console.log(payload);
+      // Promise.all([this.calcWei(this.funding_target)])
+      // await this.createThreadProposal(payload);
     },
     
     onChangeImages({ target: { files } }) {

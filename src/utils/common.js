@@ -74,6 +74,25 @@ const navigateToStatic = (path) => {
   location.href = route;
 }
 
+const calcWei = async (ethValue, decimals) => {
+  const { ethers } = require('ethers');
+  // Define the value in ETH
+  // const ethValue = 1.5;
+  // Define the decimals for USDC (6 decimal places)
+  const usdcDecimals = 6;
+  // Define the USDC contract address and ABI
+  // const usdcAddress = this.tradeToken;
+  // const usdcAbi = ['function decimals() view returns (uint8)'];
+  // Create an instance of the USDC contract using ethers.js
+  // const usdcContract = new ethers.Contract(usdcAddress, usdcAbi, provider);
+  // Get the USDC decimals
+  // const decimals = 6
+  // Convert the ETH value to USDC wei
+  const usdcValueWei = ethers.utils.parseUnits(ethValue.toString(), 18)
+    .mul(ethers.BigNumber.from(10).pow(decimals - usdcDecimals));
+  console.log(`Value in USDC wei: ${usdcValueWei}`);
+}
+
 export {
   truncateAddress,
   toHex,
