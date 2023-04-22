@@ -78,6 +78,21 @@ class DEX {
     const status = await frabricTokenContract.sell(price, amount);
     return status;
   }
+
+  async cancelOrder(assetId, price, pricePointIndex) {
+    const daoContract = new AssetContract(this.ethereumClient, assetId);
+
+    const erc20 = await daoContract.erc20();
+
+    const frabricTokenContract = new WeavrERC20Contract(
+      this.ethereumClient,
+      erc20
+    );
+
+    const status = await frabricTokenContract.cancelOrder(price, pricePointIndex);
+
+    return status;
+  }
 }
 
 export default DEX;
