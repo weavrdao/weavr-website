@@ -3,20 +3,20 @@
     <div class="columns reverse-columns">
         <div class="column is-three-fifths">
           <h2>Thread Orderbook</h2>
-          <OrderBook :assetId="assetId" :orders="getBuyOrders(thread.orders)" :buy="true"/>
-          <OrderBook :assetId="assetId" :orders="getSellOrders(thread.orders)" :buy="false"/>
+          <OrderBook :assetId="assetId" :orders="getBuyOrders(thread.orders)" :buy="true" :symbol="thread.symbol"/>
+          <OrderBook :assetId="assetId" :orders="getSellOrders(thread.orders)" :buy="false" :symbol="thread.symbol"/>
         </div>
         <div class="column">
-            <OrderPlacer :orders="orders"/>
+            <OrderPlacer :orders="orders" :symbol="thread.symbol" :balance="thread.balance?.toString()"/>
         </div>
     </div>
     <h2>Your Orders</h2>
     <div class="columns is-full-width">
       <div class="column is-half-desktop">
-        <OrderBook :assetId="assetId" :orders="getBuyOrders(thread.userOrders)" :buy="true" :isOwn="true"/>
+        <OrderBook :assetId="assetId" :orders="getBuyOrders(thread.userOrders)" :buy="true" :isOwn="true" :symbol="thread.symbol"/>
       </div>
       <div class="column is-half-desktop">
-        <OrderBook :assetId="assetId" :orders="getSellOrders(thread.userOrders)" :buy="false" :isOwn="true"/>
+        <OrderBook :assetId="assetId" :orders="getSellOrders(thread.userOrders)" :buy="false" :isOwn="true" :symbol="thread.symbol"/>
       </div>
     </div>
 </div>

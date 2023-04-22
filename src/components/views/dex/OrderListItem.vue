@@ -1,7 +1,7 @@
 <template>
 <div class="columns is-flex-mobile is-align-items-center">
     <div class="column">
-        {{ formatEther(order.amount) }} FBRC
+        {{ formatEther(order.amount) }} {{ symbol }}
     </div>
     <div class="column">
         {{ Number(order.price).toFixed(2) }} USD
@@ -37,6 +37,10 @@ export default {
     isOwn: {
       type: Boolean,
       default: false,
+    },
+    symbol: {
+      type: String,
+      default: "THRD"
     }
   },
   methods: {

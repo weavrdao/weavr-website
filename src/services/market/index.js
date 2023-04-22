@@ -1,10 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import AssetContract from "../../data/network/web3/contracts/assetContract"
+import TokenContract from "../../data/network/web3/contracts/tokenContract"
 import StorageNetwork from "../../data/network/storage/storageNetwork" // eslint-disable-line no-unused-vars
 import EthereumClient from "../../data/network/web3/ethereum/ethereumClient" // eslint-disable-line no-unused-vars
 import { getIpfsHashFromBytes32 } from "../../data/network/storage/ipfs/common";
 import { NETWORK } from "../constants"
 import InfuraEventCacheClient from "@/data/network/web3/events/InfuraEventCacheClient"
+import { ethers } from "ethers";
+import { ThreadJSON } from "../../data/network/web3/contracts/abi";
 /**
  * Market Provider service
  * @param {EthereumClient} ethereumClient Ethereum client
@@ -18,6 +21,23 @@ class Market {
     this.ethereumClient = ethereumClient
     this.storageNetwork = storageNetwork
     this.cacheClient = new InfuraEventCacheClient(NETWORK.id, process.env.VUE_APP_INFURA_API_KEY, NETWORK.startBlock)
+  }
+
+  async getThreadTokenData(threadId, userAddress) {
+    const threadContract = new AssetContract(this.ethereumClient, threadId);
+
+    const erc20 = await threadContract.erc20();
+
+    const tokenContract = new TokenContract(this.ethereumClient, erc20);
+
+    const balance = await tokenContract.getBalance(userAddress);
+    console.log(`BALANCE: ${balance}`)
+    const symbol = await tokenContract.getSymbol();
+
+    return {
+      balance,
+      symbol,
+    }
   }
 
   async getThreads(userAddress) {
@@ -47,6 +67,10 @@ class Market {
         const { global: threadOrders, user: userOrders } = await this.cacheClient.syncOrders(threads[i].id, userAddress, true);
         threads[i].setOrders(threadOrders);
         threads[i].setUserOrders(userOrders);
+
+        const { balance, symbol } = await this.getThreadTokenData(threads[i].id, userAddress);
+        threads[i].setUserBalance(balance);
+        threads[i].setTokenSymbol(symbol);
       }
     } catch (e) {
       // no-op

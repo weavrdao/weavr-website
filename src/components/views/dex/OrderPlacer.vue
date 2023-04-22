@@ -18,8 +18,8 @@
     <div class="is-flex is-justify-content-space-between my-4">
       <span>Avbl <img class="is-wallet-image" src="../.././../assets/pics/wallet-icon.svg"/></span>
       <span>
-        <span>5,250</span>
-        <span class="has-text-mediumBlue"> FBRC</span>
+        <span>{{ formatEther(balance) }}{{ ' ' }}</span>
+        <span class="has-text-mediumBlue"> {{ symbol }}</span>
       </span>
     </div>
     <p>Price</p>
@@ -59,6 +59,7 @@
 <script>
 import { mapActions } from "vuex";
 import { CONTRACTS } from "../../../services/constants";
+import { ethers } from "ethers";
 
 
 const orderTypes = {
@@ -86,6 +87,9 @@ export default {
       approveDexRouterTradeToken: "approveDexRouterTradeToken",
       approveDexRouterThreadToken: "approveDexRouterThreadToken",
     }),
+    formatEther(balance) {
+      return ethers.utils.formatEther(balance || "0");
+    },
     setOrderType(type) {
       this.orderType = type;
       this.setPrice();
@@ -128,6 +132,14 @@ export default {
       type: Array,
       default: () => [],
     },
+    symbol: {
+      type: String,
+      default: "THRD",
+    },
+    balance: {
+      type: String,
+      default: "0",
+    }
   },
   onMounted() {
     this.setPrice();

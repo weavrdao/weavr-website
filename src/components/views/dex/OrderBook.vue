@@ -6,7 +6,7 @@
         Size
       </div>
       <div class="column is-one-quarter">
-        Rate (1 FBRC)
+        Rate (1 {{ symbol }})
       </div>
       <div class="column is-one-quarter is-flex">
         Total
@@ -17,7 +17,7 @@
       <li
           v-for="order in orders"
           v-bind:key="order.id">
-          <OrderListItem :order="order" :isOwn="isOwn"/>
+          <OrderListItem :order="order" :isOwn="isOwn" :symbol="symbol"/>
       </li>
     </ul>
 </div>
@@ -41,6 +41,10 @@ export default {
     },
     orders: {
       type: Array,
+    },
+    symbol: {
+      type: String,
+      default: "THRD"
     }
   },
   mounted() {

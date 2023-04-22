@@ -28,6 +28,8 @@ export class Thread extends Asset {
     this.proposals = []
     this.orders = [];
     this.userOrders = [];
+    this.symbol = "THRD";
+    this.balance = 888;
   }
   setProposals(proposals) {
     this.proposals = proposals
@@ -37,6 +39,16 @@ export class Thread extends Asset {
   }
   setUserOrders(orders) {
     this.userOrders = orders;
+  }
+  setTokenSymbol(symbol) {
+    if (symbol) {
+      this.symbol = symbol.toUpperCase();
+    }
+  }
+  setUserBalance(balance) {
+    if (balance) {
+      this.balance = balance;
+    }
   }
 }
 
