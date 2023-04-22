@@ -27,12 +27,16 @@ export class Thread extends Asset {
     this.crowdfund = crowdfund;
     this.proposals = []
     this.orders = [];
+    this.userOrders = [];
   }
   setProposals(proposals) {
     this.proposals = proposals
   }
   setOrders(orders) {
     this.orders = orders;
+  }
+  setUserOrders(orders) {
+    this.userOrders = orders;
   }
 }
 

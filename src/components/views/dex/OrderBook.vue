@@ -3,6 +3,9 @@
     <h3>{{buy ? "Buy Orders" : "Sell Orders"}}</h3>
     <div class="columns is-flex-mobile headers">
       <div class="column is-one-quarter">
+        Size
+      </div>
+      <div class="column is-one-quarter">
         Rate (1 FBRC)
       </div>
       <div class="column is-one-quarter is-flex">
@@ -14,7 +17,7 @@
       <li
           v-for="order in orders"
           v-bind:key="order.id">
-          <OrderListItem :order="order"/>
+          <OrderListItem :order="order" :isOwn="isOwn"/>
       </li>
     </ul>
 </div>
@@ -31,6 +34,10 @@ export default {
     buy: {
       type: Boolean,
       default: true,
+    },
+    isOwn: {
+      type: Boolean,
+      default: false,
     },
     orders: {
       type: Array,

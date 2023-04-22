@@ -56,6 +56,7 @@ const processOrderCancelEvent = (rawOrderCancelEvent) => {
 };
 
 
+// eslint-disable-next-line max-lines-per-function
 const processAllRawOrderEvents = (rawEvents, userAddress) => {
   const rawOrderEvents = rawEvents.Order || [];
   const rawOrderIncreaseEvents = rawEvents.OrderIncrease || [];
@@ -68,31 +69,49 @@ const processAllRawOrderEvents = (rawEvents, userAddress) => {
   const orderCancels = rawOrderCancelEvents.map(processOrderCancelEvent);
 
   let orderBook = {};
+  let userOrderBook = {};
   
   for(const order of orders) {
     const { orderType, price } = order;
     // Overwrite previous values ??
     orderBook[price.toString()] = { orderType, amount: ethers.BigNumber.from(0) };
+    userOrderBook[price.toString()] = { orderType, amount: ethers.BigNumber.from(0) };
   }
 
   for(const orderIncrease of orderIncreases) {
     const { trader, price, amount } = orderIncrease;
 
     orderBook[price.toString()].amount = orderBook[price.toString()].amount.add(amount);
+
+    if (trader.toLowerCase() === userAddress.toLowerCase()) {
+      userOrderBook[price.toString()].amount = userOrderBook[price.toString()].amount.add(amount);
+    }
   }
 
   for(const orderFill of orderFills) {
-    const { orderer, price, executor, amount } = orderFill;
+    const { orderer, price, amount } = orderFill;
 
     orderBook[price.toString()].amount = orderBook[price.toString()].amount.sub(amount);
+
+    if (orderer.toLowerCase() === userAddress.toLowerCase()) {
+      userOrderBook[price.toString()].amount = userOrderBook[price.toString()].amount.sub(amount);
+    } 
   }
 
   for(const orderCancel of orderCancels) {
     const { trader, price, amount } = orderCancel;
     orderBook[price.toString()].amount = orderBook[price.toString()].amount.sub(amount);
+
+    if (trader.toLowerCase() === userAddress.toLowerCase()) {
+      userOrderBook[price.toString()].amount = userOrderBook[price.toString()].amount.sub(amount);
+    }
+      
   }
 
-  return Object.entries(orderBook).map(([price, order]) => ({ ...order, price }));
+  return {
+    global: Object.entries(orderBook).map(([price, order]) => ({ ...order, price })),
+    user: Object.entries(userOrderBook).map(([price, order]) => ({ ...order, price }))
+  };
 };
 
 export { processAllRawOrderEvents };

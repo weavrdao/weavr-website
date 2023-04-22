@@ -114,7 +114,8 @@ const getters = {
 const actions = {
  
   async refreshThreads(context) {
-    let assets = await market.getThreads();
+    const userAddress = context.getters.userWalletAddress
+    let assets = await market.getThreads(userAddress);
     console.log("REFRESH__THREADS__STATE: ", assets);
     context.commit("setThreads", assets);
   },

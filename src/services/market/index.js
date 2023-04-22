@@ -20,7 +20,7 @@ class Market {
     this.cacheClient = new InfuraEventCacheClient(NETWORK.id, process.env.VUE_APP_INFURA_API_KEY, NETWORK.startBlock)
   }
 
-  async getThreads() {
+  async getThreads(userAddress) {
     const assetList = await this.cacheClient.fetchThreads()
     let threads = []
     assetList.forEach(t => { if (t.state == "Finished") { console.log(t); threads.push(t) } })
@@ -44,9 +44,9 @@ class Market {
         const proposals = await this.cacheClient.syncProposals(threads[i].id, true)
         threads[i].setProposals(proposals)
 
-        const orders = await this.cacheClient.syncOrders(threads[i].id);
-        console.log("ORDERS: ", orders);
-        threads[i].setOrders(orders);
+        const { global: threadOrders, user: userOrders } = await this.cacheClient.syncOrders(threads[i].id, userAddress, true);
+        threads[i].setOrders(threadOrders);
+        threads[i].setUserOrders(userOrders);
       }
     } catch (e) {
       // no-op

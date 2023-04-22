@@ -10,11 +10,17 @@
       {{ getTotalAmount(order) }}
     </div>
     <div class="column is-justify-content-flex-end">
+      <div
+          v-if="isOwn"
+          class="purchase-type is-sell clickable"
+          >CANCEL</div>
         <div
+            v-else
             class="purchase-type"
             v-bind:class="order.orderType === 'BUY' ? 'is-buy' : 'is-sell'">
             {{ order.orderType === 'BUY' ? 'BUY' : 'SELL' }}
         </div>
+
     </div>
 </div>
 </template>
@@ -27,12 +33,24 @@ export default {
   props: {
     order: {
       type: Object,
+    },
+    isOwn: {
+      type: Boolean,
+      default: false,
     }
   },
   methods: {
-    formatEther: (amount) => Number(ethers.utils.formatEther(amount)).toFixed(2),
+    formatEther: (amount) => Number(
+      ethers.utils.formatEther(amount)
+    ).toFixed(2),
     getTotalAmount: (order) => {
-      return (ethers.utils.formatEther(order.amount.mul(ethers.BigNumber.from(order.price))).toString());
+      return (
+        ethers.utils.formatEther(
+          order.amount.mul(
+            ethers.BigNumber.from(order.price)
+          )
+        ).toString()
+      );
     }
   }
 }
@@ -64,5 +82,15 @@ export default {
 
 .is-sell {
     background: $red;
+}
+
+.clickable {
+  transition: all 180ms;
+  &:hover {
+    cursor: pointer;
+    background: white;
+    color: $red;
+    // filter: contrast(120%);
+  }
 }
 </style>

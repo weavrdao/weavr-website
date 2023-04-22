@@ -46,7 +46,7 @@ class InfuraEventCacheClient {
     return Array.from(Object.values(proposals))
   }
 
-  async syncOrders(assetId, isThread = false) {
+  async syncOrders(assetId, userAddress, isThread = false) {
     let blockNumber;
     const currentBlockNumber = await this.provider.getBlockNumber();
     // Listen for all events emitted by the contract, starting from the specified block number
@@ -56,7 +56,7 @@ class InfuraEventCacheClient {
     console.log(`FETCHING ORDERS FOR ${erc20}`);
     let events = await this.getEventsForILODEX(erc20, blockNumber, currentBlockNumber)
 
-    const orders = processAllRawOrderEvents(events)
+    const orders = processAllRawOrderEvents(events, userAddress)
     console.log("PROCESSED ORDERS");
     console.log(orders);
     return orders;
