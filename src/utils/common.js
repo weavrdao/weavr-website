@@ -88,9 +88,12 @@ const calcWei = async (ethValue, decimals) => {
   // Get the USDC decimals
   // const decimals = 6
   // Convert the ETH value to USDC wei
-  const usdcValueWei = ethers.utils.parseUnits(ethValue.toString(), 18)
-    .mul(ethers.BigNumber.from(10).pow(decimals - usdcDecimals));
+  
+  
+  const usdcValueWei = ethers.utils.parseUnits(ethValue.toString(), decimals)
+  //   .mul(ethers.BigNumber.from(10).pow(decimals));
   console.log(`Value in USDC wei: ${usdcValueWei}`);
+  return usdcValueWei;
 }
 
 export {
@@ -102,5 +105,6 @@ export {
   toFixedNumber,
   navigateToApp,
   navigateToStatic,
-  isJson
+  isJson, 
+  calcWei
 }

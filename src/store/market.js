@@ -287,6 +287,9 @@ const actions = {
       );
     }
   },
+  async tokenDecimals(context, params) {
+    return await token.getDecimals(params.tokenAddress)
+  },
   ...whitelistActions(whitelist),
 };
 

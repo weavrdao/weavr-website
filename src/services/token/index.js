@@ -28,8 +28,10 @@ export default class Token {
     return supply
   }
 
-  getDecimals(tokenAddress) {
-    
+  async getDecimals(tokenAddress) {
+    const tokenContract =  new TokenContract(this.ethereumClient, tokenAddress);
+    const decimals = await tokenContract.getDecimals()
+    return decimals
   }
 }
 

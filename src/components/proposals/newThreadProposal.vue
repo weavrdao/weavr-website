@@ -133,7 +133,7 @@ import {ethers} from "ethers";
 import { CONTRACTS } from "../../services/constants";
 import {ProposalTypes} from "@/models/common";
 import Proposal from "@/components/proposals/Proposal.vue"
-import { isJson } from "@/utils/common"
+import { isJson, calcWei } from "@/utils/common"
 import IPFSStorageNetwork from "@/data/network/storage/ipfs/IPFSStorageNetwork"
 export default {
 
@@ -172,6 +172,7 @@ export default {
   methods: {
     ...mapActions({
       createThreadProposal: "createThreadProposal",
+      getDecimals: "tokenDecimals"
 
     }),
     // eslint-disable-next-line max-lines-per-function
@@ -206,8 +207,10 @@ export default {
             position: "bottom",
           }
         )
-        return
+        return;
       }
+      const decimals = await this.getDecimals({tokenAddress: this.tradeToken})
+      const valueInWei = calcWei(this.funding_target, decimals)
       const payload = {
         assetId: this.assetId || CONTRACTS.WEAVR,
         blobVersion: this.blobVersion,
@@ -219,13 +222,15 @@ export default {
         symbol: String(this.symbol).toUpperCase(),
         title: this.title,
         tradeToken: this.tradeToken,
-        funding_target: this.funding_target,
+        funding_target: valueInWei,
         images: this.images,
         documents: this.documents,
         $toast: this.$toast
       }
       console.log(payload);
-      // Promise.all([this.calcWei(this.funding_target)])
+      
+      
+      
       // await this.createThreadProposal(payload);
     },
     
@@ -254,6 +259,7 @@ export default {
       } catch (e) {
         console.log("Error uploading images and files for preview", e);
       }
+      
       this.proposal = {
         name: this.name,
         description: this.description,
