@@ -3,7 +3,7 @@
 import { ethers } from "ethers";
 import ServiceProvider from "../services/provider";
 import WalletState from "../models/walletState";
-import { CONTRACTS, GUEST } from "../services/constants";
+import { CONTRACTS, GUEST, NETWORK } from "../services/constants";
 import {
   whitelistGetters,
   whitelistMutations,
@@ -146,45 +146,52 @@ const actions = {
 
   async syncWallet(context, params) {
     let {$toast} = params !== undefined ? params : {};
-    let walletState = await wallet.getState(params.wallet);
-    const symbol = await token.getTokenSymbol(CONTRACTS.TOKEN_ADDRESS);
-    const balance = await token.getTokenBalance(
-      CONTRACTS.TOKEN_ADDRESS,
-      walletState.address
-    );
-
-    Promise.all([walletState, symbol, balance])
-    const isWhitelisted = await whitelist.checkWhitelistedStatus(
-      CONTRACTS.WEAVR,
-      walletState.address
-    );
-    context.commit("setWhitelisted", isWhitelisted);
-    isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address + "_" + params.wallet, 100)
-    await token.getTokenBalance(
-      CONTRACTS.TOKEN_ADDRESS,
-      walletState.address
-    );
-
-    const hasKyc = await whitelist.hasKyc(
-      CONTRACTS.WEAVR,
-      walletState.address
-    );
-
-    walletState = new WalletState(
-      walletState.address,
-      walletState.ethBalance,
-      ethers.utils.formatEther(balance).toString(),
-      symbol,
-      wallet.getChainId()
-    );
-    context.commit("setKyc", hasKyc);
-    context.commit("setWallet", walletState);
-
-    $toast.clear();
-    $toast.success("Wallet fully synced", {
-      duration: 1000,
-      position: "top",
+    console.log("SYNC >>>>>>>>>>>>>>>>");
+    let walletState = await wallet.getState(params.wallet).then( (state) => {
+      console.log(state);
     });
+    console.log(walletState);
+    if(!walletState || walletState.network != NETWORK.id) {
+      console.log("WRONG NETWORK");
+    }
+    // const symbol = await token.getTokenSymbol(CONTRACTS.TOKEN_ADDRESS);
+    // const balance = await token.getTokenBalance(
+    //   CONTRACTS.TOKEN_ADDRESS,
+    //   walletState.address
+    // );
+
+    // Promise.all([walletState, symbol, balance])
+    // const isWhitelisted = await whitelist.checkWhitelistedStatus(
+    //   CONTRACTS.WEAVR,
+    //   walletState.address
+    // );
+    // context.commit("setWhitelisted", isWhitelisted);
+    // isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address + "_" + params.wallet, 100)
+    // await token.getTokenBalance(
+    //   CONTRACTS.TOKEN_ADDRESS,
+    //   walletState.address
+    // );
+
+    // const hasKyc = await whitelist.hasKyc(
+    //   CONTRACTS.WEAVR,
+    //   walletState.address
+    // );
+
+    // walletState = new WalletState(
+    //   walletState.address,
+    //   walletState.ethBalance,
+    //   ethers.utils.formatEther(balance).toString(),
+    //   symbol,
+    //   wallet.getChainId()
+    // );
+    // context.commit("setKyc", hasKyc);
+    // context.commit("setWallet", walletState);
+
+    // $toast.clear();
+    // $toast.success("Wallet fully synced", {
+    //   duration: 1000,
+    //   position: "top",
+    // });
   },
 
   async logout(context) {
