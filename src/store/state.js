@@ -149,49 +149,51 @@ const actions = {
     console.log("SYNC >>>>>>>>>>>>>>>>");
     let walletState = await wallet.getState(params.wallet).then( (state) => {
       console.log(state);
+      return state
     });
     console.log(walletState);
     if(!walletState || walletState.network != NETWORK.id) {
       console.log("WRONG NETWORK");
+      return false
     }
-    // const symbol = await token.getTokenSymbol(CONTRACTS.TOKEN_ADDRESS);
-    // const balance = await token.getTokenBalance(
-    //   CONTRACTS.TOKEN_ADDRESS,
-    //   walletState.address
-    // );
+    const symbol = await token.getTokenSymbol(CONTRACTS.TOKEN_ADDRESS);
+    const balance = await token.getTokenBalance(
+      CONTRACTS.TOKEN_ADDRESS,
+      walletState.address
+    );
 
-    // Promise.all([walletState, symbol, balance])
-    // const isWhitelisted = await whitelist.checkWhitelistedStatus(
-    //   CONTRACTS.WEAVR,
-    //   walletState.address
-    // );
-    // context.commit("setWhitelisted", isWhitelisted);
-    // isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address + "_" + params.wallet, 100)
-    // await token.getTokenBalance(
-    //   CONTRACTS.TOKEN_ADDRESS,
-    //   walletState.address
-    // );
+    Promise.all([walletState, symbol, balance])
+    const isWhitelisted = await whitelist.checkWhitelistedStatus(
+      CONTRACTS.WEAVR,
+      walletState.address
+    );
+    context.commit("setWhitelisted", isWhitelisted);
+    isWhitelisted && setCookie(USER_COOKIE_KEY, walletState.address + "_" + params.wallet, 100)
+    await token.getTokenBalance(
+      CONTRACTS.TOKEN_ADDRESS,
+      walletState.address
+    );
 
-    // const hasKyc = await whitelist.hasKyc(
-    //   CONTRACTS.WEAVR,
-    //   walletState.address
-    // );
+    const hasKyc = await whitelist.hasKyc(
+      CONTRACTS.WEAVR,
+      walletState.address
+    );
 
-    // walletState = new WalletState(
-    //   walletState.address,
-    //   walletState.ethBalance,
-    //   ethers.utils.formatEther(balance).toString(),
-    //   symbol,
-    //   wallet.getChainId()
-    // );
-    // context.commit("setKyc", hasKyc);
-    // context.commit("setWallet", walletState);
+    walletState = new WalletState(
+      walletState.address,
+      walletState.ethBalance,
+      ethers.utils.formatEther(balance).toString(),
+      symbol,
+      wallet.getChainId()
+    );
+    context.commit("setKyc", hasKyc);
+    context.commit("setWallet", walletState);
 
-    // $toast.clear();
-    // $toast.success("Wallet fully synced", {
-    //   duration: 1000,
-    //   position: "top",
-    // });
+    $toast.clear();
+    $toast.success("Wallet fully synced", {
+      duration: 1000,
+      position: "top",
+    });
   },
 
   async logout(context) {
