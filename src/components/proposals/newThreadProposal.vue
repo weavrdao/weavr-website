@@ -228,10 +228,7 @@ export default {
         $toast: this.$toast
       }
       console.log(payload);
-      
-      
-      
-      // await this.createThreadProposal(payload);
+      await this.createThreadProposal(payload);
     },
     
     onChangeImages({ target: { files } }) {

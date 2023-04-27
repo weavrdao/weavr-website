@@ -30,7 +30,9 @@ class IPFSStorageNetwork extends StorageNetwork {
   async addJson(payload) {
     let jsonString = JSON.stringify(payload, null, 2);
     console.log("JSON: ", jsonString);
-    return await this.ipfsInfuraAPIClient.add(jsonString, {pin: true});
+    const data = await this.ipfsInfuraAPIClient.add(jsonString, {pin: true});
+    console.log("DATA++++", data);
+    return data
   }
 
   async addArbitraryFile(file) {
@@ -75,7 +77,8 @@ class IPFSStorageNetwork extends StorageNetwork {
     try {
       const cid = await this.addJson(payload);
       // eslint-disable-next-line no-unused-vars
-      const _ = await this.ipfsCollabAPIClient.pin.add(cid.path);
+      // const _ = await this.ipfsCollabAPIClient.pin.add(cid.path);
+      console.log("CID", cid);
       return getBytes32FromIpfsHash(cid.path);
     } catch (e) {
       console.log(e);
