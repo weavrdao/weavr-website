@@ -74,7 +74,7 @@ const navigateToStatic = (path) => {
   location.href = route;
 }
 
-const calcWei = async (ethValue, decimals) => {
+const calcWei = (ethValue, decimals) => {
   const { ethers } = require('ethers');
   // Define the value in ETH
   // const ethValue = 1.5;
