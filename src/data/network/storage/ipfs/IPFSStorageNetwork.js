@@ -75,7 +75,7 @@ class IPFSStorageNetwork extends StorageNetwork {
     try {
       const cid = await this.addJson(payload);
       // eslint-disable-next-line no-unused-vars
-      const _ = await this.ipfsCollabAPIClient.pin.add(cid.path);
+      // const _ = await this.ipfsCollabAPIClient.pin.add(cid.path);
       return getBytes32FromIpfsHash(cid.path);
     } catch (e) {
       console.log(e);

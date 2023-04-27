@@ -231,7 +231,7 @@ export default {
       
       
       
-      // await this.createThreadProposal(payload);
+      await this.createThreadProposal(payload);
     },
     
     onChangeImages({ target: { files } }) {
