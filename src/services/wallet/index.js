@@ -12,9 +12,10 @@ class Wallet {
   }
 
   async getState(provider) {
-    await this.client.syncWallet(provider)
-    if(!this.client.walletProvider) {
-      return
+    const res = await this.client.syncWallet(provider)
+    console.log(res);
+    if(!res) {
+      return false
     }
     let values = await Promise.all([
       await this.client.getWalletAddress(),

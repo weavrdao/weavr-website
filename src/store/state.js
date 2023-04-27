@@ -3,7 +3,7 @@
 import { ethers } from "ethers";
 import ServiceProvider from "../services/provider";
 import WalletState from "../models/walletState";
-import { CONTRACTS, GUEST } from "../services/constants";
+import { CONTRACTS, GUEST, NETWORK } from "../services/constants";
 import {
   whitelistGetters,
   whitelistMutations,
@@ -146,7 +146,16 @@ const actions = {
 
   async syncWallet(context, params) {
     let {$toast} = params !== undefined ? params : {};
-    let walletState = await wallet.getState(params.wallet);
+    console.log("SYNC >>>>>>>>>>>>>>>>");
+    let walletState = await wallet.getState(params.wallet).then( (state) => {
+      console.log(state);
+      return state
+    });
+    console.log(walletState);
+    if(!walletState || walletState.network != NETWORK.id) {
+      console.log("WRONG NETWORK");
+      return false
+    }
     const symbol = await token.getTokenSymbol(CONTRACTS.TOKEN_ADDRESS);
     const balance = await token.getTokenBalance(
       CONTRACTS.TOKEN_ADDRESS,
