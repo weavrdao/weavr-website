@@ -154,8 +154,8 @@ const actions = {
   },
   
   async createDescriptorChangeProposal(context, props) {
-    const {assetAddr, title, description, forumLink, descriptor} = props;
-   return dao.createDescriptorChangeProposal(assetAddr, title, description, forumLink, descriptor)
+    const {assetAddr, title, description, forumLink, descriptor, images, documents, metrics} = props;
+   return dao.createDescriptorChangeProposal(assetAddr, title, description, forumLink, descriptor, images, documents, metrics)
   },
 
   async createParticipantProposal(context, props) {

@@ -153,7 +153,9 @@ export default {
       preview: false,
       markdownSource: null,
       proposal: null,
-      forumLink: ""
+      forumLink: "",
+      images: [],
+      documents: []
     }
   },
   methods: {
@@ -176,8 +178,12 @@ export default {
       const description = this.description;
       const proposalType = this.proposalType;
       const daoResolution = this.daoResolution;
+      const descriptor = this.descriptor
+      const images = this.images
+      const documents = this.documents
+      const metrics = this.metrics
       const forumLink = this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/";
-      await this.createProposal({pType:"DescriptorChange", assetAddr, proposalType, title, description, daoResolution, forumLink,  $toast: this.$toast} );
+      await this.createProposal({pType:"DescriptorChange", assetAddr, proposalType, title, description, descriptor, images, documents, metrics, daoResolution, forumLink,  $toast: this.$toast} );
       this.$emit("proposed");
     },
 
@@ -194,7 +200,14 @@ export default {
       }
       this.preview = !this.preview
     },
-
+    onChangeImages({ target: { files } }) {
+      this.images = files;
+      console.log(this.images)
+    },
+    onChangeDocuments({ target: { files } }) {
+      this.documents = files;
+      console.log(this.documents)
+    },
     onCancel() {
       this.$router.back();
     }

@@ -27,5 +27,11 @@ export default class Token {
     const supply = await tokenContract.getTotalSupply()
     return supply
   }
+
+  async getDecimals(tokenAddress) {
+    const tokenContract =  new TokenContract(this.ethereumClient, tokenAddress);
+    const decimals = await tokenContract.getDecimals()
+    return decimals
+  }
 }
 
