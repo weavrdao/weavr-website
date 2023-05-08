@@ -31,6 +31,7 @@ class InfuraEventCacheClient {
 
   // Gets all proposals, and ensures that current proposals are updated
   async syncProposals(assetId, isThread = false) {
+    console.log("isThread <<<<<<<<<<>>>>>>>>>>>>>", isThread);
     let blockNumber;
     const currentBlockNumber = await this.provider.getBlockNumber();
     // Listen for all events emitted by the contract, starting from the specified block number
@@ -39,10 +40,13 @@ class InfuraEventCacheClient {
     let events = await this.getEventsForAsset(assetId, iface, isThread, blockNumber, currentBlockNumber)
     let votingPeriod = await this.contract.votingPeriod()
     let proposals = this.getProposals(events)
-    proposals = this.processProposalTypeData(events, proposals)
+    console.log("EVENTS______________________________________________________, ",events)
+    proposals = await this.processProposalTypeData(events, proposals, isThread)
+    console.log("after TYPEDATA______________________________________________________, ",events)
     proposals = this.updateProposalsWithVotes( events, proposals)
     proposals = this.processProposalStatusChanges(events, proposals)
     proposals = this.finalizeProposals(proposals, votingPeriod)
+    console.log(".::..::. FINILIZED PROPOSALS .::..::. ", proposals);
     return Array.from(Object.values(proposals))
   }
 
@@ -54,6 +58,7 @@ class InfuraEventCacheClient {
       "Vote",
       "ProposalStateChange",
     ]
+    console.log("EVENT NAMES/TYPES :::: ", eventNames);
     let events = eventNames.map((eventName) => {
       return this.contract.queryFilter(eventName, blockNumber, currentBlockNumber).then(async (raw_events) => {
         const eventSignature = iface.getEventTopic(eventName);
@@ -80,6 +85,7 @@ class InfuraEventCacheClient {
     for (let i = 0; i < eventNames.length; i++) {
       output[eventNames[i]] = awaited_events[i]
     }
+    console.log(output);
     return output
   }
 
@@ -93,19 +99,20 @@ class InfuraEventCacheClient {
     return proposals
   }
 
-  processProposalTypeData(events, proposals) {
-
-    for (const proposalTypeName of Object.keys(this.proposalTypeSwitch)) {
+  processProposalTypeData(events, proposals, isThread) {
+    events.length > 0 ? console.log("NOT_READY") : console.log("READY");
+    for (const proposalTypeName of Object.keys(this.proposalTypeSwitch)) {  
       let proposal_events = events[proposalTypeName]
-      if(proposal_events){
-        proposal_events.forEach(obj => {
-          const {event, timestamp} = obj
-          const id = event.id.toNumber()
-          const prop = proposals[id]
-          prop.type = this.proposalTypeSwitch[proposalTypeName].type
-          proposals[id] = new this.proposalTypeSwitch[proposalTypeName].cls(prop, event)
-        })
-      }
+      console.log("events", events);
+      console.log("proposal_events", events[proposalTypeName]);
+      proposal_events.map(obj => {
+        console.log("OBJ______OBJ", obj);
+        const {event, timestamp} = obj
+        const id = event.id.toNumber()
+        const prop = proposals[id]
+        prop.type = this.proposalTypeSwitch[proposalTypeName].type
+        proposals[id] = new this.proposalTypeSwitch[proposalTypeName].cls(prop, event)
+      })
     }
     return proposals
   }
@@ -257,7 +264,7 @@ class InfuraEventCacheClient {
     const onlyFinshed =this.assets.filter( a => a.state == CrowdfundState[3])
     onlyFinshed.map(
       async (thread) => {
-        proposalMap.set(thread.id, await this.syncProposals(thread.id))
+        proposalMap.set(thread.id, await this.syncProposals(thread.id, true))
       }
     )    
     const transfersMap = await this.mapHoldersForAllThreads(onlyFinshed)

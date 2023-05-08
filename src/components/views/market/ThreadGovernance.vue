@@ -94,7 +94,7 @@ export default {
       refreshProposals: "refreshProposalsDataForAsset",
     }),
     refresh() {
-      this.refreshProposals({ assetId: this.threadId, forceRefresh: true });    
+      this.refreshProposals({ assetId: this.threadId, forceRefresh: true, isThread: true });    
     },
     show(list) {
         this.showPastProposals = list ? true : false
