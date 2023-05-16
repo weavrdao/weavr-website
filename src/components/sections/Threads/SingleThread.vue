@@ -75,7 +75,7 @@ export default {
   },
   mounted() {
     this.setLoadingState({isLoading: true, message: "Loading Thread Proposals"})
-    this.refreshProposals({assetId: this.threadId, forceRefresh: true, isThread: true}).then( () => {
+    this.refreshProposals({assetId: this.threadId, forceRefresh: false, isThread: true}).then( () => {
       this.setLoadingState({isLoading: false, message: ""})
     })
   },

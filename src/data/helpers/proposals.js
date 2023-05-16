@@ -9,6 +9,11 @@ export function getProposalTypeStyling(proposalType) {
       text: "Paper",
       class: "paper",
     };
+  case ProposalTypes.DescriptorChange:
+    return {
+      text: "DescriptorChange",
+      class: "descriptorChange",
+    };
   case ProposalTypes.Upgrade:
     return {
       text: "Upgrade",

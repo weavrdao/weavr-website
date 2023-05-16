@@ -31,7 +31,6 @@ class InfuraEventCacheClient {
 
   // Gets all proposals, and ensures that current proposals are updated
   async syncProposals(assetId, isThread = false) {
-    console.log("isThread <<<<<<<<<<>>>>>>>>>>>>>", isThread);
     let blockNumber;
     const currentBlockNumber = await this.provider.getBlockNumber();
     // Listen for all events emitted by the contract, starting from the specified block number
@@ -40,13 +39,10 @@ class InfuraEventCacheClient {
     let events = await this.getEventsForAsset(assetId, iface, isThread, blockNumber, currentBlockNumber)
     let votingPeriod = await this.contract.votingPeriod()
     let proposals = this.getProposals(events)
-    console.log("EVENTS______________________________________________________, ",events)
-    proposals = await this.processProposalTypeData(events, proposals, isThread)
-    console.log("after TYPEDATA______________________________________________________, ",events)
+    proposals = this.processProposalTypeData(events, proposals, isThread)
     proposals = this.updateProposalsWithVotes( events, proposals)
     proposals = this.processProposalStatusChanges(events, proposals)
     proposals = this.finalizeProposals(proposals, votingPeriod)
-    console.log(".::..::. FINILIZED PROPOSALS .::..::. ", proposals);
     return Array.from(Object.values(proposals))
   }
 
@@ -58,7 +54,6 @@ class InfuraEventCacheClient {
       "Vote",
       "ProposalStateChange",
     ]
-    console.log("EVENT NAMES/TYPES :::: ", eventNames);
     let events = eventNames.map((eventName) => {
       return this.contract.queryFilter(eventName, blockNumber, currentBlockNumber).then(async (raw_events) => {
         const eventSignature = iface.getEventTopic(eventName);
@@ -100,16 +95,16 @@ class InfuraEventCacheClient {
   }
 
   processProposalTypeData(events, proposals, isThread) {
-    events.length > 0 ? console.log("NOT_READY") : console.log("READY");
+    console.log("processProposalTypeData::::::::", events);
     for (const proposalTypeName of Object.keys(this.proposalTypeSwitch)) {  
       let proposal_events = events[proposalTypeName]
       console.log("events", events);
       console.log("proposal_events", events[proposalTypeName]);
       proposal_events.map(obj => {
-        console.log("OBJ______OBJ", obj);
         const {event, timestamp} = obj
         const id = event.id.toNumber()
         const prop = proposals[id]
+        console.log("____PROP", prop, proposals[id]);
         prop.type = this.proposalTypeSwitch[proposalTypeName].type
         proposals[id] = new this.proposalTypeSwitch[proposalTypeName].cls(prop, event)
       })
@@ -167,7 +162,7 @@ class InfuraEventCacheClient {
         "UpgradeProposal": {cls: UpgradeProposal, type: ProposalTypes.Upgrade},
         // "ParticipantProposal": {cls: ParticipantProposal, type: ProposalTypes.Participant},
         // "ParticipantRemovalProposal": {cls: ParticipantRemovalProposal, type: ProposalTypes.ParticipantRemoval},
-        "DescriptorChange": {cls: DescriptorChangeProposal, type: ProposalTypes.descriptorChange}
+        "DescriptorChangeProposal": {cls: DescriptorChangeProposal, type: ProposalTypes.DescriptorChange}
       } 
     : 
       {

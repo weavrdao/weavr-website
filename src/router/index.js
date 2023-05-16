@@ -49,7 +49,6 @@ async function threadDataHelper(to, options = {withProposals: false}) {
   const {withProposals} = options 
   if(store.getters.allThreads.length == 0){
     store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
-    console.log("PARAMS: ",to.params);
     await store.dispatch("refreshThreads")
     if(withProposals) {
       store.dispatch("setLoadingState", {isLoading: true, message: "Loading Thread Proposals"})
@@ -222,17 +221,17 @@ const router = new createRouter({
               path: "overview",
               name: "overview",
               component: ThreadOverview,
-              beforeEnter: async (to) => {
-                return await threadDataHelper(to, {withProposals: true})
-              },
+              // beforeEnter: async (to) => {
+              //   return await threadDataHelper(to, {withProposals: true})
+              // },
             },
             {
               path: "governance",
               name: "governance",
               component: ThreadGovernance,
-              beforeEnter: async (to) => {
-                return await threadDataHelper(to, {withProposals: true})
-              },
+              // beforeEnter: async (to) => {
+              //   return await threadDataHelper(to, {withProposals: true})
+              // },
               children: [
                 {
                   path: "paperProposal",
@@ -269,9 +268,9 @@ const router = new createRouter({
                   path: "proposal/:proposalId",
                   component: Modal,
                   props: { component: SingleProposal },
-                  beforeEnter: async (to) => {
-                    return await threadDataHelper(to, {withProposals: true})
-                  },
+                  // beforeEnter: async (to) => {
+                  //   return await threadDataHelper(to, {withProposals: true})
+                  // },
                 },
                 {
                   path: "proposal/:proposalId/queue",
@@ -437,7 +436,7 @@ router.beforeEach(async (to) => {
 
   const address = store.getters.userWalletAddress;
   const isConnected = ethers.utils.isAddress(address);
-  const isWhitelisted = store.getters.isWhitelisted;
+  // const isWhitelisted = store.getters.isWhitelisted;
   // const isGuest = store.getters.guestCookie;
   const decoded_cookie = getCookie(USER_COOKIE_KEY)
   let cookie = {}
@@ -451,24 +450,29 @@ router.beforeEach(async (to) => {
     toast.error("The route you are trying to access is currently locked", { position: "top"});
     return false
   }
-  
-    // not connected
-    // cookie
-    if (!isConnected && ethers.utils.isAddress(cookie.wallet)) {
-      console.log("____________________________ AUTOCONNECT__________________");
-      // - autoconnect and navigate
-      const toast = createToaster({})
-      await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
-      await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
-      
-          // whitelisted
-          return { path: to.fullPath}
-        
-      })
 
-    }
+  // if navigating to thread governance related path
+  // - check if proposals per asset are loaded
+  // - else sync proposals
+  // if(to.path.includes("threads") && store.getters.p)
+  if(to.params.threadId) {
+    await threadDataHelper(to, {withProposals: true}).then(() => {
+      console.log("PROPOSALS FROM ROUTER", store.getters.proposalsPerAsset)
+    })
+
+  }
+  // not connected
+  // cookie
+  if (!isConnected && ethers.utils.isAddress(cookie.wallet)) {
+    // - autoconnect and navigate
+    const toast = createToaster({})
+    await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
+    await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
+      // whitelisted
+      return { path: to.fullPath}
+    })
+  }
      
-  console.log("no wallet sync!");
   return true
 })
 

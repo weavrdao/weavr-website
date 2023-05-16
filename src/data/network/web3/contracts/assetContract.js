@@ -77,8 +77,6 @@ class AssetContract {
    * @param {bytes32} info Proposal info
    */
   async proposePaper(supermajority, info) {
-    console.log(`SENT DIRECTLY TO CONTRACT: ${info} :: => ${this.mutableContract.address}`);
-
     let tx = await this.mutableContract.proposePaper(supermajority, info,
       );
     return (await tx.wait()).status;
@@ -89,7 +87,6 @@ class AssetContract {
    * @param {bytes32} info Proposal info
    */
   async proposeParticipant(participantType, participant, info) {
-    console.log({participantType, participant, info});
     let tx = await this.mutableContract.proposeParticipant(
       participantType,
       participant,

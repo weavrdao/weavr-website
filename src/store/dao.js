@@ -169,7 +169,6 @@ const actions = {
       forumLink
     );
   },
-  
   async createParticipantRemovalProposal(context, props) {
     const {assetId, participant, removalFee, signatures, title, description, forumLink} = props;
     return dao.createParticipantRemovalProposal(
