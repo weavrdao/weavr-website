@@ -51,14 +51,14 @@
             </a>
             <!-- <hr class="dropdown-divider"> -->
 
-            <a  v-if="whitelisted && isConnected && hasKyc" class="dropdown-item">
+            <!-- <a  v-if="whitelisted && isConnected && hasKyc" class="dropdown-item">
               <div  class="columns is-flex is-vcentered" @click="onVouch">
                 <span class="column">
-                  <unicon name="user-plus" :width="24" :height="24" fill="white" alt="address verified"/>
+                 <unicon name="user-plus" :width="24" :height="24" fill="white" alt="address verified"/>
                 </span>
                 <span class="column is-flex is-vcentered has-text-white">Vouch</span>
               </div>
-            </a>
+             </a> -->
             <hr class="dropdown-divider">
              <a @click="onLogout" class="dropdown-item">
                 <div class="px-3 columns is-flex is-vcentered">
