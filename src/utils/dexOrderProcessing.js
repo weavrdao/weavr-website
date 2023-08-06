@@ -6,113 +6,125 @@ const orderTypeMap = {
   2: "SELL",
 };
 
-const processRawOrderEvent = (rawOrderEvent) => {
-  const orderType = rawOrderEvent[0];
-  const pricePoint = rawOrderEvent[1];
+const chronologicalEventSort = (e1, e2) => {
+  const { blockNumber: bn1, transactionIndex: txi1, logIndex: li1 } = e1;
+  const { blockNumber: bn2, transactionIndex: txi2, logIndex: li2 } = e2;
+
+  // Events emitted in different blocks.
+  const bnComparison = bn2 - bn1;
+  if (bnComparison !== 0) return bnComparison;
+
+  // Events emitted in same block, but seperate transactions.
+  const txiComparison = txi2 - txi1;
+  if (txiComparison !== 0) return txiComparison;
+
+  // Events emitted in same transaction.  
+  const liComparison = li2 - li1;
+  if (liComparison !== 0) return liComparison;
+
+  // Should never happen.
+  throw new Error("Duplicate event passed to chronologicalEventSort, ensure that events are unique.");
+}
 
 
-  return {
-    orderType: orderTypeMap[orderType],
-    price: pricePoint,
-  }
-};
+class OrderProcessor {
+  constructor(events) {
+    // Mirrors on-chain structure
+    this.orderBook = {};
 
-const processRawOrderIncreaseEvent = (rawOrderIncreaseEvent) => {
-  const trader = rawOrderIncreaseEvent[0];
-  const pricePoint = rawOrderIncreaseEvent[1];
-  const amount = rawOrderIncreaseEvent[2];
-
-  return {
-    trader,
-    price: pricePoint,
-    amount,
-  }
-};
-
-const processOrderFillEvent = (rawOrderFillEvent) => {
-  const orderer = rawOrderFillEvent[0];
-  const price = rawOrderFillEvent[1];
-  const executor = rawOrderFillEvent[2];
-  const amount = rawOrderFillEvent[3];
-        
-  return {
-    orderer,
-    price,
-    executor,
-    amount,
-  }
-};
-
-const processOrderCancelEvent = (rawOrderCancelEvent) => {
-  const trader = rawOrderCancelEvent[0];
-  const price = rawOrderCancelEvent[1];
-  const amount = rawOrderCancelEvent[2];
-
-  return {
-    trader,
-    price,
-    amount,
-  }
-};
-
-
-// eslint-disable-next-line max-lines-per-function
-const processAllRawOrderEvents = (rawEvents, userAddress) => {
-  const rawOrderEvents = rawEvents.Order || [];
-  const rawOrderIncreaseEvents = rawEvents.OrderIncrease || [];
-  const rawOrderFillEvents = rawEvents.OrderFill || [];
-  const rawOrderCancelEvents = rawEvents.OrderCancellation || [];
-
-  const orders = rawOrderEvents.map(processRawOrderEvent);
-  const orderIncreases = rawOrderIncreaseEvents.map(processRawOrderIncreaseEvent);
-  const orderFills = rawOrderFillEvents.map(processOrderFillEvent);
-  const orderCancels = rawOrderCancelEvents.map(processOrderCancelEvent);
-
-  let orderBook = {};
-  let userOrderBook = {};
-  
-  for(const order of orders) {
-    const { orderType, price } = order;
-    // Overwrite previous values ??
-    orderBook[price.toString()] = { orderType, amount: ethers.BigNumber.from(0) };
-    userOrderBook[price.toString()] = { orderType, amount: ethers.BigNumber.from(0) };
-  }
-
-  for(const orderIncrease of orderIncreases) {
-    const { trader, price, amount } = orderIncrease;
-
-    orderBook[price.toString()].amount = orderBook[price.toString()].amount.add(amount);
-
-    if (trader.toLowerCase() === userAddress.toLowerCase()) {
-      userOrderBook[price.toString()].amount = userOrderBook[price.toString()].amount.add(amount);
+    if (events && events.length > 0) {
+      this.processEvents(events);
     }
   }
 
-  for(const orderFill of orderFills) {
-    const { orderer, price, amount } = orderFill;
-
-    orderBook[price.toString()].amount = orderBook[price.toString()].amount.sub(amount);
-
-    if (orderer.toLowerCase() === userAddress.toLowerCase()) {
-      userOrderBook[price.toString()].amount = userOrderBook[price.toString()].amount.sub(amount);
-    } 
+  updateOrders(events) {
+    if (!events || events.length === 0) return;
+    this.processEvents(events);
   }
 
-  for(const orderCancel of orderCancels) {
-    const { trader, price, amount } = orderCancel;
-    orderBook[price.toString()].amount = orderBook[price.toString()].amount.sub(amount);
+  getOrders() {
+    return Object.entries(this.orderBook).map(([price, orders]) => ({
+      price,
+      amount: orders.reduce((total, order) => total.add(order.amount), ethers.BigNumber.from(0)),
+    }));
+  }
 
-    if (trader.toLowerCase() === userAddress.toLowerCase()) {
-      userOrderBook[price.toString()].amount = userOrderBook[price.toString()].amount.sub(amount);
+  processOrderIncrease({ event }) {
+    const [trader, pricePoint, amount] = event;
+    const price = pricePoint.toString();
+
+    if (!this.orderBook[price]) {
+      this.orderBook[price] = [];
     }
-      
+
+    this.orderBook[price].push({ trader, pricePoint: price, amount, currentIndex: this.orderBook[price].length });
   }
 
-  return {
-    global: Object.entries(orderBook).map(([price, order]) => ({ ...order, price })),
-    user: Object.entries(userOrderBook).map(([price, order]) => ({ ...order, price }))
-  };
-};
+  processOrderFill({ event }) {
+    const [orderer, pricePoint, _, amount] = event;
+    const price = pricePoint.toString();
 
-export { processAllRawOrderEvents };
+    // Assumes only one order per user at a given price point.
+    const orderIndex = this.orderBook[price].findIndex(order => order.trader === orderer);
+
+    if (orderIndex !== -1) {
+      if (this.orderBook[price][orderIndex].amount > amount) {
+        this.orderBook[price][orderIndex].amount -= amount;
+      } else {
+        this.orderBook[price].splice(orderIndex, 1);
+      }
+    }
+
+    this.orderBook[price] = this.orderBook[price].map((order, index) => ({...order, currentIndex: index}));
+
+  }
+
+  processOrderCancel({ event }) {
+    const [trader, pricePoint] = event;
+    const price = pricePoint.toString();
+
+    const orderIndex = this.orderBook[price].findIndex(order => order.trader === trader);
+
+    if (orderIndex !== -1) {
+      this.orderBook[price].splice(orderIndex, 1);
+    }
+
+    this.orderBook[price] = this.orderBook[price].map((order, index) => ({...order, currentIndex: index}));
+  }
+
+  processEvents(events) {
+    console.log(`Processing ${events.length} events.`);
+    const chronologicalEvents = events.sort(
+      ({ orderingIndicies: oi1 }, { orderingIndicies: oi2 }) => chronologicalEventSort(oi1, oi2)
+    );
+
+    console.log("chronologicalEvents");
+    console.log(chronologicalEvents);
+
+    for (const event of chronologicalEvents) {
+      switch (event.name) {
+      case "Order":
+      case "OrderCancelling":
+        // no-op
+        break;
+      case "OrderIncrease":
+        this.processOrderIncrease(event);
+        break;
+      case "OrderFill":
+        this.processOrderFill(event);
+        break;
+      case "OrderCancellation":
+        this.processOrderCancel(event);
+        break;
+      default:
+        console.error(`Unknown event type: ${event.name}`);
+      }
+    }
+
+    console.log(this.orderBook);
+    return this.orderBook;
+  }
+}
+
+export { chronologicalEventSort, OrderProcessor };
 

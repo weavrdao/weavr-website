@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import {ethers} from "ethers";
 import {CONTRACTS} from "@/services/constants"
 import {getIpfsHashFromBytes32} from "@/data/network/storage/ipfs/common";
@@ -15,7 +16,7 @@ import {
   TokenActionProposal,
   UpgradeProposal
 } from "@/models/proposals";
-import { processAllRawOrderEvents } from "../../../../utils/dexOrderProcessing";
+import { OrderProcessor } from "../../../../utils/dexOrderProcessing";
 
 class InfuraEventCacheClient {
   constructor(ProviderNetwork, ProviderApiKey, startBlockNumber) {
@@ -53,13 +54,16 @@ class InfuraEventCacheClient {
     blockNumber = this.startBlockNumber;
     const contract = new ethers.Contract(assetId, isThread ? ThreadJSON.abi : WEAVRJSON.abi, this.provider);
     const erc20 = await contract.erc20();
-    console.log(`FETCHING ORDERS FOR ${erc20}`);
+
     let events = await this.getEventsForILODEX(erc20, blockNumber, currentBlockNumber)
 
-    const orders = processAllRawOrderEvents(events, userAddress)
+    const orderProcessor = new OrderProcessor(events);
+    const orders = orderProcessor.getOrders();
+
     console.log("PROCESSED ORDERS");
     console.log(orders);
-    return orders;
+
+    return { global: orders };
   }
 
   async getEventsForAsset(assetId, iface, isThread, blockNumber, currentBlockNumber) {
@@ -110,6 +114,7 @@ class InfuraEventCacheClient {
       "OrderCancelling",
       "OrderCancellation",
     ];
+
     const events = eventNames.map(async eventName => {
       return ferc20_contract.queryFilter(eventName, blockNumber, currentBlockNumber).then(async (raw_events) => {
         const eventSignature = testInterface.getEventTopic(eventName);
@@ -117,22 +122,24 @@ class InfuraEventCacheClient {
         for (const raw_event of raw_events) {
           for (let i = 0; i < raw_event.topics.length; i++) {
             if (raw_event.topics[i] === eventSignature) {
-              const event = testInterface.decodeEventLog(eventName, raw_event.data, raw_event.topics);
-              orderEvents.push(event);
+              orderEvents.push({
+                name: eventName,
+                event: testInterface.decodeEventLog(eventName, raw_event.data, raw_event.topics),
+                orderingIndicies: {
+                  blockNumber: raw_event.blockNumber,
+                  transactionIndex: raw_event.transactionIndex,
+                  logIndex: raw_event.logIndex,
+                }
+              });
             }
           }
         }
-        console.log(`ORDER EVENTS FOR ${erc20}`)
-        console.log(orderEvents);
+
         return orderEvents;
       });
     });
-    const awaitedEvents = await Promise.all(events);
-    const output = {};
-    for (let i = 0; i < eventNames.length; i++) {
-      output[eventNames[i]] = awaitedEvents[i];
-    }
-    return output;
+
+    return (await Promise.all(events)).flat(1);
   }
 
   getProposals(events) {
