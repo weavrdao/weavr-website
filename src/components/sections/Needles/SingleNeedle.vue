@@ -173,10 +173,10 @@ export default {
       return metrics
     },
     target() {
-      return Number(ethers.utils.formatUnits(this.needle.target, 6)).toLocaleString();
+      return Number(ethers.utils.formatUnits(this.needle.target, 18)).toLocaleString();
     },
     deposited() {
-      return Number(ethers.utils.formatUnits(this.needle.amountDeposited, 6)).toLocaleString();
+      return Number(ethers.utils.formatUnits(this.needle.amountDeposited, 18)).toLocaleString();
     },
     shouldShowRedeem() {
       if(!this.crowdfundState) return false;
