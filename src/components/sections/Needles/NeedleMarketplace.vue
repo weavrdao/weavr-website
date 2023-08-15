@@ -10,10 +10,11 @@
       <h2 class="title">No needles have been created yet</h2>
     </div>
     <div v-else class="needles-container mt-5">
-      <div v-for="needle in this.needles" :key="needle.id">
-        <div v-if="needle.status === 'active' || needle.status === 'executing'">
+        <div v-for="needle in this.needles" :key="needle.id">
+          <div v-if="needle.status === 'active' || needle.status === 'executing'">
+            <NeedleMarketListItem :needle="needle" />
           <NeedleMarketListItem :needle="needle" />
-        <NeedleMarketListItem :needle="needle" />
+        </div>
       </div>
     </div>
   </div>
