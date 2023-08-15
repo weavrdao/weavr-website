@@ -192,7 +192,7 @@ const actions = {
     const { assetId } = params;
     const walletState = await wallet.getState();
 
-    const address = context.userWalletAddress || walletState.address;
+    const address = context.getters.userWalletAddress || walletState.address;
 
     if(!address) {
       console.error("No wallet connected, cannot get trade token allowance");
@@ -235,7 +235,7 @@ const actions = {
     const {threadId} = params;
     const walletState = await wallet.getState();
 
-    const address = context.userWalletAddress || walletState.address;
+    const address = context.getters.userWalletAddress || walletState.address;
 
     if(!address) {
       console.error("No wallet connected, cannot get trade token allowance");
@@ -249,7 +249,7 @@ const actions = {
     const { assetId } = params;
     const walletState = await wallet.getState();
 
-    const address = context.userWalletAddress || walletState.address;
+    const address = context.getters.userWalletAddress || walletState.address;
 
     if(!address) {
       console.error("No wallet connected, cannot get trade token allowance");
