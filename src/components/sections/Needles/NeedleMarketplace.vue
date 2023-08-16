@@ -12,25 +12,7 @@
     <div v-else>
       <h2 class="title">Active Needles</h2>
       <div class="needles-container mt-5">
-        <div v-for="needle in this.activeNeedles" :key="needle.id" >
-          <NeedleMarketListItem :needle="needle" />
-        </div>
-      </div>
-      <h2 class="title">Executing Needles</h2>
-      <div class="needles-container mt-5">
-        <div v-for="needle in this.executingNeedles" :key="needle.id" >
-          <NeedleMarketListItem :needle="needle" />
-        </div>
-      </div>
-      <h2 class="title">Finished Needles</h2>
-      <div class="needles-container mt-5">
-        <div v-for="needle in this.finishedNeedles" :key="needle.id" >
-          <NeedleMarketListItem :needle="needle" />
-        </div>
-      </div>
-      <h2 class="title">Refunding Needles</h2>
-      <div class="needles-container mt-5">
-        <div v-for="needle in this.refundingNeedles" :key="needle.id" >
+        <div v-for="needle in this.needles" :key="needle.id" >
           <NeedleMarketListItem :needle="needle" />
         </div>
       </div>

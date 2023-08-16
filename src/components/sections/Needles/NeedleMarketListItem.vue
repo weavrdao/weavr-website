@@ -4,7 +4,7 @@
       <img v-bind:src="getCoverImageIpfsUrl()" alt="">
     </div>
     <div class="tag-container mb-2">
-      <span class="tag has-background-mediumBlue has-text-white">Residential</span>
+      <span class="tag has-background-mediumBlue has-text-white">{{state}}</span>
     </div>
     <div class="is-flex is-justify-content-space-between">
       <h3>{{ needle.name || 'Unnamed' }}</h3>
@@ -45,6 +45,9 @@ export default {
     },
     percentage() {
       return 100 * this.needle.amountDeposited / this.needle.target
+    },
+    state() {
+      return this.needle.state
     }
   },
 
