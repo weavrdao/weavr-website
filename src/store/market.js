@@ -81,6 +81,30 @@ const getters = {
   allNeedles(state) {
     return state.platform.needles;
   },
+
+  activeNeedles(state) {
+    return state.platform.needles.filter((needle) => {
+      return needle.state === "Active"
+    })
+  },
+
+  executingNeedles(state) {
+    return state.platform.needles.filter((needle) => {
+      return needle.state === "Executing"
+    })
+  },
+
+  finishedNeedles(state) {
+    return state.platform.needles.filter((needle) => {
+      return needle.state === "Finished"
+    })
+  },
+
+  refundingNeedles(state) {
+    return state.platform.needles.filter((needle) => {
+      return needle.state === "Refunding"
+    })
+  },
   
   threadById(state) {
     var assetMap = new Map();

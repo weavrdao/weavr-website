@@ -9,9 +9,30 @@
     <div class="is-flex is-justify-content-center is-align-items-center mt-5 pt-5" v-else-if="this.needles.length === 0">
       <h2 class="title">No needles have been created yet</h2>
     </div>
-    <div v-else class="needles-container mt-5">
-        <div v-for="needle in this.needles" :key="needle.id">
-            <NeedleMarketListItem :needle="needle" />
+    <div v-else>
+      <h2 class="title">Active Needles</h2>
+      <div class="needles-container mt-5">
+        <div v-for="needle in this.activeNeedles" :key="needle.id" >
+          <NeedleMarketListItem :needle="needle" />
+        </div>
+      </div>
+      <h2 class="title">Executing Needles</h2>
+      <div class="needles-container mt-5">
+        <div v-for="needle in this.executingNeedles" :key="needle.id" >
+          <NeedleMarketListItem :needle="needle" />
+        </div>
+      </div>
+      <h2 class="title">Finished Needles</h2>
+      <div class="needles-container mt-5">
+        <div v-for="needle in this.finishedNeedles" :key="needle.id" >
+          <NeedleMarketListItem :needle="needle" />
+        </div>
+      </div>
+      <h2 class="title">Refunding Needles</h2>
+      <div class="needles-container mt-5">
+        <div v-for="needle in this.refundingNeedles" :key="needle.id" >
+          <NeedleMarketListItem :needle="needle" />
+        </div>
       </div>
     </div>
   </div>
@@ -31,6 +52,10 @@ export default {
   computed: {
     ...mapGetters({
       needles: "allNeedles",
+      activeNeedles: "activeNeedles",
+      executingNeedles: "executingNeedles",
+      finishedNeedles: "finishedNeedles",
+      refundingNeedles: "refundingNeedles",
     }),
     loading() {
       return this.needles === null;
