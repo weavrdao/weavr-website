@@ -13,7 +13,6 @@
         <div v-for="needle in this.needles" :key="needle.id">
           <div v-if="needle.state === 'Active' || needle.state === 'Executing'">
             <NeedleMarketListItem :needle="needle" />
-          <NeedleMarketListItem :needle="needle" />
         </div>
       </div>
     </div>
