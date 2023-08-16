@@ -58,7 +58,7 @@ export default {
         : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
     },
     getDisplayTarget() {
-      return Number(ethers.utils.formatUnits(this.needle.target, 6)).toLocaleString("en-US")
+      return Number(ethers.utils.formatUnits(this.needle.target, 18)).toLocaleString("en-US")
     },
     routeToNeedlePage() {
       this.$router.push(`needles/${this.needle.id}`);
