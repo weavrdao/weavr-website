@@ -269,21 +269,21 @@ const actions = {
     if(allowance) {
       context.commit(
         "setTradeTokenAllowance",
-        hexToDecimals(allowance, 6),
+        hexToDecimals(allowance, 18),
       );
     }
 
     if(tradeTokenBalance) {
       context.commit(
         "setTradeTokenBalance",
-        hexToDecimals(tradeTokenBalance, 6),
+        hexToDecimals(tradeTokenBalance, 18),
       );
     }
 
     if(crowdfundTokenBalance) {
       context.commit(
         "setCrowdfundTokenBalance",
-        hexToDecimals(crowdfundTokenBalance, 6)
+        hexToDecimals(crowdfundTokenBalance, 18)
       );
     }
   },

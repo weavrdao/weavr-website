@@ -11,7 +11,6 @@
     </div>
     <div v-else class="needles-container mt-5">
         <div v-for="needle in this.needles" :key="needle.id">
-          <p>{{needle.state}}</p>
           <div v-if="needle.state === 'Active' || needle.state === 'Executing'">
             <NeedleMarketListItem :needle="needle" />
           <NeedleMarketListItem :needle="needle" />
