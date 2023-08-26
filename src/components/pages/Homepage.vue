@@ -2,7 +2,7 @@
   <div class="container p-5 is-dark">
     <div class="columns is-desktop is-centered">
       <div class="column p-5 mt-6 connect-container">
-        <h1 class="title is-extra-large has-text-white p-2">
+        <h1 class="title has-text-white">
           The Blockchain
           <br />
           <span class="word-container">
@@ -170,6 +170,48 @@
 .is-size-7 {
   font-size: 0.6rem !important;
 }
+
+/* Mobile First: Default title size for mobile */
+.title {
+  font-size: 1.5rem;  // Adjust this size as required for mobile screens
+}
+
+/* Adjust for larger mobile devices or small tablets */
+@media (min-width: 480px) {
+  .title {
+    font-size: 2rem;
+  }
+}
+
+/* Adjust for larger tablets */
+@media (min-width: 640px) {
+  .title {
+    font-size: 2.5rem;
+  }
+}
+
+/* Adjust for small desktops or large tablets in landscape mode */
+@media (min-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+}
+
+/* Adjust for standard desktop screens */
+@media (min-width: 1024px) {
+  .title {
+    font-size: 3.5rem;
+  }
+}
+
+/* Adjust for large desktop screens */
+@media (min-width: 1200px) {
+  .title {
+    font-size: 4rem;  // This could be your original size for larger desktops
+  }
+}
+
+
 .content.is-vcentered {
   display: flex;
   flex-wrap: wrap;
@@ -187,14 +229,51 @@
   cursor: pointer;
 }
 
+/* Mobile First Styles */
 .word-container {
-  display: inline-block;
-  width: 500px;  /* Adjust this value based on your longest word/phrase */
-  height: 120px;  /* Adjust this value based on your font size */
-  line-height: 60px;  /* Ensures vertical centering */
-  overflow: hidden;  /* Ensures that any content exceeding the box won't be shown */
-  text-align: left;  /* Centers the content horizontally */
+  width: 90%;  /* Adjust for mobile first */
+  height: auto;
+  line-height: normal;
 }
+
+/* Media Query for Tablets and Above */
+@media (min-width: 768px) {
+  .word-container {
+    width: 500px;
+    height: 120px;
+    line-height: 60px;
+  }
+}
+
+/* Media Query for Desktops and Above */
+@media (min-width: 1024px) {
+  .columns.is-desktop {
+    display: flex;  /* Use flexbox for desktop */
+  }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 767px) {
+  .columns, .column {
+    flex-direction: column;  /* Stack columns vertically on mobile */
+  }
+
+  .image img {
+    width: 100%;  /* Make images full width on mobile */
+    height: auto;
+  }
+
+  .is-size-3-mobile {
+    font-size: 1.5rem;  /* Adjust font size for mobile */
+  }
+
+  .title, .subtitle {
+    text-align: center;  /* Center titles and subtitles on mobile */
+  }
+
+  /* Add any other mobile-specific styles here */
+}
+
 
 .fade-enter-active, .fade-leave-active {
   transition: opacity 200ms;
