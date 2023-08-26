@@ -6,48 +6,49 @@
           The Blockchain
           <br />
           <span class="word-container">
-            <span class="rotation-word has-text-mediumBlue">{{ currentWord }}</span>
-          </span>
+            <transition name="fade" mode="out-in">
+                <span class="rotating-word" :key="currentWord">{{ currentWord }}</span>
+            </transition>
+        </span>
           <br />
-          Owners Club
+          <span class="has-text-mediumBlue">Owners Club</span>
         </h1>
-        <p class="is-size-4"></p>
-        <b> Powered By</b>
-        <div class="columns is-3-desktop">
-          <!--            <a-->
-<!--                class="button is-primary is-fullwidth is-size-4"-->
-<!--                href="https://weavr-dao.gitbook.io/weavr-dao/"-->
-<!--                target="_blank">-->
-<!--              Learn more-->
-<!--            </a>-->
-            <div class="columns is-3">
-              <div class="column is-flex is-align-items-center">
-                <a href="https://ipfs.io" target="_blank">
-                <figure class="image is-128x128">
-                  <img src="../../assets/logo/3rd-party/ipfs_logo.png" alt="ipfs" />
-                </figure>
-                </a>
-              </div>
-              <div class="column is-flex is-align-items-center">
-                <a href="https://arbitrum.io" target="_blank">
-                <figure class="image is-128x128">
-                  <img src="../../assets/logo/3rd-party/arbitrum/arbitrum_vertical.png" alt="arbitrum" />
-                </figure>
-                </a>
-              </div>
-              <div class="column is-flex is-align-items-center">
-                <a href="https://tenderly.co" target="_blank">
-                <figure class="image is-128x128">
-                <img src="../../assets/logo/3rd-party/tenderly.png" alt="tenderly" />
-                </figure>
-                </a>
-              </div>
-          </div>
-        </div>
       </div>
       <div class="column logo-container p-6">
         <div class="image is-fullwidth p-4">
           <img class="p-6" src="../../assets/for-builders.svg" alt="" />
+        </div>
+        <b> Powered By</b>
+        <div class="columns is-3-desktop">
+          <!--            <a-->
+          <!--                class="button is-primary is-fullwidth is-size-4"-->
+          <!--                href="https://weavr-dao.gitbook.io/weavr-dao/"-->
+          <!--                target="_blank">-->
+          <!--              Learn more-->
+          <!--            </a>-->
+          <div class="columns is-3">
+            <div class="column is-flex is-align-items-center">
+              <a href="https://ipfs.io" target="_blank">
+                <figure class="image is-128x128">
+                  <img src="../../assets/logo/3rd-party/ipfs_logo.png" alt="ipfs" />
+                </figure>
+              </a>
+            </div>
+            <div class="column is-flex is-align-items-center">
+              <a href="https://arbitrum.io" target="_blank">
+                <figure class="image is-128x128">
+                  <img src="../../assets/logo/3rd-party/arbitrum/arbitrum_vertical.png" alt="arbitrum" />
+                </figure>
+              </a>
+            </div>
+            <div class="column is-flex is-align-items-center">
+              <a href="https://tenderly.co" target="_blank">
+                <figure class="image is-128x128">
+                  <img src="../../assets/logo/3rd-party/tenderly.png" alt="tenderly" />
+                </figure>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -56,7 +57,7 @@
       <div class="column is-full has-text-lightGray has-text-centered">
         <span class="title is-size-1 has-border-bottom primary-border-2">
           <!-- <unicon name="eye-slash" fill="lightGray"></unicon> -->
-          <b>Are you ready to Own?</b>
+          <b>Welcome to the Club</b>
         </span>
       </div>
     </div>
@@ -201,34 +202,19 @@
 
 .word-container {
   display: inline-block;
-  overflow: hidden;
-  vertical-align: bottom;
-  position: relative;
-  //height: 1em;
+  width: 500px;  /* Adjust this value based on your longest word/phrase */
+  height: 120px;  /* Adjust this value based on your font size */
+  line-height: 60px;  /* Ensures vertical centering */
+  overflow: hidden;  /* Ensures that any content exceeding the box won't be shown */
+  text-align: left;  /* Centers the content horizontally */
 }
 
-.rotating-word {
-  position: absolute;
-  top: 0;
-  left: 0;
-  animation: fadeOutIn 10s infinite;
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 200ms;
 }
-
-@keyframes fadeOutIn {
-  0%, 20%, 100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  30%, 50% {
-    opacity: 0;
-    transform: translateY(-100%);
-  }
-  60%, 80% {
-    opacity: 0;
-    transform: translateY(100%);
-  }
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
 }
-
 
 .primary-border-2 {
   border-color: $primary !important ;
@@ -260,8 +246,9 @@ export default {
   name: "Homepage",
   data() {
     return {
-      words: ["Morracan Hotel", "Five Guys", "Campground", "Condo", "Strip Mall"],
+      words: ["Hotel in Marrakesh", "Restaurant Franchise", "Campground", "Condominium", "Strip Mall"],
       currentIndex: 0,
+      OpacityLevel: 1,
       forBuyers: [
         "Buy asset tokens within weavrDAO",
         "Manage the asset collaboratively with likeminded owners",
@@ -315,17 +302,22 @@ export default {
     }
   },
   mounted() {
-    this.interval = setInterval(() => {
-      this.currentIndex = (this.currentIndex + 1) % this.words.length;
-    }, 5000);
+    this.interval = setInterval(this.changeWord, 3000);
   },
   beforeDestroy() {
     clearInterval(this.interval); // Clear the interval when the component is destroyed
   },
   methods: {
+    changeWord() {
+      this.OpacityLevel = 0;
+      setTimeout(() => {
+        this.currentIndex = (this.currentIndex + 1) % this.words.length;
+        this.OpacityLevel = 1;
+      }, 1000); // After 1 second of fade-out, change the word and fade it in.
+    },
     goBack() {
       this.$router.back();
     },
-  },
+  }
 };
 </script>
