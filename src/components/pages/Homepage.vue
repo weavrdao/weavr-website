@@ -18,41 +18,28 @@
         <div class="image is-fullwidth p-4">
           <img class="p-6" src="../../assets/for-builders.svg" alt="" />
         </div>
-        <b> Powered By</b>
-        <div class="columns is-3-desktop">
-          <!--            <a-->
+        <!--            <a-->
           <!--                class="button is-primary is-fullwidth is-size-4"-->
           <!--                href="https://weavr-dao.gitbook.io/weavr-dao/"-->
           <!--                target="_blank">-->
           <!--              Learn more-->
           <!--            </a>-->
-          <div class="columns is-3">
-            <div class="column is-flex is-align-items-center">
-              <a href="https://ipfs.io" target="_blank">
-                <figure class="image is-128x128">
-                  <img src="../../assets/logo/3rd-party/ipfs_logo.png" alt="ipfs" />
-                </figure>
-              </a>
-            </div>
-            <div class="column is-flex is-align-items-center">
-              <a href="https://arbitrum.io" target="_blank">
-                <figure class="image is-128x128">
-                  <img src="../../assets/logo/3rd-party/arbitrum/arbitrum_vertical.png" alt="arbitrum" />
-                </figure>
-              </a>
-            </div>
-            <div class="column is-flex is-align-items-center">
-              <a href="https://tenderly.co" target="_blank">
-                <figure class="image is-128x128">
-                  <img src="../../assets/logo/3rd-party/tenderly.png" alt="tenderly" />
-                </figure>
-              </a>
-            </div>
-          </div>
         </div>
       </div>
-    </div>
-
+    <section class="pl-5 is-flex is-flex-direction-column is-align-items-center-mobile mb-5">
+      <b class="is-size-4">Powered By</b>
+      <div class="is-flex is-mobile-justify-content-center is-justify-content-start my-4">
+        <a class="mx-5" href="https://ipfs.io" target="_blank">
+          <img src="../../assets/logo/3rd-party/ipfs_logo.png" alt="ipfs" class="image is-64x64" />
+        </a>
+        <a class="mr-5" href="https://arbitrum.io" target="_blank">
+          <img src="../../assets/logo/3rd-party/arbitrum/arbitrum.png" alt="arbitrum" class="image is-64x64" />
+        </a>
+        <a class="mr-5" href="https://tenderly.com" target="_blank">
+          <img src="../../assets/logo/3rd-party/tenderly.png" alt="tenderly" class="image is-64x64" />
+        </a>
+      </div>
+    </section>
     <div class="columns mt-0">
       <div class="column is-full has-text-lightGray has-text-centered">
         <span class="title is-size-1 has-border-bottom primary-border-2">
@@ -227,6 +214,12 @@
   margin-right: unset !important;
   margin-top: 1.5rem;
   gap: 1.5rem;
+}
+
+.is-align-items-center-mobile {
+  @media screen and (max-width: 1024px) {
+    align-items: center !important;
+  }
 }
 
 .bubble-background {
