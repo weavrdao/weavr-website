@@ -3,32 +3,46 @@
     <div class="columns is-desktop is-centered">
       <div class="column p-5 mt-6 connect-container">
         <h1 class="title is-extra-large has-text-white p-2">
-          The Decentralized
-          <br />Real Estate
-          <span class="has-text-mediumBlue">Club</span>
+          The Blockchain
+          <br />
+          <span class="word-container">
+            <span class="rotation-word has-text-mediumBlue">{{ currentWord }}</span>
+          </span>
+          <br />
+          Owners Club
         </h1>
         <p class="is-size-4"></p>
+        <b> Powered By</b>
         <div class="columns is-3-desktop">
-          <div class="column">
-            <a
-                class="button is-primary is-fullwidth is-size-4"
-                href="https://weavr-dao.gitbook.io/weavr-dao/"
-                target="_blank"
-            >
-              Learn more
-            </a>
+          <!--            <a-->
+<!--                class="button is-primary is-fullwidth is-size-4"-->
+<!--                href="https://weavr-dao.gitbook.io/weavr-dao/"-->
+<!--                target="_blank">-->
+<!--              Learn more-->
+<!--            </a>-->
+            <div class="columns is-3">
+              <div class="column is-flex is-align-items-center">
+                <a href="https://ipfs.io" target="_blank">
+                <figure class="image is-128x128">
+                  <img src="../../assets/logo/3rd-party/ipfs_logo.png" alt="ipfs" />
+                </figure>
+                </a>
+              </div>
+              <div class="column is-flex is-align-items-center">
+                <a href="https://arbitrum.io" target="_blank">
+                <figure class="image is-128x128">
+                  <img src="../../assets/logo/3rd-party/arbitrum/arbitrum_vertical.png" alt="arbitrum" />
+                </figure>
+                </a>
+              </div>
+              <div class="column is-flex is-align-items-center">
+                <a href="https://tenderly.co" target="_blank">
+                <figure class="image is-128x128">
+                <img src="../../assets/logo/3rd-party/tenderly.png" alt="tenderly" />
+                </figure>
+                </a>
+              </div>
           </div>
-          <!--          <div class="column">-->
-          <!--            <a class="-->
-          <!--              button -->
-          <!--              is-secondary -->
-          <!--              is-fullwidth -->
-          <!--              has-text-white  -->
-          <!--              is-size-4 "-->
-          <!--               @click="navigateToApp('weavr')">-->
-          <!--              Governance-->
-          <!--            </a>-->
-          <!--          </div>-->
         </div>
       </div>
       <div class="column logo-container p-6">
@@ -42,7 +56,7 @@
       <div class="column is-full has-text-lightGray has-text-centered">
         <span class="title is-size-1 has-border-bottom primary-border-2">
           <!-- <unicon name="eye-slash" fill="lightGray"></unicon> -->
-          <b>Welcome to the Community</b>
+          <b>Are you ready to Own?</b>
         </span>
       </div>
     </div>
@@ -185,6 +199,37 @@
   cursor: pointer;
 }
 
+.word-container {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  position: relative;
+  //height: 1em;
+}
+
+.rotating-word {
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: fadeOutIn 10s infinite;
+}
+
+@keyframes fadeOutIn {
+  0%, 20%, 100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  30%, 50% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  60%, 80% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+
 .primary-border-2 {
   border-color: $primary !important ;
   border-width: 4px;
@@ -198,6 +243,11 @@
   gap: 1.5rem;
 }
 
+.bubble-background {
+  border-radius: 50px;  /* You can adjust this value for more or less rounding */
+  padding: 20px;        /* Adjust padding as needed */
+  display: inline-block;
+}
 .bullet-text {
   @media screen and (max-width: 350) {
     font-size: 0.6rem !important;
@@ -210,6 +260,8 @@ export default {
   name: "Homepage",
   data() {
     return {
+      words: ["Morracan Hotel", "Five Guys", "Campground", "Condo", "Strip Mall"],
+      currentIndex: 0,
       forBuyers: [
         "Buy asset tokens within weavrDAO",
         "Manage the asset collaboratively with likeminded owners",
@@ -256,6 +308,19 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    currentWord() {
+      return this.words[this.currentIndex];
+    }
+  },
+  mounted() {
+    this.interval = setInterval(() => {
+      this.currentIndex = (this.currentIndex + 1) % this.words.length;
+    }, 5000);
+  },
+  beforeDestroy() {
+    clearInterval(this.interval); // Clear the interval when the component is destroyed
   },
   methods: {
     goBack() {
