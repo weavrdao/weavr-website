@@ -29,7 +29,10 @@
     <section class="pl-5 is-flex is-flex-direction-column is-align-items-center-mobile mb-5">
       <b class="is-size-4">Powered By</b>
       <div class="is-flex is-mobile-justify-content-center is-justify-content-start my-4">
-        <a class="mx-5" href="https://ipfs.io" target="_blank">
+        <a class="mx-5" href="https://fractional.finance" target="_blank">
+          <img src="../../assets/logo/3rd-party/ffi.png" alt="fractional finance" class="image is-64x64" />
+        </a>
+        <a class="mr-5" href="https://ipfs.io" target="_blank">
           <img src="../../assets/logo/3rd-party/ipfs_logo.png" alt="ipfs" class="image is-64x64" />
         </a>
         <a class="mr-5" href="https://arbitrum.io" target="_blank">
