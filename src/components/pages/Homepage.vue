@@ -3,7 +3,7 @@
     <div class="columns is-desktop is-centered">
       <div class="column p-5 mt-6 connect-container">
         <h1 class="title has-text-white">
-          The Blockchain
+          The
           <br />
           <span class="word-container">
             <transition name="fade" mode="out-in">
@@ -18,12 +18,12 @@
         <div class="image is-fullwidth p-4">
           <img class="p-6" src="../../assets/for-builders.svg" alt="" />
         </div>
-        <!--            <a-->
-          <!--                class="button is-primary is-fullwidth is-size-4"-->
-          <!--                href="https://weavr-dao.gitbook.io/weavr-dao/"-->
-          <!--                target="_blank">-->
-          <!--              Learn more-->
-          <!--            </a>-->
+                    <a
+                          class="button is-primary is-fullwidth is-size-4"
+                          href="https://3a567f7a.sibforms.com/serve/MUIEAAkS53zR0h7rhxExKB1X1JotCHaM4o7FBy9qRH3V7h92zXfDojr8PpuqQVRtRIYoeLgWddoOz_IVgW3DofxtESXPIwfentMntmPtVWwU_sTQTpYSt6ESaeVmSheGFH20mDIsMgM1UbzffXQ9ghnsJl8wKxqmH0Lxs7_Ppe1Kd6CVHsywoa4e0jFJBCru4UTyeIdV_z53X2yd"
+                          target="_blank">
+                          Apply for Access
+                      </a>
         </div>
       </div>
     <section class="pl-5 is-flex is-flex-direction-column is-align-items-center-mobile mb-5">
@@ -117,50 +117,50 @@
     </div>
 
 
-    <div class="box columns has-text-white p-5 is-5">
-      <div class="column is-half is-5">
-        <div class="image has-radius-lg has-full-borders-primary p-5">
-          <img src="../../assets/arbitrum-network.png" alt="" />
-        </div>
-      </div>
-      <div class="column is-half is-5">
-        <div class="subtitle is-1 has-text-primary">Arbitrum Network</div>
-        <div class="text has-text-lightGray">
-          Arbitrum is a Layer 2 protocol that enables super fast and cheap EVM
-          transactions, while relying on the Ethereum mainnet for security.
-        </div>
-        <a
-            class="button is-primary mt-4"
-            href="https://arbitrum.io/"
-            target="_blank"
-        >Learn more</a
-        >
-      </div>
-    </div>
+<!--    <div class="box columns has-text-white p-5 is-5">-->
+<!--      <div class="column is-half is-5">-->
+<!--        <div class="image has-radius-lg has-full-borders-primary p-5">-->
+<!--          <img src="../../assets/arbitrum-network.png" alt="" />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="column is-half is-5">-->
+<!--        <div class="subtitle is-1 has-text-primary">Arbitrum Network</div>-->
+<!--        <div class="text has-text-lightGray">-->
+<!--          Arbitrum is a Layer 2 protocol that enables super fast and cheap EVM-->
+<!--          transactions, while relying on the Ethereum mainnet for security.-->
+<!--        </div>-->
+<!--        <a-->
+<!--            class="button is-primary mt-4"-->
+<!--            href="https://arbitrum.io/"-->
+<!--            target="_blank"-->
+<!--        >Learn more</a-->
+<!--        >-->
+<!--      </div>-->
+<!--    </div>-->
 
-    <div
-        class="box columns has-background-white has-text-darkGray columns p-5 m-3"
-    >
-      <div class="column is-three-quarters p-3">
-        <div class="w-75">
-          <h1 class="is-size-3"><b>Gain Access to our Marketplace</b></h1>
-          <hr />
-          <p class="is-size-5">
-            Join our newsletter and learn to gain your access Weavr
-          </p>
-        </div>
-        <a
-            class="button is-primary"
-            href="https://3a567f7a.sibforms.com/serve/MUIEAAkS53zR0h7rhxExKB1X1JotCHaM4o7FBy9qRH3V7h92zXfDojr8PpuqQVRtRIYoeLgWddoOz_IVgW3DofxtESXPIwfentMntmPtVWwU_sTQTpYSt6ESaeVmSheGFH20mDIsMgM1UbzffXQ9ghnsJl8wKxqmH0Lxs7_Ppe1Kd6CVHsywoa4e0jFJBCru4UTyeIdV_z53X2yd"
-        >Subscribe
-        </a>
-      </div>
-      <div class="column p-5">
-        <div class="image">
-          <img src="../../assets/envelope.svg" alt="" />
-        </div>
-      </div>
-    </div>
+<!--    <div-->
+<!--        class="box columns has-background-white has-text-darkGray columns p-5 m-3"-->
+<!--    >-->
+<!--      <div class="column is-three-quarters p-3">-->
+<!--        <div class="w-75">-->
+<!--          <h1 class="is-size-3"><b>Gain Access to our Marketplace</b></h1>-->
+<!--          <hr />-->
+<!--          <p class="is-size-5">-->
+<!--            Join our newsletter and learn to gain your access Weavr-->
+<!--          </p>-->
+<!--        </div>-->
+<!--        <a-->
+<!--            class="button is-primary"-->
+<!--            href="https://3a567f7a.sibforms.com/serve/MUIEAAkS53zR0h7rhxExKB1X1JotCHaM4o7FBy9qRH3V7h92zXfDojr8PpuqQVRtRIYoeLgWddoOz_IVgW3DofxtESXPIwfentMntmPtVWwU_sTQTpYSt6ESaeVmSheGFH20mDIsMgM1UbzffXQ9ghnsJl8wKxqmH0Lxs7_Ppe1Kd6CVHsywoa4e0jFJBCru4UTyeIdV_z53X2yd"-->
+<!--        >Subscribe-->
+<!--        </a>-->
+<!--      </div>-->
+<!--      <div class="column p-5">-->
+<!--        <div class="image">-->
+<!--          <img src="../../assets/envelope.svg" alt="" />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 
