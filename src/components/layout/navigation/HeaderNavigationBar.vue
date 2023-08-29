@@ -44,7 +44,7 @@
             ]"
             v-for="item in navigation.items"
             :key="item.name"
-            v-on:click="transitTo(item.route)"
+            v-on:click="transit(item)"
           >
             {{ item.name }}
             <span v-if="item.icon">
@@ -58,7 +58,12 @@
           </a>
         </div>
 
-        <div class="navbar-end">
+<!--        <div class="navbar-center">-->
+<!--          <div class="navbar-item">-->
+<!--            <SignerAddress />-->
+<!--          </div>-->
+<!--        </div>-->
+        <div class="navbar-end is-flex is-justify-content-center is-align-items-center">
           <div class="navbar-item">
             <SignerAddress />
           </div>
@@ -84,21 +89,33 @@ export default {
       navigation: {
         isOpen: false,
         items: [
-          { name: "Governance", route: `/dao/${CONTRACTS.WEAVR}`},
+          { name: "Governance",
+            location: "internal",
+            route: `/dao/${CONTRACTS.WEAVR}`
+          },
           {
             name: "Marketplace",
+            location: "internal",
             route: "/marketplace" ,
             childs: [
               {
                 name: "Needles" ,
+                location: "internal",
                 route: { path: "marketplace", params: { market: "needle"}}
               },
               {
                 name: "Threads",
-                route: { path: "/marketplace/threads"}
+                location: "internal",
+                route: { path: "/marketplace/threads"
+                }
               }
             ]
           },
+          {
+            name: "Whitepaper",
+            location: "external",
+            route: "https://www.notion.so/zeryx/The-Weavr-Whitepaper-e88dd347846544598fad3059bfce843f#2e662626eb9d475aae59081fc110a3c7",
+          }
         ],
       },
     };
@@ -115,6 +132,18 @@ export default {
       this.$router.push(path)
       this.navigation.isOpen ? this.menuToggle() : null;
     },
+    openExternal(url) {
+      window.open(url, "_blank");
+    },
+
+    transit(element) {
+      if(element.location === "internal"){
+        this.transitTo(element.route);
+      } else {
+        this.openExternal(element.route);
+      }
+    },
+
     menuToggle() {
       this.navigation.isOpen = !this.navigation.isOpen;
     },

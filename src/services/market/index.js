@@ -53,8 +53,9 @@ class Market {
 
   async getNeedles() {
     const assetList = await this.cacheClient.fetchNeedles()
-    let needles = []
-    assetList.forEach( n => { if( n.state != "Finished") { needles.push(n)}})
+    // let needles = []
+    // assetList.forEach( n => { if( n.state != "Finished") { needles.push(n)}})
+    let needles = assetList
     try {
       const descriptors = needles.map(el => {
         return getIpfsHashFromBytes32(el.descriptor)

@@ -81,6 +81,30 @@ const getters = {
   allNeedles(state) {
     return state.platform.needles;
   },
+
+  activeNeedles(state) {
+    return state.platform.needles.filter((needle) => {
+      return needle.state === "Active"
+    })
+  },
+
+  executingNeedles(state) {
+    return state.platform.needles.filter((needle) => {
+      return needle.state === "Executing"
+    })
+  },
+
+  finishedNeedles(state) {
+    return state.platform.needles.filter((needle) => {
+      return needle.state === "Finished"
+    })
+  },
+
+  refundingNeedles(state) {
+    return state.platform.needles.filter((needle) => {
+      return needle.state === "Refunding"
+    })
+  },
   
   threadById(state) {
     var assetMap = new Map();
@@ -165,7 +189,7 @@ const actions = {
   async deposit(context, params) {
     const { crowdfundAddress, amount } = params;
     console.log(amount);
-    const parsedAmount = ethers.utils.parseUnits(String(amount), 6);
+    const parsedAmount = ethers.utils.parseUnits(String(amount), 18);
     console.log(parsedAmount);
 
     const status = await crowdfund.deposit(crowdfundAddress, parsedAmount);
@@ -175,7 +199,7 @@ const actions = {
   async withdraw(context, params) {
     const { crowdfundAddress, amount } = params;
     console.log(amount);
-    const parsedAmount = ethers.utils.parseUnits(String(amount), 6);
+    const parsedAmount = ethers.utils.parseUnits(String(amount), 18);
     console.log("PARSED_AMOUNT__ ", parsedAmount);
 
     const status = await crowdfund.withdraw(crowdfundAddress, parsedAmount);
@@ -192,7 +216,7 @@ const actions = {
     const { assetId } = params;
     const walletState = await wallet.getState();
 
-    const address = context.userWalletAddress || walletState.address;
+    const address = context.getters.userWalletAddress || walletState.address;
 
     if(!address) {
       console.error("No wallet connected, cannot get trade token allowance");
@@ -213,21 +237,21 @@ const actions = {
     if(allowance) {
       context.commit(
         "setTradeTokenAllowance",
-        hexToDecimals(allowance, 6),
+        hexToDecimals(allowance, 18),
       );
     }
 
     if(tradeTokenBalance) {
       context.commit(
         "setTradeTokenBalance",
-        hexToDecimals(tradeTokenBalance, 6),
+        hexToDecimals(tradeTokenBalance, 18),
       );
     }
 
     if(crowdfundTokenBalance) {
       context.commit(
         "setCrowdfundTokenBalance",
-        hexToDecimals(crowdfundTokenBalance, 6)
+        hexToDecimals(crowdfundTokenBalance, 18)
       );
     }
   },
@@ -235,7 +259,7 @@ const actions = {
     const {threadId} = params;
     const walletState = await wallet.getState();
 
-    const address = context.userWalletAddress || walletState.address;
+    const address = context.getters.userWalletAddress || walletState.address;
 
     if(!address) {
       console.error("No wallet connected, cannot get trade token allowance");
@@ -249,7 +273,7 @@ const actions = {
     const { assetId } = params;
     const walletState = await wallet.getState();
 
-    const address = context.userWalletAddress || walletState.address;
+    const address = context.getters.userWalletAddress || walletState.address;
 
     if(!address) {
       console.error("No wallet connected, cannot get trade token allowance");
@@ -269,23 +293,26 @@ const actions = {
     if(allowance) {
       context.commit(
         "setTradeTokenAllowance",
-        hexToDecimals(allowance, 6),
+        hexToDecimals(allowance, 18),
       );
     }
 
     if(tradeTokenBalance) {
       context.commit(
         "setTradeTokenBalance",
-        hexToDecimals(tradeTokenBalance, 6),
+        hexToDecimals(tradeTokenBalance, 18),
       );
     }
 
     if(crowdfundTokenBalance) {
       context.commit(
         "setCrowdfundTokenBalance",
-        hexToDecimals(crowdfundTokenBalance, 6)
+        hexToDecimals(crowdfundTokenBalance, 18)
       );
     }
+  },
+  async tokenDecimals(context, params) {
+    return await token.getDecimals(params.tokenAddress)
   },
   ...whitelistActions(whitelist),
 };

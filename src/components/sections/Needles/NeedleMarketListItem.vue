@@ -4,7 +4,7 @@
       <img v-bind:src="getCoverImageIpfsUrl()" alt="">
     </div>
     <div class="tag-container mb-2">
-      <span class="tag has-background-mediumBlue has-text-white">Residential</span>
+      <span class="tag has-background-mediumBlue has-text-white">{{state}}</span>
     </div>
     <div class="is-flex is-justify-content-space-between">
       <h3>{{ needle.name || 'Unnamed' }}</h3>
@@ -45,6 +45,9 @@ export default {
     },
     percentage() {
       return 100 * this.needle.amountDeposited / this.needle.target
+    },
+    state() {
+      return this.needle.state
     }
   },
 
@@ -55,7 +58,7 @@ export default {
         : "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png";
     },
     getDisplayTarget() {
-      return Number(ethers.utils.formatUnits(this.needle.target, 6)).toLocaleString("en-US")
+      return Number(ethers.utils.formatUnits(this.needle.target, 18)).toLocaleString("en-US")
     },
     routeToNeedlePage() {
       this.$router.push(`needles/${this.needle.id}`);

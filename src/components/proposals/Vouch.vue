@@ -4,7 +4,7 @@
     <div class="field">
       <label class="label">Participant</label>
       <div class="control">
-        <input class="input" v-model="participant" type="text" placeholder="Address">
+        <input  ref="participant" class="input" v-model="participant" type="text" placeholder="Address">
       </div>
     </div>
 
@@ -49,7 +49,15 @@ export default {
         this.participant = "";
         return
       }
-      await this.vouch({participant: participant})
+      console.log(this.$refs.participant);
+      // this.$refs.participant.disabled = true
+      // this.$refs.participant.disabled = false
+      await this.vouch({participant: participant}).then(res => {
+        if(res) {
+          this.$router.back()
+        }
+      })
+      
     },
     
     onCancel() {

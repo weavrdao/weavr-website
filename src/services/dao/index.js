@@ -186,10 +186,10 @@ class DAO {
       descriptor, name, imagesHashes: imageHashes, documentHashes,
       metrics
     });
-
+    console.log(">>>>>>>>>>>>", funding_target);
     const data = new ethers.utils.AbiCoder().encode(
       ["address", "uint112"],
-      [tradeToken, ethers.utils.parseUnits(String(funding_target), 6).toString()]
+      [tradeToken, funding_target]
     );
 
     if (!infoHash) return;

@@ -2,7 +2,8 @@ const contractAbi = [
   // Get the balance of a user
   "function balanceOf(address account) view returns (uint256)",
   "function symbol() view returns (string)",
-  "function totalSupply() view returns (uint256)"
+  "function totalSupply() view returns (uint256)",
+  "function decimals() view returns (uint8)"
 ];
 
 export default class TokenContract {
@@ -37,6 +38,15 @@ export default class TokenContract {
       return tSupply;
     } catch (e) {
       console.log("Error fetching token total-supply")
+      console.log(e);
+    }
+  }
+
+  // Query decimals of token
+  async getDecimals() {
+    try {
+      return await this.contract.decimals();
+    } catch (e) {
       console.log(e);
     }
   }

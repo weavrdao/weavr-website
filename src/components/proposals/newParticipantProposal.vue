@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      createProposal: "createParticipantProposal",
+      createProposal: "createProposal",
     }),
     togglePreview() {
       this.title = `Proposing ${this.participant} as ${this.selectedType}`
@@ -115,6 +115,7 @@ export default {
       this.$emit("submited");
       const participant = this.participant
       const props = {
+        pType: "Participant",
         title: `Proposing ${participant} as ${this.selectedType}`,
         assetId: this.assetId,
         participantType: this.pTypeList[this.selectedType],

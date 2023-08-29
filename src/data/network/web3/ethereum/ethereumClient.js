@@ -16,10 +16,6 @@ const { ethers } = require("ethers");
  * @property {ethers.JsonRpcSigner} walletProvider
  * @property {ethers.JsonRpcSigner} walletSigner
  */
-/**
- * @NOTE Need to implent whatchers for chianID, chain-changes and switchToNetwork
- */
-
 class EthereumClient {
   _connector = 0;
   
@@ -124,8 +120,16 @@ class EthereumClient {
   /**
    * @ToDo Implement coinbase Signature
    */
-  async getSignature(domain, types, data) {
-    return await this.walletSigner._signTypedData(domain, types, data);
+  async getSignature(params) {    
+    console.log(params);
+    const fromAddress = await this.getWalletAddress();
+    return await this._connector.provider.request({
+      method: "eth_signTypedData_v4",
+      params: [fromAddress, JSON.stringify(params)]
+    }).then( (sig) => {
+      console.log("SIGNATURE: ", sig);
+      return sig
+    })
   }
 
   /* --- Contract access --- */
