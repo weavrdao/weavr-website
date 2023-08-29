@@ -96,13 +96,13 @@
         </div>
       </div>
     </div>
-    <div class="has-radius-lg p-3">
+    <div class="has-radius-lg p-3 is-full">
       <div class="is-vcentered is-one-fifth px-6 is-3">
-        <div class="title is-1 is-size-3-mobile mt-3">What makes us Unique?</div>
+        <div class="title is-1 is-size-3-mobile mt-3 has-text-centered">What makes us Unique?</div>
       </div>
       <div class=" columns mt-0 is-6">
         <div class="column is-full p-5 is-centered">
-          <div class="columns is-multiline is-desktop">
+          <div class="columns is-centered is-multiline is-desktop">
             <div
                 class="column is-two-fifths is-5 has-radius-lg has-background-darkGray mt-4"
                 v-for="point in uniquePoints"
