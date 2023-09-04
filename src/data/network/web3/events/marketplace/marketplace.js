@@ -6,8 +6,8 @@ const getNeedleDestribuition = async (crowdfundSC) => {
   return new Promise((res) => {
     
     const distributions = distributionEvents.map( dis => {
-        return new Distribution(dis.args.id, dis.args.token, dis.args.amount)
-      })
+      return new Distribution(dis.args.id, dis.args.token, dis.args.amount)
+    })
     res(distributions)
   }) 
 }
@@ -31,7 +31,7 @@ const getNeedleWithdrawals = async(crowdfundSC) => {
     withdrawalEvent.map( w => {
       const id = `${w.args.depositor}_${w.args.amount}`
       withdrew = withdrew.add(w.args.amount)
-       withdawals.push(new Deposit(id, w.args.depositor, w.args.amount))
+      withdawals.push(new Deposit(id, w.args.depositor, w.args.amount))
     })
     res({withdawals, withdrew})
   }) 

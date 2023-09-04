@@ -85,7 +85,7 @@ class InfuraEventCacheClient {
 
   getProposals(events) {
     let proposals = {}
-    events["Proposal"].map(obj => {
+    events.Proposal.map(obj => {
       const {event, timestamp} = obj
       const id = event.id.toNumber()
       proposals[id] =  new BaseProposal(id, event.creator, event.info, event.supermajority, timestamp)
@@ -111,7 +111,7 @@ class InfuraEventCacheClient {
   }
 
   processProposalStatusChanges(events, proposals) {
-    events["ProposalStateChange"].map(obj => {
+    events.ProposalStateChange.map(obj => {
       const {event, timestamp} = obj
       const id = event.id.toNumber()
       if (id in proposals) {
@@ -122,7 +122,7 @@ class InfuraEventCacheClient {
   }
 
   updateProposalsWithVotes(events, proposals) {
-    events["Vote"].forEach(obj => {
+    events.Vote.forEach(obj => {
       const {event, timestamp} = obj
       const id = event.id.toNumber()
       if(id in proposals) {
@@ -162,7 +162,7 @@ class InfuraEventCacheClient {
         // "ParticipantRemovalProposal": {cls: ParticipantRemovalProposal, type: ProposalTypes.ParticipantRemoval},
         "DescriptorChange": {cls: DescriptorChangeProposal, type: ProposalTypes.descriptorChange}
       } 
-    : 
+      : 
       {
         "TokenActionProposal": {cls: TokenActionProposal, type: ProposalTypes.TokenAction},
         "UpgradeProposal": {cls: UpgradeProposal, type: ProposalTypes.Upgrade},
@@ -195,8 +195,8 @@ class InfuraEventCacheClient {
           const event = td_iface.decodeEventLog("CrowdfundedThread", rawEvent.data, rawEvent.topics)
           crowdfunds.set(event.crowdfund, {id: event.crowdfund, thread: threads.get(event.thread)})    
         }
-      )
-    })
+        )
+      })
     for(let needle of crowdfunds.keys()){
       const crowdfundSC = new ethers.Contract(needle, CrowdfundJSON.abi, this.provider)
       const state = await Marketplace.getNeedleState(crowdfundSC)

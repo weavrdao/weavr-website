@@ -39,8 +39,8 @@
 import { mapActions, mapGetters } from "vuex";
 import ProposalList from "@/components/proposals/ProposalList.vue";
 import Address from "../address/Address.vue";
-import { useRoute } from 'vue-router';
-import NewProposalSelector from '../../sections/NewProposalSelector.vue';
+import { useRoute } from "vue-router";
+import NewProposalSelector from "../../sections/NewProposalSelector.vue";
 export default {
   name: "ThreadGovernance",
   components: {
@@ -60,13 +60,13 @@ export default {
       proposalsPerAsset: "proposalsPerAsset",
     }),
     thread() {
-      return this.threads.get(this.$route.params['threadId'])
+      return this.threads.get(this.$route.params.threadId)
     },
     proposals() {
-      return this.proposalsPerAsset.get(this.$route.params['threadId'].toLowerCase())
+      return this.proposalsPerAsset.get(this.$route.params.threadId.toLowerCase())
     },
     activeProposals() {
-      return this.proposalsPerAsset.get(this.$route.params['threadId'].toLowerCase()).filter((proposal) => {
+      return this.proposalsPerAsset.get(this.$route.params.threadId.toLowerCase()).filter((proposal) => {
         const endTime = new Date(proposal.endTimestamp * 1000);
         const currentTime = new Date();
         return (currentTime < endTime) && proposal.state != "Cancelled";
@@ -74,7 +74,7 @@ export default {
     },
 
     pastProposals() {
-      return this.proposalsPerAsset.get(this.$route.params['threadId'].toLowerCase()).filter((proposal) => {
+      return this.proposalsPerAsset.get(this.$route.params.threadId.toLowerCase()).filter((proposal) => {
         const endTime = new Date(proposal.endTimestamp * 1000);
         const currentTime = new Date();
         return (currentTime > endTime );
@@ -97,7 +97,7 @@ export default {
       this.refreshProposals({ assetId: this.threadId, forceRefresh: true });    
     },
     show(list) {
-        this.showPastProposals = list ? true : false
+      this.showPastProposals = list ? true : false
     }
   }
 }

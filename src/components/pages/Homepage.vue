@@ -79,6 +79,7 @@
           <span class="has-radius-md has-text-white p-3 is-size-6-desktop">{{ text }}</span>
         </div>
       </div>
+      
       <div class="column is-half is-4">
         <div class="image">
           <img src="../../assets/hero-image.svg" alt="" />

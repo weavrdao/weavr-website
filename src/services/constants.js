@@ -1,5 +1,5 @@
 
-import deployments from '../../deployments.toml';
+import deployments from "../../deployments.toml";
 const deployment = deployments[process.env.VUE_APP_DEPLOYMENT];
 
 

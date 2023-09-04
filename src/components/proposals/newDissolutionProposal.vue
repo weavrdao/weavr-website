@@ -92,17 +92,18 @@ export default {
       description: "",
       daoResolution: false,
       token: "",
-      price: 0,
-      proposalType: ProposalTypes.Paper,
+      proposalType: ProposalTypes.Dissolution,
       preview: false,
       markdownSource: null,
       proposal: null,
-      forumLink: ""
+      forumLink: "",
+      purchaser: "",
+      purchaseAmount: 0,
     }
   },
   methods: {
     ...mapActions({
-      createPaperProposal: "createDissolutionProposal",
+      createDissolutionProposal: "createProposal",
     }),
     
     async publish() {
@@ -116,8 +117,11 @@ export default {
       const description = this.description;
       const proposalType = this.proposalType;
       const daoResolution = this.daoResolution;
+      const purchaser = this.purchaser;
+      const purchaseAmount = this.purchaseAmount;
+      const token = this.token;
       const forumLink = this.forumLink.includes("https://forum.weavr.org/") ? this.forumLink : "https://forum.weavr.org/c/dao-proposals/";
-      await this.createPaperProposal({assetAddr, proposalType, title, description, daoResolution, forumLink,  $toast: this.$toast} );
+      await this.createProposal({ pType: "Dissolution", assetAddr, proposalType, title, description, daoResolution, token, purchaser, purchaseAmount, forumLink,  $toast: this.$toast} );
       this.$emit("proposed");
     },
 
