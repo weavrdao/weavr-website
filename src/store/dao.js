@@ -154,8 +154,8 @@ const actions = {
   },
 
   async createDissolutionProposal(context, props) {
-    const { assetAddr, daoResolution, title, description, forumLink, purchaser, token, purchaseAmount } = props;
-    return dao.createDissolutionProposal(assetAddr, title, description, forumLink, daoResolution, purchaser, token, purchaseAmount)
+    const { assetAddr, daoResolution, title, description, forumLink, token, purchaseAmount } = props;
+    return dao.createDissolutionProposal(assetAddr, title, description, forumLink, daoResolution, token, purchaseAmount)
   },
 
   async createDescriptorChangeProposal(context, props) {

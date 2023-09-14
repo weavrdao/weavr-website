@@ -27,7 +27,7 @@ const contractAbi = [
   "function erc20() view returns (address)",
 
   // Propose a thread dissolution
-  "function proposeDissolution(string info, address purchaser, address token, uint256 purchaseAmount)",
+  "function proposeDissolution(address token, uint112 price, bytes32 info) returns (uint256 id)",
 
   // Propose Descriptor Change
   "function proposeDescriptorChange(bytes32 _descriptor, bytes32 info) returns (uint256 id)",
@@ -306,21 +306,19 @@ class AssetContract {
   /**
    * Propose a thread dissolution
    * @param {string} info Proposal info
-   * @param {address} purchaser Dissolution proposer
    * @param {address} token Currency provided for payment
    * @param {uint256} purchaseAmount Amount proposed for the purchase
    */
-  async proposeDissolution(info, purchaser, token, purchaseAmount) {
+  async proposeDissolution(token, purchaseAmount, info) {
     console.log(
       "Dissolution proposal for " + token,
-      +" by " + purchaser + "for $" + purchaseAmount
+      + " by " + "for $" + purchaseAmount + " with info " + info
     );
 
     let tx = await this.mutableContract.proposeDissolution(
-      info,
-      purchaser,
       token,
       purchaseAmount,
+      info,
       {
         gasLimit: 5000000,
       }

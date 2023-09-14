@@ -5,8 +5,7 @@ export class DissolutionProposal extends BaseProposal {
   constructor(baseProposal, data) {
     super(baseProposal.id, baseProposal.creator, baseProposal.info, baseProposal.superMajority,
       baseProposal.startTimestamp, baseProposal.status, baseProposal.type, baseProposal.votes)
-    const { purchaser, token, purchaseAmount} = data
-    this.purchaser = purchaser
+    const { token, purchaseAmount } = data
     this.token = token
     this.purchaseAmount = purchaseAmount
   }
