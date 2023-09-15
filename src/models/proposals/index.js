@@ -7,11 +7,11 @@ import {UpgradeProposal} from "./UpgradeProposal"
 import { DescriptorChangeProposal } from "./DescriptorChangeProposal"
 
 export { 
-    BaseProposal, 
-    ParticipantProposal, 
-    ParticipantRemovalProposal, 
-    ThreadProposal, 
-    TokenActionProposal, 
-    UpgradeProposal,
-    DescriptorChangeProposal
+  BaseProposal, 
+  ParticipantProposal, 
+  ParticipantRemovalProposal, 
+  ThreadProposal, 
+  TokenActionProposal, 
+  UpgradeProposal,
+  DescriptorChangeProposal
 }

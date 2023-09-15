@@ -231,6 +231,30 @@ class DAO {
   }
 
   /**
+   * Create a Dissolution Proposal
+   * @param {String} asset Asset's contract address
+   * @param {string} title Proposal title
+   * @param {string} description Proposal body
+   * @param {string} forumLink Link to forum discussion
+   * @param {string} daoResolution Link to forum discussion
+   * @param {string} token Address of the token
+   * @param {string} purchaseAmount Amount of tokens to be purchased
+   * @returns {Boolean} Transaction status (true — mined; false - reverted)
+   */
+  async createDissolutionProposal(asset, title, description, forumLink, daoResolution, token, purchaseAmount) {
+    console.log("ASSET::", asset);
+    const assetContract = new AssetContract(this.ethereumClient, asset);
+
+    const infoHash = await this.storageNetwork.uploadAndGetPathAsBytes({
+      title, description, forumLink, daoResolution,
+    });
+    if (!infoHash) return;
+
+    const status = await assetContract.proposeDissolution(token, purchaseAmount, infoHash);
+    return status;
+  }
+
+  /**
    * Create a DescriptorChange Proposal
    * @param {String} asset Asset's contract address
    * @param {string} title Proposal title

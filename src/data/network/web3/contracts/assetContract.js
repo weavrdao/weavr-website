@@ -1,5 +1,5 @@
 /* global BigInt */
-import {ethers} from "ethers";
+import { ethers } from "ethers";
 
 const contractAbi = [
   // Make a buy order
@@ -27,11 +27,11 @@ const contractAbi = [
   "function erc20() view returns (address)",
 
   // Propose a thread dissolution
-  "function proposeDissolution(string info, address purchaser, address token, uint256 purchaseAmount)",
+  "function proposeDissolution(address token, uint112 price, bytes32 info) returns (uint256 id)",
 
   // Propose Descriptor Change
   "function proposeDescriptorChange(bytes32 _descriptor, bytes32 info) returns (uint256 id)",
-  
+
   // Can Propose
   "function canPropose(address proposer) returns (bool)",
 
@@ -80,7 +80,7 @@ class AssetContract {
     console.log(`SENT DIRECTLY TO CONTRACT: ${info} :: => ${this.mutableContract.address}`);
 
     let tx = await this.mutableContract.proposePaper(supermajority, info,
-      );
+    );
     return (await tx.wait()).status;
   }
 
@@ -89,7 +89,7 @@ class AssetContract {
    * @param {bytes32} info Proposal info
    */
   async proposeParticipant(participantType, participant, info) {
-    console.log({participantType, participant, info});
+    console.log({ participantType, participant, info });
     let tx = await this.mutableContract.proposeParticipant(
       participantType,
       participant,
@@ -169,7 +169,7 @@ class AssetContract {
       });
     return (await tx.wait()).status;
   }
-  
+
   async proposeThread(variant, name, symbol, descriptorHash, data, infoHash) {
     console.log("Creating thread proposal...");
     console.log({
@@ -202,7 +202,7 @@ class AssetContract {
 
     // const bytesSignature = ethers.utils.id(signature);
     console.log("ASSETCONTRACT: ", signature);
-    let tx = this.mutableContract.vouch(participant, signature, {gasLimit: 5000000});
+    let tx = this.mutableContract.vouch(participant, signature, { gasLimit: 5000000 });
     // this.mutableContract.signer
 
     console.log(tx);
@@ -215,7 +215,7 @@ class AssetContract {
   async queueProposal(proposalId) {
 
     console.log("ASSETCONTRACT: ", proposalId);
-    let tx = await this.mutableContract.queueProposal(proposalId, {gasLimit: 5000000});
+    let tx = await this.mutableContract.queueProposal(proposalId, { gasLimit: 5000000 });
 
     console.log(tx);
     return tx;
@@ -227,7 +227,7 @@ class AssetContract {
   async completeProposal(proposalId, data) {
 
     console.log("ASSETCONTRACT: ", proposalId);
-    let tx = await this.mutableContract.completeProposal(proposalId, data, {gasLimit: 5000000});
+    let tx = await this.mutableContract.completeProposal(proposalId, data, { gasLimit: 5000000 });
 
     console.log(tx);
     return tx;
@@ -242,7 +242,7 @@ class AssetContract {
     kycHash,
     signature
   ) {
-    console.log({pType, approving, kycHash, signature})
+    console.log({ pType, approving, kycHash, signature })
     const tx = await this.mutableContract.approve(pType, approving, kycHash, signature, {
       gasLimit: 5000000,
     });
@@ -292,35 +292,33 @@ class AssetContract {
     let tx = await this.mutableContract.vote(
       [proposalId],
       [ethers.utils.parseEther(votes.toString())],
-      {"gasLimit": 5000000}
+      { "gasLimit": 5000000 }
     );
 
     return (await tx.wait()).status;
   }
 
   async withdrawProposal(proposalId) {
-    const tx = await this.mutableContract.withdrawProposal(proposalId, {"gasLimit": 5000000});
+    const tx = await this.mutableContract.withdrawProposal(proposalId, { "gasLimit": 5000000 });
     return (await tx.wait()).status;
   }
 
   /**
    * Propose a thread dissolution
    * @param {string} info Proposal info
-   * @param {address} purchaser Dissolution proposer
    * @param {address} token Currency provided for payment
    * @param {uint256} purchaseAmount Amount proposed for the purchase
    */
-  async proposeDissolution(info, purchaser, token, purchaseAmount) {
+  async proposeDissolution(token, purchaseAmount, info) {
     console.log(
       "Dissolution proposal for " + token,
-      +" by " + purchaser + "for $" + purchaseAmount
+      + " by " + "for $" + purchaseAmount + " with info " + info
     );
 
     let tx = await this.mutableContract.proposeDissolution(
-      info,
-      purchaser,
       token,
       purchaseAmount,
+      info,
       {
         gasLimit: 5000000,
       }

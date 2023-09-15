@@ -307,11 +307,11 @@ const router = new createRouter({
       beforeEnter: async () => {
         const prop =  store.getters.proposalsPerAsset;
         // if (prop.length < 1) {
-          store.dispatch("setLoadingState", {isLoading: true, message: "Loading Proposals"})
-          await store.dispatch("refreshProposalsDataForAsset", {
-            assetId: CONTRACTS.WEAVR,
-          });
-          store.dispatch("setLoadingState", {isLoading: false, message: ""})
+        store.dispatch("setLoadingState", {isLoading: true, message: "Loading Proposals"})
+        await store.dispatch("refreshProposalsDataForAsset", {
+          assetId: CONTRACTS.WEAVR,
+        });
+        store.dispatch("setLoadingState", {isLoading: false, message: ""})
         // }
         // clear toast
         if(store.getters.isConnected) {
@@ -386,9 +386,9 @@ const router = new createRouter({
           beforeEnter: async (from) => {
             const prop = await store.getters.proposalsPerAsset;
             // if (prop.length < 1 || ) {
-              store.dispatch("refreshProposalsDataForAsset", {
-                assetId: CONTRACTS.WEAVR,
-              });
+            store.dispatch("refreshProposalsDataForAsset", {
+              assetId: CONTRACTS.WEAVR,
+            });
             // }
             // clear toast
             store.getters.isConnected ? store.dispatch("updateWalletToken", {tokenAddress: CONTRACTS.TOKEN_ADDRESS}): null
@@ -452,21 +452,21 @@ router.beforeEach(async (to) => {
     return false
   }
   
-    // not connected
-    // cookie
-    if (!isConnected && ethers.utils.isAddress(cookie.wallet)) {
-      console.log("____________________________ AUTOCONNECT__________________");
-      // - autoconnect and navigate
-      const toast = createToaster({})
-      await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
-      await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
+  // not connected
+  // cookie
+  if (!isConnected && ethers.utils.isAddress(cookie.wallet)) {
+    console.log("____________________________ AUTOCONNECT__________________");
+    // - autoconnect and navigate
+    const toast = createToaster({})
+    await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
+    await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
       
-          // whitelisted
-          return { path: to.fullPath}
+      // whitelisted
+      return { path: to.fullPath}
         
-      })
+    })
 
-    }
+  }
      
   console.log("no wallet sync!");
   return true
