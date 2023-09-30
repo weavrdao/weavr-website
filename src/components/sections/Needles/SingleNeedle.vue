@@ -85,7 +85,7 @@
               <div class="mt-2">
                 <button v-if="!allowance" class="button has-background-mediumBlue has-text-white">...</button>
                 <button v-else-if="Number(allowance) === 0" @click="approve" class="button has-background-success has-text-white">Approve</button>
-                <button v-else @click="purchase" :disabled="crowdfundState.key !== 0" class="button has-background-success has-text-white">Deposit</button>
+                <button v-else @click="purchase" :disabled="state !== 'Active'" class="button has-background-success has-text-white">Deposit</button>
               </div>
             </div>
           </div>
@@ -99,11 +99,11 @@
               <input v-model="withdrawAmount" class="input my-2" type="number" />
               <div class="mt-2">
                 <button v-if="!allowance" class="button has-background-danger has-text-white">...</button>
-                <button v-else @click="withdrawFunds" :disabled="crowdfundState.key !== 0" class="button has-background-danger has-text-white">Withdraw</button>
+                <button v-else @click="withdrawFunds" :disabled="state !=='Active'" class="button has-background-danger has-text-white">Withdraw</button>
               </div>
             </div>
           </div>
-          <div v-if="shouldShowRedeem" class="card redeem-container is-flex is-align-items-center mb-5">
+          <div v-if="state === 'Finished'" class="card redeem-container is-flex is-align-items-center mb-5">
             <span class="celebration">🥳</span>
             <div>
               <h4>This needle has been executed</h4>
@@ -173,10 +173,10 @@ export default {
       return metrics
     },
     target() {
-      return Number(ethers.utils.formatUnits(this.needle.target, 6)).toLocaleString();
+      return Number(ethers.utils.formatUnits(this.needle.target, 18)).toLocaleString();
     },
     deposited() {
-      return Number(ethers.utils.formatUnits(this.needle.amountDeposited, 6)).toLocaleString();
+      return Number(ethers.utils.formatUnits(this.needle.amountDeposited, 18)).toLocaleString();
     },
     shouldShowRedeem() {
       if(!this.crowdfundState) return false;
@@ -184,6 +184,9 @@ export default {
     },
     percentage() {
       return this.needle.amountDeposited / this.needle.target * 100;
+    },
+    state() {
+      return this.needle.state
     }
   },
   methods: {

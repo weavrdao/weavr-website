@@ -75,7 +75,7 @@ const navigateToStatic = (path) => {
 }
 
 const calcWei = (ethValue, decimals) => {
-  const { ethers } = require('ethers');
+  const { ethers } = require("ethers");
   // Define the value in ETH
   // const ethValue = 1.5;
   // Define the decimals for USDC (6 decimal places)

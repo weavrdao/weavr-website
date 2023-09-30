@@ -136,7 +136,58 @@
 
       <!-- End Thread Proposal -->
 
+    <!-- Descriptor Change Proposal -->
 
+    <div v-if="this.proposal.type === ProposalTypes.DescriptorChange">
+      <div class="columns">
+        <div class="column is-two-thirds mb-5">
+          <div class="p-3">
+            <!--            <div class="box has-background-darkGray">-->
+            <!--              <div class="label">Thread Address:</div>-->
+            <!--              <Address :value="this.proposal.token"></Address>-->
+            <!--            </div>-->
+          </div>
+          <div class="box has-background-darkGray">
+            <div  class=" image-container">
+              <Carousel :autoplay="8000" :items-to-show="1" :wrap-around="true">
+                <Slide  v-for="imageHash in proposal.descriptor.imagesHashes" v-bind:key="imageHash">
+                  <div class="slide-image-container">
+                    <img v-bind:src="getIpfsUrl(imageHash)" alt="">
+                  </div>
+                </Slide>
+                <template #addons>
+                  <Navigation />
+                  <Pagination />
+                </template>
+              </Carousel>
+            </div>
+          </div>
+          <div class="box has-background-darkGray">
+            <p class="label mt-5 mb-5">Property Description</p>
+            <vue-markdown class="content markdown-body"  :source="this.proposal.descriptor.descriptor"/>
+          </div>
+          <div class="box has-background-darkGray">
+            <p class="label mb-3">Documents</p>
+            <div class="is-flex is-flex-direction-column is-justify-content-flex-start" v-for="document in this.proposal.descriptor.documentHashes" v-bind:key="document">
+              <a class="ipfs-document-link" :href="getIpfsUrl(document)"><span>{{ document }}</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="column is-one-third">
+          <div class="box has-background-darkGray has-radius-lg border-lightGray">
+            <p class="subtitle mb-3">Metrics</p>
+            <div class="columns mb-0" v-for="metric in this.metrics" :key="metric">
+              <div class="column is-half">
+                <div class="label">{{ metric.label}}:</div>
+              </div>
+              <div class="column">{{ metric.value}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- End Thread Proposal -->
 
     <div class="box has-background-darkGray">
       <label class="label">DAO Resolution</label>
@@ -169,6 +220,8 @@ export default {
       return ProposalTypes
     },
     metrics() {
+
+      console.log(this.proposal.descriptor.metrics)
       if(!isJson(this.proposal.descriptor.metrics)) return {}
       const obj = JSON.parse(this.proposal.descriptor.metrics);
       const keys = Object.keys(obj);
@@ -233,6 +286,7 @@ export default {
     },
   },
   mounted() {
+    console.log(this.proposal.metrics)
     console.log("mounting image")
     setTimeout(() => {
       this.showImage = true;

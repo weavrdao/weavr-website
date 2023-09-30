@@ -32,16 +32,16 @@
         </div>
         <div class="dropdown-menu" id="dropdown-menu3" role="menu">
           <div class="dropdown-content ">
-            <a  v-if="whitelisted && isConnected && !hasKyc"  class="dropdown-item">
-              <!-- <div class="button is-clickable is-success is-size-7" @click="onKyc"><span class="mr-1"></span>Get Verified</div> -->
-              <div  class="columns is-flex is-vcentered" @click="onKyc">
-                <span class="column">
-                  <unicon name="shield-check" :width="24" :height="24" fill="#968EFF" alt="address verified"/>
-                </span>
-                <span class="column is-flex is-vcentered has-text-lightBlue">Verify</span>
-              </div>
-            </a>
-            <a v-else-if="whitelisted && isConnected && hasKyc" class="dropdown-item">
+<!--            <a  v-if="whitelisted && isConnected && !hasKyc"  class="dropdown-item">-->
+<!--              &lt;!&ndash; <div class="button is-clickable is-success is-size-7" @click="onKyc"><span class="mr-1"></span>Get Verified</div> &ndash;&gt;-->
+<!--              <div  class="columns is-flex is-vcentered" @click="onKyc">-->
+<!--                <span class="column">-->
+<!--                  <unicon name="shield-check" :width="24" :height="24" fill="#968EFF" alt="address verified"/>-->
+<!--                </span>-->
+<!--                <span class="column is-flex is-vcentered has-text-lightBlue">Verify</span>-->
+<!--              </div>-->
+<!--            </a>-->
+            <a v-if="whitelisted && isConnected && hasKyc" class="dropdown-item">
                <div  class="columns is-flex is-vcentered" @click="kycInfo">
                 <span class="column">
                   <unicon name="user-check" :width="24" :height="24" fill="#5ed88e" alt="address verified"/>
@@ -49,16 +49,16 @@
                 <span class="column is-flex is-vcentered has-text-success	">Verified</span>
               </div>
             </a>
-            <!-- <hr class="dropdown-divider"> -->
+            <hr class="dropdown-divider"> -->
 
-            <a  v-if="whitelisted && isConnected && hasKyc" class="dropdown-item">
+            <a  v-if="whitelisted && isConnected && hasKyc " class="dropdown-item">
               <div  class="columns is-flex is-vcentered" @click="onVouch">
                 <span class="column">
-                  <unicon name="user-plus" :width="24" :height="24" fill="white" alt="address verified"/>
+                 <unicon name="user-plus" :width="24" :height="24" fill="white" alt="address verified"/>
                 </span>
                 <span class="column is-flex is-vcentered has-text-white">Vouch</span>
               </div>
-            </a>
+             </a>
             <hr class="dropdown-divider">
              <a @click="onLogout" class="dropdown-item">
                 <div class="px-3 columns is-flex is-vcentered">

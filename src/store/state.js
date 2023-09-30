@@ -76,7 +76,7 @@ const getters = {
       return 0
     } else {
       return state.user.wallet.tokenBalance;
-      }
+    }
   },
 
   assetTokenSymbol(state) {
@@ -134,7 +134,7 @@ const actions = {
       const walletState = new WalletState(
         address, 
         0, 
-       Number( ethers.utils.formatEther(res[1].value)).toFixed(6), 
+        Number( ethers.utils.formatEther(res[1].value)).toFixed(6), 
         res[0].value, 
         null, 
         wallet.getChainId()
