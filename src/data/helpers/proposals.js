@@ -11,7 +11,7 @@ export function getProposalTypeStyling(proposalType) {
     };
   case ProposalTypes.DescriptorChange:
     return {
-      text: "DescriptorChange",
+      text: "Descriptor Change",
       class: "descriptorChange",
     };
   case ProposalTypes.Upgrade:
@@ -24,10 +24,15 @@ export function getProposalTypeStyling(proposalType) {
       text: "Participant",
       class: "participant"
     };
+  case ProposalTypes.GovernorChange:
+    return {
+      text: "Governor Change",
+      class: "governorChange"
+    };
   case ProposalTypes.ParticipantRemoval:
     return {
       text: "Participant Removal",
-      class: "participantremoval"
+      class: "participantRemoval"
     }
   case ProposalTypes.TokenAction:
     return {

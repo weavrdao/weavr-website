@@ -31,7 +31,10 @@ const contractAbi = [
 
   // Propose Descriptor Change
   "function proposeDescriptorChange(bytes32 _descriptor, bytes32 info) returns (uint256 id)",
-  
+
+  // Propose Governor Change
+  "function proposeGovernorChange(address _governor,bytes32 info) returns (uint256)",
+
   // Can Propose
   "function canPropose(address proposer) returns (bool)",
 
@@ -98,6 +101,22 @@ class AssetContract {
     return (await tx.wait()).status;
   }
 
+  /**
+   * Create a governor-change proposal
+   * @param {address} governor Proposing governor
+   * @param {bytes32} info Proposal info
+   */
+  async proposeGovernorChange(governor, info) {
+    console.log({governor: governor, info: info})
+    let tx = await this.mutableContract.proposeGovernorChange(
+      governor,
+      info,
+      {
+        gasLimit: 5000000,
+      }
+    );
+    return (await tx.wait()).status;
+  }
   async proposeParticipantRemoval(participant, removalFee, signatures, info) {
     console.log("Creating participant removal proposal...");
     console.log({

@@ -175,6 +175,17 @@ const actions = {
     );
   },
 
+  async createGovernorChangeProposal(context, props) {
+    const { assetId, governor, title, description, forumLink } = props;
+    return dao.createGovernorChangeProposal(
+      assetId,
+      title,
+      governor,
+      description,
+      forumLink
+    );
+  },
+
   async createParticipantRemovalProposal(context, props) {
     const { assetId, participant, removalFee, signatures, title, description, forumLink } = props;
     return dao.createParticipantRemovalProposal(

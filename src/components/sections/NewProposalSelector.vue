@@ -103,7 +103,7 @@ export default {
           thread: true
         },
         {
-          id: "governorChange",
+          id: "governorChangeProposal",
           name: "Governor Change Proposal",
           type: "thread",
           thread: true

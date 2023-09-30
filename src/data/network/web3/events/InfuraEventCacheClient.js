@@ -13,7 +13,8 @@ import {
   ParticipantRemovalProposal,
   ThreadProposal,
   TokenActionProposal,
-  UpgradeProposal
+  UpgradeProposal,
+  GovernorChangeProposal
 } from "@/models/proposals";
 
 
@@ -162,7 +163,8 @@ class InfuraEventCacheClient {
         "UpgradeProposal": {cls: UpgradeProposal, type: ProposalTypes.Upgrade},
         // "ParticipantProposal": {cls: ParticipantProposal, type: ProposalTypes.Participant},
         // "ParticipantRemovalProposal": {cls: ParticipantRemovalProposal, type: ProposalTypes.ParticipantRemoval},
-        "DescriptorChangeProposal": {cls: DescriptorChangeProposal, type: ProposalTypes.DescriptorChange}
+        "DescriptorChangeProposal": {cls: DescriptorChangeProposal, type: ProposalTypes.DescriptorChange},
+        "GovernorChangeProposal": {cls: GovernorChangeProposal, type: ProposalTypes.GovernorChange},
       } 
       : 
       {
