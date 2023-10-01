@@ -2,6 +2,7 @@ import {ProposalTypes, PASSED} from "@/models/common";
 import {VoteType} from "@/models/vote";
 import { ethers } from "ethers";
 
+// eslint-disable-next-line max-lines-per-function
 export function getProposalTypeStyling(proposalType) {
   switch (proposalType) {
   case ProposalTypes.Paper:
@@ -34,6 +35,11 @@ export function getProposalTypeStyling(proposalType) {
       text: "Participant Removal",
       class: "participantRemoval"
     }
+  case ProposalTypes.Dissolution:
+    return {
+      text: "Dissolution",
+      class: "dissolution"
+    };
   case ProposalTypes.TokenAction:
     return {
       text: "Token Action",
@@ -57,10 +63,10 @@ export function padWithZeroes(number) {
 }
 
 export function dateStringForTimestamp(timestamp) {
-  var date = new Date(timestamp * 1000);
-  var hours = date.getHours();
-  var minutes = date.getMinutes();
-  var suffix = " AM";
+  const date = new Date(timestamp * 1000);
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+  let suffix = " AM";
 
   if (hours > 11) {
     hours = 24 - hours;
@@ -77,13 +83,12 @@ export function dateStringForTimestamp(timestamp) {
 export function getVotes(proposal) {
   const votes = Array.from(proposal.votes.values())
   const yesVoteShares = votes.reduce((total, vote) => {
-    // console.log("VOTE:::", ethers.utils.f(vote.count));
     return vote.voteDirection === VoteType.Yes ? total + Number(vote.count) : total;
   }, 0);
-
   const noVoteShares = votes.reduce((total, vote) => {
     return vote.voteDirection === VoteType.No ? total + Number(vote.count) : total;
   }, 0);
+  console.log({yesVoteShares: yesVoteShares, noVoteShares: noVoteShares})
   return {
     yes: {
       count: Number(yesVoteShares).toFixed(0),
@@ -98,12 +103,12 @@ export function getVotes(proposal) {
 
 export function getResult(proposal) {
   const votes = getVotes(proposal);
+  console.log({ yes: votes.yes.count, no: votes.yes.count })
   if (votes.yes.count > votes.no.count) {
     return PASSED.Yes;
-  } else if (votes.yes.count < votes.no.count) {
+  } else  {
     return PASSED.No;
   }
-  return PASSED.Tie;
 }
 
 export function hasEnded(proposal) {

@@ -20,9 +20,8 @@
           <div v-if="!ended" class="is-flex is-justify-content-flex-end">
           </div>
           <div v-else class="is-flex is-justify-content-flex-end">
-            <div class="tag is-medium bottom-right-corner is-success" v-if="this.passed == this.PASSED.Yes">PASSED</div>
-            <div class="tag is-medium bottom-right-corner has-backgorund-red" v-else-if="this.passed == this.PASSED.No">FAILED</div>
-            <div class="tag is-medium bottom-right-corner is-warning" v-else>TIE</div>
+            <div class="tag is-medium bottom-right-corner is-success" v-if="this.passed === this.PASSED.Yes">PASSED</div>
+            <div class="tag is-medium bottom-right-corner has-background-red" v-else >FAILED</div>
           </div>
         </div>
       </div>
@@ -116,10 +115,9 @@ export default {
 @import "../../../styles/markdown.scss";
 
 .proposal {
-  
   position: relative;
   height: 12rem;
-  
+  min-width: 16rem;
   cursor: pointer;
   transition: all 150ms;
   &:hover {

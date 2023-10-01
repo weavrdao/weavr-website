@@ -14,7 +14,8 @@ import {
   ThreadProposal,
   TokenActionProposal,
   UpgradeProposal,
-  GovernorChangeProposal
+  GovernorChangeProposal,
+  DissolutionProposal
 } from "@/models/proposals";
 
 
@@ -165,6 +166,7 @@ class InfuraEventCacheClient {
         // "ParticipantRemovalProposal": {cls: ParticipantRemovalProposal, type: ProposalTypes.ParticipantRemoval},
         "DescriptorChangeProposal": {cls: DescriptorChangeProposal, type: ProposalTypes.DescriptorChange},
         "GovernorChangeProposal": {cls: GovernorChangeProposal, type: ProposalTypes.GovernorChange},
+        "DissolutionProposal": {cls: DissolutionProposal, type: ProposalTypes.Dissolution}
       } 
       : 
       {

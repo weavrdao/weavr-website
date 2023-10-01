@@ -31,7 +31,7 @@ class DAO {
    * @returns { Proposal[] } Array of proposals
    */
   async getProposalsForAsset(assetId, isThread, localStorage) {
-    console.log("GET_PROPOSALS_PER_ASSET______", isThread);
+  
     const toast = createToaster({});
     toast.info("Fetching off-chain data...");
     let proposals = await this.cacheClient.syncProposals(assetId, isThread)
@@ -251,7 +251,7 @@ class DAO {
     });
     if (!infoHash) return;
 
-    const status = await assetContract.proposeDissolution(infoHash, purchaser, token, purchaseAmount);
+    const status = await assetContract.proposeDissolution(token, purchaseAmount, infoHash);
     return status;
   }
 
