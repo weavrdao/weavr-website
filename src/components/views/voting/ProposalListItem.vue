@@ -13,7 +13,7 @@
         <div class=" py-0">
           <div class="py-0">
             <div id="proposal-title" class="proposal-title is-size-5 has-text-white mb-4">
-              {{ proposal.title }}
+              {{ proposal.title.substring(0, 36) }}
             </div>    
           </div>
           <Address class="has-text-white" :value="proposal.creator"/>
@@ -38,7 +38,6 @@ import {
   hasEnded,
 } from "@/data/helpers";
 import { PASSED } from "@/models/common";
-import { DAO } from "../../../services/constants";
 
 export default {
   name: "ProposalListItem",
@@ -115,11 +114,11 @@ export default {
 @import "../../../styles/markdown.scss";
 
 .proposal {
-  position: relative;
-  height: 12rem;
-  min-width: 16rem;
-  cursor: pointer;
-  transition: all 150ms;
+  //position: relative;
+  //height: 12rem;
+  //min-width: 15rem;
+  //cursor: pointer;
+  //transition: all 150ms;
   &:hover {
     filter: contrast(95%);
   }
@@ -132,7 +131,7 @@ export default {
 
 .proposal-title {
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
 }
 

@@ -308,15 +308,11 @@ const router = new createRouter({
 
       meta: { requiresAuth: false },
       beforeEnter: async () => {
-        const prop =  store.getters.proposalsPerAsset;
-        // if (prop.length < 1) {
-        store.dispatch("setLoadingState", {isLoading: true, message: "Loading Proposals"})
+        await store.dispatch("setLoadingState", {isLoading: true, message: "Loading Proposals"})
         await store.dispatch("refreshProposalsDataForAsset", {
           assetId: CONTRACTS.WEAVR,
         });
-        store.dispatch("setLoadingState", {isLoading: false, message: ""})
-        // }
-        // clear toast
+        await store.dispatch("setLoadingState", {isLoading: false, message: ""})
         if(store.getters.isConnected) {
           await store.dispatch("updateWalletToken", {tokenAddress: CONTRACTS.TOKEN_ADDRESS}).then( () => {
             return true;

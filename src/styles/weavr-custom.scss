@@ -7,17 +7,7 @@
 
 $family-sans-serif: "Poppins Sans", sans-serif;
 
-// $family-sans: "Poppins", sans ;
-// @font-face {
-//   font-family: $family-sans-serif;
 
-//   src: "@/assets/fonts/Poppins-Regular.ttf" format("truetype");
-// }
-
-// @font-face {
-//   font-family: "Space Grotesk", sans-serif;
-//   src: "@/assets/fonts/SpaceGrotesk-Regular.ttf" format("truetype");
-// }
 //####################################
 //#          FRABRIC THEME           #
 //####################################
@@ -51,9 +41,9 @@ $lightGray-invert: findColorInvert($lightGray);
 $magenta-invert: findColorInvert($magenta);
 $mint-invert: findColorInvert($mint);
 $gold-invert: findColorInvert($gold);
-$red-invert: findColorInver($red);
-$cyan-invert: findColorInver($cyan);
-$dimmedBlue-invert:  findColorInver($dimmedBlue);
+$red-invert: findColorInvert($red);
+$cyan-invert: findColorInvert($cyan);
+$dimmedBlue-invert:  findColorInvert($dimmedBlue);
 // SCHEME SETUP
 $scheme-main: $black;
 $scheme-color: $lightGray;
@@ -79,11 +69,11 @@ $card-radius: 0.50rem;
 $tiny-radius: 5px;
 $small-radius: 10px;
 
-
 $tabs-link-color: $mediumGray;
 $tabs-toggle-link-active-background-color: $primary;
 $tabs-toggle-link-active-border-color: $primary;
 $tabs-toggle-link-border-color: $mediumGray;
+
 /*************************
   DROPDOWN
 *************************/ 
@@ -221,7 +211,7 @@ $colors: map-merge($colors, $addColors);
 
 .title {
   color: $lightGray;
-  font-family: "Poppins", sans !important;
+  font-family: $family-primary !important;
 
   &.is-extra-large {
     font-size: 4rem;
@@ -229,7 +219,7 @@ $colors: map-merge($colors, $addColors);
 }
 
 .subtitle {
-  font-size: "Poppins", sans !important;
+  font-family: $family-primary !important;
 
   &.is-3 {
     font-size: 2rem;
@@ -247,7 +237,7 @@ $colors: map-merge($colors, $addColors);
 }
 
 .brand {
- font-family: "Poppins", sans !important;
+ font-family: $family-primary !important;
 }
 @import "./markdown.scss";
 
@@ -259,7 +249,7 @@ $colors: map-merge($colors, $addColors);
   display: inline-block;
   font-weight: 400;
   padding: 5px 10px;
-  border: 0px solid white;
+  border: 0 solid white;
   border-radius: $tiny-radius;
   margin-bottom: 20px;
 }
@@ -422,11 +412,6 @@ $colors: map-merge($colors, $addColors);
       color: $mediumBlue;
     }
   }
-  
-  // .button {
-  //   margin-top: 20px;
-  //   width: 100% !important;
-  // }
   
   input {
     &::-webkit-outer-spin-button {

@@ -12,15 +12,18 @@
           {{ text }}
         </div>
       </div>
-      <div class="columns is-multiline is-centered    ">
-        <div class="column is-one-third-tablet, is-full-mobile" v-for="proposal in this.filteredProposals" v-bind:key="proposal.id">
+      <div class="columns is-multiline is-centered   ">
+        <div
+            class="column is-narrow is-one-third-desktop is-half-tablet is-full-mobile"
+            v-for="proposal in this.filteredProposals" v-bind:key="proposal.id"
+        >
           <ProposalListItem :proposal="proposal" :assetId="assetId"/>
         </div>
       </div>
     </div>
     <div v-else class="is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
       <figure>
-        <img class="no-proposals-image my-5" src="@/assets/common/no-proposals.svg"/>
+        <img class="no-proposals-image my-5" src="@/assets/common/no-proposals.svg" alt="No proposals"/>
       </figure>
       <div class="label is-size-4">No {{ proposalStatus.toLowerCase() }} right now</div>
     </div>
@@ -29,7 +32,7 @@
 
 <script>
 import ProposalListItem from "../views/voting/ProposalListItem.vue";
-import { ProposalTypes } from "../../models/common";
+import { ProposalTypes } from "@/models/common";
 import { getProposalTypeStyling } from "@/data/helpers";
 import { mapActions } from "vuex";
 

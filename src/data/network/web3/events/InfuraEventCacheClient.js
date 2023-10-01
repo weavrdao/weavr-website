@@ -56,8 +56,8 @@ class InfuraEventCacheClient {
       "Vote",
       "ProposalStateChange",
     ]
-    let events = eventNames.map((eventName) => {
-      return this.contract.queryFilter(eventName, blockNumber, currentBlockNumber).then(async (raw_events) => {
+    let events = eventNames.map(async (eventName) => {
+      return await this.contract.queryFilter(eventName, blockNumber, currentBlockNumber).then(async (raw_events) => {
         const eventSignature = iface.getEventTopic(eventName);
         let this_events = []
         for (const raw_event of raw_events) {
@@ -82,7 +82,7 @@ class InfuraEventCacheClient {
     for (let i = 0; i < eventNames.length; i++) {
       output[eventNames[i]] = awaited_events[i]
     }
-    console.log(output);
+    // console.log(output);
     return output
   }
 
@@ -100,14 +100,15 @@ class InfuraEventCacheClient {
     console.log("processProposalTypeData::::::::", events);
     for (const proposalTypeName of Object.keys(this.proposalTypeSwitch)) {  
       let proposal_events = events[proposalTypeName]
-      console.log("events", events);
-      console.log("proposal_events", events[proposalTypeName]);
+      // console.log("events", events);
+      // console.log("proposal_events", events[proposalTypeName]);
       proposal_events.map(obj => {
         const {event, timestamp} = obj
         const id = event.id.toNumber()
         const prop = proposals[id]
-        console.log("____PROP", prop, proposals[id]);
+        console.log("____PROP", prop.type, this.proposalTypeSwitch[proposalTypeName].type);
         prop.type = this.proposalTypeSwitch[proposalTypeName].type
+        console.log("____PROP", prop.type, this.proposalTypeSwitch[proposalTypeName].type);
         proposals[id] = new this.proposalTypeSwitch[proposalTypeName].cls(prop, event)
       })
     }
@@ -148,7 +149,6 @@ class InfuraEventCacheClient {
           proposals[id].descriptor = getIpfsHashFromBytes32(proposals[id].descriptor)
         }
       }
-
     }
     return proposals
   }
@@ -162,8 +162,7 @@ class InfuraEventCacheClient {
       {
         "TokenActionProposal": {cls: TokenActionProposal, type: ProposalTypes.TokenAction},
         "UpgradeProposal": {cls: UpgradeProposal, type: ProposalTypes.Upgrade},
-        // "ParticipantProposal": {cls: ParticipantProposal, type: ProposalTypes.Participant},
-        // "ParticipantRemovalProposal": {cls: ParticipantRemovalProposal, type: ProposalTypes.ParticipantRemoval},
+        "ParticipantRemovalProposal": {cls: ParticipantRemovalProposal, type: ProposalTypes.ParticipantRemoval},
         "DescriptorChangeProposal": {cls: DescriptorChangeProposal, type: ProposalTypes.DescriptorChange},
         "GovernorChangeProposal": {cls: GovernorChangeProposal, type: ProposalTypes.GovernorChange},
         "DissolutionProposal": {cls: DissolutionProposal, type: ProposalTypes.Dissolution}
@@ -194,7 +193,7 @@ class InfuraEventCacheClient {
     })
     let assets = [];
     let crowdfunds = new Map()
-    const cfEvents = await threadDeployer.queryFilter(threadDeployer.filters.CrowdfundedThread()).then(
+    await threadDeployer.queryFilter(threadDeployer.filters.CrowdfundedThread()).then(
       (rawCrowdfunds) => {
         rawCrowdfunds.map(rawEvent => {
           const td_iface = new ethers.utils.Interface(ThreadDeployerJSON.abi);
@@ -235,7 +234,7 @@ class InfuraEventCacheClient {
       const {withdrawals, withdrew} = await Marketplace.getNeedleWithdrawals(crowdfundSC)
       const distributions = await Marketplace.getNeedleDestribuition(crowdfundSC)
       const actualDeposits = deposited.sub(withdrew)
-      const asset = this.needles.find(a => a.id==crowdfund)
+      const asset = this.needles.find(a => a.id===crowdfund)
       const needle = new Needle(
         crowdfund,
         asset.state,  
@@ -260,19 +259,19 @@ class InfuraEventCacheClient {
     let threads = [];
     const proposalMap = new Map()
     await this.getAssets(true)
-    const onlyFinshed =this.assets.filter( a => a.state == CrowdfundState[3])
-    onlyFinshed.map(
+    const onlyFinished =this.assets.filter( a => a.state === CrowdfundState[3])
+    onlyFinished.map(
       async (thread) => {
         proposalMap.set(thread.id, await this.syncProposals(thread.id, true))
       }
     )    
-    const transfersMap = await this.mapHoldersForAllThreads(onlyFinshed)
+    const transfersMap = await this.mapHoldersForAllThreads(onlyFinished)
     const threadDeployer = new ethers.Contract(CONTRACTS.THREAD_DEPLOYER, ThreadDeployerJSON.abi, this.provider)
     const threadEvents = await threadDeployer.queryFilter(threadDeployer.filters.Thread())
 
     threadEvents.map( async (trd) => {
       const {thread, governor, descriptor, variant, erc20} = trd.args
-      const state = this.assets.find( a => a.id == thread).state
+      const state = this.assets.find( a => a.id === thread).state
       let _thread = new Thread(
         thread,
         state,  
@@ -280,7 +279,7 @@ class InfuraEventCacheClient {
         descriptor,
         variant,
         { id: erc20, holders: transfersMap.get(thread) },
-        this.assets.find( a => a.id == thread).crowdfund
+        this.assets.find( a => a.id === thread).crowdfund
       )
       threads.push(_thread)
     })
@@ -311,8 +310,8 @@ class InfuraEventCacheClient {
       const tx = ferc20_iface.decodeEventLog("Transfer", event.data, event.topics)
       for(let holderAddress of to.values()){
         let holder = new Holder(holderAddress)
-        tx.to == holderAddress ? holder.to.push(new ERC20_TX(tx.to, tx.from, tx.value, event.transactionHash)) : null
-        tx.from == holderAddress ? holder.from.push(new ERC20_TX(tx.to, tx.from, tx.value, event.transactionHash)) : null
+        tx.to === holderAddress ? holder.to.push(new ERC20_TX(tx.to, tx.from, tx.value, event.transactionHash)) : null
+        tx.from === holderAddress ? holder.from.push(new ERC20_TX(tx.to, tx.from, tx.value, event.transactionHash)) : null
         holdersMap.set(holderAddress.toLowerCase(), holder)
       }
     })
