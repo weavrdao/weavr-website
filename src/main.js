@@ -12,7 +12,7 @@ import {
   uniSignOutAlt, uniFilePlusAlt, uniCamera, 
   uniBullseye, uniTwitter, uniDiscord,  
   uniAngleLeft, uniAngleDown, uniGithub, 
-  uniUserCheck, uniCopy, uniPen, uniShieldCheck, uniCog 
+  uniUserCheck, uniCopy, uniPen, uniShieldCheck, uniCog, uniTrashAlt
 } from "vue-unicons/dist/icons";
 Unicon.add([
   uniUserPlus, uniTimesCircle, uniSync, 
@@ -22,7 +22,7 @@ Unicon.add([
   uniCamera, uniAngleDown, uniUserCheck, 
   uniBullseye, uniTwitter, uniDiscord, 
   uniAngleLeft, uniAngleDown, uniGithub, 
-  uniCopy, uniShieldCheck, uniCog
+  uniCopy, uniShieldCheck, uniCog, uniTrashAlt
 ]);
 
 require("dotenv").config();

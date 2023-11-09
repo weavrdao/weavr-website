@@ -1,6 +1,7 @@
 <template>
 <div class="container p-5">
-  <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Paper Proposal</div>
+
+  <div class="tag has-background-mediumBlue has-text-white mb-5 is-medium">New Descriptor Change</div>
   <!-- PAPER PROPOSAL FORM -->
   <div class="field"  v-if="!preview">
     <label class="label">Title</label>
@@ -20,19 +21,19 @@
       <input type="checkbox" class="checkbox" v-model="daoResolution"/><span class="ml-1 has-text-mediumGray is-italic"> - check this if the proposal will make changes to the DAO</span>
     </div>
   </div>
-  <div class="field">
+  <div class="field" v-if="!preview">
       <label class="label">Thread Descriptor</label>
       <div class="control">
         <textarea class="textarea" v-model="descriptor" type="text" placeholder="Descriptor"></textarea>
       </div>
     </div>
-    <div class="field">
+    <div class="field" v-if="!preview">
       <label class="label">Thread Metrics</label>
       <div class="control">
         <textarea class="textarea" v-model="thread.metrics" type="text" placeholder="{metricName: metricValue}"></textarea>
       </div>
     </div>
-    <div class="file">
+    <div class="file" v-if="!preview">
       <label class="file-label has-background-mediumBlue mt-3">
         <input
           class="file-input has-text-white has-background-mediumBlue"
@@ -46,17 +47,37 @@
             <unicon name="camera" fill="white" />
           </span>
           <span class="file-label">
-            Choose images
+            + Add image
           </span>
         </span>
       </label>
     </div>
-    <div class="files-container">
-      <div v-for="image in images" v-bind:key="image.name">
-        {{ image.name }}
+    <div class="files-container mt-1" v-if="!preview">
+      <div v-for="image in images" v-bind:key="image">
+        <div class="level mb-1">
+          <div class="level-item tag has-background-primary is-family-monospace is-clickable" @click="openImage(image)">
+            {{ image }}
+          </div>
+          <div class="level-item is-clickable">
+            <unicon
+                name="trash-alt"
+                fill="#d85a50"
+                width="18"
+                height="18"
+                @click="removeImage(image)"
+            >
+            </unicon>
+
+          </div>
+        </div>
+        <div v-if="showImage">
+          <img :src="getIpfsUrl(image)" alt="">
+        </div>
       </div>
+
+
     </div>
-    <div class="file">
+    <div class="file" v-if="!preview">
       <label class="file-label has-background-mediumBlue mt-3">
         <input
           class="file-input has-text-white has-background-mediumBlue"
@@ -75,12 +96,12 @@
         </span>
       </label>
     </div>
-    <div class="files-container">
+    <div class="files-container" v-if="!preview">
       <p v-for="document in documents" v-bind:key="document.name">
         {{ document.name }}
       </p>
     </div>
-    <div class="field">
+    <div class="field" v-if="!preview">
       <label class="label">Forum link</label>
       <input v-model="forumLink" type="text" class="input"/>
     </div>
@@ -113,6 +134,7 @@ import { mapActions, mapGetters } from "vuex";
 import { isJson } from "@/utils/common";
 import { ProposalTypes} from "@/models/common.js"
 import Proposal from "@/components/proposals/Proposal.vue"
+import IPFSStorageNetwork from "@/data/network/storage/ipfs/IPFSStorageNetwork";
 
 
 export default {
@@ -149,19 +171,27 @@ export default {
       description: "",
       descriptor: "",
       daoResolution: false,
-      proposalType: ProposalTypes.Paper,
+      proposalType: ProposalTypes.DescriptorChange,
       preview: false,
       markdownSource: null,
       proposal: null,
       forumLink: "",
       images: [],
-      documents: []
+      documents: [],
+      showImage: false
     }
   },
   methods: {
     ...mapActions({
       createProposal: "createProposal",
     }),
+    openImage(image) {
+      console.log("navigating to ", image)
+      this.showImage=!this.showImage
+    },
+    removeImage(image) {
+      this.images = (this.images.filter((_image, i) => _image !== image))
+    },
     getIpfsUrl(path) {
       return path
         ? `${process.env.VUE_APP_IFPS_GATEWAY_BASE_URL}/${path}`
@@ -191,18 +221,35 @@ export default {
       this.proposal = {
         title: this.title,
         description: this.description,
+        descriptor: {
+          imagesHashes: this.images,
+          documents: this.documents,
+          descriptor: this.descriptor,
+          metrics: this.thread.metrics,
+        },
+
         daoResolution: this.daoResolution,
         type: this.proposalType,
         creator: "0x00000",
         startTimeStamp: 0,
         endTimeStamp: 0,
-        forumLink: this.forumLink
+        forumLink: this.forumLink,
+
       }
       this.preview = !this.preview
     },
-    onChangeImages({ target: { files } }) {
-      this.images = files;
-      console.log(this.images)
+    async onChangeImages({ target: { files } }) {
+      const network = new IPFSStorageNetwork
+      console.log(files)
+      try {
+        await Promise.all(Array.from(files).map(
+          async (image) => {
+            this.images.push(await network.addArbitraryFile(image))
+          }
+        ));
+      } catch (e) {
+        console.log("Error uploading images and files for preview", e);
+      }
     },
     onChangeDocuments({ target: { files } }) {
       this.documents = files;

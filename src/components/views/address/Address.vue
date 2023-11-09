@@ -1,7 +1,7 @@
 <template>
   <div class="tag is-primary is-medium is-clickable has-radius-lg">
     <a :href="`${explorer}/address/${value}`" target="_blank" rel="noopener" class="has-text-white">
-      <span class="is-family-monospace" v-bind:title="address">
+      <span :class="['is-family-monospace',' is-size-7']" v-bind:title="address">
       {{
         address.substring(0, 8) + "..." + address.substring(address.length - 4)
       }}
@@ -23,6 +23,10 @@ export default {
       type: String,
       required: true,
     },
+    size: {
+      type: String,
+      required: false
+    }
   },
   data() {
     return {
@@ -32,6 +36,15 @@ export default {
   computed: {
     explorer() {
       return NETWORK.explorer
+    },
+    fontSize() {
+      let cls = "is-size-"
+      switch (this.size) {
+      case "sm": cls.concat("6"); break;
+      default: cls.concat("1"); break;
+      }
+
+      return cls
     }
   },
   created() {

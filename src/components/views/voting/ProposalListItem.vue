@@ -13,16 +13,15 @@
         <div class=" py-0">
           <div class="py-0">
             <div id="proposal-title" class="proposal-title is-size-5 has-text-white mb-4">
-              {{ proposal.title }}
+              {{ proposal.title.substring(0, 36) }}
             </div>    
           </div>
           <Address class="has-text-white" :value="proposal.creator"/>
           <div v-if="!ended" class="is-flex is-justify-content-flex-end">
           </div>
           <div v-else class="is-flex is-justify-content-flex-end">
-            <div class="tag is-medium bottom-right-corner is-success" v-if="this.passed == this.PASSED.Yes">PASSED</div>
-            <div class="tag is-medium bottom-right-corner has-backgorund-red" v-else-if="this.passed == this.PASSED.No">FAILED</div>
-            <div class="tag is-medium bottom-right-corner is-warning" v-else>TIE</div>
+            <div class="tag is-medium bottom-right-corner is-success" v-if="this.passed === this.PASSED.Yes">PASSED</div>
+            <div class="tag is-medium bottom-right-corner has-background-red" v-else >FAILED</div>
           </div>
         </div>
       </div>
@@ -39,7 +38,6 @@ import {
   hasEnded,
 } from "@/data/helpers";
 import { PASSED } from "@/models/common";
-import { DAO } from "../../../services/constants";
 
 export default {
   name: "ProposalListItem",
@@ -116,12 +114,11 @@ export default {
 @import "../../../styles/markdown.scss";
 
 .proposal {
-  
-  position: relative;
-  height: 12rem;
-  
-  cursor: pointer;
-  transition: all 150ms;
+  //position: relative;
+  //height: 12rem;
+  //min-width: 15rem;
+  //cursor: pointer;
+  //transition: all 150ms;
   &:hover {
     filter: contrast(95%);
   }
@@ -134,7 +131,7 @@ export default {
 
 .proposal-title {
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
 }
 

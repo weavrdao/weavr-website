@@ -1,19 +1,19 @@
 /* eslint-disable max-lines-per-function */
-import {ethers} from "ethers";
-import {createToaster} from "@meforma/vue-toaster";
-import {params} from "stylus/lib/utils";
+import { ethers } from "ethers";
+import { createToaster } from "@meforma/vue-toaster";
+import { params } from "stylus/lib/utils";
 import ServiceProvider from "../services/provider";
-import {CONTRACTS, NETWORK} from "../services/constants";
-import {ProposalTypes} from "@/models/common";
+import { CONTRACTS, NETWORK } from "../services/constants";
+import { ProposalTypes } from "@/models/common";
 import blacklist from "@/blacklist.json";
 
 function recoverSignerFromTypedData(signature, params, from) {
   console.log("RECOVERY______________", signature, params, from);
   const domainSeparator = ethers.utils.keccak256(
     ethers.utils.defaultAbiCoder.encode(
-      ['bytes32', 'bytes32', 'bytes32', 'uint256', 'address'],
+      ["bytes32", "bytes32", "bytes32", "uint256", "address"],
       [
-        ethers.utils.id('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)'),
+        ethers.utils.id("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"),
         ethers.utils.id(params.domain.name),
         ethers.utils.id(params.domain.version),
         params.domain.chainId,
@@ -22,25 +22,25 @@ function recoverSignerFromTypedData(signature, params, from) {
     )
   );
 
-  const typeHash = ethers.utils.id('Vouch(address participant)');
+  const typeHash = ethers.utils.id("Vouch(address participant)");
   const valueHash = ethers.utils.keccak256(
     ethers.utils.defaultAbiCoder.encode(
-      ['bytes32', 'address'],
+      ["bytes32", "address"],
       [typeHash, params.message.participant]
     )
   );
 
   const digest = ethers.utils.keccak256(
     ethers.utils.defaultAbiCoder.encode(
-      ['bytes1', 'bytes1', 'bytes32', 'bytes32'],
-      ['0x19', '0x01', domainSeparator, valueHash]
+      ["bytes1", "bytes1", "bytes32", "bytes32"],
+      ["0x19", "0x01", domainSeparator, valueHash]
     )
   );
 
   const recoveredAddress = ethers.utils.recoverAddress(digest, signature);
-  console.log('Recovered address:', recoveredAddress);
-  console.log('Signer address:', from);
-  console.log('Addresses match:', recoveredAddress.toLowerCase() === from.toLowerCase());
+  console.log("Recovered address:", recoveredAddress);
+  console.log("Signer address:", from);
+  console.log("Addresses match:", recoveredAddress.toLowerCase() === from.toLowerCase());
 }
 
 const wallet = ServiceProvider.wallet();
@@ -115,7 +115,7 @@ const getters = {
 const actions = {
   async createProposal(context, params) {
     console.log("PROPOSAL CREATION");
-    const {pType} = params
+    const { pType } = params
     const typeToFunction = `create${pType}Proposal`
     const toast = params.$toast || createToaster({});
     toast.clear();
@@ -127,7 +127,7 @@ const actions = {
     Promise.resolve([status]).then((status) => {
       if (status) {
         toast.success("Transaction confirmed!");
-        context.dispatch("refreshProposalsDataForAsset",{assetId: params.assetAddr, forceRefresh: true})
+        context.dispatch("refreshProposalsDataForAsset", { assetId: params.assetAddr, forceRefresh: true })
       } else {
         toast.error("Transaction failed. See details in MetaMask.");
         console.log("Transaction failed. See details in MetaMask.");
@@ -138,10 +138,10 @@ const actions = {
     let assetId = params.assetId.toLowerCase();
     if (context.getters.proposalsPerAsset.get(assetId) && !params.forceRefresh)
       return false;
-    
-    const {isThread} = params;
+
+    const { isThread } = params;
     let assetProposals = await dao.getProposalsForAsset(assetId, isThread, localStorage);
-    
+
     context.commit("setProposalsForAsset", {
       assetId: assetId.toLowerCase(),
       proposals: assetProposals,
@@ -149,17 +149,22 @@ const actions = {
   },
 
   async createPaperProposal(context, props) {
-    const {assetAddr, daoResolution, title, description, forumLink} = props;
-    return dao.createPaperProposal(assetAddr, title, description, forumLink, daoResolution)    
+    const { assetAddr, daoResolution, title, description, forumLink } = props;
+    return dao.createPaperProposal(assetAddr, title, description, forumLink, daoResolution)
   },
-  
+
+  async createDissolutionProposal(context, props) {
+    const { assetAddr, daoResolution, title, description, forumLink, purchaser, token, purchaseAmount } = props;
+    return dao.createDissolutionProposal(assetAddr, title, description, forumLink, daoResolution, purchaser, token, purchaseAmount)
+  },
+
   async createDescriptorChangeProposal(context, props) {
-    const {assetAddr, title, description, forumLink, descriptor, images, documents, metrics} = props;
-   return dao.createDescriptorChangeProposal(assetAddr, title, description, forumLink, descriptor, images, documents, metrics)
+    const { assetAddr, title, description, forumLink, descriptor, images, documents, metrics } = props;
+    return dao.createDescriptorChangeProposal(assetAddr, title, description, forumLink, descriptor, images, documents, metrics)
   },
 
   async createParticipantProposal(context, props) {
-    const {assetId, participant, participantType, title, description, forumLink} = props;
+    const { assetId, participant, participantType, title, description, forumLink } = props;
     return dao.createParticipantProposal(
       assetId,
       title,
@@ -169,7 +174,18 @@ const actions = {
       forumLink
     );
   },
-  
+
+  async createGovernorChangeProposal(context, props) {
+    const { assetId, governor, title, description, forumLink } = props;
+    return dao.createGovernorChangeProposal(
+      assetId,
+      title,
+      governor,
+      description,
+      forumLink
+    );
+  },
+
   async createParticipantRemovalProposal(context, props) {
     const {assetId, participant, removalFee, signatures, title, description, forumLink} = props;
     return dao.createParticipantRemovalProposal(
@@ -237,7 +253,7 @@ const actions = {
   },
 
   async simulateProposalWillComplete(context, props) {
-    const {proposalId, endTimestamp } = props;
+    const { proposalId, endTimestamp } = props;
     return await dao.simulateWillProposalComplete(proposalId, endTimestamp);
   },
 
@@ -276,7 +292,7 @@ const actions = {
 
   async vote(context, props) {
     const toast = params.$toast || createToaster({});
-    const {assetAddress, proposalId, votes} = props;
+    const { assetAddress, proposalId, votes } = props;
     const status = dao.vote(
       assetAddress || CONTRACTS.WEAVR,
       proposalId,
@@ -297,7 +313,7 @@ const actions = {
 
   async withdrawProposal(context, props) {
     const toast = params.$toast || createToaster({});
-    const {assetAddress, proposalId} = props;
+    const { assetAddress, proposalId } = props;
     const status = await dao.withdraw(
       assetAddress || CONTRACTS.WEAVR,
       proposalId,
@@ -330,7 +346,7 @@ const actions = {
 
   async vouchParticipant(context, params) {
     const toast = params.$toast || createToaster({});
-    const {participant} = params;
+    const { participant } = params;
     const domain = {
       name: "Weavr Protocol",
       version: "1",
@@ -339,12 +355,12 @@ const actions = {
     };
     const types = {
       EIP712Domain: [
-        { name: 'name', type: 'string' },
-        { name: 'version', type: 'string' },
-        { name: 'chainId', type: 'uint256' },
-        { name: 'verifyingContract', type: 'address' },
+        { name: "name", type: "string" },
+        { name: "version", type: "string" },
+        { name: "chainId", type: "uint256" },
+        { name: "verifyingContract", type: "address" },
       ],
-      Vouch: [{type: "address", name: "participant"}],
+      Vouch: [{ type: "address", name: "participant" }],
     };
     const message = {
       participant: participant
@@ -355,7 +371,7 @@ const actions = {
       primaryType: "Vouch",
       message: message
     }
-    toast.info("Waiting for signature..", {position: "top"});
+    toast.info("Waiting for signature..", { position: "top" });
     let fixedSignature = {}
     const signature = await wallet.getSignature(_params).then((signatures) => {
       const sig = ethers.utils.splitSignature(signatures[0]);
@@ -382,8 +398,8 @@ const actions = {
 
   async verifyParticipant(context, props) {
     const toast = params.$toast || createToaster({});
-    const {customDomain, participant, pType, kycHash, nonce} = props;
-    console.log({customDomain, participant, pType, kycHash, nonce})
+    const { customDomain, participant, pType, kycHash, nonce } = props;
+    console.log({ customDomain, participant, pType, kycHash, nonce })
     const domain = customDomain || {
       name: "Weavr Protocol",
       version: "1",
@@ -392,10 +408,10 @@ const actions = {
     };
     const types = {
       KYCVerification: [
-        {type: "uint8", name: "participantType"},
-        {type: "address", name: "participant"},
-        {type: "bytes32", name: "kyc"},
-        {type: "uint256", name: "nonce"}
+        { type: "uint8", name: "participantType" },
+        { type: "address", name: "participant" },
+        { type: "bytes32", name: "kyc" },
+        { type: "uint256", name: "nonce" }
       ]
     };
     const data = {
@@ -405,7 +421,7 @@ const actions = {
       nonce: ethers.BigNumber.from(nonce)
     };
 
-    toast.info("Waiting for signature..", {position: "top"});
+    toast.info("Waiting for signature..", { position: "top" });
 
     const signatures = await wallet.getSignature(domain, types, data);
     Promise.all([signatures])
@@ -450,7 +466,7 @@ const mutations = {
     state.platform.assets = assets;
   },
 
-  setProposalsForAsset(state, {assetId, proposals}) {
+  setProposalsForAsset(state, { assetId, proposals }) {
     state.platform.proposals.set(assetId, proposals);
   },
 

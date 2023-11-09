@@ -31,13 +31,12 @@ class IPFSStorageNetwork extends StorageNetwork {
     let jsonString = JSON.stringify(payload, null, 2);
     console.log("JSON: ", jsonString);
     const data = await this.ipfsInfuraAPIClient.add(jsonString, {pin: true});
-    console.log("DATA++++", data);
     return data
   }
 
   async addArbitraryFile(file) {
     const filesHash = await this.ipfsInfuraAPIClient.add(file, {pin: true})
-    await this.ipfsCollabAPIClient.pin.add(filesHash.path);
+    // await this.ipfsCollabAPIClient.pin.add(filesHash.path);
     return filesHash.path
   }
 

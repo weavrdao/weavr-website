@@ -44,35 +44,33 @@ import SumSub from "@/components/SumSub.vue";
 import Airdrop from "@/components/pages/Airdrop.vue";
 import AirdropClaimModal from "@/components/views/modals/AirdropClaimModal.vue"
 import Login from "@/components/sections/Login.vue"
+import newGovernorChangeProposal from "@/components/proposals/newGovernorChangeProposal.vue";
 
 async function threadDataHelper(to, options = {withProposals: false}) {
   const {withProposals} = options 
-  if(store.getters.allThreads.length == 0){
-    store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
+  if(store.getters.allThreads.length === 0){
+    await store.dispatch("setLoadingState", {isLoading: true, message: "Loading Threads"})
     console.log("PARAMS: ",to.params);
     await store.dispatch("refreshThreads")
     if(withProposals) {
-      store.dispatch("setLoadingState", {isLoading: true, message: "Loading Thread Proposals"})
+      await store.dispatch("setLoadingState", {isLoading: true, message: "Loading Thread Proposals"})
       await store.dispatch("refreshProposalsDataForAsset", {assetId: to.params.threadId, forceRefresh: true})
     }
-    store.dispatch("setLoadingState", {isLoading: false, message: ""})
+    await store.dispatch("setLoadingState", {isLoading: false, message: ""})
     
   }else if(store.getters.allThreads.find( t => t.id.toLowerCase() === to.params.threadId)) {
     if(withProposals ) {
-      store.dispatch("setLoadingState", {isLoading: true, message: "Loading Thread Proposals"})
+      await store.dispatch("setLoadingState", {isLoading: true, message: "Loading Thread Proposals"})
       await store.dispatch("refreshProposalsDataForAsset", {assetId: to.params.threadId, forceRefresh: true}).then( () => {
         store.dispatch("setLoadingState", {isLoading: false, message: ""})
       })
-      
     }
-    
   }
   if(to.params.threadId && store.getters.isConnected){
-    const _token = store.getters.allThreads.find( t => t.id == to.params.threadId).erc20.id
+    const _token = store.getters.allThreads.find( t => t.id === to.params.threadId).erc20.id
     await store.dispatch("updateWalletToken", {tokenAddress: _token})
   }
   return true
-  
 }
 
 const router = new createRouter({
@@ -255,6 +253,11 @@ const router = new createRouter({
                   props: {component: newParticipantRemovalProposal},
                 },
                 {
+                  path: "governorChangeProposal",
+                  component: Modal,
+                  props: {component: newGovernorChangeProposal},
+                },
+                {
                   path: "upgradeProposal",
                   component: Modal,
                   props: { component: newUpgradeProposal },
@@ -305,15 +308,11 @@ const router = new createRouter({
 
       meta: { requiresAuth: false },
       beforeEnter: async () => {
-        const prop =  store.getters.proposalsPerAsset;
-        // if (prop.length < 1) {
-          store.dispatch("setLoadingState", {isLoading: true, message: "Loading Proposals"})
-          await store.dispatch("refreshProposalsDataForAsset", {
-            assetId: CONTRACTS.WEAVR,
-          });
-          store.dispatch("setLoadingState", {isLoading: false, message: ""})
-        // }
-        // clear toast
+        await store.dispatch("setLoadingState", {isLoading: true, message: "Loading Proposals"})
+        await store.dispatch("refreshProposalsDataForAsset", {
+          assetId: CONTRACTS.WEAVR,
+        });
+        await store.dispatch("setLoadingState", {isLoading: false, message: ""})
         if(store.getters.isConnected) {
           await store.dispatch("updateWalletToken", {tokenAddress: CONTRACTS.TOKEN_ADDRESS}).then( () => {
             return true;
@@ -386,9 +385,9 @@ const router = new createRouter({
           beforeEnter: async (from) => {
             const prop = await store.getters.proposalsPerAsset;
             // if (prop.length < 1 || ) {
-              store.dispatch("refreshProposalsDataForAsset", {
-                assetId: CONTRACTS.WEAVR,
-              });
+            store.dispatch("refreshProposalsDataForAsset", {
+              assetId: CONTRACTS.WEAVR,
+            });
             // }
             // clear toast
             store.getters.isConnected ? store.dispatch("updateWalletToken", {tokenAddress: CONTRACTS.TOKEN_ADDRESS}): null
@@ -452,21 +451,21 @@ router.beforeEach(async (to) => {
     return false
   }
   
-    // not connected
-    // cookie
-    if (!isConnected && ethers.utils.isAddress(cookie.wallet)) {
-      console.log("____________________________ AUTOCONNECT__________________");
-      // - autoconnect and navigate
-      const toast = createToaster({})
-      await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
-      await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
+  // not connected
+  // cookie
+  if (!isConnected && ethers.utils.isAddress(cookie.wallet)) {
+    console.log("____________________________ AUTOCONNECT__________________");
+    // - autoconnect and navigate
+    const toast = createToaster({})
+    await store.dispatch("syncWallet", { wallet: cookie.provider, $toast: toast })
+    await store.dispatch("checkWhitelistStatus", { assetId: CONTRACTS.WEAVR }).then(() => {
       
-          // whitelisted
-          return { path: to.fullPath}
+      // whitelisted
+      return { path: to.fullPath}
         
-      })
+    })
 
-    }
+  }
      
   console.log("no wallet sync!");
   return true

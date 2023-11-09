@@ -15,10 +15,10 @@
    
   </div>
 </template>
+
 <script>
 import { mapActions, mapGetters } from "vuex";
 import "vue3-carousel/dist/carousel.css"
-import store from "@/store";
 export default {
   name: "SingleThread",
   
@@ -75,10 +75,11 @@ export default {
   },
   mounted() {
     this.setLoadingState({isLoading: true, message: "Loading Thread Proposals"})
-    this.refreshProposals({assetId: this.threadId, forceRefresh: true}).then( () => {
+    this.refreshProposals({assetId: this.threadId, forceRefresh: false, isThread: true}).then( () => {
       this.setLoadingState({isLoading: false, message: ""})
     })
-  }
+  },
+
 }
 </script>
   <style scoped lang="scss">
